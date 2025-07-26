@@ -76,7 +76,7 @@ export default function SignInPage() {
   return (
     <div className="min-h-screen flex">
       {/* Left side - Dark background with text */}
-      <div className="flex-1 flex items-center justify-center px-8 bg-primary">
+      <div className="hidden flex-1 md:flex items-center justify-center p-2 md:px-5 lg:px-8 bg-primary">
         <div>
           <h2 className="text-4xl font-bold text-[#010A18] leading-tight">
             Welcome Back! Verify Your Email to Access Your Learning Portal!
@@ -89,7 +89,7 @@ export default function SignInPage() {
       </div>
 
       {/* Right side - Sign in form */}
-      <div className="flex-1 bg-gray-50 flex items-center justify-center p-8">
+      <div className="flex-1 bg-gray-50 flex items-center justify-center p-2 md:px-5 lg:px-8">
         <div className="w-full max-w-md bg-white border border-gray-200 rounded-2xl p-8 shadow-sm">
           <div className="text-center mb-6">
             <h2 className="text-2xl font-semibold text-gray-900 mb-2">

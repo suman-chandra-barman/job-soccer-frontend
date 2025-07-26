@@ -33,7 +33,7 @@ export default function SignUpPage() {
       firstName: "",
       lastName: "",
       email: "",
-      role: undefined, // Changed from "Academy" to undefined
+      role: undefined,
       password: "",
       agreeToTerms: false,
     },
@@ -68,9 +68,9 @@ export default function SignUpPage() {
   };
 
   return (
-    <div className="min-h-screen flex">
-      {/* Left side - Dark background with text */}
-      <div className="flex-1 flex items-center justify-center px-8 bg-primary">
+    <div className="min-h-screen md:flex">
+      {/* Left side */}
+      <div className="hidden flex-1 md:flex items-center justify-center px-2 md:px-5 lg:px-8 bg-primary">
         <div>
           <h2 className="text-4xl font-bold text-[#010A18] leading-tight">
             Join the Team: Sign Up to Access Our Football Career Portal
@@ -83,7 +83,7 @@ export default function SignUpPage() {
       </div>
 
       {/* Right side - Sign up form */}
-      <div className="flex-1 bg-gray-50 flex items-center justify-center p-8">
+      <div className="flex-1 bg-gray-50 flex items-center justify-center p-2 md:p-5 lg:p-8">
         <div className="w-full max-w-md bg-white border-2 rounded-lg p-8">
           <div className="text-center mb-6">
             <h2 className="text-2xl font-semibold text-gray-900 mb-2">

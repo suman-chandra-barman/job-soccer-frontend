@@ -45,7 +45,7 @@ export default function EmailVerificaion() {
   return (
     <div className="min-h-screen flex">
       {/* Left Panel */}
-      <div className="flex-1 bg-primary p-8 ">
+      <div className="hidden md:block flex-1 bg-primary p-2 md:px-5 lg:px-8">
         <div className="flex items-center justify-center h-full">
           <h1 className="text-4xl font-bold text-[#010A18] leading-tight">
             Confirm Your Email to Access Your Learning Resources!
@@ -54,7 +54,7 @@ export default function EmailVerificaion() {
       </div>
 
       {/* Right Panel */}
-      <div className="flex-1 bg-gray-50 flex items-center justify-center p-8">
+      <div className="flex-1 bg-gray-50 flex items-center justify-center p-2 md:px-5 lg:px-8">
         <div className="w-full max-w-md">
           <div className="bg-white rounded-2xl p-8 shadow-sm border border-gray-100">
             <div className="text-center mb-8">
