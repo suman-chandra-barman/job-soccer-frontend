@@ -93,7 +93,7 @@ export default function EmailVerificaion() {
               <button
                 onClick={handleResendCode}
                 disabled={resendTimer > 0}
-                className="text-sm text-gray-400 hover:text-gray-600 disabled:cursor-not-allowed"
+                className="text-sm text-gray-400 hover:text-gray-600 cursor-pointer disabled:cursor-not-allowed"
               >
                 Resend Code {resendTimer > 0 && `${resendTimer}s`}
               </button>

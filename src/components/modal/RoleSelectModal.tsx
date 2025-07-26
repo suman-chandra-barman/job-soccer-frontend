@@ -45,8 +45,8 @@ export default function RoleSelect({ value, onValueChange }: RoleSelectProps) {
           <ChevronDown className="h-4 w-4 opacity-50" />
         </Button>
       </DialogTrigger>
-      <DialogContent className="max-w-md border-2 border-yellow-400">
-        <DialogHeader className="border-b border-yellow-400 pb-4">
+      <DialogContent className="max-w-md border-2">
+        <DialogHeader className="border-b pb-4">
           <DialogTitle className="text-left">Select Role</DialogTitle>
         </DialogHeader>
 

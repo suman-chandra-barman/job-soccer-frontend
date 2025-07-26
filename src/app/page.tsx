@@ -1,3 +1,9 @@
+import RegistrationSuccess from "@/components/auth/RegistrationSuccess";
+
 export default function Home() {
-  return <div>Welcome to job soccer</div>;
+  return (
+    <div>
+      <RegistrationSuccess />
+    </div>
+  );
 }
