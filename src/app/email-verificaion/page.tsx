@@ -7,7 +7,7 @@ import { Input } from "@/components/ui/input";
 import { ArrowLeft } from "lucide-react";
 import Link from "next/link";
 
-export default function EmailVerificaion() {
+export default function EmailVerificaionPage() {
   const [otp, setOtp] = useState(["", "", "", "", "", ""]);
   const [resendTimer, setResendTimer] = useState(56);
   const inputRefs = useRef<(HTMLInputElement | null)[]>([]);
