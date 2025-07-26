@@ -20,7 +20,7 @@ import {
 } from "@/components/ui/form";
 import { signUpSchema, type SignUpFormData } from "@/shchemas/signupValidation";
 import { useRouter } from "next/navigation";
-import RoleSelect from "@/components/modal/RoleSelectModal";
+import RoleSelect from "@/components/input/RoleSelect";
 
 export default function SignUpPage() {
   const [showPassword, setShowPassword] = useState(false);
