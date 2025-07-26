@@ -1,24 +1,31 @@
-"use client"
+"use client";
 
-import { useState } from "react"
-import Link from "next/link"
-import { useForm } from "react-hook-form"
-import { zodResolver } from "@hookform/resolvers/zod"
-import { toast } from "sonner"
-import { FaUser, FaEye, FaEyeSlash, FaFacebook } from "react-icons/fa"
-import { FcGoogle } from "react-icons/fc"
-import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
-import { Checkbox } from "@/components/ui/checkbox"
-import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form"
-import { signUpSchema, type SignUpFormData } from "@/shchemas/signupValidation"
-import { useRouter } from "next/navigation"
-import RoleSelect from "@/components/modal/RoleSelectModal"
+import { useState } from "react";
+import Link from "next/link";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { toast } from "sonner";
+import { FaUser, FaEye, FaEyeSlash, FaFacebook } from "react-icons/fa";
+import { FcGoogle } from "react-icons/fc";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Checkbox } from "@/components/ui/checkbox";
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "@/components/ui/form";
+import { signUpSchema, type SignUpFormData } from "@/shchemas/signupValidation";
+import { useRouter } from "next/navigation";
+import RoleSelect from "@/components/modal/RoleSelectModal";
 
 export default function SignUpPage() {
-  const [showPassword, setShowPassword] = useState(false)
-  const [isLoading, setIsLoading] = useState(false)
-  const router = useRouter()
+  const [showPassword, setShowPassword] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
+  const router = useRouter();
 
   const form = useForm<SignUpFormData>({
     resolver: zodResolver(signUpSchema),
@@ -30,45 +37,47 @@ export default function SignUpPage() {
       password: "",
       agreeToTerms: false,
     },
-  })
+  });
 
   const onSubmit = async (data: SignUpFormData) => {
-    setIsLoading(true)
+    setIsLoading(true);
     try {
       // Simulate API call
-      await new Promise((resolve) => setTimeout(resolve, 2000))
-      console.log("Form data:", data)
+      await new Promise((resolve) => setTimeout(resolve, 2000));
+      console.log("Form data:", data);
       toast.success("Account created successfully!", {
-        description: "Welcome to our platform. You can now access incredible learning tools!",
-      })
+        description:
+          "Welcome to our platform. You can now access incredible learning tools!",
+      });
       // Reset form after successful submission
-      form.reset()
+      form.reset();
       // router.push("/emailVerification")
     } catch (error) {
       toast.error("Something went wrong!", {
         description: "Please try again later.",
-      })
+      });
     } finally {
-      setIsLoading(false)
+      setIsLoading(false);
     }
-  }
+  };
 
   const handleSocialLogin = (provider: string) => {
     toast.info(`${provider} login clicked`, {
       description: "Social login functionality would be implemented here.",
-    })
-  }
+    });
+  };
 
   return (
     <div className="min-h-screen flex">
       {/* Left side - Dark background with text */}
-      <div className="flex-1 flex items-center justify-center p-8 bg-primary">
-        <div className="max-w-md">
+      <div className="flex-1 flex items-center justify-center px-8 bg-primary">
+        <div>
           <h2 className="text-4xl font-bold text-[#010A18] leading-tight">
             Join the Team: Sign Up to Access Our Football Career Portal
           </h2>
-          <p className="text-[#837E5B]">
-            Join us to access personalized AI solutions built for productivity and simplicity.
+          <p className="text-[#837E5B] mt-1">
+            Join us to access personalized AI solutions built for productivity
+            and simplicity.
           </p>
         </div>
       </div>
@@ -77,7 +86,9 @@ export default function SignUpPage() {
       <div className="flex-1 bg-gray-50 flex items-center justify-center p-8">
         <div className="w-full max-w-md bg-white border-2 rounded-lg p-8">
           <div className="text-center mb-6">
-            <h2 className="text-2xl font-semibold text-gray-900 mb-2">Create a free account</h2>
+            <h2 className="text-2xl font-semibold text-gray-900 mb-2">
+              Create a free account
+            </h2>
           </div>
 
           <Form {...form}>
@@ -89,10 +100,16 @@ export default function SignUpPage() {
                   name="firstName"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel className="text-sm font-medium text-gray-700">First Name</FormLabel>
+                      <FormLabel className="text-sm font-medium text-gray-700">
+                        First Name
+                      </FormLabel>
                       <FormControl>
                         <div className="relative">
-                          <Input placeholder="First name" className="pr-10 bg-gray-100 border-gray-200" {...field} />
+                          <Input
+                            placeholder="First name"
+                            className="pr-10 bg-gray-100 border-gray-200"
+                            {...field}
+                          />
                           <FaUser className="absolute right-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400" />
                         </div>
                       </FormControl>
@@ -105,10 +122,16 @@ export default function SignUpPage() {
                   name="lastName"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel className="text-sm font-medium text-gray-700">Last Name</FormLabel>
+                      <FormLabel className="text-sm font-medium text-gray-700">
+                        Last Name
+                      </FormLabel>
                       <FormControl>
                         <div className="relative">
-                          <Input placeholder="Last name" className="pr-10 bg-gray-100 border-gray-200" {...field} />
+                          <Input
+                            placeholder="Last name"
+                            className="pr-10 bg-gray-100 border-gray-200"
+                            {...field}
+                          />
                           <FaUser className="absolute right-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400" />
                         </div>
                       </FormControl>
@@ -124,7 +147,9 @@ export default function SignUpPage() {
                 name="email"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel className="text-sm font-medium text-gray-700">E-mail or Phone</FormLabel>
+                    <FormLabel className="text-sm font-medium text-gray-700">
+                      E-mail or Phone
+                    </FormLabel>
                     <FormControl>
                       <Input
                         placeholder="Enter your mail"
@@ -143,9 +168,14 @@ export default function SignUpPage() {
                 name="role"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel className="text-sm font-medium text-gray-700">Role</FormLabel>
+                    <FormLabel className="text-sm font-medium text-gray-700">
+                      Role
+                    </FormLabel>
                     <FormControl>
-                      <RoleSelect value={field.value} onValueChange={field.onChange} />
+                      <RoleSelect
+                        value={field.value}
+                        onValueChange={field.onChange}
+                      />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -158,7 +188,9 @@ export default function SignUpPage() {
                 name="password"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel className="text-sm font-medium text-gray-700">Password</FormLabel>
+                    <FormLabel className="text-sm font-medium text-gray-700">
+                      Password
+                    </FormLabel>
                     <FormControl>
                       <div className="relative">
                         <Input
@@ -192,7 +224,11 @@ export default function SignUpPage() {
                 render={({ field }) => (
                   <FormItem className="flex flex-row items-start space-x-3 space-y-0 text-black">
                     <FormControl>
-                      <Checkbox checked={field.value} onCheckedChange={field.onChange} className="cursor-pointer" />
+                      <Checkbox
+                        checked={field.value}
+                        onCheckedChange={field.onChange}
+                        className="cursor-pointer"
+                      />
                     </FormControl>
                     <div className="space-y-1 leading-none">
                       <FormLabel className="text-sm text-gray-600">
@@ -219,7 +255,9 @@ export default function SignUpPage() {
           </Form>
 
           {/* Divider */}
-          <div className="text-center text-gray-500 text-sm my-4">Or Sign Up with</div>
+          <div className="text-center text-gray-500 text-sm my-4">
+            Or Sign Up with
+          </div>
 
           {/* Social Login Buttons */}
           <div className="grid grid-cols-2 gap-4">
@@ -246,12 +284,15 @@ export default function SignUpPage() {
           {/* Sign in link */}
           <div className="text-center text-sm text-gray-600 mt-4">
             Already have an account?{" "}
-            <Link href="/signin" className="underline text-primary-fill-primary">
+            <Link
+              href="/signin"
+              className="underline text-primary-fill-primary"
+            >
               Sign in
             </Link>
           </div>
         </div>
       </div>
     </div>
-  )
+  );
 }

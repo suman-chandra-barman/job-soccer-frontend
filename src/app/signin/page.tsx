@@ -52,7 +52,6 @@ export default function SignInPage() {
       setTimeout(() => {
         router.push("/");
       }, 1500);
-      
     } catch (error) {
       toast.error("Sign in failed!", {
         description: "Please check your credentials and try again.",
@@ -77,14 +76,14 @@ export default function SignInPage() {
   return (
     <div className="min-h-screen flex">
       {/* Left side - Dark background with text */}
-      <div className="flex-1 flex items-center justify-center p-8 bg-primary">
-        <div className="max-w-md">
+      <div className="flex-1 flex items-center justify-center px-8 bg-primary">
+        <div>
           <h2 className="text-4xl font-bold text-[#010A18] leading-tight">
             Welcome Back! Verify Your Email to Access Your Learning Portal!
           </h2>
-          <p className="text-[#837E5B]">
-            Join us to access personalized AI solutions built for productivity
-            and simplicity.
+          <p className="text-[#837E5B] mt-1">
+            Log in to manage your smart assistant and stay in control of your AI
+            tools.
           </p>
         </div>
       </div>
