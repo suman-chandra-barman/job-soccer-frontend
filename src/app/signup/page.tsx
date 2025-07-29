@@ -65,7 +65,7 @@ export default function SignUpPage() {
     <div className="min-h-screen md:flex">
       {/* Left side */}
       <div className="hidden flex-1 md:flex items-center justify-center px-2 md:px-5 lg:px-8 bg-primary">
-        <div>
+        <div className="max-w-2xl">
           <h2 className="text-4xl font-bold text-[#010A18] leading-tight">
             Join the Team: Sign Up to Access Our Football Career Portal
           </h2>
