@@ -77,7 +77,7 @@ export default function SignInPage() {
     <div className="min-h-screen flex">
       {/* Left side - Dark background with text */}
       <div className="hidden flex-1 md:flex items-center justify-center p-2 md:px-5 lg:px-8 bg-primary">
-        <div>
+        <div className="max-w-2xl">
           <h2 className="text-4xl font-bold text-[#010A18] leading-tight">
             Welcome Back! Verify Your Email to Access Your Learning Portal!
           </h2>
@@ -204,33 +204,6 @@ export default function SignInPage() {
               </Button>
             </form>
           </Form>
-
-          {/* Divider */}
-          <div className="text-center text-gray-500 text-sm my-6">
-            Or Login with
-          </div>
-
-          {/* Social Login Buttons */}
-          <div className="grid grid-cols-2 gap-4">
-            <Button
-              type="button"
-              variant="outline"
-              onClick={() => handleSocialLogin("Google")}
-              className="flex items-center justify-center space-x-2 py-3 bg-transparent cursor-pointer"
-            >
-              <FcGoogle className="w-5 h-5" />
-              <span>Google</span>
-            </Button>
-            <Button
-              type="button"
-              variant="outline"
-              onClick={() => handleSocialLogin("Facebook")}
-              className="flex items-center justify-center space-x-2 py-3 bg-transparent cursor-pointer"
-            >
-              <FaFacebook className="w-5 h-5 text-blue-600" />
-              <span>Facebook</span>
-            </Button>
-          </div>
 
           {/* Sign up link */}
           <div className="text-center text-sm text-gray-600 mt-6">
