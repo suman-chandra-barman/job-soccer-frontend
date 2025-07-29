@@ -79,7 +79,7 @@ export default function SignInPage() {
       <div className="hidden flex-1 md:flex items-center justify-center p-2 md:px-5 lg:px-8 bg-primary">
         <div className="max-w-2xl">
           <h2 className="text-4xl font-bold text-[#010A18] leading-tight">
-            Welcome Back! Verify Your Email to Access Your Learning Portal!
+            Welcome Back to Your Football Career Hub
           </h2>
           <p className="text-[#837E5B] mt-1">
             Log in to manage your smart assistant and stay in control of your AI
@@ -209,7 +209,7 @@ export default function SignInPage() {
           <div className="text-center text-sm text-gray-600 mt-6">
             Don&apos;t haven an account?{" "}
             <Link href="/signup" className="underline">
-              Sign Up Free
+              Sign up free
             </Link>
           </div>
         </div>
