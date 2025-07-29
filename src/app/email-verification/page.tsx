@@ -46,8 +46,9 @@ export default function EmailVerificaionPage() {
   };
 
   const handleVerity = () => {
-      router.push("/success-message")
-  }
+    console.log("OTP: ", otp);
+    router.push("/success-message");
+  };
 
   return (
     <div className="min-h-screen flex">

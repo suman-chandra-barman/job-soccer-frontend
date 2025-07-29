@@ -44,7 +44,7 @@ export default function SignUpPage() {
     try {
       // Simulate API call
       await new Promise((resolve) => setTimeout(resolve, 2000));
-      console.log("Form data:", data);
+      console.log("Signup data:", data);
       toast.success("Account created successfully!", {
         description:
           "Welcome to our platform. You can now access incredible learning tools!",

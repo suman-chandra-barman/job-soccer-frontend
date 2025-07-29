@@ -6,6 +6,7 @@ import React from "react";
 
 const SuccessMessagePage = () => {
   const router = useRouter();
+  
   const handleOnNext = () => {
     router.push("/profile/complete")
   };
