@@ -15,9 +15,9 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import {
-  fieldStaffProfessionalInfoSchema,
-  TFieldStaffProfessionalInfo,
+  fieldStaffProfessionalInfoSchema
 } from "@/shchemas/profileValidation";
+import { TFieldStaffProfessionalInfo } from "@/types/profile";
 
 interface IFieldStaffProfessionalInfoFormProps {
   onNext: (data: TFieldStaffProfessionalInfo) => void;
@@ -31,7 +31,7 @@ interface IFieldStaffProfessionalInfoFormProps {
   }>;
 }
 
-export function FieldOfficerProfessionalInfoForm({
+export function FieldStaffProfessionalInfoForm({
   onNext,
   onPrev,
   initialData,

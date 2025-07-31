@@ -1,5 +1,5 @@
 import CandidateProfileClient from "@/app/profile/complete/[role]/CandidateProfileForm";
-import { type TCandidateRole } from "@/shchemas/candidateRole";
+import { TCandidateRole } from "@/types/profile";
 
 export async function generateStaticParams() {
   return [

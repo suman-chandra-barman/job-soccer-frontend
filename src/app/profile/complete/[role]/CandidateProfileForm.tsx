@@ -23,7 +23,7 @@ import { AmateurPlayerProfessionalInfoForm } from "@/components/forms/AmateurPla
 import { ProfessionalPlayerProfessionalInfoForm } from "@/components/forms/ProfessionalPlayerProfessionalInfoForm";
 import { HighSchoolPlayerProfessionalInfoForm } from "@/components/forms/HighSchoolPlayerProfessionalInfoForm";
 import { CollegePlayerProfessionalInfoForm } from "@/components/forms/CollegePlayerProfessionalInfoForm";
-import { FieldOfficerProfessionalInfoForm } from "@/components/forms/FieldStaffProfessionalInfoForm";
+import { FieldStaffProfessionalInfoForm } from "@/components/forms/FieldStaffProfessionalInfoForm";
 import { OfficeStaffProfessionalInfoForm } from "@/components/forms/OfficeStaffProfessionalInfoForm";
 
 interface CandidateProfileClientProps {
@@ -128,7 +128,7 @@ export default function CompleteProfilePage({
       case "college-player":
         return <CollegePlayerProfessionalInfoForm {...commonProps} />;
       case "field-staff":
-        return <FieldOfficerProfessionalInfoForm {...commonProps} />;
+        return <FieldStaffProfessionalInfoForm {...commonProps} />;
       case "office-staff":
         return <OfficeStaffProfessionalInfoForm {...commonProps} />;
       default:
