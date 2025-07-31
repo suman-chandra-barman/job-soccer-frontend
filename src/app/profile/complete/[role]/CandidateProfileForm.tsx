@@ -13,9 +13,11 @@ import type {
   TCollegePlayerProfessionalInfo,
   TOfficeStaffProfessionalInfo,
   TFieldStaffProfessionalInfo,
-} from "@/shchemas/profileValidation";
+  TCandidateRole,
+  TMultipleHighlights,
+} from "@/types/profile";
 import { useRouter } from "next/navigation";
-import { TCandidateRole, candidateRoleConfig } from "@/shchemas/candidateRole";
+import { candidateRoleConfig } from "@/shchemas/profileValidation";
 import { MultipleHighlightsForm } from "@/components/forms/MultipleHighlisghtsForm";
 import { AmateurPlayerProfessionalInfoForm } from "@/components/forms/AmateurPlayerProfessionalInfoForm";
 import { ProfessionalPlayerProfessionalInfoForm } from "@/components/forms/ProfessionalPlayerProfessionalInfoForm";
@@ -41,7 +43,7 @@ export default function CompleteProfilePage({
       | TCollegePlayerProfessionalInfo
       | TOfficeStaffProfessionalInfo
       | TFieldStaffProfessionalInfo;
-    highlights?: THighlights;
+    highlights?: THighlights | TMultipleHighlights;
   }>({});
 
   const router = useRouter();
@@ -93,7 +95,7 @@ export default function CompleteProfilePage({
     toast.success("Professional information saved successfully!");
   };
 
-  const handleHighlightsNext = (data: THighlights) => {
+  const handleHighlightsNext = (data: THighlights | TMultipleHighlights) => {
     setFormData((prev) => ({ ...prev, highlights: data }));
 
     // Here you would typically submit the complete form data to your API
@@ -135,17 +137,22 @@ export default function CompleteProfilePage({
   };
 
   const renderHighlightsForm = () => {
-    const commonProps = {
-      onNext: handleHighlightsNext,
-      onPrev: handlePrevStep,
-      initialData: formData.highlights,
-      steps,
-    };
-
     if (config.highlightsType === "multiple") {
-      return <MultipleHighlightsForm {...commonProps} />;
+      const multipleProps = {
+        onNext: handleHighlightsNext as (data: TMultipleHighlights) => void,
+        onPrev: handlePrevStep,
+        initialData: formData.highlights as TMultipleHighlights | undefined,
+        steps,
+      };
+      return <MultipleHighlightsForm {...multipleProps} />;
     } else {
-      return <HighlightsForm {...commonProps} />;
+      const singleProps = {
+        onNext: handleHighlightsNext as (data: THighlights) => void,
+        onPrev: handlePrevStep,
+        initialData: formData.highlights as THighlights | undefined,
+        steps,
+      };
+      return <HighlightsForm {...singleProps} />;
     }
   };
 
@@ -160,24 +167,6 @@ export default function CompleteProfilePage({
       )}
       {currentStep === 2 && renderProfessionalForm()}
       {currentStep === 3 && renderHighlightsForm()}
-
-      {/* {currentStep === 2 && (
-        <ProfessionalInfoForm
-          onNext={handleProfessionalInfoNext}
-          onPrev={handlePrevStep}
-          initialData={formData.professionalInfo}
-          steps={steps}
-        />
-      )}
-
-      {currentStep === 3 && (
-        <HighlightsForm
-          onNext={handleHighlightsNext}
-          onPrev={handlePrevStep}
-          initialData={formData.highlights}
-          steps={steps}
-        />
-      )} */}
     </div>
   );
 }

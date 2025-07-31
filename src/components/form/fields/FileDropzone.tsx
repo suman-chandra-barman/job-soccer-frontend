@@ -39,10 +39,10 @@ export function FileDropzone({
       e.preventDefault();
       setIsDragOver(false);
 
-      const droppedFiles = Array.from(e.dataTransfer.files);
+      const droppedFiles = Array.from(e.dataTransfer.files).filter(file => file.type.startsWith('video/'));
       const newFiles = multiple
         ? [...files, ...droppedFiles].slice(0, maxFiles)
-        : droppedFiles.slice(0, 1);
+        : [droppedFiles[0]].filter(Boolean);
 
       setFiles(newFiles);
       onFilesChange(newFiles);
@@ -52,13 +52,16 @@ export function FileDropzone({
 
   const handleFileInput = useCallback(
     (e: React.ChangeEvent<HTMLInputElement>) => {
-      const selectedFiles = Array.from(e.target.files || []);
+      const selectedFiles = Array.from(e.target.files || []).filter(file => file.type.startsWith('video/'));
       const newFiles = multiple
         ? [...files, ...selectedFiles].slice(0, maxFiles)
-        : selectedFiles.slice(0, 1);
+        : [selectedFiles[0]].filter(Boolean);
 
       setFiles(newFiles);
       onFilesChange(newFiles);
+      
+      // Reset the input value to allow selecting the same file again
+      e.target.value = '';
     },
     [files, multiple, maxFiles, onFilesChange]
   );
