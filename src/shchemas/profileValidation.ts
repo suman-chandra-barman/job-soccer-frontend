@@ -1,3 +1,4 @@
+import { TCandidateRole, THighlightsType } from "@/types/profile";
 import { z } from "zod";
 
 // Personal Information Schema
@@ -6,9 +7,7 @@ export const personalInfoSchema = z.object({
   firstName: z.string().min(1, "First name is required"),
   lastName: z.string().min(1, "Last name is required"),
   dateOfBirth: z.string().min(1, "Date of birth is required"),
-  placeOfBirth: z
-    .string()
-    .min(1, "Place of birth is required"),
+  placeOfBirth: z.string().min(1, "Place of birth is required"),
   nationality: z.string().min(1, "Nationality is required"),
   phoneNumber: z.string().min(10, "Phone number must be at least 10 digits"),
 });
@@ -122,35 +121,65 @@ export const completeProfileSchema = z.object({
   highlights: highlightsSchema,
 });
 
-export type TPersonalInfo = z.infer<typeof personalInfoSchema>;
-export type THighlights = z.infer<typeof highlightsSchema>;
-export type TCompleteProfile = z.infer<typeof completeProfileSchema>;
+// Single Highlights schemas
+export const singleHighlightsSchema = z.object({
+  videos: z.array(z.instanceof(File)).min(1, "At least one video is required"),
+});
 
-export type TAmateurPlayerProfessionalInfo = z.infer<
-  typeof amateurPlayerProfessionalInfoSchema
->;
-export type TProfessionalPlayerProfessionalInfo = z.infer<
-  typeof professionalPlayerProfessionalInfoSchema
->;
-export type THighSchoolPlayerProfessionalInfo = z.infer<
-  typeof highSchoolPlayerProfessionalInfoSchema
->;
-export type TCollegePlayerProfessionalInfo = z.infer<
-  typeof collegePlayerProfessionalInfoSchema
->;
-export type TFieldStaffProfessionalInfo = z.infer<
-  typeof fieldStaffProfessionalInfoSchema
->;
-export type TOfficeStaffProfessionalInfo = z.infer<
-  typeof officeStaffProfessionalInfoSchema
->;
+// Multipole Highlights schemas
+export const multipleHighlightsSchema = z.object({
+  preInterviewVideos: z
+    .array(z.instanceof(File))
+    .min(1, "Pre-interview video is required"),
+  technicalVideos: z
+    .array(z.instanceof(File))
+    .min(1, "Technical video is required"),
+  practicalVideos: z
+    .array(z.instanceof(File))
+    .min(1, "Practical video is required"),
+  gamePrinciplesVideos: z
+    .array(z.instanceof(File))
+    .min(1, "Game principles video is required"),
+});
 
-// Role types
-export type CandidateRole =
-  | "professional-player"
-  | "amateur-player"
-  | "high-school-player"
-  | "college-player"
-  | "filed-staff"
-  | "office-staff";
-export type HighlightsType = "single" | "multiple";
+// Role configuration
+export const candidateRoleConfig: Record<
+  TCandidateRole,
+  {
+    professionalSchema: z.ZodSchema;
+    highlightsType: THighlightsType;
+    highlightsSchema: z.ZodSchema;
+  }
+> = {
+  "professional-player": {
+    professionalSchema: professionalPlayerProfessionalInfoSchema,
+    highlightsType: "single",
+    highlightsSchema: singleHighlightsSchema,
+  },
+  "amateur-player": {
+    professionalSchema: amateurPlayerProfessionalInfoSchema,
+    highlightsType: "single",
+    highlightsSchema: singleHighlightsSchema,
+  },
+  "high-school-player": {
+    professionalSchema: highSchoolPlayerProfessionalInfoSchema,
+    highlightsType: "single",
+    highlightsSchema: singleHighlightsSchema,
+  },
+  "college-player": {
+    professionalSchema: collegePlayerProfessionalInfoSchema,
+    highlightsType: "single",
+    highlightsSchema: singleHighlightsSchema,
+  },
+  "field-staff": {
+    professionalSchema: fieldStaffProfessionalInfoSchema,
+    highlightsType: "single",
+    highlightsSchema: singleHighlightsSchema,
+  },
+  "office-staff": {
+    professionalSchema: fieldStaffProfessionalInfoSchema,
+    highlightsType: "single",
+    highlightsSchema: singleHighlightsSchema,
+  },
+};
+
