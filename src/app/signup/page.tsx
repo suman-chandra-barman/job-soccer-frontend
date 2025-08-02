@@ -5,8 +5,7 @@ import Link from "next/link";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { toast } from "sonner";
-import { FaUser, FaEye, FaEyeSlash, FaFacebook } from "react-icons/fa";
-import { FcGoogle } from "react-icons/fc";
+import { FaUser, FaEye, FaEyeSlash } from "react-icons/fa";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Checkbox } from "@/components/ui/checkbox";
@@ -25,6 +24,7 @@ import RoleSelect from "@/components/input/RoleSelect";
 export default function SignUpPage() {
   const [showPassword, setShowPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
+
   const router = useRouter();
 
   const form = useForm<SignUpFormData>({
@@ -47,9 +47,8 @@ export default function SignUpPage() {
       console.log("Signup data:", data);
       toast.success("Account created successfully!", {
         description:
-          "Welcome to our platform. You can now access incredible learning tools!",
+          "Welcome to our platform",
       });
-      // Reset form after successful submission
       form.reset();
       router.push("/email-verification");
     } catch (error) {
