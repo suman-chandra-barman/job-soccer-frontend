@@ -2,6 +2,8 @@ import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import "./globals.css";
 import Providers from "@/lib/Provider";
+import React from "react";
+import { MainLayout } from "@/components/shared/MainLayout";
 
 const inter = Inter({
   subsets: ["latin"],
@@ -18,11 +20,13 @@ export default function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
-}>) {  
+}>) {
   return (
     <Providers>
       <html lang="en">
-        <body className={`${inter.className} antialiased`}>{children}</body>
+        <body className={`${inter.className} antialiased`}>
+          <MainLayout>{children}</MainLayout>
+        </body>
       </html>
     </Providers>
   );
