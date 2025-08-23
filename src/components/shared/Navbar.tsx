@@ -73,7 +73,7 @@ export function Navbar() {
 
         {/* Secondary Navigation */}
         <div className="bg-yellow-50 ">
-          <div className="container mx-auto">
+          <div className="container mx-auto px-4">
             <div className="flex items-center justify-between py-1">
               {/* Logo */}
               <Link href="/" className="flex items-center">
@@ -91,12 +91,12 @@ export function Navbar() {
                     value={searchQuery}
                     onChange={(e) => setSearchQuery(e.target.value)}
                     onKeyPress={handleKeyPress}
-                    className="w-full py-5 pr-12 border-none bg-white rounded-full focus:border-yellow-400 focus:ring-yellow-400"
+                    className="w-full py-5 pr-12 border-none bg-white rounded-full focus:border-yellow-300 focus:ring-yellow-300"
                   />
                   <Button
                     onClick={handleSearch}
                     size="lg"
-                    className="absolute h-full right-0 top-1/2 -translate-y-1/2 bg-yellow-400 hover:bg-yellow-500 text-black rounded-r-full"
+                    className="absolute h-full right-0 top-1/2 -translate-y-1/2 bg-yellow-300 hover:bg-yellow-400 text-black rounded-r-full"
                   >
                     <Search className="h-6 w-6" />
                   </Button>
