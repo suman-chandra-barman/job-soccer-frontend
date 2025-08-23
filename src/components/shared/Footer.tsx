@@ -1,18 +1,17 @@
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import Link from "next/link";
+import Image from "next/image";
 import logo from "@/assets/logo_with_domain.png";
-import facebook from "@/assets/socials/facebook.svg"
+import facebook from "@/assets/socials/facebook.svg";
 import youtube from "@/assets/socials/youtube.svg";
 import X from "@/assets/socials/x.svg";
-import Image from "next/image";
-
 
 export function Footer() {
   return (
     <footer className="bg-yellow-50 py-12">
       <div className="container mx-auto px-4">
-        <div className="flex items-center mb-4">
+        <div className="flex items-center justify-center md:justify-start mb-4">
           {/* Logo */}
           <Link href="/" className="flex items-center">
             <div className="flex items-center justify-center">
@@ -25,9 +24,9 @@ export function Footer() {
             </div>
           </Link>
         </div>
-        <div className="flex items-center justify-between gap-8">
+        <div className="flex flex-col md:flex-row items-center md:items-start justify-between gap-8">
           {/* Brand Section */}
-          <div className="md:col-span-1">
+          <div className="md:col-span-1 w-full md:w-auto text-center md:text-left">
             <h2 className="text-5xl font-bold text-[#362F05] mb-2">
               JOB SOCCER
             </h2>
@@ -41,7 +40,7 @@ export function Footer() {
           </div>
 
           {/* Quick Action */}
-          <div className="md:col-span-1">
+          <div className="md:col-span-1 w-full md:w-auto text-center md:text-left">
             <h3 className="font-semibold text-gray-900 mb-4">Quick Action</h3>
             <ul className="space-y-2">
               <li>
@@ -64,7 +63,7 @@ export function Footer() {
           </div>
 
           {/* Policy */}
-          <div className="md:col-span-1">
+          <div className="md:col-span-1 w-full md:w-auto text-center md:text-left">
             <h3 className="font-semibold text-gray-900 mb-4">Policy</h3>
             <ul className="space-y-2">
               <li>
@@ -87,12 +86,14 @@ export function Footer() {
           </div>
 
           {/* Subscribe */}
-          <div className="md:col-span-1">
-            <h3 className="font-semibold text-gray-900 mb-4">Subscribe</h3>
-            <p className="text-gray-600 text-sm mb-4">
+          <div className="md:col-span-1 w-full md:w-auto">
+            <h3 className="font-semibold text-gray-900 mb-4 text-center md:text-left">
+              Subscribe
+            </h3>
+            <p className="text-gray-600 text-sm mb-4 text-center md:text-left">
               Subscribe to our email alerts
             </p>
-            <div className="flex gap-2 mb-6">
+            <div className="flex flex-col sm:flex-row gap-2 mb-6">
               <Input
                 type="email"
                 placeholder="Enter your email"

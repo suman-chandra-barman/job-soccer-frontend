@@ -28,7 +28,7 @@ export function HeroSection() {
               </h1>
             </div>
 
-            <div className="flex flex-col sm:flex-row gap-2 justify-center lg:justify-start">
+            <div className="flex flex-row gap-2 justify-center lg:justify-start">
               <Button
                 asChild
                 className="flex-1 bg-yellow-300 hover:bg-yellow-400 text-black font-semibold px-8 py-6 text-lg rounded-lg"

@@ -19,7 +19,7 @@ import {
 } from "@/components/ui/form";
 import { signUpSchema, type SignUpFormData } from "@/shchemas/signupValidation";
 import { useRouter } from "next/navigation";
-import RoleSelect from "@/components/input/RoleSelect";
+import RoleSelect from "@/components/input/SelectRole";
 
 export default function SignUpPage() {
   const [showPassword, setShowPassword] = useState(false);
@@ -46,8 +46,7 @@ export default function SignUpPage() {
       await new Promise((resolve) => setTimeout(resolve, 2000));
       console.log("Signup data:", data);
       toast.success("Account created successfully!", {
-        description:
-          "Welcome to our platform",
+        description: "Welcome to our platform",
       });
       form.reset();
       router.push("/email-verification");

@@ -1,9 +1,9 @@
 import { Button } from "@/components/ui/button";
 import { NewJobCard } from "../cards/NewJobCard";
-import user1 from "@/assets/user/user1.png";
-import user2 from "@/assets/user/user2.png";
-import user3 from "@/assets/user/user3.png";
-import user4 from "@/assets/user/user4.png";
+import user1 from "@/assets/candidates/user1.png";
+import user2 from "@/assets/candidates/user2.png";
+import user3 from "@/assets/candidates/user3.png";
+import user4 from "@/assets/candidates/user4.png";
 import { StaticImageData } from "next/image";
 
 export interface TNewJobPost {
