@@ -75,7 +75,7 @@ function CandidateCard({ candidate }: { candidate: TCandidate }) {
 
             <Button
               size="sm"
-              className="w-full text-xs bg-yellow-300 hover:bg-yellow-400 text-black font-medium"
+              className="w-full text-xs bg-yellow-300 hover:bg-yellow-400 text-black font-medium py-3"
             >
               <MessageCircle className="w-3 h-3 mr-1" />
               Message

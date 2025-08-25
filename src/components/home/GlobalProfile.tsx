@@ -80,16 +80,16 @@ export function GlobalProfile() {
             </div>
 
             {/* CTA Buttons */}
-            <div className="flex flex-col sm:flex-row gap-4">
+            <div className="flex items-center gap-4">
               <Button
                 size="lg"
-                className="bg-yellow-300 hover:bg-yellow-400 text-black font-semibold px-8 py-3 rounded-lg"
+                className="bg-yellow-300 hover:bg-yellow-400 text-black font-semibold px-8 py-2 rounded-lg"
               >
                 <Link href="/signup">Sign Up</Link>
               </Button>
               <Button
                 size="lg"
-                className="bg-yellow-300 hover:bg-yellow-400 text-black font-semibold px-8 py-3 rounded-lg"
+                className="bg-yellow-300 hover:bg-yellow-400 text-black font-semibold px-8 py-2 rounded-lg"
               >
                 <Link href="/signin">Sign In</Link>
               </Button>

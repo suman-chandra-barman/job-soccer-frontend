@@ -31,13 +31,13 @@ export function HeroSection() {
             <div className="flex flex-row gap-2 justify-center lg:justify-start">
               <Button
                 asChild
-                className="flex-1 bg-yellow-300 hover:bg-yellow-400 text-black font-medium px-8 py-6 text-lg rounded-lg"
+                className=" md:w-[200px] bg-yellow-300 hover:bg-yellow-400 text-black font-medium px-8 py-3 text-lg rounded-lg"
               >
                 <Link href="/signin">Sign In</Link>
               </Button>
               <Button
                 asChild
-                className="flex-1 bg-yellow-300 hover:bg-yellow-400 text-black font-medium px-8 py-6 text-lg rounded-lg"
+                className=" md:w-[200px] bg-yellow-300 hover:bg-yellow-400 text-black font-medium px-8 py-3 text-lg rounded-lg"
               >
                 <Link href="/signup">Sign Up</Link>
               </Button>

@@ -69,7 +69,7 @@ export function NewJobs() {
       </div>
 
       <div className="flex justify-end">
-        <Button className="bg-yellow-300 hover:bg-yellow-400 text-black font-semibold px-6 py-2 rounded-xl">
+        <Button className="bg-yellow-300 hover:bg-yellow-400 text-black font-semibold px-6 py-3 rounded-lg">
           See All Jobs
         </Button>
       </div>
