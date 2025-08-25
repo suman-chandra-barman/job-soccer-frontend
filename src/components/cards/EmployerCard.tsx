@@ -8,7 +8,7 @@ import {
 } from "lucide-react";
 import Image from "next/image";
 import { Button } from "../ui/button";
-import { TClub } from "@/app/employers/page";
+import { TClub } from "@/app/job-board/page";
 import employerLogo from "@/assets/employers/compony logo.png";
 
 export function EmployerCard({ job }: { job: TClub }) {
@@ -36,17 +36,17 @@ export function EmployerCard({ job }: { job: TClub }) {
           </div>
         </div>
 
-        <div className="flex gap-4 items-center">
+        <div className="flex gap-2 items-center">
           <Button
             variant="outline"
-            className="flex-1 bg-transparent rounded-full text-green-500 border border-green-500"
+            className="flex-1 bg-transparent rounded-full text-green-500 border border-green-500 px-1"
           >
             <ShieldCheck className="w-6 h-6" />
             Verified
           </Button>
           <Button
             variant="outline"
-            className="flex-1 rounded-full bg-transparent border-black"
+            className="flex-1 rounded-full bg-transparent border-black px-1"
           >
             {job.clubType}
           </Button>
