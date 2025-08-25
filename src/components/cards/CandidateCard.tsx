@@ -10,7 +10,7 @@ function CandidateCard({ candidate }: { candidate: TCandidate }) {
   return (
     <div>
       <Card
-        className="bg-white border-0 shadow-sm hover:shadow-md transition-shadow"
+        className="bg-gradient-to-br from-white to-[#FDF9E3] border-0 shadow-sm hover:shadow-md transition-shadow"
       >
         <CardContent className="p-6">
           {/* Profile Header */}

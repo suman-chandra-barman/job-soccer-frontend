@@ -6,7 +6,7 @@ import { Button } from "../ui/button";
 
 export function JobCard({ job }: { job: TNewJobPost }) {
   return (
-    <div className="bg-[#FDF9E3] rounded-xl p-4 shadow-sm border border-gray-100">
+    <div className="bg-gradient-to-br from-white to-[#FDF9E3] rounded-xl p-4 shadow-sm border border-gray-100">
       <div className="flex items-center gap-3 mb-4 border-b border-gray-200 pb-4">
         <div
           className={`w-12 h-12 rounded-xl flex items-center justify-center border border-gray-200 bg-white`}

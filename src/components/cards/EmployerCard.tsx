@@ -13,7 +13,7 @@ import employerLogo from "@/assets/employers/compony logo.png";
 
 export function EmployerCard({ job }: { job: TClub }) {
   return (
-    <div className="bg-[#FDF9E3] rounded-xl p-4 shadow-sm border border-gray-100">
+    <div className="bg-gradient-to-br from-white to-[#FDF9E3] rounded-xl p-4 shadow-sm border border-gray-100">
       <div className="border-b border-gray-200 pb-4">
         <div className="flex items-center gap-3 mb-4 ">
           <div
