@@ -16,6 +16,8 @@ export function middleware(request: NextRequest) {
     "/upgrade",
     "/profile",
     "/jobs",
+    "/job/[id]",
+    "/companies",
     "/not-found",
   ];
 

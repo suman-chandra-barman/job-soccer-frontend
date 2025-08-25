@@ -139,7 +139,7 @@ function JobsPage() {
             New Listed
           </h2>
           <div className="grid grid-cols-1 md:grid-cols-4 gap-2 md:gap-4 mb-8">
-            {jobPosts.map((job) => (
+            {jobPosts.slice(0, 4).map((job) => (
               <JobCard key={job.id} job={job} />
             ))}
           </div>
