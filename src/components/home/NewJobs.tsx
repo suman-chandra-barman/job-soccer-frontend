@@ -5,6 +5,7 @@ import user2 from "@/assets/candidates/user2.png";
 import user3 from "@/assets/candidates/user3.png";
 import user4 from "@/assets/candidates/user4.png";
 import { StaticImageData } from "next/image";
+import Link from "next/link";
 
 export interface TNewJobPost {
   id: string;
@@ -70,7 +71,7 @@ export function NewJobs() {
 
       <div className="flex justify-end">
         <Button className="bg-yellow-300 hover:bg-yellow-400 text-black font-semibold px-6 py-3 rounded-lg">
-          See All Jobs
+         <Link href="/job-board">See All Jobs</Link>
         </Button>
       </div>
     </div>

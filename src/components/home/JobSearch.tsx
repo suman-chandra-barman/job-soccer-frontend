@@ -5,15 +5,7 @@ import { useState } from "react";
 import { Search, MapPin } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
 import { useRouter } from "next/navigation";
-import RoleSelect from "../input/SelectRole";
 import SelectJobCategory from "../input/SelectJobCategory";
 
 const popularSearches = [
@@ -22,17 +14,6 @@ const popularSearches = [
   "Midfielder",
   "Forward",
   "Goalkeeper",
-];
-
-const locations = [
-  "Paris, France",
-  "Lyon, France",
-  "Marseille, France",
-  "Toulouse, France",
-  "Nice, France",
-  "Nantes, France",
-  "Strasbourg, France",
-  "Montpellier, France",
 ];
 
 export function JobSearch() {
@@ -81,32 +62,16 @@ export function JobSearch() {
             />
           </div>
 
-          {/* Location Select */}
-          <div className="w-full md:w-64 relative">
-            <Select
+          {/* Location */}
+          <div className="relative">
+            <MapPin className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
+            <Input
+              placeholder="Location"
               value={selectedLocation}
-              onValueChange={setSelectedLocation}
-            >
-              <SelectTrigger className="w-full !h-12 bg-white text-gray-500 border-0 shadow-none">
-                <div className="flex items-center gap-2">
-                  <MapPin className="w-4 h-4 text-gray-400" />
-                  <SelectValue placeholder="Select location" />
-                </div>
-              </SelectTrigger>
-              <SelectContent>
-                {locations.map((location) => (
-                  <SelectItem
-                    key={location}
-                    value={location
-                      .toLowerCase()
-                      .replace(", ", "-")
-                      .replace(" ", "-")}
-                  >
-                    {location}
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
+              onChange={(e) => setSelectedLocation(e.target.value)}
+              onKeyPress={handleKeyPress}
+              className="pl-12 h-12 border-none shadow-none bg-transparent text-gray-700 placeholder:text-gray-400 focus-visible:ring-0"
+            />
           </div>
 
           {/* Search Button */}
