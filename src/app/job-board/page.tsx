@@ -1,160 +1,124 @@
 import { JobSearch } from "@/components/home/JobSearch";
 import { JobFilters } from "@/components/jobs/JobFilters";
 import React from "react";
-import { EmployerCard } from "@/components/cards/EmployerCard";
+import user1 from "@/assets/candidates/user1.png";
+import user2 from "@/assets/candidates/user2.png";
+import user3 from "@/assets/candidates/user3.png";
+import user4 from "@/assets/candidates/user4.png";
+import { TNewJobPost } from "@/components/home/NewJobs";
+import { JobCard } from "@/components/cards/JobCard";
 
-export interface TClub {
-  id: number;
-  name: string;
-  location: string;
-  logo: string;
-  verified: boolean;
-  clubType: TClubType;
-  activeJobPosts: number;
-  followers: number;
-  following: number;
-}
-
-type TClubType = "Amateur Club" | "Professional Club" | "Youth Academy" | "Semi-Professional";
-
-  const clubsData: TClub[] = [
+function JobBoardPage() {
+  const jobPosts: TNewJobPost[] = [
     {
-      id: 1,
-      name: "Barcelona FC",
-      location: "Barcelona, Spain",
-      logo: "🔵",
-      verified: true,
-      clubType: "Professional Club",
-      activeJobPosts: 8,
-      followers: 125430,
-      following: 45
+      id: "1",
+      company: "Trappes FC",
+      location: "Trappes, France",
+      applicantCount: 120,
+      salary: "$30K",
+      postedTime: "2 days ago",
+      applicantImages: [user1, user2, user3, user4],
     },
     {
-      id: 2,
-      name: "Manchester United",
-      location: "Manchester, England",
-      logo: "🔴",
-      verified: true,
-      clubType: "Professional Club",
-      activeJobPosts: 12,
-      followers: 98750,
-      following: 67
+      id: "2",
+      company: "Bordeaux AC",
+      location: "Trappes, France",
+      applicantCount: 120,
+      salary: "$30K",
+      postedTime: "2 days ago",
+      applicantImages: [user1, user2, user3, user4],
     },
     {
-      id: 3,
-      name: "Bayern Munich",
-      location: "Munich, Germany",
-      logo: "⚪",
-      verified: true,
-      clubType: "Professional Club",
-      activeJobPosts: 7,
-      followers: 87643,
-      following: 52
+      id: "3",
+      company: "Greece FC",
+      location: "Trappes, France",
+      applicantCount: 120,
+      salary: "$30K",
+      postedTime: "2 days ago",
+      applicantImages: [user1, user2, user3, user4],
     },
     {
-      id: 4,
-      name: "Ajax Amsterdam",
-      location: "Amsterdam, Netherlands",
-      logo: "🟡",
-      verified: true,
-      clubType: "Professional Club",
-      activeJobPosts: 5,
-      followers: 54320,
-      following: 89
+      id: "4",
+      company: "Tunis FC",
+      location: "Trappes, France",
+      applicantCount: 120,
+      salary: "$30K",
+      postedTime: "2 days ago",
+      applicantImages: [user1, user2, user3, user4],
     },
     {
-      id: 5,
-      name: "Juventus FC",
-      location: "Turin, Italy",
-      logo: "⚫",
-      verified: true,
-      clubType: "Professional Club",
-      activeJobPosts: 9,
-      followers: 76543,
-      following: 38
+      id: "5",
+      company: "Trappes FC",
+      location: "Trappes, France",
+      applicantCount: 120,
+      salary: "$30K",
+      postedTime: "2 days ago",
+      applicantImages: [user1, user2, user3, user4],
     },
     {
-      id: 6,
-      name: "Paris Saint-Germain",
-      location: "Paris, France",
-      logo: "🔵",
-      verified: true,
-      clubType: "Professional Club",
-      activeJobPosts: 6,
-      followers: 92184,
-      following: 71
+      id: "6",
+      company: "Bordeaux AC",
+      location: "Trappes, France",
+      applicantCount: 120,
+      salary: "$30K",
+      postedTime: "2 days ago",
+      applicantImages: [user1, user2, user3, user4],
     },
     {
-      id: 7,
-      name: "Chelsea FC",
-      location: "London, England",
-      logo: "🔵",
-      verified: true,
-      clubType: "Professional Club",
-      activeJobPosts: 11,
-      followers: 68291,
-      following: 43
+      id: "7",
+      company: "Greece FC",
+      location: "Trappes, France",
+      applicantCount: 120,
+      salary: "$30K",
+      postedTime: "2 days ago",
+      applicantImages: [user1, user2, user3, user4],
     },
     {
-      id: 8,
-      name: "AC Milan",
-      location: "Milan, Italy",
-      logo: "🔴",
-      verified: true,
-      clubType: "Professional Club",
-      activeJobPosts: 4,
-      followers: 59873,
-      following: 56
+      id: "8",
+      company: "Tunis FC",
+      location: "Trappes, France",
+      applicantCount: 120,
+      salary: "$30K",
+      postedTime: "2 days ago",
+      applicantImages: [user1, user2, user3, user4],
     },
     {
-      id: 9,
-      name: "Borussia Dortmund",
-      location: "Dortmund, Germany",
-      logo: "🟡",
-      verified: true,
-      clubType: "Professional Club",
-      activeJobPosts: 8,
-      followers: 45672,
-      following: 94
+      id: "9",
+      company: "Trappes FC",
+      location: "Trappes, France",
+      applicantCount: 120,
+      salary: "$30K",
+      postedTime: "2 days ago",
+      applicantImages: [user1, user2, user3, user4],
     },
     {
-      id: 10,
-      name: "Liverpool FC",
-      location: "Liverpool, England",
-      logo: "🔴",
-      verified: true,
-      clubType: "Professional Club",
-      activeJobPosts: 7,
-      followers: 82945,
-      following: 29
+      id: "10",
+      company: "Bordeaux AC",
+      location: "Trappes, France",
+      applicantCount: 120,
+      salary: "$30K",
+      postedTime: "2 days ago",
+      applicantImages: [user1, user2, user3, user4],
     },
     {
-      id: 11,
-      name: "Real Madrid CF",
-      location: "Madrid, Spain",
-      logo: "⚪",
-      verified: true,
-      clubType: "Professional Club",
-      activeJobPosts: 10,
-      followers: 134578,
-      following: 61
+      id: "11",
+      company: "Greece FC",
+      location: "Trappes, France",
+      applicantCount: 120,
+      salary: "$30K",
+      postedTime: "2 days ago",
+      applicantImages: [user1, user2, user3, user4],
     },
     {
-      id: 12,
-      name: "Atlético Madrid",
-      location: "Madrid, Spain",
-      logo: "🔴",
-      verified: true,
-      clubType: "Professional Club",
-      activeJobPosts: 6,
-      followers: 41826,
-      following: 78
-    }
+      id: "12",
+      company: "Tunis FC",
+      location: "Trappes, France",
+      applicantCount: 120,
+      salary: "$30K",
+      postedTime: "2 days ago",
+      applicantImages: [user1, user2, user3, user4],
+    },
   ];
-
-
-function CompaniesPage() {
-
 
   return (
     <div>
@@ -169,14 +133,14 @@ function CompaniesPage() {
       </div>
       {/* Jobs */}
       <div className="container mx-auto px-4 md:px-0">
-        {/* New Listed Jobs */}
+        {/* New Listing Jobs */}
         <div>
           <h2 className="text-3xl md:text-4xl text-red-400 font-semibold my-10">
-            New Listed
+            New Listing
           </h2>
           <div className="grid grid-cols-1 md:grid-cols-4 gap-2 md:gap-4 mb-8">
-            {clubsData.slice(0, 4).map((job) => (
-              <EmployerCard key={job.id} job={job} />
+            {jobPosts.slice(0, 4).map((job) => (
+              <JobCard key={job.id} job={job} />
             ))}
           </div>
         </div>
@@ -184,8 +148,8 @@ function CompaniesPage() {
         <div>
           <h2 className="text-3xl md:text-4xl font-semibold my-10">All Jobs</h2>
           <div className="grid grid-cols-1 md:grid-cols-4 gap-2 md:gap-4 mb-8">
-            {clubsData.map((job) => (
-              <EmployerCard key={job.id} job={job} />
+            {jobPosts.map((job) => (
+              <JobCard key={job.id} job={job} />
             ))}
           </div>
         </div>
@@ -194,4 +158,4 @@ function CompaniesPage() {
   );
 }
 
-export default CompaniesPage;
+export default JobBoardPage;

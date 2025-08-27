@@ -7,6 +7,7 @@ export function middleware(request: NextRequest) {
     "/candidates",
     "/employers",
     "/job-board",
+    "/job-board/category",
     "/my-network",
     "/signin",
     "/signup",
@@ -16,16 +17,30 @@ export function middleware(request: NextRequest) {
     "/upgrade",
     "/profile",
     "/jobs",
-    "/job/[id]",
     "/companies",
     "/not-found",
   ];
 
-  if (
-    !validRoutes.some(
-      (route) => pathname === route || pathname.startsWith(`${route}/`)
-    )
-  ) {
+  // Dynamic route patterns
+  const dynamicPatterns = [
+    /^\/job\/(.+)$/,
+    /^\/job-board\/category\/(.+)$/,
+    /^\/profile\/(.+)$/,
+  ];
+
+  const isValid =
+    validRoutes.some((route) => {
+      // Allow exact, with trailing slash, or with query params
+      return (
+        pathname === route ||
+        pathname === `${route}/` ||
+        pathname.startsWith(`${route}/`) ||
+        pathname.startsWith(`${route}?`)
+      );
+    }) ||
+    dynamicPatterns.some((pattern) => pattern.test(pathname));
+
+  if (!isValid) {
     return NextResponse.redirect(new URL("/not-found", request.url));
   }
 

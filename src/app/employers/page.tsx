@@ -3,7 +3,7 @@ import { JobFilters } from "@/components/jobs/JobFilters";
 import { Button } from "@/components/ui/button";
 import React from "react";
 import FindYourDreamTeam from "@/components/employer/FindYourDreamTeam";
-import { TClub } from "../job-board/page";
+import { TClub } from "../all-employer/page";
 import { EmployerCard } from "@/components/cards/EmployerCard";
 
 const clubsData: TClub[] = [

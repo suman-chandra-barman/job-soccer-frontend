@@ -1,5 +1,5 @@
-import { JobSearch } from "@/components/home/JobSearch";
-import { JobFilters } from "@/components/jobs/JobFilters";
+"use client";
+
 import React from "react";
 import user1 from "@/assets/candidates/user1.png";
 import user2 from "@/assets/candidates/user2.png";
@@ -7,8 +7,24 @@ import user3 from "@/assets/candidates/user3.png";
 import user4 from "@/assets/candidates/user4.png";
 import { TNewJobPost } from "@/components/home/NewJobs";
 import { JobCard } from "@/components/cards/JobCard";
+import { useSearchParams } from "next/navigation";
+import { JobSearch } from "@/components/home/JobSearch";
+import { JobFilters } from "@/components/jobs/JobFilters";
 
-function JobsPage() {
+function JobBoardCategoryPage() {
+  const searchParams = useSearchParams();
+  const category = searchParams.get("category");
+
+  const formatCategory = (category: string | null) => {
+    if (!category) return "";
+    return category
+      .split("-")
+      .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
+      .join(" ");
+  };
+
+  const formattedCategory = formatCategory(category);
+
   const jobPosts: TNewJobPost[] = [
     {
       id: "1",
@@ -133,29 +149,17 @@ function JobsPage() {
       </div>
       {/* Jobs */}
       <div className="container mx-auto px-4 md:px-0">
-        {/* New Listed Jobs */}
-        <div>
-          <h2 className="text-3xl md:text-4xl text-red-400 font-semibold my-10">
-            New Listed
-          </h2>
-          <div className="grid grid-cols-1 md:grid-cols-4 gap-2 md:gap-4 mb-8">
-            {jobPosts.slice(0, 4).map((job) => (
-              <JobCard key={job.id} job={job} />
-            ))}
-          </div>
-        </div>
-        {/* All Jobs */}
-        <div>
-          <h2 className="text-3xl md:text-4xl font-semibold my-10">All Jobs</h2>
-          <div className="grid grid-cols-1 md:grid-cols-4 gap-2 md:gap-4 mb-8">
-            {jobPosts.map((job) => (
-              <JobCard key={job.id} job={job} />
-            ))}
-          </div>
+        <h2 className="text-3xl md:text-4xl font-semibold my-10">
+          {category ? `${formattedCategory}` : "All Jobs"}
+        </h2>
+        <div className="grid grid-cols-1 md:grid-cols-4 gap-2 md:gap-4 mb-8">
+          {jobPosts.map((job) => (
+            <JobCard key={job.id} job={job} />
+          ))}
         </div>
       </div>
     </div>
   );
 }
 
-export default JobsPage;
+export default JobBoardCategoryPage;

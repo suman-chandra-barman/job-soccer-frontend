@@ -58,8 +58,8 @@ export function JobCategories() {
             Your complete hub for soccer talents, jobs and connections
           </h2>
           <Link
-            href="/jobs"
-            className="text-gray-600 hover:text-gray-900 font-medium transition-colors"
+            href="/job-board"
+            className="text-gray-600 hover:text-[#504A20] font-medium transition-colors hover:underline"
           >
             See All Jobs
           </Link>
@@ -72,7 +72,7 @@ export function JobCategories() {
             return (
               <Link
                 key={category.id}
-                href={`/jobs?category=${category.id}`}
+                href={`/job-board/category?category=${category.id}`}
                 className="group bg-white rounded-full p-3 border border-gray-200 hover:bg-[#504A20] hover:text-white transition-all duration-200 cursor-pointer"
               >
                 <div className="flex items-center justify-between">

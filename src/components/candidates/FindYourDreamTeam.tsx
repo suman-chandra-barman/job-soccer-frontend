@@ -2,7 +2,7 @@ import { Check } from "lucide-react";
 import React from "react";
 import { EmployerCard } from "../cards/EmployerCard";
 import { Button } from "../ui/button";
-import { TClub } from "@/app/job-board/page";
+import { TClub } from "@/app/all-employer/page";
 
 const FindYourDreamTeam = () => {
   const opportunities: string[] = [

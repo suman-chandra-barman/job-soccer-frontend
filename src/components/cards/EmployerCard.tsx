@@ -8,7 +8,7 @@ import {
 } from "lucide-react";
 import Image from "next/image";
 import { Button } from "../ui/button";
-import { TClub } from "@/app/job-board/page";
+import { TClub } from "@/app/all-employer/page";
 import employerLogo from "@/assets/employers/compony logo.png";
 
 export function EmployerCard({ job }: { job: TClub }) {
