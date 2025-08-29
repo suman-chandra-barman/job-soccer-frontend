@@ -75,7 +75,7 @@ function EmployersPage() {
           <div className="flex items-center justify-between py-4">
             <span className="text-2xl font-bold">Consulting Company</span>
             <Button variant="link" className="text-black">
-              <Link href="/job-board">See All Jobs</Link>
+              <Link href="/job-board">See All</Link>
             </Button>
           </div>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6">
@@ -89,7 +89,7 @@ function EmployersPage() {
           <div className="flex items-center justify-between py-4">
             <span className="text-2xl font-bold">Club</span>
             <Button variant="link" className="text-black">
-              All Jobs
+              See All
             </Button>
           </div>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6">
@@ -104,7 +104,7 @@ function EmployersPage() {
           <div className="flex items-center justify-between py-4">
             <span className="text-2xl font-bold">Agent</span>
             <Button variant="link" className="text-black">
-              All Jobs
+              See All
             </Button>
           </div>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6">
@@ -119,7 +119,7 @@ function EmployersPage() {
           <div className="flex items-center justify-between py-4">
             <span className="text-2xl font-bold">College & University</span>
             <Button variant="link" className="text-black">
-              All Jobs
+              See All
             </Button>
           </div>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6">

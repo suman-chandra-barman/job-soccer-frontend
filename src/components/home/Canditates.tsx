@@ -72,7 +72,7 @@ export function Candidates() {
               asChild
               className="bg-yellow-300 hover:bg-yellow-400 text-black font-medium px-6"
             >
-              <Link href="/candidates">See All Candidates</Link>
+              <Link href="/candidates">See All</Link>
             </Button>
           </div>
 

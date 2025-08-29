@@ -138,7 +138,7 @@ function JobBoardPage() {
           <h2 className="text-3xl md:text-4xl text-red-400 font-semibold my-10">
             New Listing
           </h2>
-          <div className="grid grid-cols-1 md:grid-cols-4 gap-2 md:gap-4 mb-8">
+          <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-2 md:gap-4 mb-8">
             {jobPosts.slice(0, 4).map((job) => (
               <JobCard key={job.id} job={job} />
             ))}
@@ -147,7 +147,7 @@ function JobBoardPage() {
         {/* All Jobs */}
         <div>
           <h2 className="text-3xl md:text-4xl font-semibold my-10">All Jobs</h2>
-          <div className="grid grid-cols-1 md:grid-cols-4 gap-2 md:gap-4 mb-8">
+          <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-2 md:gap-4 mb-8">
             {jobPosts.map((job) => (
               <JobCard key={job.id} job={job} />
             ))}

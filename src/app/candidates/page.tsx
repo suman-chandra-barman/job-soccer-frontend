@@ -64,7 +64,7 @@ function CandidatesPage() {
           <div className="flex items-center justify-between py-4">
             <span className="text-2xl font-bold">Player</span>
             <Button variant="link" className="text-black">
-             <Link href="/job-board"> All Jobs</Link>
+             <Link href="/job-board"> See All</Link>
             </Button>
           </div>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6">
@@ -78,7 +78,7 @@ function CandidatesPage() {
           <div className="flex items-center justify-between py-4">
             <span className="text-2xl font-bold">Staff on The Field</span>
             <Button variant="link" className="text-black">
-             <Link href="/job-board"> All Jobs</Link>
+             <Link href="/job-board"> See All</Link>
             </Button>
           </div>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6">
@@ -93,7 +93,7 @@ function CandidatesPage() {
           <div className="flex items-center justify-between py-4">
             <span className="text-2xl font-bold">Office Staff</span>
             <Button variant="link" className="text-black">
-             <Link href="/job-board"> All Jobs</Link>
+             <Link href="/job-board"> See All</Link>
             </Button>
           </div>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6">

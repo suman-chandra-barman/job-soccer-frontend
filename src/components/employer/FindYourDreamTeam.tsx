@@ -1,10 +1,11 @@
-import { Check, Link } from "lucide-react";
+import { Check } from "lucide-react";
 import React from "react";
 import { Button } from "../ui/button";
 import { TCandidate } from "../home/Canditates";
 import user1 from "@/assets/candidates/user1.png";
 import user2 from "@/assets/candidates/user2.png";
 import CandidateCard from "../cards/CandidateCard";
+import Link from "next/link";
 
 const FindYourDreamTeam = () => {
   const opportunities: string[] = [
@@ -60,9 +61,9 @@ const FindYourDreamTeam = () => {
             your vision
           </p>
         </div>
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-2 lg:gap-12 items-start">
+        <div className="lg:flex gap-2 lg:gap-12 items-start">
           {/* Left Column - Opportunities */}
-          <div className={`space-y-6 py-8 `}>
+          <div className={`space-y-6 py-8 lg:w-2/5`}>
             <h2 className="text-3xl md:text-4xl font-bold text-[#362F05] leading-tight">
               Find the Right Opportunity for You
             </h2>
@@ -79,7 +80,7 @@ const FindYourDreamTeam = () => {
           </div>
 
           {/* Right Column - Jobs */}
-          <div className="bg-[#F7F6F2] rounded-3xl p-2 md:p-4 w-full">
+          <div className="bg-[#F7F6F2] rounded-3xl p-2 md:p-6 lg:w-3/5 w-full">
             <div className="flex items-center justify-between mb-8">
               <h2 className="text-3xl md:4xl font-bold text-gray-900">
                 Candidate
@@ -94,8 +95,8 @@ const FindYourDreamTeam = () => {
 
             <div className="flex justify-end">
               <Button className="bg-yellow-300 hover:bg-yellow-400 text-black font-semibold px-6 py-3 rounded-lg">
-                <Link href="/job-board">See All Jobs</Link>
-              </Button>
+                <Link href="/employers">See All</Link>
+              </Button>                      
             </div>
           </div>
         </div>

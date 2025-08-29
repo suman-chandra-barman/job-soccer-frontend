@@ -23,6 +23,12 @@ const jobCategories = [
     icon: Users,
   },
   {
+    id: "high-school-player",
+    name: "High School Player",
+    jobCount: 80,
+    icon: Users,
+  },
+  {
     id: "college-player",
     name: "College Player",
     jobCount: 80,
@@ -39,12 +45,6 @@ const jobCategories = [
     name: "Office Staff",
     jobCount: 80,
     icon: Building,
-  },
-  {
-    id: "high-school-player",
-    name: "High School Player",
-    jobCount: 80,
-    icon: Users,
   },
 ];
 
@@ -72,7 +72,7 @@ export function JobCategories() {
             return (
               <Link
                 key={category.id}
-                href={`/job-board/category?category=${category.id}`}
+                href={`/job-board?category=${category.id}`}
                 className="group bg-white rounded-full p-3 border border-gray-200 hover:bg-[#504A20] hover:text-white transition-all duration-200 cursor-pointer"
               >
                 <div className="flex items-center justify-between">
