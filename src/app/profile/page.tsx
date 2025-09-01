@@ -235,6 +235,190 @@ export default function MyProfilePage() {
           </Button>
         </div>
       </div>
+      <div className="py-8">
+        <div>
+          {/* Personal Contact Section */}
+          <div className="bg-white rounded-lg border border-gray-200 p-6 mb-6">
+            <div className="flex items-center justify-between mb-6">
+              <h2 className="text-xl font-semibold text-gray-900">
+                Personal Contact
+              </h2>
+              <div className="flex items-center gap-3">
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  className="text-gray-600 hover:text-gray-900"
+                >
+                  <Edit className="w-4 h-4 mr-1" />
+                  Edit
+                </Button>
+              </div>
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-6">
+              <div>
+                <label className="text-sm text-gray-500 mb-1 block">
+                  Position
+                </label>
+                <p className="text-gray-900 font-medium">Striker</p>
+              </div>
+              <div>
+                <label className="text-sm text-gray-500 mb-1 block">
+                  Phone number
+                </label>
+                <p className="text-gray-900 font-medium">+880 1636-828200</p>
+              </div>
+              <div>
+                <label className="text-sm text-gray-500 mb-1 block">
+                  Date of birth
+                </label>
+                <p className="text-gray-900 font-medium">
+                  12 May, 1992 (age-32)
+                </p>
+              </div>
+              <div>
+                <label className="text-sm text-gray-500 mb-1 block">
+                  Address
+                </label>
+                <p className="text-gray-900 font-medium">
+                  33 Pendergast Aven e, GA, 30736
+                </p>
+              </div>
+              <div>
+                <label className="text-sm text-gray-500 mb-1 block">
+                  Place of birth
+                </label>
+                <p className="text-gray-900 font-medium">Uganda</p>
+              </div>
+              <div>
+                <label className="text-sm text-gray-500 mb-1 block">
+                  Social Media
+                </label>
+                <p className="text-blue-600 font-medium cursor-pointer hover:underline">
+                  Connect your Social Media
+                </p>
+              </div>
+            </div>
+          </div>
+
+          {/* Player Details Section */}
+          <div className="bg-white rounded-lg border border-gray-200 p-6">
+            <div className="flex items-center justify-between mb-6">
+              <div className="flex items-center gap-2">
+                <h2 className="text-xl font-semibold text-gray-900">
+                  Player Details
+                </h2>
+              </div>
+              <Button
+                variant="ghost"
+                size="sm"
+                className="text-gray-600 hover:text-gray-900"
+              >
+                <Edit className="w-4 h-4 mr-1" />
+                Edit
+              </Button>
+            </div>
+
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-x-8 gap-y-6">
+              <div>
+                <label className="text-sm text-gray-500 mb-1 block">
+                  Contract Expires
+                </label>
+                <p className="text-gray-900 font-medium">Contract Expires</p>
+              </div>
+              <div>
+                <label className="text-sm text-gray-500 mb-1 block">
+                  Market Value
+                </label>
+                <p className="text-gray-900 font-medium">$42,0000</p>
+              </div>
+              <div className="sm:col-span-2 lg:col-span-1"></div>
+
+              <div>
+                <label className="text-sm text-gray-500 mb-1 block">
+                  On loan From
+                </label>
+                <p className="text-gray-900 font-medium">On loan From</p>
+              </div>
+              <div>
+                <label className="text-sm text-gray-500 mb-1 block">
+                  Current Club
+                </label>
+                <p className="text-gray-900 font-medium">Real Madrid CF</p>
+              </div>
+              <div className="sm:col-span-2 lg:col-span-1"></div>
+
+              <div>
+                <label className="text-sm text-gray-500 mb-1 block">
+                  Shortlist
+                </label>
+                <p className="text-gray-900 font-medium">42 games</p>
+              </div>
+              <div>
+                <label className="text-sm text-gray-500 mb-1 block">
+                  Agent
+                </label>
+                <p className="text-gray-900 font-medium">Agent</p>
+              </div>
+              <div className="sm:col-span-2 lg:col-span-1"></div>
+
+              <div>
+                <label className="text-sm text-gray-500 mb-1 block">
+                  Agent
+                </label>
+                <p className="text-gray-900 font-medium">Agent</p>
+              </div>
+              <div>
+                <label className="text-sm text-gray-500 mb-1 block">
+                  Height
+                </label>
+                <p className="text-gray-900 font-medium">5&apos;10</p>
+              </div>
+              <div>
+                <label className="text-sm text-gray-500 mb-1 block">Age</label>
+                <p className="text-gray-900 font-medium">36</p>
+              </div>
+
+              <div>
+                <label className="text-sm text-gray-500 mb-1 block">
+                  Position
+                </label>
+                <p className="text-gray-900 font-medium">Striker</p>
+              </div>
+              <div>
+                <label className="text-sm text-gray-500 mb-1 block">
+                  Weight
+                </label>
+                <p className="text-gray-900 font-medium">68kg</p>
+              </div>
+              <div className="sm:col-span-2 lg:col-span-1"></div>
+
+              <div>
+                <label className="text-sm text-gray-500 mb-1 block">
+                  Gender
+                </label>
+                <p className="text-gray-900 font-medium">Male</p>
+              </div>
+              <div className="sm:col-span-2 lg:col-span-1"></div>
+              <div className="sm:col-span-2 lg:col-span-1"></div>
+
+              <div>
+                <label className="text-sm text-gray-500 mb-1 block">
+                  Languages
+                </label>
+                <p className="text-gray-900 font-medium">English, Spanish</p>
+              </div>
+              <div>
+                <label className="text-sm text-gray-500 mb-1 block">
+                  National Team Career
+                </label>
+                <p className="text-gray-900 font-medium">English, Spanish</p>
+              </div>
+              <div className="sm:col-span-2 lg:col-span-1"></div>
+            </div>
+          </div>
+        </div>
+      </div>
 
       {/* Analytics Cards */}
       <div className="mb-8">
