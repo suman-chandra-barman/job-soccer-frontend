@@ -18,6 +18,7 @@ import Image from "next/image";
 import userImg from "@/assets/candidates/user1.png";
 import banner from "@/assets/banner.jpg";
 import AddExperienceModal, {
+  TExperience,
   type FormData as ExperienceFormData,
 } from "@/components/modals/AddExperienceModal";
 import { useState } from "react";
@@ -30,16 +31,7 @@ import AddEducationModal, {
 import UploadResumeModal from "@/components/modals/UploadResumeModal";
 import EditPersonalInformationModal from "@/components/modals/EditPersonalInformationModal";
 import EditPlayerDetailsModal from "@/components/modals/EditPlayerDetailsModal";
-
-export interface Experience {
-  id: string;
-  company: string;
-  position: string;
-  duration: string;
-  location: string;
-  description: string;
-  logo?: string;
-}
+import EditExperienceModal from "@/components/modals/EditExperienceModal";
 
 interface PersonalContact {
   position: string;
@@ -76,24 +68,32 @@ const user = {
   },
 };
 
-const experiences: Experience[] = [
+const experiences: TExperience[] = [
   {
-    id: "1",
-    company: "Nebula City FC",
-    position: "Defence Player",
-    duration: "Mar 2025 - Present",
-    location: "Amsterdam, Hollandia",
+    title: "Forward Striker",
+    employmentType: "Full-time",
+    club: "FC Barcelona",
+    location: "Barcelona, Spain",
+    isCurrentlyWorking: true,
+    startMonth: "August",
+    startYear: "2022",
+    endMonth: undefined, // optional
+    endYear: undefined, // optional
     description:
-      "It's an amazing company with a strong focus on collaboration and design thinking. I'm truly inspired by our team—based work process, where we prioritize research, user and client goals to build better, more",
+      "Playing as the main forward, responsible for scoring and assisting goals during league and international matches.",
   },
   {
-    id: "2",
-    company: "Nebula City FC",
-    position: "Defence Player",
-    duration: "Mar 2025 - Present",
-    location: "Amsterdam, Hollandia",
+    title: "Midfielder",
+    employmentType: "Part-time",
+    club: "Manchester United",
+    location: "Manchester, UK",
+    isCurrentlyWorking: false,
+    startMonth: "January",
+    startYear: "2020",
+    endMonth: "June",
+    endYear: "2021",
     description:
-      "It's an amazing company with a strong focus on collaboration and design thinking. I'm truly inspired by our team—based work process, where we prioritize research, user and client goals to build better, more",
+      "Worked as a central midfielder, managing ball distribution and supporting both defense and attack during matches.",
   },
 ];
 const certificates = [
@@ -173,6 +173,8 @@ export default function MyProfilePage() {
   ] = useState(false);
   const [isEditPlayerDetailsModalOpen, setIsPlayerDetailsModalOpen] =
     useState(false);
+  const [isEditExperienceModalOpen, setIsEditExperienceModalOpen] =
+    useState(false);
 
   const [personalContact, setPersonalContact] = useState<PersonalContact>({
     position: "Striker",
@@ -198,6 +200,8 @@ export default function MyProfilePage() {
     languages: "English, Spanish",
     nationalTeamCareer: "English, Spanish",
   });
+
+  const [editExperienceData, setEditExperienceData] = useState(null);
 
   return (
     <div className="px-4">
@@ -510,10 +514,18 @@ export default function MyProfilePage() {
                   <div className="flex items-start justify-between">
                     <div>
                       <h3 className="font-semibold text-gray-900">
-                        {exp.company}
+                        {exp.club}
                       </h3>
-                      <p className="text-sm text-gray-600">{exp.position}</p>
-                      <p className="text-sm text-gray-500">{exp.duration}</p>
+                      <p className="text-sm text-gray-600">{exp.title}</p>
+                      <p className="text-sm text-gray-500">
+                        {exp.startMonth} {exp.startYear} -{" "}
+                        {`${
+                          exp.isCurrentlyWorking && !exp.endMonth
+                            ? "Present"
+                            : `${exp.endMonth}
+                              ${exp.endYear}`
+                        }`}
+                      </p>
                       <div className="flex items-center mt-1">
                         <MapPin className="h-4 w-4 text-gray-400 mr-1" />
                         <span className="text-sm text-gray-500">
@@ -521,7 +533,14 @@ export default function MyProfilePage() {
                         </span>
                       </div>
                     </div>
-                    <Button variant="ghost" size="sm">
+                    <Button
+                      variant="ghost"
+                      size="sm"
+                      onClick={() => {
+                        setEditExperienceData(exp);
+                        setIsEditExperienceModalOpen(true);
+                      }}
+                    >
                       <Edit className="h-4 w-4" />
                     </Button>
                   </div>
@@ -534,6 +553,7 @@ export default function MyProfilePage() {
             ))}
           </CardContent>
         </Card>
+
         {/* Certificates Section */}
         <Card className="mb-6">
           <CardHeader>
@@ -677,38 +697,40 @@ export default function MyProfilePage() {
         </Card>
       </div>
 
-      {/* Add Experience Modal */}
+      {/* Modals */}
       <AddExperienceModal
         isOpen={isAddExperienceModalOpen}
         onClose={() => setIsAddExperienceModalOpen(false)}
       />
-      {/* Add Licenses or Certifications Modal */}
       <AddLicensesOrCertificationsModal
         isOpen={isAddLicensesOrCertificationsModalOpen}
         onClose={() => setIsAddLicensesOrCertificationsModalOpen(false)}
       />
-      {/* Add Education Modal */}
       <AddEducationModal
         isOpen={isAddEducationModalOpen}
         onClose={() => setIsAddEducationModalOpen(false)}
       />
-      {/* Upload Resume Modal */}
       <UploadResumeModal
         isOpen={isUploadModalOpen}
         onClose={() => setIsUploadModalOpen(false)}
       />
-      {/* Edit Personal Information  */}
       <EditPersonalInformationModal
         isOpen={isEditPersonalInformationModalOpen}
         onClose={() => setIsEditPersonalInformationModalOpen(false)}
         initialData={personalContact}
       />
-      {/* Edit Player Details */}
       <EditPlayerDetailsModal
         isOpen={isEditPlayerDetailsModalOpen}
         onClose={() => setIsPlayerDetailsModalOpen(false)}
         initialData={playerDetails}
       />
+      {editExperienceData && (
+        <EditExperienceModal
+          isOpen={isEditExperienceModalOpen}
+          onClose={() => setIsEditExperienceModalOpen(false)}
+          experienceData={editExperienceData}
+        />
+      )}
     </div>
   );
 }

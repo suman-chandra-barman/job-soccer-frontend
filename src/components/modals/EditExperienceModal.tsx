@@ -3,6 +3,7 @@
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
+import { useEffect } from "react";
 import {
   Dialog,
   DialogContent,
@@ -43,17 +44,33 @@ const formSchema = z.object({
   description: z.string().min(1, "Description is required"),
 });
 
-export type TExperience = z.infer<typeof formSchema>
+export type FormData = z.infer<typeof formSchema>;
 
-interface AddExperienceModalProps {
-  isOpen: boolean;
-  onClose: () => void;
+export interface ExperienceData {
+  id?: string;
+  title: string;
+  employmentType: string;
+  club: string;
+  location: string;
+  isCurrentlyWorking: boolean;
+  startMonth: string;
+  startYear: string;
+  endMonth?: string;
+  endYear?: string;
+  description: string;
 }
 
-export default function AddExperienceModal({
+interface EditExperienceModalProps {
+  isOpen: boolean;
+  onClose: () => void;
+  experienceData: ExperienceData | null;
+}
+
+export default function EditExperienceModal({
   isOpen,
   onClose,
-}: AddExperienceModalProps) {
+  experienceData,
+}: EditExperienceModalProps) {
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -72,8 +89,26 @@ export default function AddExperienceModal({
 
   const isCurrentlyWorking = form.watch("isCurrentlyWorking");
 
-  const onSubmit = (data: TExperience) => {
-    console.log("Experience data", data);
+  // Pre-populate form when experienceData changes
+  useEffect(() => {
+    if (experienceData && isOpen) {
+      form.reset({
+        title: experienceData.title,
+        employmentType: experienceData.employmentType,
+        club: experienceData.club,
+        location: experienceData.location,
+        isCurrentlyWorking: experienceData.isCurrentlyWorking,
+        startMonth: experienceData.startMonth,
+        startYear: experienceData.startYear,
+        endMonth: experienceData.endMonth || "",
+        endYear: experienceData.endYear || "",
+        description: experienceData.description,
+      });
+    }
+  }, [experienceData, isOpen, form]);
+
+  const onSubmit = (data: FormData) => {
+    console.log("Updated experience data", data);
     form.reset();
     onClose();
   };
@@ -89,7 +124,7 @@ export default function AddExperienceModal({
         <DialogHeader>
           <div className="flex items-center justify-between">
             <DialogTitle className="text-xl font-semibold">
-              Add Experience
+              Edit Experience
             </DialogTitle>
           </div>
         </DialogHeader>
@@ -126,18 +161,15 @@ export default function AddExperienceModal({
                   <FormLabel className="text-sm font-medium text-gray-700">
                     Employment Type
                   </FormLabel>
-                  <Select
-                    onValueChange={field.onChange}
-                    defaultValue={field.value}
-                  >
+                  <Select onValueChange={field.onChange} value={field.value}>
                     <FormControl className="w-full">
                       <SelectTrigger className="mt-1">
                         <SelectValue placeholder="Please select" />
                       </SelectTrigger>
                     </FormControl>
                     <SelectContent>
-                      <SelectItem value="full-time">Full Time</SelectItem>
-                      <SelectItem value="part-time">Part Time</SelectItem>
+                      <SelectItem value="Full-time">Full Time</SelectItem>
+                      <SelectItem value="Part-time">Part Time</SelectItem>
                     </SelectContent>
                   </Select>
                   <FormMessage />
@@ -221,7 +253,7 @@ export default function AddExperienceModal({
                     <FormItem>
                       <Select
                         onValueChange={field.onChange}
-                        defaultValue={field.value}
+                        value={field.value}
                       >
                         <FormControl className="w-full">
                           <SelectTrigger>
@@ -229,11 +261,8 @@ export default function AddExperienceModal({
                           </SelectTrigger>
                         </FormControl>
                         <SelectContent>
-                          {months.map((month, index) => (
-                            <SelectItem
-                              key={month}
-                              value={(index + 1).toString()}
-                            >
+                          {months.map((month) => (
+                            <SelectItem key={month} value={month}>
                               {month}
                             </SelectItem>
                           ))}
@@ -250,7 +279,7 @@ export default function AddExperienceModal({
                     <FormItem>
                       <Select
                         onValueChange={field.onChange}
-                        defaultValue={field.value}
+                        value={field.value}
                       >
                         <FormControl className="w-full">
                           <SelectTrigger>
@@ -286,7 +315,7 @@ export default function AddExperienceModal({
                       <FormItem>
                         <Select
                           onValueChange={field.onChange}
-                          defaultValue={field.value}
+                          value={field.value || ""}
                         >
                           <FormControl className="w-full">
                             <SelectTrigger>
@@ -297,7 +326,7 @@ export default function AddExperienceModal({
                             {months.map((month, index) => (
                               <SelectItem
                                 key={month}
-                                value={(index + 1).toString()}
+                                value={month}
                               >
                                 {month}
                               </SelectItem>
@@ -315,7 +344,7 @@ export default function AddExperienceModal({
                       <FormItem>
                         <Select
                           onValueChange={field.onChange}
-                          defaultValue={field.value}
+                          value={field.value || ""}
                         >
                           <FormControl className="w-full">
                             <SelectTrigger>
@@ -368,7 +397,7 @@ export default function AddExperienceModal({
                 type="submit"
                 className="bg-black hover:bg-gray-800 text-white"
               >
-                Save
+                Update
               </Button>
             </div>
           </form>
