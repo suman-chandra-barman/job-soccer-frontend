@@ -45,7 +45,6 @@ export type FormData = z.infer<typeof formSchema>;
 interface AddExperienceModalProps {
   isOpen: boolean;
   onClose: () => void;
-  onSave: (data: FormData) => void;
 }
 
 const months = [
@@ -70,7 +69,6 @@ const years = Array.from({ length: 30 }, (_, i) =>
 export default function AddExperienceOrCertificationsModal({
   isOpen,
   onClose,
-  onSave,
 }: AddExperienceModalProps) {
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -88,7 +86,7 @@ export default function AddExperienceOrCertificationsModal({
   });
 
   const onSubmit = (data: FormData) => {
-    onSave(data);
+    console.log("Educaiton data", data);
     form.reset();
     onClose();
   };

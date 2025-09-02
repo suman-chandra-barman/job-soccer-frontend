@@ -34,14 +34,14 @@ export type PersonalInformationFormData = z.infer<typeof formSchema>;
 interface PersonalInformationModalProps {
   isOpen: boolean;
   onClose: () => void;
-  onSave: (data: PersonalInformationFormData) => void;
+  // onSave: (data: PersonalInformationFormData) => void;
   initialData: PersonalInformationFormData;
 }
 
 export default function EditPersonalInformationModal({
   isOpen,
   onClose,
-  onSave,
+  // onSave,
   initialData,
 }: PersonalInformationModalProps) {
   const form = useForm<PersonalInformationFormData>({
@@ -50,13 +50,13 @@ export default function EditPersonalInformationModal({
   });
 
   const onSubmit = (data: PersonalInformationFormData) => {
-    onSave(data);
+    console.log("Personal information data", data)
     onClose();
   };
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent className="sm:max-w-[500px]">
+      <DialogContent className="sm:max-w-[500px] md:w-[600px]">
         <DialogHeader>
           <DialogTitle>Update Personal Information</DialogTitle>
         </DialogHeader>
@@ -95,7 +95,7 @@ export default function EditPersonalInformationModal({
                 <FormItem>
                   <FormLabel>Date of birth</FormLabel>
                   <FormControl>
-                    <Input {...field} />
+                    <Input type="date" {...field} className="flex-col" />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -140,11 +140,16 @@ export default function EditPersonalInformationModal({
                 </FormItem>
               )}
             />
+
+            {/* Action button */}
             <div className="flex justify-end gap-2 pt-2">
               <Button type="button" variant="outline" onClick={onClose}>
                 Cancel
               </Button>
-              <Button type="submit" className="bg-black text-white">
+              <Button
+                type="submit"
+                className="bg-black hover:bg-gray-800 text-white"
+              >
                 Save
               </Button>
             </div>

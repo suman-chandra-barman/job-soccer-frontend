@@ -28,6 +28,8 @@ import AddEducationModal, {
   FormData as EducationFormData,
 } from "@/components/modals/AddEducationModal";
 import UploadResumeModal from "@/components/modals/UploadResumeModal";
+import EditPersonalInformationModal from "@/components/modals/EditPersonalInformationModal";
+import EditPlayerDetailsModal from "@/components/modals/EditPlayerDetailsModal";
 
 export interface Experience {
   id: string;
@@ -37,6 +39,31 @@ export interface Experience {
   location: string;
   description: string;
   logo?: string;
+}
+
+interface PersonalContact {
+  position: string;
+  phone: string;
+  dob: string;
+  address: string;
+  placeOfBirth: string;
+  socialMedia: string;
+}
+
+interface PlayerDetails {
+  contractExpires: string;
+  marketValue: string;
+  onLoanFrom: string;
+  currentClub: string;
+  shortlist: string;
+  agent: string;
+  height: string;
+  age: string;
+  weight: string;
+  position: string;
+  gender: string;
+  languages: string;
+  nationalTeamCareer: string;
 }
 
 const user = {
@@ -140,24 +167,37 @@ export default function MyProfilePage() {
 
   const [isAddEducationModalOpen, setIsAddEducationModalOpen] = useState(false);
   const [isUploadModalOpen, setIsUploadModalOpen] = useState(false);
+  const [
+    isEditPersonalInformationModalOpen,
+    setIsEditPersonalInformationModalOpen,
+  ] = useState(false);
+  const [isEditPlayerDetailsModalOpen, setIsPlayerDetailsModalOpen] =
+    useState(false);
 
-  const handleSaveExperience = (data: ExperienceFormData) => {
-    console.log("Experience data saved:", data);
-    // Save the experience data
-    setIsAddExperienceModalOpen(false);
-  };
+  const [personalContact, setPersonalContact] = useState<PersonalContact>({
+    position: "Striker",
+    phone: "+880 1636-828200",
+    dob: "12 May, 1992 (age-32)",
+    address: "33 Pendergast Avenue, GA, 30736",
+    placeOfBirth: "Uganda",
+    socialMedia: "Connect your Social Media",
+  });
 
-  const handleSaveLicensesOrCertifications = (data: CertificationFormData) => {
-    console.log("Licenses or Certifications data saved:", data);
-    // Save the licenses or certifications data
-    setIsAddLicensesOrCertificationsModalOpen(false);
-  };
-
-  const handleAddEducation = (data: EducationFormData) => {
-    console.log("Education data saved:", data);
-    // Save the education data
-    setIsAddEducationModalOpen(false);
-  };
+  const [playerDetails, setPlayerDetails] = useState<PlayerDetails>({
+    contractExpires: "June 2025",
+    marketValue: "$42,000",
+    onLoanFrom: "Not on loan",
+    currentClub: "Real Madrid CF",
+    shortlist: "42 games",
+    agent: "Sports Agent Pro",
+    height: "5'10\"",
+    age: "36",
+    weight: "68kg",
+    position: "Striker",
+    gender: "Male",
+    languages: "English, Spanish",
+    nationalTeamCareer: "English, Spanish",
+  });
 
   return (
     <div className="px-4">
@@ -239,8 +279,6 @@ export default function MyProfilePage() {
       </div>
 
       <div className="p-4 md:p-6 border rounded-2xl shadow">
-        {/* Personal Contact & Player Details */}
-
         {/* Personal Contact Section */}
         <div className="bg-white rounded-lg border shadow border-gray-200 p-6 mb-6">
           <div className="flex items-center justify-between mb-6">
@@ -252,6 +290,7 @@ export default function MyProfilePage() {
                 variant="ghost"
                 size="sm"
                 className="text-gray-600 hover:text-gray-900"
+                onClick={() => setIsEditPersonalInformationModalOpen(true)}
               >
                 <Edit className="w-4 h-4 mr-1" />
                 Edit
@@ -315,13 +354,14 @@ export default function MyProfilePage() {
               variant="ghost"
               size="sm"
               className="text-gray-600 hover:text-gray-900"
+              onClick={() => setIsPlayerDetailsModalOpen(true)}
             >
               <Edit className="w-4 h-4 mr-1" />
               Edit
             </Button>
           </div>
 
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-x-8 gap-y-6">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-6">
             <div>
               <label className="text-sm text-gray-500 mb-1 block">
                 Contract Expires
@@ -444,7 +484,11 @@ export default function MyProfilePage() {
           <CardHeader>
             <div className="flex items-center justify-between">
               <CardTitle>Experience</CardTitle>
-              <Button variant="ghost" size="sm">
+              <Button
+                variant="ghost"
+                size="sm"
+                onClick={() => setIsAddExperienceModalOpen(true)}
+              >
                 <Plus className="h-4 w-4" />
                 Add
               </Button>
@@ -637,27 +681,33 @@ export default function MyProfilePage() {
       <AddExperienceModal
         isOpen={isAddExperienceModalOpen}
         onClose={() => setIsAddExperienceModalOpen(false)}
-        onSave={handleSaveExperience}
       />
-
       {/* Add Licenses or Certifications Modal */}
       <AddLicensesOrCertificationsModal
         isOpen={isAddLicensesOrCertificationsModalOpen}
         onClose={() => setIsAddLicensesOrCertificationsModalOpen(false)}
-        onSave={handleSaveLicensesOrCertifications}
       />
-
       {/* Add Education Modal */}
       <AddEducationModal
         isOpen={isAddEducationModalOpen}
         onClose={() => setIsAddEducationModalOpen(false)}
-        onSave={handleAddEducation}
       />
-
       {/* Upload Resume Modal */}
       <UploadResumeModal
         isOpen={isUploadModalOpen}
         onClose={() => setIsUploadModalOpen(false)}
+      />
+      {/* Edit Personal Information  */}
+      <EditPersonalInformationModal
+        isOpen={isEditPersonalInformationModalOpen}
+        onClose={() => setIsEditPersonalInformationModalOpen(false)}
+        initialData={personalContact}
+      />
+      {/* Edit Player Details */}
+      <EditPlayerDetailsModal
+        isOpen={isEditPlayerDetailsModalOpen}
+        onClose={() => setIsPlayerDetailsModalOpen(false)}
+        initialData={playerDetails}
       />
     </div>
   );
