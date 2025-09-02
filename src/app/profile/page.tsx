@@ -34,6 +34,7 @@ import EditPlayerDetailsModal from "@/components/modals/EditPlayerDetailsModal";
 import EditExperienceModal from "@/components/modals/EditExperienceModal";
 import EditLicenseOrCertificationsModal from "@/components/modals/EditLicensesOrCertificationsModal";
 import EditEducationModal from "@/components/modals/EditEducationModal";
+import AddVideoModal from "@/components/modals/AddVideoModal";
 
 interface PersonalContact {
   position: string;
@@ -191,6 +192,7 @@ export default function MyProfilePage() {
   const [isEditEducationModalOpen, setIsEditEducationModalOpen] =
     useState(false);
   const [isUploadModalOpen, setIsUploadModalOpen] = useState(false);
+  const [isAddVideoModalOpen, setIsAddVideoModalOpen] = useState(false);
   const [
     isEditPersonalInformationModalOpen,
     setIsEditPersonalInformationModalOpen,
@@ -726,7 +728,11 @@ export default function MyProfilePage() {
           <CardHeader>
             <div className="flex items-center justify-between">
               <CardTitle className="text-lg lg:text-xl">Videos</CardTitle>
-              <Button variant="ghost" size="sm">
+              <Button
+                variant="ghost"
+                size="sm"
+                onClick={() => setIsAddVideoModalOpen(true)}
+              >
                 <Plus className="h-4 w-4" />
                 <span className="hidden sm:inline ml-1">Add</span>
               </Button>
@@ -774,6 +780,10 @@ export default function MyProfilePage() {
       <UploadResumeModal
         isOpen={isUploadModalOpen}
         onClose={() => setIsUploadModalOpen(false)}
+      />
+      <AddVideoModal
+        isOpen={isAddVideoModalOpen}
+        onClose={() => setIsAddVideoModalOpen(false)}
       />
       <EditPersonalInformationModal
         isOpen={isEditPersonalInformationModalOpen}
