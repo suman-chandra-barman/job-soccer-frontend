@@ -3,6 +3,7 @@
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
+import { useEffect } from "react";
 import {
   Dialog,
   DialogContent,
@@ -43,16 +44,30 @@ const formSchema = z.object({
 
 export type FormData = z.infer<typeof formSchema>;
 
-interface AddExperienceModalProps {
-  isOpen: boolean;
-  onClose: () => void;
+export interface EducationData {
+  id?: string;
+  schoolName: string;
+  degree: string;
+  fieldOfStudy: string;
+  grade: string;
+  startMonth: string;
+  startYear: string;
+  endMonth?: string;
+  endYear?: string;
+  description: string;
 }
 
+interface EditEducationModalProps {
+  isOpen: boolean;
+  onClose: () => void;
+  educationData: EducationData | null;
+}
 
-export default function AddExperienceOrCertificationsModal({
+export default function EditEducationModal({
   isOpen,
   onClose,
-}: AddExperienceModalProps) {
+  educationData,
+}: EditEducationModalProps) {
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -68,8 +83,25 @@ export default function AddExperienceOrCertificationsModal({
     },
   });
 
+  // Pre-populate form when educationData changes
+  useEffect(() => {
+    if (educationData && isOpen) {
+      form.reset({
+        schoolName: educationData.schoolName,
+        degree: educationData.degree,
+        fieldOfStudy: educationData.fieldOfStudy,
+        grade: educationData.grade,
+        startMonth: educationData.startMonth,
+        startYear: educationData.startYear,
+        endMonth: educationData.endMonth || "",
+        endYear: educationData.endYear || "",
+        description: educationData.description,
+      });
+    }
+  }, [educationData, isOpen, form]);
+
   const onSubmit = (data: FormData) => {
-    console.log("Educaiton data", data);
+    console.log("Updated education data", data);
     form.reset();
     onClose();
   };
@@ -85,14 +117,14 @@ export default function AddExperienceOrCertificationsModal({
         <DialogHeader>
           <div className="flex items-center justify-between">
             <DialogTitle className="text-xl font-semibold">
-              Add Education
+              Edit Education
             </DialogTitle>
           </div>
         </DialogHeader>
 
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
-            {/* Name */}
+            {/* School Name */}
             <FormField
               control={form.control}
               name="schoolName"
@@ -123,7 +155,11 @@ export default function AddExperienceOrCertificationsModal({
                     Degree
                   </FormLabel>
                   <FormControl>
-                    <Input placeholder="Ex: UEFA" {...field} className="mt-1" />
+                    <Input
+                      placeholder="Ex: Bachelor of Science"
+                      {...field}
+                      className="mt-1"
+                    />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -141,7 +177,28 @@ export default function AddExperienceOrCertificationsModal({
                   </FormLabel>
                   <FormControl>
                     <Input
-                      placeholder="Ex: Business"
+                      placeholder="Ex: Sports Science"
+                      {...field}
+                      className="mt-1"
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+
+            {/* Grade */}
+            <FormField
+              control={form.control}
+              name="grade"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel className="text-sm font-medium text-gray-700">
+                    Grade
+                  </FormLabel>
+                  <FormControl>
+                    <Input
+                      placeholder="Ex: 3.5 GPA"
                       {...field}
                       className="mt-1"
                     />
@@ -164,7 +221,7 @@ export default function AddExperienceOrCertificationsModal({
                     <FormItem>
                       <Select
                         onValueChange={field.onChange}
-                        defaultValue={field.value}
+                        value={field.value}
                       >
                         <FormControl className="w-full">
                           <SelectTrigger>
@@ -172,10 +229,10 @@ export default function AddExperienceOrCertificationsModal({
                           </SelectTrigger>
                         </FormControl>
                         <SelectContent>
-                          {months.map((month, index) => (
+                          {months.map((month) => (
                             <SelectItem
                               key={month}
-                              value={(index + 1).toString()}
+                              value={month}
                             >
                               {month}
                             </SelectItem>
@@ -193,7 +250,7 @@ export default function AddExperienceOrCertificationsModal({
                     <FormItem>
                       <Select
                         onValueChange={field.onChange}
-                        defaultValue={field.value}
+                        value={field.value}
                       >
                         <FormControl className="w-full">
                           <SelectTrigger>
@@ -228,7 +285,7 @@ export default function AddExperienceOrCertificationsModal({
                     <FormItem>
                       <Select
                         onValueChange={field.onChange}
-                        defaultValue={field.value}
+                        value={field.value || ""}
                       >
                         <FormControl className="w-full">
                           <SelectTrigger>
@@ -236,10 +293,10 @@ export default function AddExperienceOrCertificationsModal({
                           </SelectTrigger>
                         </FormControl>
                         <SelectContent>
-                          {months.map((month, index) => (
+                          {months.map((month) => (
                             <SelectItem
                               key={month}
-                              value={(index + 1).toString()}
+                              value={month}
                             >
                               {month}
                             </SelectItem>
@@ -257,7 +314,7 @@ export default function AddExperienceOrCertificationsModal({
                     <FormItem>
                       <Select
                         onValueChange={field.onChange}
-                        defaultValue={field.value}
+                        value={field.value || ""}
                       >
                         <FormControl className="w-full">
                           <SelectTrigger>
@@ -279,23 +336,6 @@ export default function AddExperienceOrCertificationsModal({
               </div>
             </div>
 
-            {/* Grade */}
-            <FormField
-              control={form.control}
-              name="grade"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel className="text-sm font-medium text-gray-700">
-                    Grade
-                  </FormLabel>
-                  <FormControl>
-                    <Input placeholder="Ex: 3.5" {...field} className="mt-1" />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-
             {/* Description */}
             <FormField
               control={form.control}
@@ -307,7 +347,7 @@ export default function AddExperienceOrCertificationsModal({
                   </FormLabel>
                   <FormControl>
                     <Textarea
-                      placeholder="Describe your education"
+                      placeholder="Describe your education experience"
                       className="mt-1 min-h-[100px] resize-none"
                       {...field}
                     />
@@ -326,7 +366,7 @@ export default function AddExperienceOrCertificationsModal({
                 type="submit"
                 className="bg-black hover:bg-gray-800 text-white"
               >
-                Save
+                Update
               </Button>
             </div>
           </form>

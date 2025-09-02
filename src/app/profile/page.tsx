@@ -33,6 +33,7 @@ import EditPersonalInformationModal from "@/components/modals/EditPersonalInform
 import EditPlayerDetailsModal from "@/components/modals/EditPlayerDetailsModal";
 import EditExperienceModal from "@/components/modals/EditExperienceModal";
 import EditLicenseOrCertificationsModal from "@/components/modals/EditLicensesOrCertificationsModal";
+import EditEducationModal from "@/components/modals/EditEducationModal";
 
 interface PersonalContact {
   position: string;
@@ -127,24 +128,30 @@ const certificates = [
 ];
 const education = [
   {
-    id: "1",
-    institution: "Nebula City FC",
-    degree: "Bachelor's",
-    field: "Business",
-    grade: "3.5",
-    duration: "Mar 2025 - Present",
+    id: "edu-001",
+    schoolName: "University of Barcelona",
+    degree: "Bachelor of Science",
+    fieldOfStudy: "Sports Science and Physical Education",
+    grade: "3.8 GPA",
+    startMonth: "September",
+    startYear: "2010",
+    endMonth: "June",
+    endYear: "2014",
     description:
-      "It's an amazing company with a strong focus on collaboration and design thinking. I'm truly inspired by our team—based work process, where we prioritize research, user and client goals to build better, more",
+      "Comprehensive study of sports science including biomechanics, exercise physiology, sports psychology, and nutrition. Specialized in football performance analysis and athlete development. Completed thesis on 'Impact of High-Intensity Training on Professional Football Players' which received academic recognition.",
   },
   {
-    id: "2",
-    institution: "Nebula City FC",
-    degree: "Bachelor's",
-    field: "Business",
-    grade: "3.5",
-    duration: "Mar 2025 - Present",
+    id: "edu-002",
+    schoolName: "Real Madrid Graduate School - Universidad Europea",
+    degree: "Master of Science",
+    fieldOfStudy: "Football Management and Analytics",
+    grade: "4.0 GPA",
+    startMonth: "January",
+    startYear: "2015",
+    endMonth: "December",
+    endYear: "2016",
     description:
-      "It's an amazing company with a strong focus on collaboration and design thinking. I'm truly inspired by our team—based work process, where we prioritize research, user and client goals to build better, more",
+      "Advanced program focusing on modern football management, data analytics, tactical analysis, and sports business administration. Collaborated with Real Madrid coaching staff on research projects involving player performance metrics and team strategy optimization. Graduated summa cum laude with specialization in youth academy development.",
   },
 ];
 const videos = [
@@ -181,6 +188,8 @@ export default function MyProfilePage() {
   ] = useState(false);
 
   const [isAddEducationModalOpen, setIsAddEducationModalOpen] = useState(false);
+  const [isEditEducationModalOpen, setIsEditEducationModalOpen] =
+    useState(false);
   const [isUploadModalOpen, setIsUploadModalOpen] = useState(false);
   const [
     isEditPersonalInformationModalOpen,
@@ -219,6 +228,7 @@ export default function MyProfilePage() {
   const [editExperienceData, setEditExperienceData] = useState(null);
   const [editLicensesOrCertifications, setEditLicensesOrCertifications] =
     useState(null);
+  const [editEducation, setEditEducation] = useState(null);
   return (
     <div className="px-4">
       {/* Hero Section */}
@@ -642,7 +652,11 @@ export default function MyProfilePage() {
           <CardHeader>
             <div className="flex items-center justify-between">
               <CardTitle className="text-lg lg:text-xl">Education</CardTitle>
-              <Button variant="ghost" size="sm">
+              <Button
+                variant="ghost"
+                size="sm"
+                onClick={() => setIsAddEducationModalOpen(true)}
+              >
                 <Plus className="h-4 w-4" />
                 <span className="hidden sm:inline ml-1">Add</span>
               </Button>
@@ -664,23 +678,37 @@ export default function MyProfilePage() {
                   <div className="flex items-start justify-between">
                     <div>
                       <h3 className="font-semibold text-gray-900 text-sm lg:text-base">
-                        {edu.institution}
+                        {edu.schoolName}
                       </h3>
                       <p className="text-xs lg:text-sm text-gray-600">
                         Degree: {edu.degree}
                       </p>
                       <p className="text-xs lg:text-sm text-gray-600">
-                        Field of study: {edu.field}
+                        Field of study: {edu.fieldOfStudy}
                       </p>
                       <p className="text-xs lg:text-sm text-gray-600">
                         Grade: {edu.grade}
                       </p>
                       <p className="text-xs lg:text-sm text-gray-500">
-                        {edu.duration}
+                        {edu.startMonth} {edu.startYear} -{" "}
+                        {`${
+                          !edu.endMonth
+                            ? "Present"
+                            : `${edu.endMonth}
+                              ${edu.endYear}`
+                        }`}
                       </p>
                     </div>
-                    <Button variant="ghost" size="sm">
+                    <Button
+                      variant="ghost"
+                      size="sm"
+                      onClick={() => {
+                        setEditEducation(edu);
+                        setIsEditEducationModalOpen(true);
+                      }}
+                    >
                       <Edit className="h-3 w-3 lg:h-4 lg:w-4" />
+                      Edit
                     </Button>
                   </div>
 
@@ -769,6 +797,13 @@ export default function MyProfilePage() {
           isOpen={isEditLicensesOrCertificationsModalOpen}
           onClose={() => setIsEditLicensesOrCertificationsModalOpen(false)}
           certificationData={editLicensesOrCertifications}
+        />
+      )}
+      {editEducation && (
+        <EditEducationModal
+          isOpen={isEditEducationModalOpen}
+          onClose={() => setIsEditEducationModalOpen(false)}
+          educationData={editEducation}
         />
       )}
     </div>
