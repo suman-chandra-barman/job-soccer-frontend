@@ -83,7 +83,7 @@ function SidebarContent({ activeSection }: { activeSection: string }) {
                 >
                   <Button
                     className={cn(
-                      "w-full flex bg-transparent items-center px-4 py-3 text-sm font-medium rounded-lg transition-colors duration-200 text-left",
+                      "w-full flex justify-start bg-transparent items-center px-4 py-3 text-sm font-medium rounded-lg transition-colors duration-200 text-left",
                       isActive
                         ? "bg-yellow-300 text-black shadow"
                         : "text-gray-700 hover:bg-gray-100 hover:text-gray-900"

@@ -13,6 +13,7 @@ import {
   GraduationCap,
   LayoutGrid,
   Upload,
+  Camera,
 } from "lucide-react";
 import Image from "next/image";
 import userImg from "@/assets/candidates/user1.png";
@@ -21,7 +22,7 @@ import AddExperienceModal, {
   TExperience,
   type FormData as ExperienceFormData,
 } from "@/components/modals/AddExperienceModal";
-import { useState } from "react";
+import { useState, useRef } from "react";
 import AddLicensesOrCertificationsModal, {
   type FormData as CertificationFormData,
 } from "@/components/modals/AddLicensesOrCertificationsModal";
@@ -61,10 +62,11 @@ interface PlayerDetails {
   nationalTeamCareer: string;
 }
 
-const user = {
+const initialUser = {
   name: "Suman Barman",
   title: "Professional Player",
-  avatar: userImg,
+  avatar:
+    "https://images.pexels.com/photos/1043471/pexels-photo-1043471.jpeg?auto=compress&cs=tinysrgb&w=150&h=150&dpr=1",
   verification: {
     age: true,
     personal: true,
@@ -231,27 +233,97 @@ export default function MyProfilePage() {
   const [editLicensesOrCertifications, setEditLicensesOrCertifications] =
     useState(null);
   const [editEducation, setEditEducation] = useState(null);
+
+  const [user, setUser] = useState(initialUser);
+  const [bannerImage, setBannerImage] = useState(
+    "https://images.pexels.com/photos/274422/pexels-photo-274422.jpeg?auto=compress&cs=tinysrgb&w=800&h=400&dpr=1"
+  );
+
+  const bannerInputRef = useRef<HTMLInputElement>(null);
+  const profileInputRef = useRef<HTMLInputElement>(null);
+
+  const handleProfileImageChange = (
+    event: React.ChangeEvent<HTMLInputElement>
+  ) => {
+    const file = event.target.files?.[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        const result = e.target?.result as string;
+        setUser((prev) => ({ ...prev, avatar: result }));
+      };
+      reader.readAsDataURL(file);
+    }
+  };
+
+  const handleBannerImageChange = (
+    event: React.ChangeEvent<HTMLInputElement>
+  ) => {
+    const file = event.target.files?.[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        const result = e.target?.result as string;
+        setBannerImage(result);
+      };
+      reader.readAsDataURL(file);
+    }
+  };
   return (
     <div className="px-4">
-      {/* Hero Section */}
       <div className="relative mb-8">
-        <div className="h-48 lg:h-64 bg-gradient-to-r from-blue-500 to-green-400 rounded-lg overflow-hidden">
-          <Image
-            src={banner}
+        <div className="relative h-48 lg:h-64 bg-gradient-to-r from-blue-500 to-green-400 rounded-lg overflow-hidden group">
+          <img
+            src={bannerImage}
             alt="Soccer player"
-            className="w-full object-cover"
+            className="w-full h-full object-cover"
           />
+          {/* Banner Edit Button */}
+          <div className="absolute inset-0 bg-black/0 group-hover:bg-black/50 transition-all duration-300 flex items-center justify-center">
+            <input
+              type="file"
+              accept="image/*"
+              onChange={handleBannerImageChange}
+              className="hidden"
+              ref={bannerInputRef}
+            />
+            <Button
+              onClick={() => bannerInputRef.current?.click()}
+              variant="secondary"
+              size="sm"
+              className="opacity-0 group-hover:opacity-100 transition-opacity duration-300 bg-white/90 hover:bg-white text-gray-800"
+            >
+              <Camera className="h-4 w-4 mr-2" />
+              Edit Banner
+            </Button>
+          </div>
         </div>
 
-        <div className="absolute -bottom-16 left-8">
-          <div className="relative">
-            <Image
+        <div className="absolute -bottom-16 left-4 lg:left-8">
+          <div className="relative group">
+            <img
               src={user.avatar}
               alt={user.name}
-              className="rounded-full border-4 border-white object-cover"
-              width={128}
-              height={128}
+              className="w-24 h-24 lg:w-32 lg:h-32 rounded-full border-4 border-white object-cover"
             />
+            {/* Profile Image Edit Button */}
+            <div className="absolute inset-0 bg-opacity-0 group-hover:bg-opacity-50 transition-all duration-300 rounded-full flex items-center justify-center bg-black/0 group-hover:bg-black/50">
+              <input
+                type="file"
+                accept="image/*"
+                onChange={handleProfileImageChange}
+                className="hidden"
+                ref={profileInputRef}
+              />
+              <Button
+                onClick={() => profileInputRef.current?.click()}
+                variant="secondary"
+                size="sm"
+                className="opacity-0 group-hover:opacity-100 transition-opacity duration-300 bg-white/90 hover:bg-white text-gray-800 rounded-full p-2"
+              >
+                <Camera className="h-4 w-4" />
+              </Button>
+            </div>
           </div>
         </div>
       </div>
