@@ -74,7 +74,7 @@ export default function BillingPage() {
   });
 
   return (
-    <div className="min-h-screen">
+    <div className="min-h-screen w-full">
       <div className="w-full px-4 sm:px-6 lg:px-8">
         {/* Monthly Plan Section */}
         <div className="bg-white rounded-lg border border-gray-200 p-6 mb-8">
