@@ -28,7 +28,10 @@ interface RoleSelectProps {
   onValueChange?: (value: string) => void;
 }
 
-export default function SelectJobCategory({ value, onValueChange }: RoleSelectProps) {
+export default function SelectJobCategory({
+  value,
+  onValueChange,
+}: RoleSelectProps) {
   const [open, setOpen] = useState(false);
   const [selectedRole, setSelectedRole] = useState(value || "");
   const dropdownRef = useRef<HTMLDivElement>(null);
@@ -67,7 +70,7 @@ export default function SelectJobCategory({ value, onValueChange }: RoleSelectPr
         className="w-full h-12 border-0 border-r border-l rounded-none shadow-none justify-between text-gray-500 hover:text-gray-500 text-left font-normal hover:bg-transparent"
         onClick={() => setOpen(!open)}
       >
-        {selectedRole || "Select Job Category"}
+        {selectedRole || "Select Category"}
         <ChevronDown
           className={`h-4 w-4 opacity-50 transition-transform ${
             open ? "rotate-180" : ""

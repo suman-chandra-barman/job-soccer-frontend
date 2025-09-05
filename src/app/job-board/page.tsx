@@ -1,4 +1,4 @@
-import { JobSearch } from "@/components/home/JobSearch";
+import { JobSearch } from "@/components/search/JobSearch";
 import { JobFilters } from "@/components/jobs/JobFilters";
 import React from "react";
 import user1 from "@/assets/candidates/user1.png";

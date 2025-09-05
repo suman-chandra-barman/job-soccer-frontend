@@ -90,7 +90,7 @@ const FindYourDreamTeam = () => {
           </div>
 
           {/* Right Column - Jobs */}
-          <div className="bg-[#F7F6F2] rounded-3xl p-2 md:p-6 lg:w-3/5 w-full">
+          <div className="bg-[#F7F6F2] rounded-3xl p-4 md:p-6 lg:w-3/5 w-full">
             <div className="flex items-center justify-between mb-8">
               <h2 className="text-3xl md:4xl font-bold text-gray-900">
                 Employer

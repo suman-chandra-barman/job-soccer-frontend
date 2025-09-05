@@ -1,0 +1,101 @@
+"use client";
+
+import type React from "react";
+import { useState } from "react";
+import { Search, MapPin } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import SelectJobCategory from "../input/SelectJobCategory";
+
+const popularSearches = [
+  "Goal Keeper",
+  "Defence Player",
+  "Midfielder",
+  "Forward",
+  "Goalkeeper",
+];
+
+export function EmployerSearch() {
+  const [searchTerm, setSearchTerm] = useState("");
+  const [selectedCategory, setSelectedCategory] = useState("");
+  const [selectedLocation, setSelectedLocation] = useState("");
+
+  const handleSearch = () => {
+    const params = new URLSearchParams();
+    if (searchTerm) params.set("search", searchTerm);
+    if (selectedCategory) params.set("category", selectedCategory);
+    if (selectedLocation) params.set("location", selectedLocation);
+  };
+
+  const handleKeyPress = (e: React.KeyboardEvent) => {
+    if (e.key === "Enter") {
+      handleSearch();
+    }
+  };
+
+  return (
+    <div className="bg-[#F7F6F2] px-4 py-8">
+      {/* Main Search Container */}
+      <div className="container mx-auto pb-4 flex items-center justify-center">
+        <div className="w-full md:w-auto flex flex-col p-2 md:flex-row gap-2 items-center justify-center rounded-2xl border border-gray-100 bg-white">
+          {/* Search Input */}
+          <div className="relative w-full lg:w-64">
+            <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
+            <Input
+              placeholder="Search candidates by name"
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+              onKeyPress={handleKeyPress}
+              className="pl-12 h-12 border-none shadow-none bg-transparent text-gray-700 placeholder:text-gray-400 focus-visible:ring-0"
+            />
+          </div>
+
+          {/* Category Select */}
+          <div className="w-full lg:w-64">
+            <SelectJobCategory
+              value={selectedCategory}
+              onValueChange={setSelectedCategory}
+            />
+          </div>
+
+          {/* Location */}
+          <div className="relative w-full lg:w-64">
+            <MapPin className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
+            <Input
+              placeholder="Location"
+              value={selectedLocation}
+              onChange={(e) => setSelectedLocation(e.target.value)}
+              onKeyPress={handleKeyPress}
+              className="pl-12 h-12 border-none shadow-none bg-transparent text-gray-700 placeholder:text-gray-400 focus-visible:ring-0"
+            />
+          </div>
+
+          {/* Search Button */}
+          <Button
+            onClick={handleSearch}
+            className="h-12 !px-10 bg-black hover:bg-gray-800 text-white rounded-xl font-medium"
+          >
+            <Search className="w-4 h-4 mr-1" />
+            Search
+          </Button>
+        </div>
+      </div>
+
+      {/* Popular Searches */}
+      <div className="flex flex-wrap items-center justify-center gap-4 w-full">
+        <span className="text-gray-600 font-medium">Popular Searches:</span>
+        <div className="flex flex-wrap gap-2">
+          {popularSearches.map((search) => (
+            <button
+              key={search}
+              onClick={() => setSearchTerm(search)}
+              className="px-4 py-1 border bg-gray-100 hover:bg-gray-200 text-gray-700 rounded-full text-sm transition-colors"
+            >
+              {search}
+            </button>
+          ))}
+        </div>
+      </div>
+    </div>
+  );
+}

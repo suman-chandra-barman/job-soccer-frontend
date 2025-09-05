@@ -13,7 +13,7 @@ import {
   ArrowLeft,
   SquareCheck,
 } from "lucide-react";
-import { JobSearch } from "@/components/home/JobSearch";
+import { JobSearch } from "@/components/search/JobSearch";
 import { JobFilters } from "@/components/jobs/JobFilters";
 import { TCandidate } from "@/components/home/Canditates";
 import user1 from "@/assets/candidates/user1.png";

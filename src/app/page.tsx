@@ -5,7 +5,7 @@ import FindYourNextJob from "@/components/home/FindYourNextJob";
 import { GlobalProfile } from "@/components/home/GlobalProfile";
 import { HeroSection } from "@/components/home/HeroSection";
 import { JobCategories } from "@/components/home/JobCategories";
-import { JobSearch } from "@/components/home/JobSearch";
+import { JobSearch } from "@/components/search/JobSearch";
 
 export default function HomePage() {
   return (

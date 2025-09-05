@@ -8,7 +8,7 @@ import user4 from "@/assets/candidates/user4.png";
 import { TNewJobPost } from "@/components/home/NewJobs";
 import { JobCard } from "@/components/cards/JobCard";
 import { useSearchParams } from "next/navigation";
-import { JobSearch } from "@/components/home/JobSearch";
+import { JobSearch } from "@/components/search/JobSearch";
 import { JobFilters } from "@/components/jobs/JobFilters";
 
 function JobBoardCategoryPage() {
