@@ -3,6 +3,8 @@
 import React, { useState } from "react";
 import { MoreVertical, Download, MessageCircle, Plus } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import CreateJobPostModal from "@/components/modals/CreateJobPostModal";
+import { set } from "zod";
 
 // Types
 interface Applicant {
@@ -122,6 +124,8 @@ const JobsPage: React.FC = () => {
     jobs.find((job) => job.status === "active") || null
   );
   const [openDropdownId, setOpenDropdownId] = useState<string | null>(null);
+  const [isCreateJobPostModalOpen, setIsCreateJobPostModalOpen] =
+    useState(false);
 
   // Filter jobs based on active tab
   const filteredJobs = jobs.filter((job) => job.status === activeTab);
@@ -189,11 +193,15 @@ const JobsPage: React.FC = () => {
 
   return (
     <div className="min-h-screen w-full p-4 md:p-6 border rounded-2xl">
-      <div className="">
+      <div>
         {/* Header */}
         <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-6 gap-4">
           <h1 className="text-2xl font-bold text-gray-900">Jobs</h1>
-          <Button variant="outline" className="flex items-center gap-2 px-4 py-2 rounded-lg transition-colors">
+          <Button
+            variant="outline"
+            className="flex items-center gap-2 px-4 py-2 rounded-lg transition-colors"
+            onClick={() => setIsCreateJobPostModalOpen(true)}
+          >
             <Plus size={20} />
             Job Post
           </Button>
@@ -204,20 +212,20 @@ const JobsPage: React.FC = () => {
           <button
             onClick={() => handleTabChange("active")}
             className={`py-4 px-1 border-b-2 font-medium text-sm transition-colors ${
-                  activeTab === "active"
-                    ? "border-blue-500 text-blue-600"
-                    : "border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300"
-                }`}
+              activeTab === "active"
+                ? "border-blue-500 text-blue-600"
+                : "border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300"
+            }`}
           >
             Active
           </button>
           <button
             onClick={() => handleTabChange("closed")}
             className={`py-4 px-1 border-b-2 font-medium text-sm transition-colors ${
-                  activeTab === "closed"
-                    ? "border-blue-500 text-blue-600"
-                    : "border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300"
-                }`}
+              activeTab === "closed"
+                ? "border-blue-500 text-blue-600"
+                : "border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300"
+            }`}
           >
             Closed
           </button>
@@ -397,6 +405,13 @@ const JobsPage: React.FC = () => {
           </div>
         </div>
       </div>
+      {/* Add Job Post Modal (Placeholder) */}
+      {isCreateJobPostModalOpen && (
+        <CreateJobPostModal
+          isOpen={isCreateJobPostModalOpen}
+          onClose={() => setIsCreateJobPostModalOpen(false)}
+        />
+      )}
     </div>
   );
 };
