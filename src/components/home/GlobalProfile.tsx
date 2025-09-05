@@ -1,7 +1,5 @@
 import Image from "next/image";
-import { Button } from "@/components/ui/button";
 import earth from "@/assets/home/earth.png";
-import Link from "next/link";
 
 export function GlobalProfile() {
   return (
@@ -9,7 +7,7 @@ export function GlobalProfile() {
       <div className="container mx-auto px-4">
         {/* Header */}
         <div className="text-center mb-8">
-          <h2 className="text-4xl md:text-5xl font-bold text-gray-900 mb-4">
+          <h2 className="text-3xl md:text-4xl  font-bold text-gray-900 mb-4">
             Create your profile and get seen globally!
           </h2>
           <p className="text-gray-600 text-lg">
@@ -19,28 +17,28 @@ export function GlobalProfile() {
         </div>
 
         {/* Main Content */}
-        <div className="grid lg:grid-cols-2 gap-12 items-center">
+        <div className="grid md:grid-cols-2 gap-12 items-center">
           {/* Left Side - Earth Image */}
           <div className="flex justify-center">
-            <div className="relative w-full max-w-lg aspect-square">
+            <div className="relative w-full max-w-lg aspect-square overflow-hidden">
               <Image
                 src={earth}
                 alt="Global opportunities worldwide"
                 fill
-                className="object-contain"
+                className="object-contain absolute"
                 style={{
                   animation: "spin 50s linear infinite",
                 }}
                 priority
               />
-              {/* <style>
+              <style>
                 {`
                   @keyframes spin {
                     0% { transform: rotate(0deg); }
                     100% { transform: rotate(360deg); }
                   }
                 `}
-              </style> */}
+              </style>
             </div>
           </div>
 
@@ -77,22 +75,6 @@ export function GlobalProfile() {
                   1,253 active job offers from 62 countries
                 </p>
               </div>
-            </div>
-
-            {/* CTA Buttons */}
-            <div className="flex items-center gap-4">
-              <Button
-                size="lg"
-                className="bg-yellow-300 hover:bg-yellow-400 text-black font-semibold px-8 py-2 rounded-lg"
-              >
-                <Link href="/signup">Sign Up</Link>
-              </Button>
-              <Button
-                size="lg"
-                className="bg-yellow-300 hover:bg-yellow-400 text-black font-semibold px-8 py-2 rounded-lg"
-              >
-                <Link href="/signin">Sign In</Link>
-              </Button>
             </div>
           </div>
         </div>

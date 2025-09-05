@@ -8,9 +8,9 @@ export function HeroSection() {
   return (
     <section className="relative overflow-hidden">
       <div className="container mx-auto px-4">
-        <div className="grid lg:grid-cols-2 gap-8 items-center">
+        <div className="grid md:grid-cols-2  gap-8 items-center">
           {/* Left Content */}
-          <div className="space-y-8 text-center lg:text-left pt-15">
+          <div className="hidden md:block space-y-8 text-center lg:text-left pt-15">
             <div className="space-y-4">
               <h1 className="text-4xl md:text-5xl lg:text-6xl xl:text-7xl font-bold text-gray-900 leading-tight">
                 <span className="relative inline-block">

@@ -41,9 +41,9 @@ export function JobSearch() {
     <div className="bg-[#F7F6F2] px-4 py-8">
       {/* Main Search Container */}
       <div className="container mx-auto pb-4 flex items-center justify-center">
-        <div className="flex flex-col p-2 md:flex-row gap-2 items-center justify-center rounded-2xl border border-gray-100 bg-white">
+        <div className="w-full md:w-auto flex flex-col p-2 md:flex-row gap-2 items-center justify-center rounded-2xl border border-gray-100 bg-white">
           {/* Search Input */}
-          <div className="relative">
+          <div className="relative w-full lg:w-64">
             <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
             <Input
               placeholder="Search by job title"
@@ -55,7 +55,7 @@ export function JobSearch() {
           </div>
 
           {/* Category Select */}
-          <div className="w-full md:w-64">
+          <div className="w-full lg:w-64">
             <SelectJobCategory
               value={selectedCategory}
               onValueChange={setSelectedCategory}
@@ -63,7 +63,7 @@ export function JobSearch() {
           </div>
 
           {/* Location */}
-          <div className="relative">
+          <div className="relative w-full lg:w-64">
             <MapPin className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
             <Input
               placeholder="Location"
@@ -86,7 +86,7 @@ export function JobSearch() {
       </div>
 
       {/* Popular Searches */}
-      <div className="flex flex-wrap items-center justify-center gap-4">
+      <div className="flex flex-wrap items-center justify-center gap-4 w-full">
         <span className="text-gray-600 font-medium">Popular Searches:</span>
         <div className="flex flex-wrap gap-2">
           {popularSearches.map((search) => (
