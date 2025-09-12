@@ -1,5 +1,3 @@
-import { JobSearch } from "@/components/search/JobSearch";
-import { JobFilters } from "@/components/jobs/JobFilters";
 import { Button } from "@/components/ui/button";
 import React from "react";
 import FindYourDreamTeam from "@/components/employer/FindYourDreamTeam";
@@ -59,11 +57,6 @@ function EmployersPage() {
   return (
     <div>
       <div className="bg-[#F7F6F2]">
-        <h2 className="text-3xl md:text-4xl text-[#362F05] text-center pt-10 mb-24">
-          Find Your <span className="text-green-400">Ultimate Employers</span>
-          <br />
-          Search Companion
-        </h2>
         <EmployerSearch />
       </div>
       {/* Jobs */}
