@@ -9,9 +9,9 @@ export function Discover() {
         {/* Header */}
         <div className="text-center mb-16">
           <h2 className="text-3xl md:text-4xl font-bold text-[#362F05] mb-4">
-            What You&apos;ll Discover Here
+            What You Will Discover Here
           </h2>
-          <p className="text-sm text-gray-600">
+          <p className=" text-gray-600">
             The global platform for soccer careers & recruitment
           </p>
         </div>
