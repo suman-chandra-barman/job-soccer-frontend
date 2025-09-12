@@ -58,7 +58,7 @@ export function GlobalProfile() {
                   Visibility
                 </h3>
                 <p className="text-[#A19C80] text-sm">
-                  Showcase your game. Get scouted. Go global
+                  Showcase your talent. Get scouted. Go global!
                 </p>
               </div>
 
