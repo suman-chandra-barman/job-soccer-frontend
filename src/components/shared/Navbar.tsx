@@ -15,6 +15,12 @@ import Image from "next/image";
 import logo from "@/assets/logo.png";
 import Link from "next/link";
 import NotificationModal from "../modals/NotificationModal";
+import {
+  Sheet,
+  SheetContent,
+  SheetHeader,
+  SheetTitle,
+} from "../ui/sheet";
 
 // Types for notification data
 interface NotificationItem {
@@ -27,30 +33,53 @@ interface NotificationItem {
 
 export function Navbar() {
   const pathname = usePathname();
-  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const [isOpen, setIsOpen] = useState(false);
   const [isNotificationOpen, setIsNotificationOpen] = useState(false);
+  const isLoggedIn = false;
 
-  const topNavLinks = [
-    { name: "Candidates", href: "/candidates" },
-    { name: "Employers", href: "/employers" },
-    { name: "Job Board", href: "/job-board" },
-    { name: "My Network", href: "/my-network" },
-    { name: "Sign In", href: "/signin" },
-    { name: "Sign Up", href: "/signup" },
-  ];
+  const topNavLinks = isLoggedIn
+    ? [
+        { name: "Candidates", href: "/candidates" },
+        { name: "Employers", href: "/employers" },
+        { name: "Job Board", href: "/job-board" },
+        { name: "My Network", href: "/my-network" },
+      ]
+    : [
+        { name: "Candidates", href: "/candidates" },
+        { name: "Employers", href: "/employers" },
+        { name: "Job Board", href: "/job-board" },
+        { name: "My Network", href: "/my-network" },
+        { name: "Sign In", href: "/signin" },
+        { name: "Sign Up", href: "/signup" },
+      ];
 
-  const iconLinks = [
-    { name: "Home", href: "/", icon: Home },
-    { name: "Message", href: "/messages", icon: MessageCircle },
-    { name: "Upgrade", href: "/upgrade", icon: Crown },
-    { name: "Profile", href: "/profile/candidate", icon: CircleUserRound },
-  ];
+  const iconLinks = isLoggedIn
+    ? [
+        { name: "Home", href: "/", icon: Home },
+        { name: "Message", href: "/messages", icon: MessageCircle },
+        { name: "Upgrade", href: "/upgrade", icon: Crown },
+        {
+          name: "Notification",
+          href: "#",
+          icon: Bell,
+          onClick: () => setIsNotificationOpen(true),
+        },
+        { name: "Profile", href: "/profile/candidate", icon: CircleUserRound },
+      ]
+    : [
+        { name: "Home", href: "/", icon: Home },
+        { name: "Message", href: "/messages", icon: MessageCircle },
+        { name: "Upgrade", href: "/upgrade", icon: Crown },
+        {
+          name: "Notification",
+          href: "#",
+          icon: Bell,
+          onClick: () => setIsNotificationOpen(true),
+        },
+        { name: "Profile", href: "/profile/candidate", icon: CircleUserRound },
+      ];
 
   const isActiveLink = (href) => pathname === href;
-
-  const toggleMobileMenu = () => {
-    setIsMobileMenuOpen(!isMobileMenuOpen);
-  };
 
   // Mock notification data matching your design
   const mockNotifications: NotificationItem[] = [
@@ -129,14 +158,10 @@ export function Navbar() {
           {/* Hamburger Menu for Mobile */}
           <button
             className="lg:hidden text-gray-600 hover:text-green-500"
-            onClick={toggleMobileMenu}
+            onClick={() => setIsOpen(true)}
             aria-label="Toggle menu"
           >
-            {isMobileMenuOpen ? (
-              <X className="h-6 w-6" />
-            ) : (
-              <Menu className="h-6 w-6" />
-            )}
+            <Menu className="h-6 w-6" />
           </button>
 
           {/* Desktop Navigation */}
@@ -160,6 +185,7 @@ export function Navbar() {
               <Link
                 key={link.name}
                 href={link.href}
+                onClick={link.onClick}
                 className={`flex flex-col items-center transition-colors ${
                   isActiveLink(link.href)
                     ? "text-green-500"
@@ -170,61 +196,59 @@ export function Navbar() {
                 <span className="text-xs mt-1">{link.name}</span>
               </Link>
             ))}
-            <button
-              onClick={() => setIsNotificationOpen(true)}
-              className={`flex items-center flex-col text-gray-600 hover:text-green-500`}
-            >
-              <Bell className="h-5 w-5" />
-              <span className="text-xs mt-1">Notification</span>
-            </button>
           </div>
         </div>
 
-        {/* Mobile Navigation */}
-        {isMobileMenuOpen && (
-          <div className="lg:hidden bg-yellow-50 p-4 rounded-lg">
-            <div className="flex flex-col space-y-4">
-              {topNavLinks.map((link) => (
-                <Link
-                  key={link.name}
-                  href={link.href}
-                  onClick={toggleMobileMenu}
-                  className={`text-sm font-medium transition-colors ${
-                    isActiveLink(link.href)
-                      ? "text-green-500"
-                      : "text-gray-600 hover:text-green-500"
-                  }`}
-                >
-                  {link.name}
-                </Link>
-              ))}
-              {iconLinks.map((link) => (
-                <Link
-                  key={link.name}
-                  href={link.href}
-                  onClick={toggleMobileMenu}
-                  className={`flex items-center space-x-2 transition-colors ${
-                    isActiveLink(link.href)
-                      ? "text-green-500"
-                      : "text-gray-600 hover:text-green-500"
-                  }`}
-                >
-                  <link.icon className="h-5 w-5" />
-                  <span>{link.name}</span>
-                </Link>
-              ))}
-              <button
-                onClick={() => {
-                  setIsNotificationOpen(!isNotificationOpen);
-                }}
-                className={`flex items-center space-x-2 text-gray-600 hover:text-green-500`}
-              >
-                <Bell className="h-5 w-5" />
-                <span>Notification</span>
-              </button>
-            </div>
-          </div>
-        )}
+        {/* Mobile Navigation Drawer */}
+        <div className="lg:hidden">
+          <Sheet open={isOpen} onOpenChange={setIsOpen}>
+            <SheetContent side="left" className="w-[300px] sm:w-[400px] ">
+              <SheetHeader className="py-4.5 border border-b">
+                <SheetTitle className="text-left">
+                  <Link href="/" className="flex items-center">
+                    <Image
+                      src={logo}
+                      alt="Logo"
+                      className="object-contain"
+                      width={52}
+                    />
+                  </Link>
+                </SheetTitle>
+              </SheetHeader>
+              <div className="flex flex-col space-y-6 mt-8 px-4">
+                {topNavLinks.map((link) => (
+                  <Link
+                    key={link.name}
+                    href={link.href}
+                    onClick={() => setIsOpen(false)}
+                    className={`transition-colors ${
+                      isActiveLink(link.href)
+                        ? "text-green-500"
+                        : "text-gray-600 hover:text-green-500"
+                    }`}
+                  >
+                    {link.name}
+                  </Link>
+                ))}
+                {iconLinks.map((link) => (
+                  <Link
+                    key={link.name}
+                    href={link.href}
+                    onClick={link.onClick || (() => setIsOpen(false))}
+                    className={`flex items-center space-x-2 transition-colors ${
+                      isActiveLink(link.href)
+                        ? "text-green-500"
+                        : "text-gray-600 hover:text-green-500"
+                    }`}
+                  >
+                    <link.icon className="h-5 w-5" />
+                    <span>{link.name}</span>
+                  </Link>
+                ))}
+              </div>
+            </SheetContent>
+          </Sheet>
+        </div>
       </div>
       {/* Notification Modal */}
       <NotificationModal
