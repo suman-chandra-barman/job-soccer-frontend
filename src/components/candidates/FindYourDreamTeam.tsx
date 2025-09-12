@@ -63,18 +63,14 @@ const FindYourDreamTeam = () => {
     <div className="min-h-screen bg-white">
       <div className="container mx-auto px-4 py-8 lg:py-16">
         <div className="text-center mb-12">
-          <h2 className="text-3xl md:text-4xl font-bold text-[#362F05] mb-1">
-            Find Your Dream Team
+          <h2 className="text-2xl md:text-4xl font-bold text-[#362F05] mb-1">
+            Find your dream job!
           </h2>
-          <p>
-            Build your dream team . We connect you with the talent that fits
-            your vision
-          </p>
         </div>
         <div className="lg:flex gap-2 lg:gap-12 items-start">
           {/* Left Column - Opportunities */}
           <div className={`space-y-6 py-8 lg:w-2/5`}>
-            <h2 className="text-3xl md:text-4xl font-bold text-[#362F05] leading-tight">
+            <h2 className="text-2xl md:text-4xl font-bold text-[#362F05] leading-tight">
               Find the Right Opportunity for You
             </h2>
             <div className="space-y-8 text-[#504A20]">
@@ -92,8 +88,8 @@ const FindYourDreamTeam = () => {
           {/* Right Column - Jobs */}
           <div className="bg-[#F7F6F2] rounded-3xl p-4 md:p-6 lg:w-3/5 w-full">
             <div className="flex items-center justify-between mb-8">
-              <h2 className="text-3xl md:4xl font-bold text-gray-900">
-                Employer
+              <h2 className="text-2xl md:text-3xl font-bold text-gray-900">
+                Employers
               </h2>
             </div>
 

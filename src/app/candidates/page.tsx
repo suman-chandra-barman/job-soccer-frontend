@@ -46,11 +46,6 @@ function CandidatesPage() {
   return (
     <div>
       <div className="bg-[#F7F6F2]">
-        <h2 className="text-3xl md:text-4xl text-[#362F05] text-center pt-10 mb-24">
-          Find Your <span className="text-green-400">Ultimate Candidates</span>
-          <br />
-          Search Companion
-        </h2>
         <CandidateSearch />
       </div>
       {/* Jobs */}
@@ -60,7 +55,7 @@ function CandidatesPage() {
         {/* Players */}
         <div className="my-8">
           <div className="flex items-center justify-between py-4">
-            <span className="text-2xl font-bold">Player</span>
+            <span className="text-xl md:text-2xl font-bold">Players</span>
             <Button variant="link" className="text-black">
               <Link href="/job-board"> See All</Link>
             </Button>
@@ -74,7 +69,7 @@ function CandidatesPage() {
         {/* Staff on The Field */}
         <div className="my-8">
           <div className="flex items-center justify-between py-4">
-            <span className="text-2xl font-bold">Staff on The Field</span>
+            <span className="text-xl md:text-2xl font-bold"> On Field Staff</span>
             <Button variant="link" className="text-black">
               <Link href="/job-board"> See All</Link>
             </Button>
@@ -89,7 +84,7 @@ function CandidatesPage() {
         {/* Office Staff */}
         <div className="my-8">
           <div className="flex items-center justify-between py-4">
-            <span className="text-2xl font-bold">Office Staff</span>
+            <span className="text-xl md:text-2xl font-bold">Office Staff</span>
             <Button variant="link" className="text-black">
               <Link href="/job-board"> See All</Link>
             </Button>
