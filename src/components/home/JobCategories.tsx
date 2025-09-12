@@ -8,6 +8,7 @@ import {
   Trophy,
 } from "lucide-react";
 import Link from "next/link";
+import { Button } from "../ui/button";
 
 const jobCategories = [
   {
@@ -55,14 +56,11 @@ export function JobCategories() {
         {/* Header */}
         <div className="flex flex-col md:flex-row justify-between items-start mb-12 gap-8">
           <h2 className="text-2xl md:text-4xl font-bold text-[#362F05] leading-tight max-w-2xl">
-            Your complete hub for soccer talents, jobs and connections
+            Your complete hub for soccer talents jobs and connections
           </h2>
-          <Link
-            href="/job-board"
-            className="text-gray-600 hover:text-[#504A20] font-medium transition-colors hover:underline"
-          >
-            See All Jobs
-          </Link>
+          <Button className="bg-yellow-300 hover:bg-yellow-400 text-black font-semibold px-6 py-3 rounded-lg">
+            <Link href="/job-board">See All Jobs</Link>
+          </Button>
         </div>
 
         {/* Categories Grid */}
