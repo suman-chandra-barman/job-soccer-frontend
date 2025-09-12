@@ -47,7 +47,7 @@ export function GlobalProfile() {
                 <h3 className="text-xl font-bold text-[#362F05] mb-2">
                   Global Access
                 </h3>
-                <p className="text-[#A19C80]">
+                <p className="text-[#A19C80] text-sm">
                   Connect with clubs and agent around the world
                 </p>
               </div>
@@ -57,7 +57,7 @@ export function GlobalProfile() {
                 <h3 className="text-xl font-bold text-[#362F05] mb-2">
                   Visibility
                 </h3>
-                <p className="text-[#A19C80]">
+                <p className="text-[#A19C80] text-sm">
                   Showcase your game. Get scouted. Go global
                 </p>
               </div>
@@ -67,7 +67,7 @@ export function GlobalProfile() {
                 <h3 className="text-xl font-bold text-[#362F05] mb-2">
                   Opportunities
                 </h3>
-                <p className="text-[#A19C80]">
+                <p className="text-[#A19C80] text-sm">
                   Discover jobs offer and trials worldwide
                 </p>
               </div>
