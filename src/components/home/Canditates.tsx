@@ -55,12 +55,12 @@ export function Candidates() {
       <div className="container mx-auto px-4">
         {/* Header */}
         <div className="text-center mb-12">
-          <h2 className="text-3xl md:text-4xl font-bold text-[#362F05] mb-4">
+          <h2 className="text-3xl md:text-4xl font-bold text-[#362F05] mb-3">
             Find Your Dream Team
           </h2>
-          <p className="text-lg text-gray-600 max-w-3xl mx-auto">
-            Build your Dream Team and we connect you with the talent that fits
-            your vision
+          <p className=" text-[#504A20] max-w-3xl mx-auto">
+            Build your Dream Team and we will connect you with the talent that
+            matches your vision
           </p>
         </div>
 
