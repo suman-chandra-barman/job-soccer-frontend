@@ -51,25 +51,25 @@ const FindYourDreamTeam = () => {
             Find Your Dream Team
           </h2>
         </div>
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 items-stretch">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-2 lg:gap-6">
           {/* Left Column - Opportunities */}
           <div className={``}>
             <Image
               src={candidatesImg}
               alt="Candidates"
-              className="w-full h-full object-cover rounded-2xl"
+              className="w-full h-full xl:max-h-[1000px] object-cover rounded-2xl"
             />
           </div>
 
           {/* Right Column - Jobs */}
           <div className="bg-[#F7F6F2] rounded-3xl p-4 md:p-6 w-full">
-            <div className="flex items-center justify-between mb-8">
+            <div className="flex items-center justify-between mb-4">
               <h2 className="text-2xl md:text-3xl font-bold text-gray-900">
                 Candidates
               </h2>
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-3 md:gap-4">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-3 md:gap-4 mb-4">
               {candidates.map((candidate: TCandidate) => (
                 <CandidateCard key={candidate.id} candidate={candidate} />
               ))}
