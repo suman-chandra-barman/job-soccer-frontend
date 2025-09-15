@@ -66,7 +66,7 @@ export function EmployerCard({ job }: { job: TClub }) {
           </div>
         </div>
       </div>
-      <div className="border-t border-gray-200 pt-4 flex gap-4 items-center">
+      <div className="border-t border-gray-200 pt-4 flex flex-wrap gap-2 items-center">
         <Button variant="outline" className="flex-1 bg-transparent">
           <UserRoundPlus className="w-6 h-6" />
           Follow

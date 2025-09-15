@@ -67,9 +67,9 @@ const FindYourDreamTeam = () => {
             Find your dream job!
           </h2>
         </div>
-        <div className="lg:flex gap-2 lg:gap-12 items-start">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 items-start">
           {/* Left Column - Opportunities */}
-          <div className={`space-y-6 py-8 lg:w-2/5`}>
+          <div className={`space-y-6 py-8`}>
             <h2 className="text-2xl md:text-4xl font-bold text-[#362F05] leading-tight">
               Find the Right Opportunity for You
             </h2>
@@ -86,14 +86,14 @@ const FindYourDreamTeam = () => {
           </div>
 
           {/* Right Column - Jobs */}
-          <div className="bg-[#F7F6F2] rounded-3xl p-4 md:p-6 lg:w-3/5 w-full">
-            <div className="flex items-center justify-between mb-8">
+          <div className="bg-[#F7F6F2] rounded-3xl p-4 md:p-6 w-full">
+            <div className="flex items-center justify-between mb-6">
               <h2 className="text-2xl md:text-3xl font-bold text-gray-900">
                 Employers
               </h2>
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-3 md:gap-4 mb-8">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-3 md:gap-4 mb-6">
               {clubsData.map((job) => (
                 <EmployerCard key={job.id} job={job} />
               ))}
