@@ -20,6 +20,10 @@ export function middleware(request: NextRequest) {
     "/jobs",
     "/companies",
     "/not-found",
+    "/email-verification",
+    "/success-message",
+    "/create-new-password",
+    "/forgate-password",
   ];
 
   // Dynamic route patterns
@@ -38,8 +42,7 @@ export function middleware(request: NextRequest) {
         pathname.startsWith(`${route}/`) ||
         pathname.startsWith(`${route}?`)
       );
-    }) ||
-    dynamicPatterns.some((pattern) => pattern.test(pathname));
+    }) || dynamicPatterns.some((pattern) => pattern.test(pathname));
 
   if (!isValid) {
     return NextResponse.redirect(new URL("/not-found", request.url));

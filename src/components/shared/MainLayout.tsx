@@ -10,6 +10,7 @@ export function MainLayout({ children }: { children: React.ReactNode }) {
   const noHeaderFooterRoutes = [
     "/signin",
     "/signup",
+    "/email-verification",
     "/forgot-password",
     "/not-found",
   ];

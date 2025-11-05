@@ -1,19 +1,39 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
 
 import type React from "react";
 import { useState, useRef, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { ArrowLeft } from "lucide-react";
-import Link from "next/link";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
+import {
+  useEmailVerifyMutation,
+  useResendOtpMutation,
+} from "@/redux/features/auth/authApi";
+import { toast } from "sonner";
 
-export default function EmailVerificaionPage() {
-  const [otp, setOtp] = useState(["", "", "", "", "", ""]);
-  const [resendTimer, setResendTimer] = useState(56);
+export default function EmailVerificationPage() {
+  const [otp, setOtp] = useState<string[]>(["", "", "", "", "", ""]);
+  const [resendTimer, setResendTimer] = useState(120);
 
+  const [emailVerify, { isLoading }] = useEmailVerifyMutation();
+  const [resendOtp, { isLoading: isResending }] = useResendOtpMutation();
+
+  const searchParams = useSearchParams();
   const inputRefs = useRef<(HTMLInputElement | null)[]>([]);
   const router = useRouter();
+
+  const email = searchParams.get("email");
+  const reason: "account_verification" | "password_reset" = searchParams.get(
+    "reason"
+  ) as any;
+
+  // Redirect if no email is provided
+  useEffect(() => {
+    if (!email || !reason) {
+      router.replace("/signup");
+    }
+  }, [email, router, reason]);
 
   useEffect(() => {
     if (resendTimer > 0) {
@@ -41,13 +61,57 @@ export default function EmailVerificaionPage() {
     }
   };
 
-  const handleResendCode = () => {
-    setResendTimer(56);
+  const handleResendCode = async () => {
+    if (!email || !reason) return;
+
+    try {
+      await resendOtp({ email, reason }).unwrap();
+      setResendTimer(120);
+      toast.success("Verification code resent successfully!");
+    } catch (error) {
+      toast.error("Failed to resend verification code. Please try again.");
+    }
   };
 
-  const handleVerity = () => {
-    console.log("OTP: ", otp);
-    router.push("/success-message");
+  const handleVerify = async () => {
+    if (!email || !reason) {
+      toast.error("Email and reason are required");
+      return;
+    }
+
+    const stringOtp = otp.join("");
+    if (stringOtp.length !== 6) {
+      toast.error("Please enter a complete verification code");
+      return;
+    }
+
+    const payload = {
+      email,
+      reason,
+      oneTimeCode: stringOtp,
+    };
+
+    try {
+      const res = await emailVerify(payload).unwrap();
+
+      if (res.success) {
+        toast.success("Email verified successfully!");
+        localStorage.setItem("accessToken", res.data.accessToken);
+
+        // Redirect based on the verification reason or default to success page
+        if (reason === "account_verification") {
+          router.push("/signin");
+        } else {
+          router.push("/success-message");
+        }
+      }
+    } catch (error) {
+      toast.error("Failed to verify email. Please try again.");
+      // Clear OTP fields on error
+      setOtp(["", "", "", "", "", ""]);
+      // Focus first input
+      inputRefs.current[0]?.focus();
+    }
   };
 
   return (
@@ -71,11 +135,8 @@ export default function EmailVerificaionPage() {
           <div className="bg-white rounded-2xl p-8 shadow-sm border border-gray-100">
             <div className="text-center mb-8">
               <h2 className="text-2xl font-semibold text-gray-900 mb-2">
-                Verify Your E-mail
+                Verify Your Email
               </h2>
-              <button className="text-sm text-gray-500 hover:text-gray-700">
-                Change your E-mail
-              </button>
             </div>
 
             {/* OTP Input */}
@@ -104,29 +165,23 @@ export default function EmailVerificaionPage() {
               </p>
               <button
                 onClick={handleResendCode}
-                disabled={resendTimer > 0}
+                disabled={resendTimer > 0 || isResending || !email}
                 className="text-sm text-gray-400 hover:text-gray-600 cursor-pointer disabled:cursor-not-allowed"
               >
-                Resend Code {resendTimer > 0 && `${resendTimer}s`}
+                {isResending
+                  ? "Resending..."
+                  : `Resend Code ${resendTimer > 0 ? `(${resendTimer}s)` : ""}`}
               </button>
             </div>
 
             {/* Verify Button */}
             <Button
-              className="w-full bg-primary text-[#252525] py-3 rounded-lg text-base font-medium mb-4 cursor-pointer"
-              disabled={otp.some((digit) => !digit)}
-              onClick={handleVerity}
+              className="w-full bg-primary text-[#252525] py-3 rounded-lg text-base font-medium mb-4 cursor-pointer disabled:opacity-50"
+              disabled={otp.some((digit) => !digit) || isLoading || !email}
+              onClick={handleVerify}
             >
-              Verify
+              {isLoading ? "Verifying..." : "Verify"}
             </Button>
-
-            {/* Back Link */}
-            <Link href="/signup" className="text-center">
-              <button className="flex items-center justify-center gap-2 text-sm text-gray-500 hover:text-gray-700 mx-auto cursor-pointer">
-                <ArrowLeft className="w-4 h-4" />
-                Back
-              </button>
-            </Link>
           </div>
         </div>
       </div>
