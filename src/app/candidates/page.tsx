@@ -1,48 +1,21 @@
+"use client";
+
 import FindYourDreamTeam from "@/components/candidates/FindYourDreamTeam";
-import { TCandidate } from "@/components/home/Canditates";
 import { Button } from "@/components/ui/button";
 import React from "react";
-import user1 from "@/assets/candidates/user1.png";
-import user2 from "@/assets/candidates/user2.png";
 import CandidateCard from "@/components/cards/CandidateCard";
 import Link from "next/link";
 import { CandidateSearch } from "@/components/search/CandidateSearch";
+import {
+  useGetCandidateFeaturedQuery,
+} from "@/redux/features/candidate/candidateApi";
+import { ICandidate } from "@/types/user";
 
-const candidates: TCandidate[] = [
-  {
-    id: 1,
-    name: "Jacob Jones",
-    role: "Head Coach",
-    location: "Rio, Brazil",
-    nationality: "Brazil",
-    avatar: user1,
-  },
-  {
-    id: 2,
-    name: "Courtney Henry",
-    role: "Marketing Manager",
-    location: "Dallas, USA",
-    nationality: "USA",
-    avatar: user2,
-  },
-  {
-    id: 3,
-    name: "Wade Warren",
-    role: "Technical Director",
-    location: "Glasgow, Scotland",
-    nationality: "Scottish",
-    avatar: user1,
-  },
-  {
-    id: 4,
-    name: "John Doe",
-    role: "Striker (Player)",
-    location: "Madrid, Spain",
-    nationality: "Bangladeshi",
-    avatar: user2,
-  },
-];
+
 function CandidatesPage() {
+  const { data: featuredCandidatesData } = useGetCandidateFeaturedQuery(null);
+
+  console.log("featuredCandidatesData", featuredCandidatesData);
   return (
     <div>
       <div className="bg-[#F7F6F2]">
@@ -52,32 +25,98 @@ function CandidatesPage() {
       <div className="container mx-auto px-4 md:px-0">
         <FindYourDreamTeam />
 
-        {/* Players */}
+        {/* High School Players */}
         <div className="my-8">
           <div className="flex items-center justify-between py-4">
-            <span className="text-xl md:text-2xl font-bold">Players</span>
+            <span className="text-xl md:text-2xl font-bold">
+              High School Players
+            </span>
             <Button variant="link" className="text-black">
               <Link href="/job-board"> See All</Link>
             </Button>
           </div>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-3 md:gap-4">
-            {candidates.map((candidate: TCandidate) => (
-              <CandidateCard key={candidate.id} candidate={candidate} />
-            ))}
+            {featuredCandidatesData?.data?.HighSchool?.map(
+              (candidate: ICandidate) => (
+                <CandidateCard key={candidate._id} candidate={candidate} />
+              )
+            )}
           </div>
         </div>
-        {/* Staff on The Field */}
+
+        {/* College/University Players */}
         <div className="my-8">
           <div className="flex items-center justify-between py-4">
-            <span className="text-xl md:text-2xl font-bold"> On Field Staff</span>
+            <span className="text-xl md:text-2xl font-bold">
+              College/University Players
+            </span>
             <Button variant="link" className="text-black">
               <Link href="/job-board"> See All</Link>
             </Button>
           </div>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-3 md:gap-4">
-            {candidates.map((candidate: TCandidate) => (
-              <CandidateCard key={candidate.id} candidate={candidate} />
-            ))}
+            {featuredCandidatesData?.data?.["College/University"]?.map(
+              (candidate: ICandidate) => (
+                <CandidateCard key={candidate._id} candidate={candidate} />
+              )
+            )}
+          </div>
+        </div>
+
+        {/* Professional Players */}
+        <div className="my-8">
+          <div className="flex items-center justify-between py-4">
+            <span className="text-xl md:text-2xl font-bold">
+              Professional Players
+            </span>
+            <Button variant="link" className="text-black">
+              <Link href="/job-board"> See All</Link>
+            </Button>
+          </div>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-3 md:gap-4">
+            {featuredCandidatesData?.data?.ProfessionalPlayer?.map(
+              (candidate: ICandidate) => (
+                <CandidateCard key={candidate._id} candidate={candidate} />
+              )
+            )}
+          </div>
+        </div>
+
+        {/* Amateur Players */}
+        <div className="my-8">
+          <div className="flex items-center justify-between py-4">
+            <span className="text-xl md:text-2xl font-bold">
+              Amateur Players
+            </span>
+            <Button variant="link" className="text-black">
+              <Link href="/job-board"> See All</Link>
+            </Button>
+          </div>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-3 md:gap-4">
+            {featuredCandidatesData?.data?.AmateurPlayer?.map(
+              (candidate: ICandidate) => (
+                <CandidateCard key={candidate._id} candidate={candidate} />
+              )
+            )}
+          </div>
+        </div>
+
+        {/* On-field Staff */}
+        <div className="my-8">
+          <div className="flex items-center justify-between py-4">
+            <span className="text-xl md:text-2xl font-bold">
+              On-field Staff
+            </span>
+            <Button variant="link" className="text-black">
+              <Link href="/job-board"> See All</Link>
+            </Button>
+          </div>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-3 md:gap-4">
+            {featuredCandidatesData?.data?.Onfieldstaff?.map(
+              (candidate: ICandidate) => (
+                <CandidateCard key={candidate._id} candidate={candidate} />
+              )
+            )}
           </div>
         </div>
 
@@ -90,9 +129,11 @@ function CandidatesPage() {
             </Button>
           </div>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-3 md:gap-4">
-            {candidates.map((candidate: TCandidate) => (
-              <CandidateCard key={candidate.id} candidate={candidate} />
-            ))}
+            {featuredCandidatesData?.data?.OfficeStaff?.map(
+              (candidate: ICandidate) => (
+                <CandidateCard key={candidate._id} candidate={candidate} />
+              )
+            )}
           </div>
         </div>
       </div>

@@ -1,30 +1,34 @@
 import React from "react";
 import { Card, CardContent } from "../ui/card";
-import Image from "next/image";
 import { Bookmark, Lock, MapPin, MessageCircle, SquarePen } from "lucide-react";
 import { FaPlayCircle } from "react-icons/fa";
 import { Button } from "../ui/button";
-import { TCandidate } from "../home/Canditates";
+import { ICandidate } from "@/types/user";
+import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
 
-function CandidateCard({ candidate }: { candidate: TCandidate }) {
+function CandidateCard({ candidate }: { candidate: ICandidate }) {
   return (
     <div>
-      <Card
-        className="bg-gradient-to-br from-white to-[#FDF9E3] border-0 shadow-sm hover:shadow-md transition-shadow"
-      >
+      <Card className="bg-gradient-to-br from-white to-[#FDF9E3] border-0 shadow-sm hover:shadow-md transition-shadow">
         <CardContent className="p-6">
           {/* Profile Header */}
           <div className="flex items-center gap-3 mb-4">
-            <div className="relative w-12 h-12 rounded-full overflow-hidden">
-              <Image
-                src={candidate.avatar}
-                alt={candidate.name}
-                fill
+            <Avatar className="w-12 h-12">
+              <AvatarImage
+                src={candidate?.profileImage || ""}
+                alt={`${candidate?.firstName || ""} 
+                }`}
                 className="object-cover"
               />
-            </div>
+              <AvatarFallback className="text-base font-medium">
+                {candidate?.firstName?.charAt(0)}
+                {candidate?.lastName?.charAt(0)}
+              </AvatarFallback>
+            </Avatar>
             <div>
-              <h4 className="font-semibold text-gray-900">{candidate.name}</h4>
+              <h4 className="font-semibold text-gray-900">
+                {candidate.firstName + " " + candidate.lastName}
+              </h4>
               <p className="text-sm text-gray-500">{candidate.role}</p>
             </div>
           </div>
@@ -32,14 +36,16 @@ function CandidateCard({ candidate }: { candidate: TCandidate }) {
           {/* Location */}
           <div className="flex items-center gap-2 mb-3">
             <MapPin className="w-4 h-4 text-gray-400" />
-            <span className="text-sm text-gray-600">{candidate.location}</span>
+            <span className="text-sm text-gray-600">
+              {candidate.profile?.placeOfBirth}
+            </span>
           </div>
 
           {/* Nationality */}
           <div className="mb-3">
             <span className="text-sm text-gray-600">
               <span className="font-medium">Nationality:</span>{" "}
-              {candidate.nationality}
+              {candidate.profile?.nationality}
             </span>
           </div>
 
