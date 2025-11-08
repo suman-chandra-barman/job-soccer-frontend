@@ -66,7 +66,7 @@ export function HighlightsForm({
               onFilesChange={(files) => setValue("videos", files)}
               accept="video/*"
               multiple={true}
-              maxFiles={5}
+              maxFiles={2}
               placeholder="Drag & drop to upload file or "
             />
           </FormField>

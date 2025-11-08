@@ -29,6 +29,7 @@ import { useAppSelector } from "@/redux/hooks";
 import { useGetMeQuery } from "@/redux/features/auth/authApi";
 
 export default function CandidateProfilePage() {
+  // Get the user's token and data
   const token = useAppSelector((state) => state.auth.token);
   const { data: user } = useGetMeQuery(undefined, { skip: !token });
 
@@ -102,8 +103,6 @@ export default function CandidateProfilePage() {
     console.log("Complete form data:", { ...formData, highlights: data });
     toast.success("Profile completed successfully!");
 
-    // Redirect to home page
-    router.push("/");
   };
 
   const handlePrevStep = () => {
@@ -136,6 +135,7 @@ export default function CandidateProfilePage() {
     }
   };
 
+  // Render highlights form based on configuration
   const renderHighlightsForm = () => {
     if (config.highlightsType === "multiple") {
       const multipleProps = {

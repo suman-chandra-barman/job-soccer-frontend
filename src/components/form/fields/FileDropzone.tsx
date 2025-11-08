@@ -13,6 +13,20 @@ interface FileDropzoneProps {
   className?: string;
 }
 
+// ✅ Helper function to check video duration (max 180 seconds)
+const checkVideoDuration = (file: File): Promise<boolean> => {
+  return new Promise((resolve) => {
+    const video = document.createElement("video");
+    video.preload = "metadata";
+    video.onloadedmetadata = () => {
+      window.URL.revokeObjectURL(video.src);
+      const duration = video.duration;
+      resolve(duration <= 180); // ✅ Allow only if ≤ 180 seconds
+    };
+    video.src = URL.createObjectURL(file);
+  });
+};
+
 export function FileDropzone({
   onFilesChange,
   accept = "video/*",
@@ -34,15 +48,29 @@ export function FileDropzone({
     setIsDragOver(false);
   }, []);
 
+  // ✅ Handle dropped files (check video duration)
   const handleDrop = useCallback(
-    (e: React.DragEvent) => {
+    async (e: React.DragEvent) => {
       e.preventDefault();
       setIsDragOver(false);
 
-      const droppedFiles = Array.from(e.dataTransfer.files).filter(file => file.type.startsWith('video/'));
+      const droppedFiles = Array.from(e.dataTransfer.files).filter((file) =>
+        file.type.startsWith("video/")
+      );
+
+      const validFiles: File[] = [];
+      for (const file of droppedFiles) {
+        const isValid = await checkVideoDuration(file);
+        if (isValid) {
+          validFiles.push(file);
+        } else {
+          alert(`❌ ${file.name} is longer than 180 seconds.`);
+        }
+      }
+
       const newFiles = multiple
-        ? [...files, ...droppedFiles].slice(0, maxFiles)
-        : [droppedFiles[0]].filter(Boolean);
+        ? [...files, ...validFiles].slice(0, maxFiles)
+        : [validFiles[0]].filter(Boolean);
 
       setFiles(newFiles);
       onFilesChange(newFiles);
@@ -50,18 +78,31 @@ export function FileDropzone({
     [files, multiple, maxFiles, onFilesChange]
   );
 
+  // ✅ Handle file selection (check video duration)
   const handleFileInput = useCallback(
-    (e: React.ChangeEvent<HTMLInputElement>) => {
-      const selectedFiles = Array.from(e.target.files || []).filter(file => file.type.startsWith('video/'));
+    async (e: React.ChangeEvent<HTMLInputElement>) => {
+      const selectedFiles = Array.from(e.target.files || []).filter((file) =>
+        file.type.startsWith("video/")
+      );
+
+      const validFiles: File[] = [];
+      for (const file of selectedFiles) {
+        const isValid = await checkVideoDuration(file);
+        if (isValid) {
+          validFiles.push(file);
+        } else {
+          alert(`❌ ${file.name} is longer than 180 seconds.`);
+        }
+      }
+
       const newFiles = multiple
-        ? [...files, ...selectedFiles].slice(0, maxFiles)
-        : [selectedFiles[0]].filter(Boolean);
+        ? [...files, ...validFiles].slice(0, maxFiles)
+        : [validFiles[0]].filter(Boolean);
 
       setFiles(newFiles);
       onFilesChange(newFiles);
-      
-      // Reset the input value to allow selecting the same file again
-      e.target.value = '';
+
+      e.target.value = ""; // Reset input to allow same file again
     },
     [files, multiple, maxFiles, onFilesChange]
   );

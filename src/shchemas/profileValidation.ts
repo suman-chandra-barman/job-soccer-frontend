@@ -197,8 +197,8 @@ export const candidateRoleConfig: Record<
   },
   [CandidateRole.AMATEUR_PLAYER]: {
     professionalSchema: amateurPlayerProfessionalInfoSchema,
-    highlightsType: "multiple",
-    highlightsSchema: multipleHighlightsSchema,
+    highlightsType: "single",
+    highlightsSchema: singleHighlightsSchema,
   },
   [CandidateRole.HIGH_SCHOOL]: {
     professionalSchema: highSchoolPlayerProfessionalInfoSchema,
