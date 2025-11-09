@@ -1,20 +1,11 @@
 import { Check } from "lucide-react";
-import React from "react";
-import { EmployerCard } from "../cards/EmployerCard";
+import React, { Suspense } from "react";
 import { Button } from "../ui/button";
-import { TClub } from "@/app/all-employer/page";
 import Link from "next/link";
-import { useGetEmployersQuery } from "@/redux/features/employer/employerApi";
-import { IEmployer } from "@/types/user";
+import EmployersPreview from "./EmployersPreview";
+import { CardSkeletonGrid } from "../skeleton/CardSkeleton";
 
 const FindYourDreamTeam = () => {
-  const { data: employersData, isLoading } = useGetEmployersQuery(null);
-  console.log(" Employers Data:", employersData);
-
-  if (isLoading) {
-    return <div>Loading...</div>;
-  }
-
   const opportunities: string[] = [
     "Club Professional and Amateur - Discover players, staff and insights",
     "Agent - Manage talent and explore club networks",
@@ -22,52 +13,7 @@ const FindYourDreamTeam = () => {
     "Staff - Browse and connect with Clubs and Agents",
     "College/University - Connect with Coaches and discover soccer talents",
   ];
- 
-  //   {
-  //     id: 1,
-  //     name: "Barcelona FC",
-  //     location: "Barcelona, Spain",
-  //     logo: "🔵",
-  //     verified: true,
-  //     clubType: "Professional Club",
-  //     activeJobPosts: 8,
-  //     followers: 125430,
-  //     following: 45,
-  //   },
-  //   {
-  //     id: 2,
-  //     name: "Manchester United",
-  //     location: "Manchester, England",
-  //     logo: "🔴",
-  //     verified: true,
-  //     clubType: "Professional Club",
-  //     activeJobPosts: 12,
-  //     followers: 98750,
-  //     following: 67,
-  //   },
-  //   {
-  //     id: 3,
-  //     name: "Bayern Munich",
-  //     location: "Munich, Germany",
-  //     logo: "⚪",
-  //     verified: true,
-  //     clubType: "Professional Club",
-  //     activeJobPosts: 7,
-  //     followers: 87643,
-  //     following: 52,
-  //   },
-  //   {
-  //     id: 4,
-  //     name: "Ajax Amsterdam",
-  //     location: "Amsterdam, Netherlands",
-  //     logo: "🟡",
-  //     verified: true,
-  //     clubType: "Professional Club",
-  //     activeJobPosts: 5,
-  //     followers: 54320,
-  //     following: 89,
-  //   },
-  // ];
+
   return (
     <div className="min-h-screen bg-white">
       <div className="container mx-auto px-4 py-8 lg:py-16">
@@ -102,11 +48,9 @@ const FindYourDreamTeam = () => {
               </h2>
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-3 md:gap-4 mb-6">
-              {employersData?.data?.slice(0,4).map((employer:IEmployer) => (
-                <EmployerCard key={employer._id} employer={employer} />
-              ))}
-            </div>
+            <Suspense fallback={<CardSkeletonGrid />}>
+              <EmployersPreview />
+            </Suspense>
 
             <div className="flex justify-end">
               <Button className="bg-yellow-300 hover:bg-yellow-400 text-black font-semibold px-6 py-3 rounded-lg">
