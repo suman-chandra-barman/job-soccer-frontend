@@ -11,7 +11,6 @@ import {
   LogIn,
   Crown,
   Menu,
-  UserPlus,
   UserSquare,
 } from "lucide-react";
 import { usePathname, useRouter } from "next/navigation";
@@ -32,6 +31,7 @@ import { AvatarImage } from "@radix-ui/react-avatar";
 import { useGetMeQuery } from "@/redux/features/auth/authApi";
 import { useAppDispatch } from "@/redux/hooks";
 import { logout } from "@/redux/features/auth/authSlice";
+import { Button } from "../ui/button";
 
 // Types for notification data
 interface NotificationItem {
@@ -76,8 +76,6 @@ export function Navbar() {
         { name: "Job Board", href: "/job-board", icon: Briefcase },
         { name: "Upgrade", href: "/upgrade", icon: Crown },
         { name: "Messages", href: "/messages", icon: MessageCircle },
-        { name: "Sign In", href: "/signin", icon: LogIn },
-        { name: "Sign Up", href: "/signup", icon: UserPlus },
       ];
 
   const isActiveLink = (href) => pathname === href;
@@ -152,12 +150,12 @@ export function Navbar() {
     <nav className="bg-[#FFF8CC] border-b sticky top-0 z-50 text-[#362F05]">
       <div className="container mx-auto px-4">
         <div className="flex items-center gap-4 justify-between py-1">
-          {/* Logo */}
+          {/* Job Soccer Logo */}
           <Link
             href="/"
             className="flex items-center bg-white p-1 rounded-full"
           >
-            <Image src={logo} alt="Logo" className="h-16 w-16" priority />
+            <Image src={logo} alt="Logo" className="w-16 h-auto" priority />
           </Link>
 
           {/* Hamburger Menu for Mobile */}
@@ -188,9 +186,9 @@ export function Navbar() {
               </DropdownMenu>
             )}
           </div>
+
           {/* Desktop Navigation */}
-          <div className="hidden lg:flex items-center justify-end gap-4 lg:gap-8 w-full">
-            {/* Icon Links */}
+          <div className="hidden lg:flex items-center justify-center gap-4 lg:gap-8 w-full">
             {iconLinks.map((link) => (
               <Link
                 key={link.name}
@@ -206,7 +204,10 @@ export function Navbar() {
                 <span className="text-xs mt-1">{link.name}</span>
               </Link>
             ))}
-            {isLoggedIn && (
+          </div>
+
+          <div className="hidden lg:flex justify-end">
+            {isLoggedIn ? (
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
                   <Avatar className="w-10 h-10 cursor-pointer">
@@ -225,6 +226,15 @@ export function Navbar() {
                   </DropdownMenuItem>
                 </DropdownMenuContent>
               </DropdownMenu>
+            ) : (
+              <Link
+                href={"/signin"}
+                className={`flex flex-col items-center flex-nowrap transition-colors`}
+              >
+                <Button className=" bg-black hover:bg-gray-800 text-white hover:text-white rounded-md font-medium">
+                  Sign In
+                </Button>
+              </Link>
             )}
           </div>
         </div>
@@ -261,11 +271,23 @@ export function Navbar() {
                     <span>{link.name}</span>
                   </Link>
                 ))}
+                <Link
+                  href={"/signin"}
+                  className={`flex space-x-2 items-center flex-nowrap transition-colors ${
+                    isActiveLink("/signin")
+                      ? "text-green-500"
+                      : "text-gray-600 hover:text-green-500"
+                  }`}
+                >
+                  <LogIn className="h-5 w-5" />
+                  <span>Log in</span>
+                </Link>
               </div>
             </SheetContent>
           </Sheet>
         </div>
       </div>
+
       {/* Notification Modal */}
       <NotificationModal
         isOpen={isNotificationOpen}
