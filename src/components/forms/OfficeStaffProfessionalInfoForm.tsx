@@ -19,7 +19,7 @@ import { TOfficeStaffProfessionalInfo } from "@/types/profile";
 import {
   availabilityOptions,
   countryList,
-  positionOptions,
+  officeStaffPositionOptions,
 } from "@/constants/selectOptions";
 
 interface IOfficeStaffProfessionalInfoFormProps {
@@ -126,7 +126,7 @@ export function OfficeStaffProfessionalInfoForm({
                   <SelectValue placeholder="Select your position" />
                 </SelectTrigger>
                 <SelectContent>
-                  {positionOptions.map((pos) => (
+                  {officeStaffPositionOptions.map((pos) => (
                     <SelectItem key={pos} value={pos}>
                       {pos}
                     </SelectItem>

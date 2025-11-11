@@ -14,10 +14,19 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { professionalPlayerProfessionalInfoSchema } from "@/shchemas/profileValidation";
 import {
-  professionalPlayerProfessionalInfoSchema,
-  type TProfessionalPlayerProfessionalInfo,
-} from "@/shchemas/profileValidation";
+  availabilityOptions,
+  countryList,
+  divisionLevelOptions,
+  footOptions,
+  genderOptions,
+  heightUnitOptions,
+  nationalTeamCategoryOptions,
+  playerPositionOptions,
+  weightUnitOptions,
+} from "@/constants/selectOptions";
+import { TProfessionalPlayerProfessionalInfo } from "@/types/profile";
 
 interface IProfessionalPlayerProfessionalInfoFormProps {
   onNext: (data: TProfessionalPlayerProfessionalInfo) => void;
@@ -45,7 +54,17 @@ export function ProfessionalPlayerProfessionalInfoForm({
     formState: { errors, isValid },
   } = useForm<TProfessionalPlayerProfessionalInfo>({
     resolver: zodResolver(professionalPlayerProfessionalInfoSchema),
-    defaultValues: initialData,
+    defaultValues: {
+      ...(initialData ?? {}),
+      height: {
+        size: initialData?.height?.size ?? "",
+        unit: initialData?.height?.unit ?? "ft",
+      },
+      weight: {
+        size: initialData?.weight?.size ?? "",
+        unit: initialData?.weight?.unit ?? "kg",
+      },
+    },
     mode: "onChange",
   });
 
@@ -64,118 +83,156 @@ export function ProfessionalPlayerProfessionalInfoForm({
       <form className="space-y-8">
         <FormSection title="Professional Information">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            {/* Gender */}
             <FormField label="Gender" error={errors.gender?.message}>
-              <Select onValueChange={(value) => setValue("gender", value)}>
+              <Select
+                onValueChange={(value) =>
+                  setValue(
+                    "gender" as const,
+                    value as TProfessionalPlayerProfessionalInfo["gender"],
+                    {
+                      shouldValidate: true,
+                      shouldDirty: true,
+                    }
+                  )
+                }
+              >
                 <SelectTrigger className="bg-gray-50 border-0 w-full">
                   <SelectValue placeholder="Select your gender" />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="male">Male</SelectItem>
-                  <SelectItem value="female">Female</SelectItem>
-                  <SelectItem value="other">Other</SelectItem>
+                  {genderOptions.map((item) => (
+                    <SelectItem key={item} value={item}>
+                      {item}
+                    </SelectItem>
+                  ))}
                 </SelectContent>
               </Select>
             </FormField>
 
+            {/* Availability */}
             <FormField
               label="Availability"
               error={errors.availability?.message}
             >
               <Select
-                onValueChange={(value) => setValue("availability", value)}
-              >
-                <SelectTrigger className="bg-gray-50 border-0 w-full">
-                  <SelectValue placeholder="Availability" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="now">Now</SelectItem>
-                  <SelectItem value="later">Later</SelectItem>
-                  <SelectItem value="soon">Soon</SelectItem>
-                </SelectContent>
-              </Select>
-            </FormField>
-
-            <FormField label="Height" error={errors.height?.message}>
-              <div className="flex space-x-2">
-                <Input
-                  {...register("height")}
-                  placeholder="Ex. 5.7"
-                  className="bg-gray-50 border-0"
-                />
-                <Select defaultValue="ft">
-                  <SelectTrigger className="w-20 bg-gray-50 border-0">
-                    <SelectValue />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="ft">ft</SelectItem>
-                    <SelectItem value="cm">cm</SelectItem>
-                  </SelectContent>
-                </Select>
-              </div>
-            </FormField>
-
-            <FormField label="Weight" error={errors.weight?.message}>
-              <div className="flex space-x-2">
-                <Input
-                  {...register("weight")}
-                  placeholder="Ex. 75"
-                  className="bg-gray-50 border-0"
-                />
-                <Select defaultValue="kg">
-                  <SelectTrigger className="w-20 bg-gray-50 border-0">
-                    <SelectValue />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="kg">kg</SelectItem>
-                    <SelectItem value="lbs">lbs</SelectItem>
-                  </SelectContent>
-                </Select>
-              </div>
-            </FormField>
-
-            <FormField
-              label="NationalTeamCategory"
-              error={errors.nationalTeamCategory?.message}
-            >
-              <Select
                 onValueChange={(value) =>
-                  setValue("nationalTeamCategory", value)
+                  setValue(
+                    "availability",
+                    value as unknown as TProfessionalPlayerProfessionalInfo["availability"],
+                    { shouldValidate: true, shouldDirty: true }
+                  )
                 }
               >
                 <SelectTrigger className="bg-gray-50 border-0 w-full">
-                  <SelectValue placeholder="Select your national team category" />
+                  <SelectValue placeholder="Select availability" />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="U14">U14</SelectItem>
-                  <SelectItem value="U15">U15</SelectItem>
-                  <SelectItem value="U16">U16</SelectItem>
-                  <SelectItem value="U17">U17</SelectItem>
-                  <SelectItem value="U18">U18</SelectItem>
-                  <SelectItem value="U19">U19</SelectItem>
-                  <SelectItem value="U20">U20</SelectItem>
-                  <SelectItem value="U21">U21</SelectItem>
-                  <SelectItem value="U22">U22</SelectItem>
-                  <SelectItem value="U23">U23</SelectItem>
-                  <SelectItem value="U24">U24</SelectItem>
+                  {availabilityOptions.map((item) => (
+                    <SelectItem key={item} value={item}>
+                      {item}
+                    </SelectItem>
+                  ))}
                 </SelectContent>
               </Select>
             </FormField>
 
-            <FormField
-              label="NationalTeamGames"
-              error={errors.nationalTeamGames?.message}
-            >
-              <Input
-                {...register("nationalTeamGames")}
-                placeholder="How many games did you play?"
-                className="bg-gray-50 border-0"
-              />
+            {/* Height */}
+            <FormField label="Height" error={errors.height?.size?.message}>
+              <div className="flex space-x-2">
+                <Input
+                  {...register("height.size" as const)}
+                  placeholder="Ex. 5.7"
+                  className="bg-gray-50 border-0"
+                />
+                <Select
+                  defaultValue={initialData?.height?.unit || "ft"}
+                  onValueChange={(value) =>
+                    setValue(
+                      "height.unit" as const,
+                      value as TProfessionalPlayerProfessionalInfo["height"]["unit"],
+                      {
+                        shouldValidate: true,
+                        shouldDirty: true,
+                      }
+                    )
+                  }
+                >
+                  <SelectTrigger className="w-20 bg-gray-50 border-0">
+                    <SelectValue placeholder="Select" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {heightUnitOptions.map((item) => (
+                      <SelectItem key={item} value={item}>
+                        {item}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </div>
             </FormField>
 
-            <FormField
-              label="Current Club"
-              error={errors.currentClub?.message}
-            >
+            {/* Weight */}
+            <FormField label="Weight" error={errors.weight?.size?.message}>
+              <div className="flex space-x-2">
+                <Input
+                  {...register("weight.size" as const)}
+                  placeholder="Ex. 75"
+                  className="bg-gray-50 border-0"
+                />
+                <Select
+                  defaultValue={initialData?.weight?.unit || "kg"}
+                  onValueChange={(value) =>
+                    setValue(
+                      "weight.unit" as const,
+                      value as TProfessionalPlayerProfessionalInfo["weight"]["unit"],
+                      {
+                        shouldValidate: true,
+                        shouldDirty: true,
+                      }
+                    )
+                  }
+                >
+                  <SelectTrigger className="w-20 bg-gray-50 border-0">
+                    <SelectValue placeholder="Select" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {weightUnitOptions.map((item) => (
+                      <SelectItem key={item} value={item}>
+                        {item}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </div>
+            </FormField>
+
+            {/* Country */}
+            <FormField label="Country" error={errors.country?.message}>
+              <Select
+                onValueChange={(value) =>
+                  setValue(
+                    "country",
+                    value as unknown as TProfessionalPlayerProfessionalInfo["country"],
+                    { shouldValidate: true, shouldDirty: true }
+                  )
+                }
+              >
+                <SelectTrigger className="bg-gray-50 border-0 w-full">
+                  <SelectValue placeholder="Select country" />
+                </SelectTrigger>
+                <SelectContent>
+                  {countryList.map((item) => (
+                    <SelectItem key={item} value={item}>
+                      {item}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </FormField>
+
+            {/* Current Club */}
+            <FormField label="Current club" error={errors.currentClub?.message}>
               <Input
                 {...register("currentClub")}
                 placeholder="Ex. Real Madrid"
@@ -183,75 +240,124 @@ export function ProfessionalPlayerProfessionalInfoForm({
               />
             </FormField>
 
+            {/* National Team Category */}
             <FormField
-              label="Social Media"
-              error={errors.socialMedia?.message}
+              label="National Team Category"
+              error={errors.nationalTeamCategory?.message}
+            >
+              <Select
+                onValueChange={(value) =>
+                  setValue(
+                    "nationalTeamCategory",
+                    value as unknown as TProfessionalPlayerProfessionalInfo["nationalTeamCategory"],
+                    { shouldValidate: true, shouldDirty: true }
+                  )
+                }
+              >
+                <SelectTrigger className="bg-gray-50 border-0 w-full">
+                  <SelectValue placeholder="Select your category" />
+                </SelectTrigger>
+                <SelectContent>
+                  {nationalTeamCategoryOptions.map((item) => (
+                    <SelectItem key={item} value={item}>
+                      {item}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </FormField>
+
+            {/* nationalTeamGames */}
+            <FormField
+              label="National Team Games"
+              error={errors.nationalTeamGames?.message}
             >
               <Input
-                {...register("socialMedia")}
-                placeholder="Social Media"
-                className="bg-gray-50 bord er-0"
+                {...register("nationalTeamGames")}
+                placeholder="Ex. 10"
+                className="bg-gray-50 border-0"
               />
             </FormField>
 
-            <FormField
-              label="Division Level"
-              error={errors.nationalTeamGames?.message}
-            >
+            {/* Foot */}
+            <FormField label="Foot" error={errors.foot?.message}>
               <Select
-                onValueChange={(value) => setValue("divisionLevel", value)}
+                onValueChange={(value) =>
+                  setValue(
+                    "foot",
+                    value as unknown as TProfessionalPlayerProfessionalInfo["foot"],
+                    { shouldValidate: true, shouldDirty: true }
+                  )
+                }
               >
                 <SelectTrigger className="bg-gray-50 border-0 w-full">
-                  <SelectValue placeholder="Select divion level" />
+                  <SelectValue placeholder="Select foot" />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="1">1</SelectItem>
-                  <SelectItem value="2">2</SelectItem>
-                  <SelectItem value="3">3</SelectItem>
-                  <SelectItem value="4">4</SelectItem> 
+                  {footOptions.map((item) => (
+                    <SelectItem key={item} value={item}>
+                      {item}
+                    </SelectItem>
+                  ))}
                 </SelectContent>
               </Select>
             </FormField>
 
-            <FormField label="Foot" error={errors.foot?.message}>
-              <Select onValueChange={(value) => setValue("foot", value)}>
-                <SelectTrigger className="bg-gray-50 border-0 w-full">
-                  <SelectValue placeholder="Foot" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="right">Right</SelectItem>
-                  <SelectItem value="left">Left</SelectItem>
-                  <SelectItem value="both">Both</SelectItem>
-                </SelectContent>
-              </Select>
-            </FormField>
-
+            {/* Position */}
             <FormField label="Position" error={errors.position?.message}>
-              <Select onValueChange={(value) => setValue("position", value)}>
+              <Select
+                onValueChange={(value) =>
+                  setValue(
+                    "position",
+                    value as unknown as TProfessionalPlayerProfessionalInfo["position"],
+                    { shouldValidate: true, shouldDirty: true }
+                  )
+                }
+              >
                 <SelectTrigger className="bg-gray-50 border-0 w-full">
                   <SelectValue placeholder="Select your position" />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="GK">GK</SelectItem>
-                  <SelectItem value="central back">Central back</SelectItem>
-                  <SelectItem value="left back">Left back</SelectItem>
-                  <SelectItem value="right back">Right back</SelectItem>
-                  <SelectItem value="defensive midfielder">
-                    Defensive midfielder
-                  </SelectItem>
-                  <SelectItem value="offensive midfielder">
-                    Offensive midfielder
-                  </SelectItem>
-                  <SelectItem value="right winger">Right winger</SelectItem>
-                  <SelectItem value="left winger">Left winger</SelectItem>
-                  <SelectItem value="forward">Forward</SelectItem>
-                  <SelectItem value="striker">Striker</SelectItem>
+                  {playerPositionOptions.map((item) => (
+                    <SelectItem key={item} value={item}>
+                      {item}
+                    </SelectItem>
+                  ))}
                 </SelectContent>
               </Select>
             </FormField>
 
-             <FormField
-              label="Tearm's Joined"
+            {/* Social Media */}
+            <FormField label="Social Media" error={errors.socialMedia?.message}>
+              <Input
+                {...register("socialMedia")}
+                placeholder="Social Media"
+                className="bg-gray-50 border-0"
+              />
+            </FormField>
+
+            {/* Division level */}
+            <FormField
+              label="Division Level"
+              error={errors.nationalTeamGames?.message}
+            >
+              <Select onValueChange={(value) => setValue("division", value)}>
+                <SelectTrigger className="bg-gray-50 border-0 w-full">
+                  <SelectValue placeholder="Select divion level" />
+                </SelectTrigger>
+                <SelectContent>
+                  {divisionLevelOptions.map((item) => (
+                    <SelectItem key={item} value={item}>
+                      {item}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </FormField>
+
+            {/* Teams Joined */}
+            <FormField
+              label="Team's Joined"
               error={errors.teamsJoined?.message}
             >
               <Input
@@ -261,21 +367,19 @@ export function ProfessionalPlayerProfessionalInfoForm({
               />
             </FormField>
 
+            {/* Agent */}
             <FormField
-              label="Agent"
+              label="Agent (if applicable)"
               error={errors.agent?.message}
             >
-              <Select onValueChange={(value) => setValue("agent", value)}>
-                <SelectTrigger className="bg-gray-50 border-0 w-full">
-                  <SelectValue placeholder="Select your answer" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="yes">Yes</SelectItem>
-                  <SelectItem value="no">No</SelectItem>
-                </SelectContent>
-              </Select>
+              <Input
+                {...register("agent")}
+                placeholder="Agent name"
+                className="bg-gray-50 border-0"
+              />
             </FormField>
 
+            {/* Contract Expires */}
             <FormField
               label="Contract Expires"
               error={errors.contractExpires?.message}
@@ -283,7 +387,7 @@ export function ProfessionalPlayerProfessionalInfoForm({
               <Input
                 {...register("contractExpires")}
                 placeholder="Contract expires"
-                className="bg-gray-50 bord er-0"
+                className="bg-gray-50 border-0"
               />
             </FormField>
           </div>

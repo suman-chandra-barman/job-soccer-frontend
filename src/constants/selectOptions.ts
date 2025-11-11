@@ -207,8 +207,8 @@ export type TGender = (typeof genderOptions)[number];
 export const availabilityOptions = ["Now", "Soon", "Later"] as const;
 export type TAvailability = (typeof availabilityOptions)[number];
 
-// Position options
-export const positionOptions = [
+// Office Staff Position options
+export const officeStaffPositionOptions = [
   "Administrative Director",
   "Community Manager",
   "Data Analyst",
@@ -218,4 +218,62 @@ export const positionOptions = [
   "Equipment Staff",
   "Sales",
 ] as const;
-export type TPosition = (typeof positionOptions)[number];
+export type TOfficeStaffPosition = (typeof officeStaffPositionOptions)[number];
+
+// Field Staff Position options
+export const fieldStaffPositionOptions = [
+  "Administrative Director",
+  "Community Manager",
+  "Data Analyst",
+  "Digital Marketing",
+  "Medical Staff",
+  "Performance Staff",
+  "Equipment Staff",
+  "Sales",
+] as const;
+export type TFieldStaffPosition = (typeof fieldStaffPositionOptions)[number];
+
+// Player Position options
+export const playerPositionOptions = [
+  "GK",
+  "Central back",
+  "Left back",
+  "Right back",
+  "Defensive midfielder",
+  "Offensive midfielder",
+  "Right winger",
+  "Left winger",
+  "Forward",
+  "Striker",
+] as const;
+export type TPlayerPosition = (typeof playerPositionOptions)[number];
+
+// National Team Category options
+export const nationalTeamCategoryOptions = [
+  "U14",
+  "U15",
+  "U16",
+  "U17",
+  "U18",
+  "U19",
+  "U20",
+  "U21",
+] as const;
+export type TNationalTeamCategory =
+  (typeof nationalTeamCategoryOptions)[number];
+
+// Foot options
+export const footOptions = ["Right", "Left", "Both"] as const;
+export type TFoot = (typeof footOptions)[number];
+
+// Height Unit options
+export const heightUnitOptions = ["cm", "m", "in", "ft"] as const;
+export type THeightUnit = (typeof heightUnitOptions)[number];
+
+// Weight Unit options
+export const weightUnitOptions = ["kg", "lb"] as const;
+export type TWeightUnit = (typeof weightUnitOptions)[number];
+
+// Division Level options
+export const divisionLevelOptions = ["1", "2", "3", "4"] as const;
+export type TDivisionLevel = (typeof divisionLevelOptions)[number];

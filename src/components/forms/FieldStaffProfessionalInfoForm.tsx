@@ -19,8 +19,8 @@ import { TFieldStaffProfessionalInfo } from "@/types/profile";
 import {
   availabilityOptions,
   countryList,
+  fieldStaffPositionOptions,
   genderOptions,
-  positionOptions,
 } from "@/constants/selectOptions";
 
 interface IFieldStaffProfessionalInfoFormProps {
@@ -170,7 +170,7 @@ export function FieldStaffProfessionalInfoForm({
                   <SelectValue placeholder="Select your position" />
                 </SelectTrigger>
                 <SelectContent>
-                  {positionOptions.map((pos) => (
+                  {fieldStaffPositionOptions.map((pos) => (
                     <SelectItem key={pos} value={pos}>
                       {pos}
                     </SelectItem>

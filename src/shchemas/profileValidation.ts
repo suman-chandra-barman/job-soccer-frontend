@@ -124,18 +124,25 @@ export const highSchoolPlayerProfessionalInfoSchema = z.object({
 // Professional player Professional Information Schema
 export const professionalPlayerProfessionalInfoSchema = z.object({
   gender: z.string().min(1, "Gender is required"),
-  availability: z.string().min(1, "Availability is required"),
-  height: z.string().min(1, "Height is required"),
-  weight: z.string().min(1, "Weight is required"),
+  height: z.object({
+    size: z.string().min(1, "Height is required"),
+    unit: z.enum(["cm", "m", "in", "ft"]),
+  }),
+  weight: z.object({
+    size: z.string().min(1, "Weight is required"),
+    unit: z.enum(["kg", "lb"]),
+  }),
   nationalTeamCategory: z.string().min(1, "National Team Category is required"),
-  nationalTeamGames: z.string().min(1, "National Team Games is required"),
   currentClub: z.string().min(1, "Current club is required"),
+  division: z.string().trim().min(1, "Division is required"),
+  position: z.string().min(1, "Position is required"),
+  agent: z.string().optional(),
+  country: z.string().min(1, "Country is required"),
+  availability: z.string().min(1, "Availability is required"),
   socialMedia: z.string().min(1, "Social Media is required"),
   foot: z.string().min(1, "Foot is required"),
-  position: z.string().min(1, "Position is required"),
-  divisionLevel: z.string().min(1, "Division Level is required"),
+  nationalTeamGames: z.string().min(1, "National Team Games is required"),
   teamsJoined: z.string().min(1, "Team's Joined is required"),
-  agent: z.string().min(1, "Agent is required"),
   contractExpires: z.string().min(1, "Contract expires is required"),
 });
 
