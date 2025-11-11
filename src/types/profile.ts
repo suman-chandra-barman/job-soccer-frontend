@@ -1,6 +1,6 @@
 import {
   amateurPlayerProfessionalInfoSchema,
-  collegePlayerProfessionalInfoSchema,
+  collegeOrUniversityPlayerProfessionalInfoSchema,
   completeProfileSchema,
   fieldStaffProfessionalInfoSchema,
   highlightsSchema,
@@ -30,8 +30,8 @@ export type TProfessionalPlayerProfessionalInfo = z.infer<
 export type THighSchoolPlayerProfessionalInfo = z.infer<
   typeof highSchoolPlayerProfessionalInfoSchema
 >;
-export type TCollegePlayerProfessionalInfo = z.infer<
-  typeof collegePlayerProfessionalInfoSchema
+export type TCollegeOrUniversityPlayerProfessionalInfo = z.infer<
+  typeof collegeOrUniversityPlayerProfessionalInfoSchema
 >;
 export type TFieldStaffProfessionalInfo = z.infer<
   typeof fieldStaffProfessionalInfoSchema

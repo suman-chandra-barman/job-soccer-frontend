@@ -10,12 +10,12 @@ import {
   type THighlights,
   type TAmateurPlayerProfessionalInfo,
   type THighSchoolPlayerProfessionalInfo,
-  type TCollegePlayerProfessionalInfo,
   type TOfficeStaffProfessionalInfo,
   type TFieldStaffProfessionalInfo,
   type TCandidateRole,
   type TMultipleHighlights,
   CandidateRole,
+  TCollegeOrUniversityPlayerProfessionalInfo,
 } from "@/types/profile";
 import { useRouter } from "next/navigation";
 import { candidateRoleConfig } from "@/shchemas/profileValidation";
@@ -23,7 +23,6 @@ import { MultipleHighlightsForm } from "@/components/forms/MultipleHighlisghtsFo
 import { AmateurPlayerProfessionalInfoForm } from "@/components/forms/AmateurPlayerProfessionalInfoForm";
 import { ProfessionalPlayerProfessionalInfoForm } from "@/components/forms/ProfessionalPlayerProfessionalInfoForm";
 import { HighSchoolPlayerProfessionalInfoForm } from "@/components/forms/HighSchoolPlayerProfessionalInfoForm";
-import { CollegePlayerProfessionalInfoForm } from "@/components/forms/CollegePlayerProfessionalInfoForm";
 import { FieldStaffProfessionalInfoForm } from "@/components/forms/FieldStaffProfessionalInfoForm";
 import { OfficeStaffProfessionalInfoForm } from "@/components/forms/OfficeStaffProfessionalInfoForm";
 
@@ -41,7 +40,7 @@ export default function CompleteProfilePage({
       | TProfessionalPlayerProfessionalInfo
       | TAmateurPlayerProfessionalInfo
       | THighSchoolPlayerProfessionalInfo
-      | TCollegePlayerProfessionalInfo
+      | TCollegeOrUniversityPlayerProfessionalInfo
       | TOfficeStaffProfessionalInfo
       | TFieldStaffProfessionalInfo;
     highlights?: THighlights | TMultipleHighlights;
@@ -87,7 +86,7 @@ export default function CompleteProfilePage({
       | TProfessionalPlayerProfessionalInfo
       | TAmateurPlayerProfessionalInfo
       | THighSchoolPlayerProfessionalInfo
-      | TCollegePlayerProfessionalInfo
+      | TCollegeOrUniversityPlayerProfessionalInfo
       | TOfficeStaffProfessionalInfo
       | TFieldStaffProfessionalInfo
   ) => {

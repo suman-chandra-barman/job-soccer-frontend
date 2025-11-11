@@ -81,7 +81,7 @@ export function PersonalInfoForm({
             >
               <Input
                 {...register("placeOfBirth")}
-                placeholder="New York"
+                placeholder="Ex. New York"
                 className="bg-gray-50 border-0"
               />
             </FormField>

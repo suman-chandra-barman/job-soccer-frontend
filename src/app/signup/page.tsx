@@ -21,6 +21,7 @@ import { signUpSchema, type SignUpFormData } from "@/shchemas/signupValidation";
 import { useRouter } from "next/navigation";
 import RoleSelect from "@/components/input/SelectRole";
 import { useSignupMutation } from "@/redux/features/auth/authApi";
+import { Spinner } from "@/components/ui/spinner";
 
 export default function SignUpPage() {
   const [userRype, setUserRype] = useState<string>("");
@@ -224,7 +225,7 @@ export default function SignUpPage() {
                 disabled={isLoading}
                 className="w-full cursor-pointer bg-primary text-[#252525] hover:bg-amber-300 py-3 rounded-md"
               >
-                {isLoading ? "Creating Account..." : "Sign Up"}
+                {isLoading ? <Spinner className="h-4 w-4" /> : "Sign up"}
               </Button>
             </form>
           </Form>

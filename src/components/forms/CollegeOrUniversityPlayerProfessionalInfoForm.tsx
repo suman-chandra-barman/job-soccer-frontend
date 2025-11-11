@@ -14,13 +14,13 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { amateurPlayerProfessionalInfoSchema } from "@/shchemas/profileValidation";
-import type { TAmateurPlayerProfessionalInfo } from "@/types/profile";
+import { collegeOrUniversityPlayerProfessionalInfoSchema } from "@/shchemas/profileValidation";
+import { TCollegeOrUniversityPlayerProfessionalInfo } from "@/types/profile";
 
-interface IAmateurPlayerProfessionalInfoFormProps {
-  onNext: (data: TAmateurPlayerProfessionalInfo) => void;
+interface ICollegeOrUniversityPlayerProfessionalInfoFormProps {
+  onNext: (data: TCollegeOrUniversityPlayerProfessionalInfo) => void;
   onPrev: () => void;
-  initialData?: Partial<TAmateurPlayerProfessionalInfo>;
+  initialData?: Partial<TCollegeOrUniversityPlayerProfessionalInfo>;
   steps?: Array<{
     id: number;
     label: string;
@@ -29,19 +29,19 @@ interface IAmateurPlayerProfessionalInfoFormProps {
   }>;
 }
 
-export function AmateurPlayerProfessionalInfoForm({
+export function CollegeOrUniversityPlayerProfessionalInfoForm({
   onNext,
   onPrev,
   initialData,
   steps,
-}: IAmateurPlayerProfessionalInfoFormProps) {
+}: ICollegeOrUniversityPlayerProfessionalInfoFormProps) {
   const {
     register,
     handleSubmit,
     setValue,
     formState: { errors, isValid },
-  } = useForm<TAmateurPlayerProfessionalInfo>({
-    resolver: zodResolver(amateurPlayerProfessionalInfoSchema),
+  } = useForm<TCollegeOrUniversityPlayerProfessionalInfo>({
+    resolver: zodResolver(collegeOrUniversityPlayerProfessionalInfoSchema),
     defaultValues: {
       ...(initialData ?? {}),
       height: {
@@ -56,9 +56,7 @@ export function AmateurPlayerProfessionalInfoForm({
     mode: "onChange",
   });
 
-  const onSubmit = (data: TAmateurPlayerProfessionalInfo) => {
-    console.log("Amateur Player Professional Info:", data);
-
+  const onSubmit = (data: TCollegeOrUniversityPlayerProfessionalInfo) => {
     onNext(data);
   };
 
@@ -73,14 +71,13 @@ export function AmateurPlayerProfessionalInfoForm({
       <form className="space-y-8">
         <FormSection title="Professional Information">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-
             {/* Gender */}
             <FormField label="Gender" error={errors.gender?.message}>
               <Select
                 onValueChange={(value) =>
                   setValue(
                     "gender" as const,
-                    value as TAmateurPlayerProfessionalInfo["gender"],
+                    value as TCollegeOrUniversityPlayerProfessionalInfo["gender"],
                     {
                       shouldValidate: true,
                       shouldDirty: true,
@@ -108,7 +105,7 @@ export function AmateurPlayerProfessionalInfoForm({
                 onValueChange={(value) =>
                   setValue(
                     "availability",
-                    value as unknown as TAmateurPlayerProfessionalInfo["availability"],
+                    value as unknown as TCollegeOrUniversityPlayerProfessionalInfo["availability"],
                     { shouldValidate: true, shouldDirty: true }
                   )
                 }
@@ -137,7 +134,7 @@ export function AmateurPlayerProfessionalInfoForm({
                   onValueChange={(value) =>
                     setValue(
                       "height.unit" as const,
-                      value as TAmateurPlayerProfessionalInfo["height"]["unit"],
+                      value as TCollegeOrUniversityPlayerProfessionalInfo["height"]["unit"],
                       {
                         shouldValidate: true,
                         shouldDirty: true,
@@ -171,7 +168,7 @@ export function AmateurPlayerProfessionalInfoForm({
                   onValueChange={(value) =>
                     setValue(
                       "weight.unit" as const,
-                      value as TAmateurPlayerProfessionalInfo["weight"]["unit"],
+                      value as TCollegeOrUniversityPlayerProfessionalInfo["weight"]["unit"],
                       {
                         shouldValidate: true,
                         shouldDirty: true,
@@ -199,43 +196,13 @@ export function AmateurPlayerProfessionalInfoForm({
               />
             </FormField>
 
-            {/* National Team Category */}
-            <FormField
-              label="Category"
-              error={errors.nationalTeamCategory?.message}
-            >
-              <Select
-                onValueChange={(value) =>
-                  setValue(
-                    "nationalTeamCategory",
-                    value as unknown as TAmateurPlayerProfessionalInfo["nationalTeamCategory"],
-                    { shouldValidate: true, shouldDirty: true }
-                  )
-                }
-              >
-                <SelectTrigger className="bg-gray-50 border-0 w-full">
-                  <SelectValue placeholder="Select your category" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="U14">U14</SelectItem>
-                  <SelectItem value="U15">U15</SelectItem>
-                  <SelectItem value="U16">U16</SelectItem>
-                  <SelectItem value="U17">U17</SelectItem>
-                  <SelectItem value="U18">U18</SelectItem>
-                  <SelectItem value="U19">U19</SelectItem>
-                  <SelectItem value="U20">U20</SelectItem>
-                  <SelectItem value="U21">U21</SelectItem>
-                </SelectContent>
-              </Select>
-            </FormField>
-
             {/* Foot */}
             <FormField label="Foot" error={errors.foot?.message}>
               <Select
                 onValueChange={(value) =>
                   setValue(
                     "foot",
-                    value as unknown as TAmateurPlayerProfessionalInfo["foot"],
+                    value as unknown as TCollegeOrUniversityPlayerProfessionalInfo["foot"],
                     { shouldValidate: true, shouldDirty: true }
                   )
                 }
@@ -257,7 +224,7 @@ export function AmateurPlayerProfessionalInfoForm({
                 onValueChange={(value) =>
                   setValue(
                     "position",
-                    value as unknown as TAmateurPlayerProfessionalInfo["position"],
+                    value as unknown as TCollegeOrUniversityPlayerProfessionalInfo["position"],
                     { shouldValidate: true, shouldDirty: true }
                   )
                 }
@@ -294,10 +261,83 @@ export function AmateurPlayerProfessionalInfoForm({
             </FormField>
 
             {/* Agent */}
-            <FormField label="Agent" error={errors.agent?.message}>
+            <FormField
+              label="Agent (if applicable)"
+              error={errors.agent?.message}
+            >
               <Input
                 {...register("agent")}
                 placeholder="Ex. Suman Barman"
+                className="bg-gray-50 border-0"
+              />
+            </FormField>
+
+            {/* Category */}
+            <FormField
+              label="Category (if applicable)"
+              error={errors.category?.message}
+            >
+              <Input
+                {...register("category")}
+                placeholder="Ex. Forward"
+                className="bg-gray-50 border-0"
+              />
+            </FormField>
+
+            {/* school name */}
+            <FormField label="School Name" error={errors.schoolName?.message}>
+              <Input
+                {...register("schoolName")}
+                placeholder="Write your school name"
+                className="bg-gray-50 border-0"
+              />
+            </FormField>
+
+            {/* College or University Name */}
+            <FormField
+              label="College or University"
+              error={errors.collegeOrUniversity?.message}
+            >
+              <Input
+                {...register("collegeOrUniversity")}
+                placeholder="Write your college or university name"
+                className="bg-gray-50 border-0"
+              />
+            </FormField>
+            <FormField label="Diploma" error={errors.diploma?.message}>
+              <Input
+                {...register("diploma")}
+                placeholder="Write your diploma"
+                className="bg-gray-50 border-0"
+              />
+            </FormField>
+
+            <FormField
+              label="SAT/ACT (if applicable)"
+              error={errors.schoolName?.message}
+            >
+              <Input
+                {...register("satOrAct")}
+                placeholder="Write your diploma name"
+                className="bg-gray-50 border-0"
+              />
+            </FormField>
+
+            <FormField
+              label="GPA (if applicable)"
+              error={errors.schoolName?.message}
+            >
+              <Input
+                {...register("gpa")}
+                placeholder="Write your gpa"
+                className="bg-gray-50 border-0"
+              />
+            </FormField>
+
+            <FormField label="Country" error={errors.country?.message}>
+              <Input
+                {...register("country")}
+                placeholder="Write your country"
                 className="bg-gray-50 border-0"
               />
             </FormField>
@@ -314,7 +354,6 @@ export function AmateurPlayerProfessionalInfoForm({
                 className="bg-gray-50 border-0"
               />
             </FormField>
-            
           </div>
         </FormSection>
       </form>

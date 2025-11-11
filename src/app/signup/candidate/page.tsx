@@ -10,29 +10,24 @@ import {
   type THighlights,
   type TAmateurPlayerProfessionalInfo,
   type THighSchoolPlayerProfessionalInfo,
-  type TCollegePlayerProfessionalInfo,
+  type TCollegeOrUniversityPlayerProfessionalInfo,
   type TOfficeStaffProfessionalInfo,
   type TFieldStaffProfessionalInfo,
   type TMultipleHighlights,
   CandidateRole,
 } from "@/types/profile";
-import { useRouter } from "next/navigation";
 import { candidateRoleConfig } from "@/shchemas/profileValidation";
 import { MultipleHighlightsForm } from "@/components/forms/MultipleHighlisghtsForm";
 import { AmateurPlayerProfessionalInfoForm } from "@/components/forms/AmateurPlayerProfessionalInfoForm";
 import { ProfessionalPlayerProfessionalInfoForm } from "@/components/forms/ProfessionalPlayerProfessionalInfoForm";
 import { HighSchoolPlayerProfessionalInfoForm } from "@/components/forms/HighSchoolPlayerProfessionalInfoForm";
-import { CollegePlayerProfessionalInfoForm } from "@/components/forms/CollegePlayerProfessionalInfoForm";
+import { CollegeOrUniversityPlayerProfessionalInfoForm } from "@/components/forms/CollegeOrUniversityPlayerProfessionalInfoForm";
 import { FieldStaffProfessionalInfoForm } from "@/components/forms/FieldStaffProfessionalInfoForm";
 import { OfficeStaffProfessionalInfoForm } from "@/components/forms/OfficeStaffProfessionalInfoForm";
 import { useAppSelector } from "@/redux/hooks";
-import { useGetMeQuery } from "@/redux/features/auth/authApi";
+import { Spinner } from "@/components/ui/spinner";
 
 export default function CandidateProfilePage() {
-  // Get the user's token and data
-  const token = useAppSelector((state) => state.auth.token);
-  const { data: user } = useGetMeQuery(undefined, { skip: !token });
-
   const [currentStep, setCurrentStep] = useState(1);
   const [formData, setFormData] = useState<{
     personalInfo?: TPersonalInfo;
@@ -40,20 +35,21 @@ export default function CandidateProfilePage() {
       | TAmateurPlayerProfessionalInfo
       | TProfessionalPlayerProfessionalInfo
       | THighSchoolPlayerProfessionalInfo
-      | TCollegePlayerProfessionalInfo
+      | TCollegeOrUniversityPlayerProfessionalInfo
       | TOfficeStaffProfessionalInfo
       | TFieldStaffProfessionalInfo;
     highlights?: THighlights | TMultipleHighlights;
   }>({});
 
-  const router = useRouter();
-  const role = user?.data?.role as CandidateRole;
+  const user = useAppSelector((state) => state.auth.user);
 
-  const config = candidateRoleConfig[role];
+  const config = candidateRoleConfig[user?.role as CandidateRole];
 
   if (!config) {
     return (
-      <div className="grid h-screen w-full place-items-center">Loading...</div>
+      <div className="grid h-screen w-full place-items-center">
+        <Spinner className="size-8 text-yellow-500" />
+      </div>
     );
   }
 
@@ -88,7 +84,7 @@ export default function CandidateProfilePage() {
       | TProfessionalPlayerProfessionalInfo
       | TAmateurPlayerProfessionalInfo
       | THighSchoolPlayerProfessionalInfo
-      | TCollegePlayerProfessionalInfo
+      | TCollegeOrUniversityPlayerProfessionalInfo
       | TOfficeStaffProfessionalInfo
       | TFieldStaffProfessionalInfo
   ) => {
@@ -102,7 +98,6 @@ export default function CandidateProfilePage() {
     // Here you would typically submit the complete form data to your API
     console.log("Complete form data:", { ...formData, highlights: data });
     toast.success("Profile completed successfully!");
-
   };
 
   const handlePrevStep = () => {
@@ -110,26 +105,79 @@ export default function CandidateProfilePage() {
   };
 
   const renderProfessionalForm = () => {
-    const commonProps = {
+    const baseProps = {
       onNext: handleProfessionalInfoNext,
       onPrev: handlePrevStep,
-      initialData: formData.professionalInfo,
       steps,
-    };
+    } as const;
 
-    switch (role) {
+    switch (user?.role) {
       case CandidateRole.PROFESSIONAL_PLAYER:
-        return <ProfessionalPlayerProfessionalInfoForm {...commonProps} />;
+        return (
+          <ProfessionalPlayerProfessionalInfoForm
+            {...baseProps}
+            initialData={
+              formData.professionalInfo as
+                | TProfessionalPlayerProfessionalInfo
+                | undefined
+            }
+          />
+        );
       case CandidateRole.AMATEUR_PLAYER:
-        return <AmateurPlayerProfessionalInfoForm {...commonProps} />;
+        return (
+          <AmateurPlayerProfessionalInfoForm
+            {...baseProps}
+            initialData={
+              formData.professionalInfo as
+                | TAmateurPlayerProfessionalInfo
+                | undefined
+            }
+          />
+        );
       case CandidateRole.HIGH_SCHOOL:
-        return <HighSchoolPlayerProfessionalInfoForm {...commonProps} />;
+        return (
+          <HighSchoolPlayerProfessionalInfoForm
+            {...baseProps}
+            initialData={
+              formData.professionalInfo as
+                | THighSchoolPlayerProfessionalInfo
+                | undefined
+            }
+          />
+        );
       case CandidateRole.COLLEGE_UNIVERSITY:
-        return <CollegePlayerProfessionalInfoForm {...commonProps} />;
+        return (
+          <CollegeOrUniversityPlayerProfessionalInfoForm
+            {...baseProps}
+            initialData={
+              formData.professionalInfo as
+                | TCollegeOrUniversityPlayerProfessionalInfo
+                | undefined
+            }
+          />
+        );
       case CandidateRole.ON_FIELD_STAFF:
-        return <FieldStaffProfessionalInfoForm {...commonProps} />;
+        return (
+          <FieldStaffProfessionalInfoForm
+            {...baseProps}
+            initialData={
+              formData.professionalInfo as
+                | TFieldStaffProfessionalInfo
+                | undefined
+            }
+          />
+        );
       case CandidateRole.OFFICE_STAFF:
-        return <OfficeStaffProfessionalInfoForm {...commonProps} />;
+        return (
+          <OfficeStaffProfessionalInfoForm
+            {...baseProps}
+            initialData={
+              formData.professionalInfo as
+                | TOfficeStaffProfessionalInfo
+                | undefined
+            }
+          />
+        );
       default:
         return null;
     }

@@ -27,7 +27,7 @@ export const personalInfoSchema = z.object({
 
 // Amateur player Professional Information Schema
 export const amateurPlayerProfessionalInfoSchema = z.object({
-  gender: z.string().min(1, "Gender is required"),
+  gender: z.enum(["Male", "Female", "Other"]),
   availability: z.enum(["Now", "Soon", "Later"]),
   height: z.object({
     size: z.string().min(1, "Height is required"),
@@ -103,22 +103,30 @@ export const highSchoolPlayerProfessionalInfoSchema = z.object({
 });
 
 // High School player Professional Information Schema
-export const collegePlayerProfessionalInfoSchema = z.object({
+export const collegeOrUniversityPlayerProfessionalInfoSchema = z.object({
   gender: z.string().min(1, "Gender is required"),
   availability: z.string().min(1, "Availability is required"),
-  height: z.string().min(1, "Height is required"),
-  weight: z.string().min(1, "Weight is required"),
+  height: z.object({
+    size: z.string().min(1, "Height is required"),
+    unit: z.enum(["cm", "m", "in", "ft"]),
+  }),
+  weight: z.object({
+    size: z.string().min(1, "Weight is required"),
+    unit: z.enum(["kg", "lb"]),
+  }),
   currentClub: z.string().min(1, "Current club is required"),
   socialMedia: z.string().min(1, "Social Media is required"),
-  category: z.string().min(1, "Category is required"),
+  category: z.string().optional(),
   foot: z.string().min(1, "Foot is required"),
   position: z.string().min(1, "Position is required"),
   league: z.string().min(1, "League is required"),
-  agent: z.string().min(1, "Agent is required"),
+  agent: z.string().optional(),
   schoolName: z.string().min(1, "School Name is required"),
+  collegeOrUniversity: z.string().min(1, "College or University is required"),
   diploma: z.string().min(1, "Diploma is required"),
   satOrAct: z.string().optional(),
   gpa: z.string().optional(),
+  country: z.string().min(1, "Country is required"),
 });
 
 // Field staff Professional Information Schema
@@ -206,7 +214,7 @@ export const candidateRoleConfig: Record<
     highlightsSchema: singleHighlightsSchema,
   },
   [CandidateRole.COLLEGE_UNIVERSITY]: {
-    professionalSchema: collegePlayerProfessionalInfoSchema,
+    professionalSchema: collegeOrUniversityPlayerProfessionalInfoSchema,
     highlightsType: "single",
     highlightsSchema: singleHighlightsSchema,
   },
