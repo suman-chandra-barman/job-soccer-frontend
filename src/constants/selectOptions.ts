@@ -222,14 +222,18 @@ export type TOfficeStaffPosition = (typeof officeStaffPositionOptions)[number];
 
 // Field Staff Position options
 export const fieldStaffPositionOptions = [
-  "Administrative Director",
-  "Community Manager",
-  "Data Analyst",
-  "Digital Marketing",
-  "Medical Staff",
-  "Performance Staff",
-  "Equipment Staff",
-  "Sales",
+  "Head Coach",
+  "Assistant Coach",
+  "GK Coach",
+  "Mental Coach",
+  "Video Analyst Coach",
+  "Specific Offensive Coach",
+  "Specific Defensive Coach",
+  "Specific Technical Coach",
+  "Scout",
+  "Technical Director",
+  "Academy Director",
+  "Director of Coaching",
 ] as const;
 export type TFieldStaffPosition = (typeof fieldStaffPositionOptions)[number];
 
