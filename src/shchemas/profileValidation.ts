@@ -4,7 +4,6 @@ import {
   TCandidateRole,
   THighlightsType,
 } from "@/types/profile";
-import { count } from "console";
 import { z } from "zod";
 
 // Personal Information Schema
@@ -24,7 +23,7 @@ export const personalInfoSchema = z.object({
     .transform((date) => new Date(date)),
   placeOfBirth: z.string().trim().min(1, "Place of birth is required"),
   nationality: z.string().trim().min(1, "Nationality is required"),
-  phoneNumber: z.string().trim().min(1, "Phone number is required"),
+  phoneNumber: z.string().optional(),
 });
 
 // Amateur player Professional Information Schema

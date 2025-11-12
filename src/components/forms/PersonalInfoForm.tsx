@@ -55,6 +55,7 @@ export function PersonalInfoForm({
         <FormSection title="Personal Information">
           <div className="flex justify-start mb-6">
             <FormField error={errors.image?.message}>
+              {/* Profile Picture, Date of Birth, Place of Birth, Nationality, Phone Number (Optional) */}
               <ImageUpload
                 value={imageValue}
                 onChange={(file) => setValue("image", file as File)}
@@ -62,7 +63,6 @@ export function PersonalInfoForm({
               />
             </FormField>
           </div>
-
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <FormField
               label="Date of birth"
@@ -81,7 +81,7 @@ export function PersonalInfoForm({
             >
               <Input
                 {...register("placeOfBirth")}
-                placeholder="Ex. New York"
+                placeholder="Enter your place of birth"
                 className="bg-gray-50 border-0"
               />
             </FormField>
@@ -89,15 +89,18 @@ export function PersonalInfoForm({
             <FormField label="Nationality" error={errors.nationality?.message}>
               <Input
                 {...register("nationality")}
-                placeholder="Ex. American"
+                placeholder="Enter your nationality"
                 className="bg-gray-50 border-0"
               />
             </FormField>
 
-            <FormField label="Phone number" error={errors.phoneNumber?.message}>
+            <FormField
+              label="Phone number (optional)"
+              error={errors.phoneNumber?.message}
+            >
               <Input
                 {...register("phoneNumber")}
-                placeholder="Ex. XXXX-XXXX"
+                placeholder="Enter your phone number"
                 className="bg-gray-50 border-0"
               />
             </FormField>
