@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
 
 import React from "react";
@@ -34,7 +35,7 @@ export function PersonalInfoForm({
     watch,
     formState: { errors, isValid },
   } = useForm<TPersonalInfo>({
-    resolver: zodResolver(personalInfoSchema),
+    resolver: zodResolver(personalInfoSchema) as any,
     defaultValues: initialData,
     mode: "onChange",
   });

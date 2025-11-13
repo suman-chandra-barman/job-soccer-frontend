@@ -200,7 +200,7 @@ export const countryList = [
 export type TCountry = (typeof countryList)[number];
 
 // Gender options
-export const genderOptions = ["Male", "Female", "Other"] as const;
+export const genderOptions = ["male", "female", "other"] as const;
 export type TGender = (typeof genderOptions)[number];
 
 // Availability options

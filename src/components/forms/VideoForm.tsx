@@ -4,7 +4,6 @@ import React, { useState, useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { FormLayout } from "@/components/form/FormLayout";
-import { FormSection } from "@/components/form/FormSection";
 import { highlightsSchema } from "@/shchemas/profileValidation";
 import { THighlights } from "@/types/profile";
 import { IndividualVideoUpload } from "../form/fields/IndividualVideoUpload";
@@ -71,8 +70,12 @@ export function VideoForm({
   }, [videoMap, setValue]);
 
   const onSubmit = (data: THighlights) => {
-    // Create ordered arrays for videos and videoTitles based on videoMap
-    const videoTitles: VideoType[] = [];
+    // Create ordered arrays for videos and videoMeta based on videoMap
+    const videoMeta: Array<{
+      type: VideoType;
+      title: string;
+      description: string;
+    }> = [];
     const videos: File[] = [];
 
     // Maintain specific order
@@ -86,17 +89,18 @@ export function VideoForm({
     orderedVideoTypes.forEach((videoType) => {
       const file = videoMap[videoType];
       if (file) {
-        videoTitles.push(videoType);
+        // Use file name as the title and leave description empty for now.
+        videoMeta.push({ type: videoType, title: file.name, description: "" });
         videos.push(file);
       }
     });
 
-    // Pass formatted data with videoTitles array
+    // Pass formatted data with videoMeta array and videos
     onNext({
       ...data,
-      videoTitles,
+      videoMeta,
       videos,
-    } as THighlights);
+    } as THighlights & { videoMeta?: Array<{ type: VideoType; title: string; description: string }>; videos?: File[] });
   };
 
   // Handle individual video changes by video type
@@ -124,7 +128,6 @@ export function VideoForm({
       isNextDisabled={!hasAllRequiredVideos}
     >
       <form className="space-y-8">
-        {/* <FormSection title="Videos"> */}
         <div className="space-y-6">
           {/* Video 1 - Required */}
           <IndividualVideoUpload
@@ -193,7 +196,6 @@ export function VideoForm({
             }
           />
         </div>
-        {/* </FormSection> */}
       </form>
     </FormLayout>
   );
