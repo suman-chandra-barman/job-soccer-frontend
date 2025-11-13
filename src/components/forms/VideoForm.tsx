@@ -4,15 +4,15 @@ import React, { useState, useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { FormLayout } from "@/components/form/FormLayout";
-import { highlightsSchema } from "@/shchemas/profileValidation";
-import { THighlights } from "@/types/profile";
 import { IndividualVideoUpload } from "../form/fields/IndividualVideoUpload";
 import { VideoType } from "@/constants/video.constant";
+import { videoSchema } from "@/shchemas/profileValidation";
+import { TVideo } from "@/types/profile";
 
 interface IVideoFormProps {
-  onNext: (data: THighlights) => void;
+  onNext: (data: TVideo) => void;
   onPrev: () => void;
-  initialData?: Partial<THighlights>;
+  initialData?: Partial<TVideo>;
   steps?: Array<{
     id: number;
     label: string;
@@ -36,8 +36,8 @@ export function VideoForm({
     handleSubmit,
     setValue,
     formState: { errors },
-  } = useForm<THighlights>({
-    resolver: zodResolver(highlightsSchema),
+  } = useForm<TVideo>({
+    resolver: zodResolver(videoSchema),
     defaultValues: initialData,
     mode: "onChange",
   });
@@ -69,7 +69,7 @@ export function VideoForm({
     setValue("videos", videoArray, { shouldValidate: true });
   }, [videoMap, setValue]);
 
-  const onSubmit = (data: THighlights) => {
+  const onSubmit = (data: TVideo) => {
     // Create ordered arrays for videos and videoMeta based on videoMap
     const videoMeta: Array<{
       type: VideoType;
@@ -100,7 +100,7 @@ export function VideoForm({
       ...data,
       videoMeta,
       videos,
-    } as THighlights & { videoMeta?: Array<{ type: VideoType; title: string; description: string }>; videos?: File[] });
+    } as TVideo & { videoMeta?: Array<{ type: VideoType; title: string; description: string }>; videos?: File[] });
   };
 
   // Handle individual video changes by video type

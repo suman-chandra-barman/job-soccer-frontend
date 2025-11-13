@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
 
 import React, { useState } from "react";
@@ -6,16 +7,15 @@ import { toast } from "sonner";
 import {
   type TPersonalInfo,
   type TProfessionalPlayerProfessionalInfo,
-  type THighlights,
   type TAmateurPlayerProfessionalInfo,
   type THighSchoolPlayerProfessionalInfo,
   type TCollegeOrUniversityPlayerProfessionalInfo,
   type TOfficeStaffProfessionalInfo,
   type TFieldStaffProfessionalInfo,
-  type TMultipleHighlights,
   CandidateRole,
+  TVideo,
 } from "@/types/profile";
-import { candidateRoleConfig } from "@/shchemas/profileValidation";
+// import { candidateRoleConfig } from "@/shchemas/profileValidation";
 import { AmateurPlayerProfessionalInfoForm } from "@/components/forms/AmateurPlayerProfessionalInfoForm";
 import { ProfessionalPlayerProfessionalInfoForm } from "@/components/forms/ProfessionalPlayerProfessionalInfoForm";
 import { HighSchoolPlayerProfessionalInfoForm } from "@/components/forms/HighSchoolPlayerProfessionalInfoForm";
@@ -39,14 +39,14 @@ export default function CandidateProfilePage() {
       | TCollegeOrUniversityPlayerProfessionalInfo
       | TOfficeStaffProfessionalInfo
       | TFieldStaffProfessionalInfo;
-    highlights?: THighlights | TMultipleHighlights;
+    videos?: TVideo;
   }>({});
   const [fieldStaffPosition, setFieldStaffPosition] = useState<string>("");
 
   const user = useAppSelector((state) => state.auth.user);
   const [createUserProfile] = useCreateUserProfileMutation();
 
-  const config = candidateRoleConfig[user?.role as CandidateRole];
+  const config = user?.role as CandidateRole;
   if (!config) {
     return (
       <div className="grid h-screen w-full place-items-center">
@@ -132,9 +132,9 @@ export default function CandidateProfilePage() {
     setCurrentStep(3);
   };
 
-  const handleVideoNext = async (data: THighlights | TMultipleHighlights) => {
+  const handleVideoNext = async (data: TVideo) => {
     // Format the complete form data for API submission
-    const videoData = data as THighlights & {
+    const videoData = data as TVideo & {
       videoTitles?: VideoType[];
       videos?: File[];
     };
@@ -142,12 +142,12 @@ export default function CandidateProfilePage() {
     // Debug logs: show current stored formData (userInfo) and incoming video payload
     console.log("handleVideoNext called. current formData state:", formData);
     console.log("redux user:", user);
-    console.log("incoming highlights/video data:", videoData);
+    console.log("incoming videos data:", videoData);
     if (videoData.videos) {
       try {
         console.log(
           "video files:",
-          videoData.videos.map((v) => ({
+          videoData.videos.map((v:any) => ({
             name: v.name,
             size: v.size,
             type: v.type,
@@ -169,7 +169,7 @@ export default function CandidateProfilePage() {
     const cleanedCombined = removeEmptyFields(combinedRaw) ?? {};
 
     // Update state for future reference
-    setFormData((prev) => ({ ...prev, highlights: data }));
+    setFormData((prev) => ({ ...prev, videos: data }));
 
     // Create FormData for multipart/form-data submission
     const formDataToSend = new FormData();
@@ -206,7 +206,7 @@ export default function CandidateProfilePage() {
 
     // Append each video file
     if (videoData.videos) {
-      videoData.videos.forEach((video) => {
+      videoData.videos.forEach((video:any) => {
         formDataToSend.append("videos", video);
       });
     }
@@ -241,6 +241,7 @@ export default function CandidateProfilePage() {
     setCurrentStep((prev) => Math.max(1, prev - 1));
   };
 
+  // Render Professional Info form based on candidate role
   const renderProfessionalForm = () => {
     const baseProps = {
       onNext: handleProfessionalInfoNext,
@@ -320,12 +321,12 @@ export default function CandidateProfilePage() {
     }
   };
 
-  // Render highlights form based on configuration
-  const renderHighlightsForm = () => {
+  // Render Video form based on configuration
+  const renderVideoForm = () => {
     const videoProps = {
-      onNext: handleVideoNext as (data: THighlights) => void,
+      onNext: handleVideoNext as (data: TVideo) => void,
       onPrev: handlePrevStep,
-      initialData: formData.highlights as THighlights | undefined,
+      initialData: formData.videos as TVideo | undefined,
       steps,
     };
 
@@ -345,7 +346,7 @@ export default function CandidateProfilePage() {
         />
       )}
       {currentStep === 2 && renderProfessionalForm()}
-      {currentStep === 3 && renderHighlightsForm()}
+      {currentStep === 3 && renderVideoForm()}
     </div>
   );
 }

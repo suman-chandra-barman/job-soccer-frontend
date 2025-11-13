@@ -1,26 +1,18 @@
 import {
   amateurPlayerProfessionalInfoSchema,
   collegeOrUniversityPlayerProfessionalInfoSchema,
-  completeProfileSchema,
   fieldStaffProfessionalInfoSchema,
-  highlightsSchema,
   highSchoolPlayerProfessionalInfoSchema,
-  multipleHighlightsSchema,
   officeStaffProfessionalInfoSchema,
   personalInfoSchema,
   professionalPlayerProfessionalInfoSchema,
-  singleHighlightsSchema,
+  videoSchema,
 } from "@/shchemas/profileValidation";
 import z from "zod";
 
 export type TCandidateRole = CandidateRole;
-export type THighlightsType = "single" | "multiple";
-export type TSingleHighlights = z.infer<typeof singleHighlightsSchema>;
-export type TMultipleHighlights = z.infer<typeof multipleHighlightsSchema>;
-
 export type TPersonalInfo = z.infer<typeof personalInfoSchema>;
-export type THighlights = z.infer<typeof highlightsSchema>;
-export type TCompleteProfile = z.infer<typeof completeProfileSchema>;
+export type TVideo = z.infer<typeof videoSchema>;
 export type TAmateurPlayerProfessionalInfo = z.infer<
   typeof amateurPlayerProfessionalInfoSchema
 >;
