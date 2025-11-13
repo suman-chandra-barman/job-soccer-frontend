@@ -142,6 +142,30 @@ export function FieldStaffProfessionalInfoForm({
               />
             </FormField>
 
+            {/* Category */}
+            <FormField
+              label="Category (if applicable)"
+              error={errors.category?.message}
+            >
+              <Input
+                {...register("category")}
+                placeholder="Write your category"
+                className="bg-gray-50 border-0"
+              />
+            </FormField>
+
+            {/* Category */}
+            <FormField
+              label="League"
+              error={errors.league?.message}
+            >
+              <Input
+                {...register("league")}
+                placeholder="Write your league"
+                className="bg-gray-50 border-0"
+              />
+            </FormField>
+
             {/* Position */}
             <FormField
               label="Select Your Position"

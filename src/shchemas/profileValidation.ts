@@ -148,7 +148,9 @@ export const fieldStaffProfessionalInfoSchema = z.object({
   gender: z.string().min(1, "Gender is required"),
   socialMedia: z.string().min(1, "Social Media is required"),
   position: z.string().min(1, "Position is required"),
+  league: z.string().min(1, "League is required"),
   agent: z.string().optional(),
+  category: z.string().optional(),
 });
 
 // Office staff Professional Information Schema
