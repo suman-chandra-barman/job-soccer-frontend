@@ -73,10 +73,10 @@ export default function SignInPage() {
       {/* Home navigation link */}
       <Link
         href="/"
-        className="absolute top-6 left-6 flex items-center gap-2 px-4 py-2 rounded-lg bg-white/80 backdrop-blur-sm shadow-md hover:shadow-lg border border-gray-200 hover:border-gray-300 text-gray-700 hover:text-black transition-all duration-300 z-10 group"
+        className="absolute top-6 left-6 flex items-center gap-2 px-4 py-2 rounded-md bg-black hover:bg-gray-800 text-white hover:text-white shadow-md hover:shadow-lg transition-all duration-300 z-10 group font-medium"
       >
         <IoMdArrowBack className="h-5 w-5 group-hover:-translate-x-1 transition-transform duration-300" />
-        <span className="font-semibold text-sm">Home</span>
+        <span className="text-sm">Home</span>
       </Link>
 
       {/* Left side - Dark background with text */}
