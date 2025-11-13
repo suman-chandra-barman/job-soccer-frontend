@@ -15,7 +15,6 @@ import {
   CandidateRole,
   TVideo,
 } from "@/types/profile";
-// import { candidateRoleConfig } from "@/shchemas/profileValidation";
 import { AmateurPlayerProfessionalInfoForm } from "@/components/forms/AmateurPlayerProfessionalInfoForm";
 import { ProfessionalPlayerProfessionalInfoForm } from "@/components/forms/ProfessionalPlayerProfessionalInfoForm";
 import { HighSchoolPlayerProfessionalInfoForm } from "@/components/forms/HighSchoolPlayerProfessionalInfoForm";
@@ -24,8 +23,8 @@ import { FieldStaffProfessionalInfoForm } from "@/components/forms/FieldStaffPro
 import { OfficeStaffProfessionalInfoForm } from "@/components/forms/OfficeStaffProfessionalInfoForm";
 import { useAppSelector } from "@/redux/hooks";
 import { Spinner } from "@/components/ui/spinner";
-import { VideoForm } from "@/components/forms/VideoForm";
-import { VideoType } from "@/constants/video.constant";
+import { HeadCourseVideoForm } from "@/components/forms/HeadCourseVideoForm";
+import { FieldStaffPosition, VideoType } from "@/constants/video.constant";
 import { useCreateUserProfileMutation } from "@/redux/features/user/userApi";
 
 export default function CandidateProfilePage() {
@@ -46,8 +45,8 @@ export default function CandidateProfilePage() {
   const user = useAppSelector((state) => state.auth.user);
   const [createUserProfile] = useCreateUserProfileMutation();
 
-  const config = user?.role as CandidateRole;
-  if (!config) {
+  const userRole = user?.role as CandidateRole;
+  if (!userRole) {
     return (
       <div className="grid h-screen w-full place-items-center">
         <Spinner className="size-8 text-yellow-500" />
@@ -79,6 +78,8 @@ export default function CandidateProfilePage() {
   const handlePersonalInfoNext = (data: TPersonalInfo) => {
     setFormData((prev) => ({ ...prev, personalInfo: data }));
     setCurrentStep(2);
+
+    console.log("Personal Info Data:", data);
   };
 
   // Remove empty optional fields from an object recursively.
@@ -141,22 +142,7 @@ export default function CandidateProfilePage() {
 
     // Debug logs: show current stored formData (userInfo) and incoming video payload
     console.log("handleVideoNext called. current formData state:", formData);
-    console.log("redux user:", user);
     console.log("incoming videos data:", videoData);
-    if (videoData.videos) {
-      try {
-        console.log(
-          "video files:",
-          videoData.videos.map((v:any) => ({
-            name: v.name,
-            size: v.size,
-            type: v.type,
-          }))
-        );
-      } catch (e) {
-        console.log("video files: (unable to enumerate)", e);
-      }
-    }
 
     // Prepare the data object combining personal and professional info
     // Use the current formData before setState to ensure we have all data
@@ -165,8 +151,18 @@ export default function CandidateProfilePage() {
       ...(formData.professionalInfo ?? {}),
     };
 
+    // Extract the image File if present (File objects can't be JSON stringified)
+    const imageFile =
+      (combinedRaw as any).image instanceof File
+        ? (combinedRaw as any).image
+        : null;
+
+    // Remove image from the data object since we'll append it separately
+    const dataWithoutImage = { ...combinedRaw };
+    delete (dataWithoutImage as any).image;
+
     // Remove empty optional fields so backend only receives populated values
-    const cleanedCombined = removeEmptyFields(combinedRaw) ?? {};
+    const cleanedCombined = removeEmptyFields(dataWithoutImage) ?? {};
 
     // Update state for future reference
     setFormData((prev) => ({ ...prev, videos: data }));
@@ -176,6 +172,11 @@ export default function CandidateProfilePage() {
 
     // Append the cleaned data object as JSON string
     formDataToSend.append("data", JSON.stringify(cleanedCombined));
+
+    // Append the image file separately if it exists
+    if (imageFile) {
+      formDataToSend.append("image", imageFile);
+    }
 
     // Append videoMeta array as JSON string (type, title, description)
     const videoMeta = (
@@ -206,7 +207,7 @@ export default function CandidateProfilePage() {
 
     // Append each video file
     if (videoData.videos) {
-      videoData.videos.forEach((video:any) => {
+      videoData.videos.forEach((video: any) => {
         formDataToSend.append("videos", video);
       });
     }
@@ -331,8 +332,14 @@ export default function CandidateProfilePage() {
     };
 
     switch (fieldStaffPosition) {
-      case "Head Coach":
-        return <VideoForm {...videoProps} />;
+      // ------ On field staff positions ------
+      // Head Coach
+      case FieldStaffPosition.HEAD_COACH:
+        return <HeadCourseVideoForm {...videoProps} />;
+
+      // Assistant Coach
+      case FieldStaffPosition.ASSISTANT_COACH:
+        return <HeadCourseVideoForm {...videoProps} />;
     }
   };
 

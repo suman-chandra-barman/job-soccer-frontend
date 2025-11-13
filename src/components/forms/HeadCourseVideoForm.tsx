@@ -26,12 +26,14 @@ interface VideoMap {
   [key: string]: File | null;
 }
 
-export function VideoForm({
+export function HeadCourseVideoForm({
   onNext,
   onPrev,
   initialData,
   steps,
 }: IVideoFormProps) {
+  const [hasSubmitted, setHasSubmitted] = useState(false);
+
   const {
     handleSubmit,
     setValue,
@@ -39,7 +41,8 @@ export function VideoForm({
   } = useForm<TVideo>({
     resolver: zodResolver(videoSchema),
     defaultValues: initialData,
-    mode: "onChange",
+    mode: "onSubmit",
+    reValidateMode: "onChange",
   });
 
   // Maintain a map of video types to files
@@ -70,6 +73,8 @@ export function VideoForm({
   }, [videoMap, setValue]);
 
   const onSubmit = (data: TVideo) => {
+    setHasSubmitted(true);
+
     // Create ordered arrays for videos and videoMeta based on videoMap
     const videoMeta: Array<{
       type: VideoType;
@@ -140,7 +145,9 @@ export function VideoForm({
               handleVideoChangeByType(VideoType.PRE_RECORDED_INTERVIEW, file)
             }
             error={
-              errors.videos && !videoMap[VideoType.PRE_RECORDED_INTERVIEW]
+              hasSubmitted &&
+              errors.videos &&
+              !videoMap[VideoType.PRE_RECORDED_INTERVIEW]
                 ? "This video is required"
                 : undefined
             }
@@ -157,7 +164,7 @@ export function VideoForm({
               handleVideoChangeByType(VideoType.TECHNICAL, file)
             }
             error={
-              errors.videos && !videoMap[VideoType.TECHNICAL]
+              hasSubmitted && errors.videos && !videoMap[VideoType.TECHNICAL]
                 ? "This video is required"
                 : undefined
             }
@@ -173,7 +180,7 @@ export function VideoForm({
               handleVideoChangeByType(VideoType.TACTICAL, file)
             }
             error={
-              errors.videos && !videoMap[VideoType.TACTICAL]
+              hasSubmitted && errors.videos && !videoMap[VideoType.TACTICAL]
                 ? "This video is required"
                 : undefined
             }
@@ -190,7 +197,9 @@ export function VideoForm({
               handleVideoChangeByType(VideoType.GAME_PRINCIPALS, file)
             }
             error={
-              errors.videos && !videoMap[VideoType.GAME_PRINCIPALS]
+              hasSubmitted &&
+              errors.videos &&
+              !videoMap[VideoType.GAME_PRINCIPALS]
                 ? "This video is required"
                 : undefined
             }
