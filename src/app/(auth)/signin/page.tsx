@@ -24,6 +24,7 @@ import { useLoginMutation } from "@/redux/features/auth/authApi";
 
 export default function SignInPage() {
   const [showPassword, setShowPassword] = useState(false);
+  const [error, setError] = useState<string>("");
 
   const [login, { isLoading: isLoggingIn }] = useLoginMutation();
   const router = useRouter();
@@ -37,6 +38,7 @@ export default function SignInPage() {
   });
 
   const onSubmit = async (data: SignInFormData) => {
+    setError("");
     const payload = {
       email: data.email,
       password: data.password,
@@ -59,7 +61,15 @@ export default function SignInPage() {
           router.push("/signup/candidate");
         }
       }
-    } catch (error) {
+    } catch (error: unknown) {
+      const err = error as {
+        data?: { message?: string; errorSources?: Array<{ message?: string }> };
+      };
+      const errorMessage =
+        err?.data?.message ||
+        err?.data?.errorSources?.[0]?.message ||
+        "Sign in failed. Please check your credentials and try again.";
+      setError(errorMessage);
       console.error("Sign in error:", error);
     }
   };
@@ -105,6 +115,14 @@ export default function SignInPage() {
 
           <Form {...form}>
             <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
+              {/* Error Message */}
+              {error && (
+                <div className="bg-red-50 border border-red-200 text-red-800 px-4 py-3 rounded-md text-sm">
+                  <p className="font-medium">Error</p>
+                  <p className="mt-1">{error}</p>
+                </div>
+              )}
+
               {/* Username */}
               <FormField
                 control={form.control}

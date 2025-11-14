@@ -27,6 +27,7 @@ import { Spinner } from "@/components/ui/spinner";
 export default function SignUpPage() {
   const [userRype, setUserRype] = useState<string>("");
   const [showPassword, setShowPassword] = useState(false);
+  const [error, setError] = useState<string>("");
   const [signup, { isLoading }] = useSignupMutation();
 
   const router = useRouter();
@@ -43,6 +44,7 @@ export default function SignUpPage() {
   });
 
   const onSubmit = async (formData: SignUpFormData) => {
+    setError("");
     try {
       const payload = {
         ...formData,
@@ -67,6 +69,11 @@ export default function SignUpPage() {
         );
       }
     } catch (error: any) {
+      const errorMessage =
+        error?.data?.message ||
+        error?.data?.errorSources?.[0]?.message ||
+        "Something went wrong! Please try again later.";
+      setError(errorMessage);
       toast.error(
         error?.data?.errorSources[0]?.message || "Something went wrong!",
         {
@@ -110,6 +117,14 @@ export default function SignUpPage() {
 
           <Form {...form}>
             <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
+              {/* Error Message */}
+              {error && (
+                <div className="bg-red-50 border border-red-200 text-red-800 px-4 py-3 rounded-md text-sm">
+                  <p className="font-medium">Error</p>
+                  <p className="mt-1">{error}</p>
+                </div>
+              )}
+
               {/* First Name and Last Name */}
               <div className="grid grid-cols-2 gap-4">
                 <FormField
