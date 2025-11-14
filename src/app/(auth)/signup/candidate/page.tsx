@@ -26,6 +26,9 @@ import { Spinner } from "@/components/ui/spinner";
 import { HeadCourseVideoForm } from "@/components/forms/HeadCourseVideoForm";
 import { FieldStaffPosition, VideoType } from "@/constants/video.constant";
 import { useCreateUserProfileMutation } from "@/redux/features/user/userApi";
+import { useRouter } from "next/navigation";
+import Link from "next/link";
+import { IoMdArrowBack } from "react-icons/io";
 
 export default function CandidateProfilePage() {
   const [currentStep, setCurrentStep] = useState(1);
@@ -44,6 +47,8 @@ export default function CandidateProfilePage() {
 
   const user = useAppSelector((state) => state.auth.user);
   const [createUserProfile] = useCreateUserProfileMutation();
+
+  const router = useRouter();
 
   const userRole = user?.role as CandidateRole;
   if (!userRole) {
@@ -234,8 +239,13 @@ export default function CandidateProfilePage() {
 
     // Here you would typically submit the FormData to your API
     const { data: userProfile } = await createUserProfile(formDataToSend);
-    console.log("created userProfile", userProfile);
-    toast.success("Profile completed successfully!");
+    if (userProfile?.data.profileId) {
+      console.log("created userProfile", userProfile);
+      toast.success("Profile completed successfully!");
+      router.push("/");
+    } else {
+      toast.error("Failed to create profile. Please try again.");
+    }
   };
 
   const handlePrevStep = () => {
@@ -345,6 +355,15 @@ export default function CandidateProfilePage() {
 
   return (
     <div>
+      {/* Home navigation link */}
+      <Link
+        href="/"
+        className="absolute top-6 left-6 flex items-center gap-2 px-4 py-2 rounded-md bg-black hover:bg-gray-800 text-white hover:text-white shadow-md hover:shadow-lg transition-all duration-300 z-10 group font-medium"
+      >
+        <IoMdArrowBack className="h-5 w-5 group-hover:-translate-x-1 transition-transform duration-300" />
+        <span className="text-sm">Home</span>
+      </Link>
+
       {currentStep === 1 && (
         <PersonalInfoForm
           onNext={handlePersonalInfoNext}

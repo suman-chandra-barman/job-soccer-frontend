@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
 
 import React, { useState } from "react";
@@ -52,7 +53,7 @@ export function Navbar() {
   const { data: user } = useGetMeQuery(null);
   const dispatch = useAppDispatch();
 
-  const isLoggedIn = !!user?.data;
+  const isLoggedIn = !!user?.data?.profileId;
   const iconLinks = isLoggedIn
     ? [
         { name: "Home", href: "/", icon: Home },
@@ -78,7 +79,7 @@ export function Navbar() {
         { name: "Messages", href: "/messages", icon: MessageCircle },
       ];
 
-  const isActiveLink = (href) => pathname === href;
+  const isActiveLink = (href:any) => pathname === href;
 
   // Mock notification data matching your design
   const mockNotifications: NotificationItem[] = [
@@ -146,6 +147,10 @@ export function Navbar() {
     router.push("/signin");
   };
 
+  const profileImageUrl = user?.data?.profileImage
+    ? `/api/image${user?.data?.profileImage}`
+    : undefined;
+
   return (
     <nav className="bg-[#FFF8CC] border-b sticky top-0 z-50 text-[#362F05]">
       <div className="container mx-auto px-4">
@@ -170,12 +175,17 @@ export function Navbar() {
             {isLoggedIn && (
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
-                  <Avatar className="w-8 h-8 cursor-pointer">
-                    <AvatarImage
-                      src="https://github.com/shadcn.png"
-                      alt="@shadcn"
-                    />
-                    <AvatarFallback>S</AvatarFallback>
+                  <Avatar className="w-10 h-10 cursor-pointer">
+                    {profileImageUrl && (
+                      <AvatarImage
+                        src={profileImageUrl}
+                        alt="User Avatar"
+                        className="w-full h-full object-cover"
+                      />
+                    )}
+                    <AvatarFallback>
+                      {user?.data?.firstName?.[0] || "U"}
+                    </AvatarFallback>
                   </Avatar>
                 </DropdownMenuTrigger>
                 <DropdownMenuContent className="w-56" align="start">
@@ -211,11 +221,19 @@ export function Navbar() {
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
                   <Avatar className="w-10 h-10 cursor-pointer">
-                    <AvatarImage
-                      src="https://github.com/shadcn.png"
-                      alt="@shadcn"
-                    />
-                    <AvatarFallback>S</AvatarFallback>
+                    {profileImageUrl && (
+                      <AvatarImage
+                        src={profileImageUrl}
+                        alt="User Avatar"
+                        className="w-full h-full object-cover"
+                      />
+                    )}
+                    <AvatarFallback
+                      className="w-full h-full bg-black text-white
+                    "
+                    >
+                      {user?.data?.firstName?.[0] || "U"}
+                    </AvatarFallback>
                   </Avatar>
                 </DropdownMenuTrigger>
                 <DropdownMenuContent className="w-56" align="start">

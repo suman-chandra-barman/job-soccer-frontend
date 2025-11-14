@@ -33,7 +33,7 @@ const authApi = baseApi.injectEndpoints({
           const { data } = await queryFulfilled;
           if (data?.data.accessToken) {
             const token = data.data.accessToken;
-            localStorage.setItem("accessToken", token);
+            localStorage.setItem("tempAccessToken", token);
             dispatch(setCredentials({ user: null, token }));
           } else {
             console.warn("No token found in verification response:", data);
@@ -89,7 +89,7 @@ const authApi = baseApi.injectEndpoints({
       async onQueryStarted(arg, { dispatch, queryFulfilled }) {
         try {
           const { data } = await queryFulfilled;
-          const token = localStorage.getItem("accessToken");
+          const token = localStorage.getItem("tempAccessToken");
           
           if (token) {
             dispatch(setCredentials({ user: data.data, token }));
