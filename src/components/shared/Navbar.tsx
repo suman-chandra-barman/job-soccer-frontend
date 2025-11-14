@@ -27,12 +27,11 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "../ui/dropdown-menu";
-import { Avatar, AvatarFallback } from "../ui/avatar";
-import { AvatarImage } from "@radix-ui/react-avatar";
 import { useGetMeQuery } from "@/redux/features/auth/authApi";
 import { useAppDispatch } from "@/redux/hooks";
 import { logout } from "@/redux/features/auth/authSlice";
 import { Button } from "../ui/button";
+import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
 
 // Types for notification data
 interface NotificationItem {
@@ -79,7 +78,7 @@ export function Navbar() {
         { name: "Messages", href: "/messages", icon: MessageCircle },
       ];
 
-  const isActiveLink = (href:any) => pathname === href;
+  const isActiveLink = (href: any) => pathname === href;
 
   // Mock notification data matching your design
   const mockNotifications: NotificationItem[] = [
@@ -148,8 +147,12 @@ export function Navbar() {
   };
 
   const profileImageUrl = user?.data?.profileImage
-    ? `/api/image${user?.data?.profileImage}`
+    ? `${process.env.NEXT_PUBLIC_IMAGE_BASE_URL}${user?.data?.profileImage}`
     : undefined;
+
+  console.log(
+    process.env.NEXT_PUBLIC_IMAGE_BASE_URL + user?.data?.profileImage
+  );
 
   return (
     <nav className="bg-[#FFF8CC] border-b sticky top-0 z-50 text-[#362F05]">
@@ -172,29 +175,6 @@ export function Navbar() {
             >
               <Menu className="h-6 w-6" />
             </button>
-            {isLoggedIn && (
-              <DropdownMenu>
-                <DropdownMenuTrigger asChild>
-                  <Avatar className="w-10 h-10 cursor-pointer">
-                    {profileImageUrl && (
-                      <AvatarImage
-                        src={profileImageUrl}
-                        alt="User Avatar"
-                        className="w-full h-full object-cover"
-                      />
-                    )}
-                    <AvatarFallback>
-                      {user?.data?.firstName?.[0] || "U"}
-                    </AvatarFallback>
-                  </Avatar>
-                </DropdownMenuTrigger>
-                <DropdownMenuContent className="w-56" align="start">
-                  <DropdownMenuItem>Profile</DropdownMenuItem>
-                  <DropdownMenuSeparator />
-                  <DropdownMenuItem>Log out</DropdownMenuItem>
-                </DropdownMenuContent>
-              </DropdownMenu>
-            )}
           </div>
 
           {/* Desktop Navigation */}
@@ -232,7 +212,7 @@ export function Navbar() {
                       className="w-full h-full bg-black text-white
                     "
                     >
-                      {user?.data?.firstName?.[0] || "U"}
+                      {user?.data?.firstName?.[0]}
                     </AvatarFallback>
                   </Avatar>
                 </DropdownMenuTrigger>
@@ -261,16 +241,36 @@ export function Navbar() {
         <div className="lg:hidden">
           <Sheet open={isOpen} onOpenChange={setIsOpen}>
             <SheetContent side="left" className="w-[300px] sm:w-[400px] ">
-              <SheetHeader className="py-4.5 border border-b">
+              <SheetHeader className="border-b py-2">
                 <SheetTitle className="text-left">
-                  <Link href="/" className="flex items-center">
-                    <Image
-                      src={logo}
-                      alt="Logo"
-                      className="object-contain"
-                      width={52}
-                    />
-                  </Link>
+                  {isLoggedIn && (
+                    <DropdownMenu>
+                      <DropdownMenuTrigger asChild>
+                        <Avatar className="w-16 h-16 cursor-pointer">
+                          {profileImageUrl && (
+                            <AvatarImage
+                              src={profileImageUrl}
+                              alt="User Avatar"
+                              className="w-full h-full object-cover"
+                            />
+                          )}
+                          <AvatarFallback
+                            className="w-full h-full bg-black text-white
+                    "
+                          >
+                            {user?.data?.firstName?.[0]}
+                          </AvatarFallback>
+                        </Avatar>
+                      </DropdownMenuTrigger>
+                      <DropdownMenuContent className="w-56" align="start">
+                        <DropdownMenuItem>Profile</DropdownMenuItem>
+                        <DropdownMenuSeparator />
+                        <DropdownMenuItem onClick={() => handleLogout()}>
+                          Log out
+                        </DropdownMenuItem>
+                      </DropdownMenuContent>
+                    </DropdownMenu>
+                  )}
                 </SheetTitle>
               </SheetHeader>
               <div className="flex flex-col space-y-6 mt-8 px-4">
@@ -289,17 +289,21 @@ export function Navbar() {
                     <span>{link.name}</span>
                   </Link>
                 ))}
-                <Link
-                  href={"/signin"}
-                  className={`flex space-x-2 items-center flex-nowrap transition-colors ${
-                    isActiveLink("/signin")
-                      ? "text-green-500"
-                      : "text-gray-600 hover:text-green-500"
-                  }`}
-                >
-                  <LogIn className="h-5 w-5" />
-                  <span>Log in</span>
-                </Link>
+                <div>
+                  {!isLoggedIn && (
+                    <Link
+                      href={"/signin"}
+                      className={`flex space-x-2 items-center flex-nowrap transition-colors ${
+                        isActiveLink("/signin")
+                          ? "text-green-500"
+                          : "text-gray-600 hover:text-green-500"
+                      }`}
+                    >
+                      <LogIn className="h-5 w-5" />
+                      <span>Log in</span>
+                    </Link>
+                  )}
+                </div>
               </div>
             </SheetContent>
           </Sheet>

@@ -6,8 +6,6 @@ const nextConfig: NextConfig = {
       {
         protocol: "http",
         hostname: process.env.NEXT_PUBLIC_HOSTNAME || "10.10.12.125",
-        port: "5013",
-        pathname: "/images/**",
       },
     ],
   },
