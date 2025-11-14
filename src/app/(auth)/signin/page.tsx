@@ -5,12 +5,10 @@ import Link from "next/link";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { toast } from "sonner";
-import { FaUser, FaEye, FaEyeSlash, FaFacebook } from "react-icons/fa";
-import { FcGoogle } from "react-icons/fc";
+import { FaUser, FaEye, FaEyeSlash } from "react-icons/fa";
 import { IoMdArrowBack } from "react-icons/io";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Checkbox } from "@/components/ui/checkbox";
 import {
   Form,
   FormControl,
@@ -21,45 +19,48 @@ import {
 } from "@/components/ui/form";
 import { signInSchema, type SignInFormData } from "@/shchemas/signinValidation";
 import { useRouter } from "next/navigation";
+import { Spinner } from "@/components/ui/spinner";
+import { useLoginMutation } from "@/redux/features/auth/authApi";
 
 export default function SignInPage() {
   const [showPassword, setShowPassword] = useState(false);
-  const [isLoading, setIsLoading] = useState(false);
 
+  const [login, { isLoading: isLoggingIn }] = useLoginMutation();
   const router = useRouter();
 
   const form = useForm<SignInFormData>({
     resolver: zodResolver(signInSchema),
     defaultValues: {
-      username: "",
+      email: "",
       password: "",
-      rememberMe: false,
     },
   });
 
   const onSubmit = async (data: SignInFormData) => {
-    setIsLoading(true);
+    const payload = {
+      email: data.email,
+      password: data.password,
+      loginProvider: "email",
+    };
 
     try {
-      // API call
-      await new Promise((resolve) => setTimeout(resolve, 2000));
-
-      console.log("Sign in data:", data);
-      toast.success("Welcome back!", {
-        description: "You have successfully signed in to your account.",
-      });
-      form.reset();
-
-      setTimeout(() => {
-        router.push("/");
-      }, 1500);
+      const res = await login(payload).unwrap();
+      if (res?.data?.accessToken) {
+        localStorage.setItem("accessToken", res.data.token);
+        toast.success("Welcome back!", {
+          description: "You have successfully signed in to your account.",
+        });
+        form.reset();
+        if (res.data.user?.profileId) {
+          router.push("/");
+        } else if (res.data.user?.userType === "employer") {
+          router.push("/signup/employer");
+        } else {
+          router.push("/signup/candidate");
+        }
+      }
     } catch (error) {
       console.error("Sign in error:", error);
-      toast.error("Sign in failed!", {
-        description: "Please check your credentials and try again.",
-      });
-    } finally {
-      setIsLoading(false);
     }
   };
 
@@ -98,14 +99,8 @@ export default function SignInPage() {
         <div className="w-full max-w-md bg-white border border-gray-200 rounded-2xl p-8 shadow-sm">
           <div className="text-center mb-6">
             <h2 className="text-2xl font-semibold text-gray-900 mb-2">
-              Sing in Account
+              Sign in your account
             </h2>
-            <p className="text-gray-600 text-sm">
-              Don&apos;t haven Account?{" "}
-              <Link href="/signup" className="underline">
-                Sing Up Free
-              </Link>
-            </p>
           </div>
 
           <Form {...form}>
@@ -113,16 +108,16 @@ export default function SignInPage() {
               {/* Username */}
               <FormField
                 control={form.control}
-                name="username"
+                name="email"
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel className="text-sm font-medium text-gray-700">
-                      User name
+                      Email
                     </FormLabel>
                     <FormControl>
                       <div className="relative">
                         <Input
-                          placeholder="Enter your user name"
+                          placeholder="Enter your email"
                           className="pr-10 bg-gray-100 border-gray-200"
                           {...field}
                         />
@@ -169,43 +164,22 @@ export default function SignInPage() {
                 )}
               />
 
-              {/* Remember Me and Forgot Password */}
-              <div className="flex items-center justify-between">
-                <FormField
-                  control={form.control}
-                  name="rememberMe"
-                  render={({ field }) => (
-                    <FormItem className="flex flex-row items-start space-x-3 space-y-0  cursor-pointer">
-                      <FormControl>
-                        <Checkbox
-                          checked={field.value}
-                          onCheckedChange={field.onChange}
-                        />
-                      </FormControl>
-                      <div className="space-y-1 leading-none ">
-                        <FormLabel className="text-sm text-gray-600 cursor-pointer">
-                          Remember for 30 Days
-                        </FormLabel>
-                      </div>
-                    </FormItem>
-                  )}
-                />
-                <button
-                  type="button"
-                  onClick={handleForgotPassword}
-                  className="text-sm text-gray-600 hover:text-gray-800  cursor-pointer"
-                >
-                  Forget Password?
-                </button>
-              </div>
+              {/* Forgot Password */}
+              <button
+                type="button"
+                onClick={handleForgotPassword}
+                className="text-sm text-gray-600 hover:text-gray-800  cursor-pointer"
+              >
+                Forgot Password?
+              </button>
 
               {/* Login Button */}
               <Button
                 type="submit"
-                disabled={isLoading}
+                disabled={isLoggingIn}
                 className="w-full bg-primary hover:bg-amber-300 text-[#010A18] py-3 rounded-md"
               >
-                {isLoading ? "Signing in..." : "Login"}
+                {isLoggingIn ? <Spinner /> : "Login"}
               </Button>
             </form>
           </Form>
