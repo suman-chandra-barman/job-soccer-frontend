@@ -150,10 +150,6 @@ export function Navbar() {
     ? `${process.env.NEXT_PUBLIC_IMAGE_BASE_URL}${user?.data?.profileImage}`
     : undefined;
 
-  console.log(
-    process.env.NEXT_PUBLIC_IMAGE_BASE_URL + user?.data?.profileImage
-  );
-
   return (
     <nav className="bg-[#FFF8CC] border-b sticky top-0 z-50 text-[#362F05]">
       <div className="container mx-auto px-4">

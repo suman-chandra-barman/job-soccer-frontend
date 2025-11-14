@@ -10,6 +10,24 @@ const authApi = baseApi.injectEndpoints({
         method: "POST",
         body: userInfo,
       }),
+      async onQueryStarted(arg, { dispatch, queryFulfilled }) {
+        try {
+          const { data } = await queryFulfilled;
+          if (data?.data.accessToken) {
+            const token = data.data.accessToken;
+            console.log("Token -->", token);
+            console.log("user --->", {user: data.data.user})
+            localStorage.setItem("accessToken", token);
+            const test =  localStorage.getItem("accessToken");
+            console.log("Test Token -->", test);
+            dispatch(setCredentials({ user: data.data.user, token }));
+          } else {
+            console.warn("No token found in verification response:", data);
+          }
+        } catch (error) {
+          console.error("Email verification failed:", error);
+        }
+      },
     }),
 
     // SIGNUP
@@ -33,7 +51,7 @@ const authApi = baseApi.injectEndpoints({
           const { data } = await queryFulfilled;
           if (data?.data.accessToken) {
             const token = data.data.accessToken;
-            localStorage.setItem("tempAccessToken", token);
+            localStorage.setItem("accessToken", token);
             dispatch(setCredentials({ user: null, token }));
           } else {
             console.warn("No token found in verification response:", data);
@@ -89,7 +107,7 @@ const authApi = baseApi.injectEndpoints({
       async onQueryStarted(arg, { dispatch, queryFulfilled }) {
         try {
           const { data } = await queryFulfilled;
-          const token = localStorage.getItem("tempAccessToken");
+          const token = localStorage.getItem("accessToken");
           
           if (token) {
             dispatch(setCredentials({ user: data.data, token }));

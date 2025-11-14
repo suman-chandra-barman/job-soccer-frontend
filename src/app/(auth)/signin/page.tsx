@@ -48,7 +48,6 @@ export default function SignInPage() {
     try {
       const res = await login(payload).unwrap();
       if (res?.data?.accessToken) {
-        localStorage.setItem("accessToken", res.data.token);
         toast.success("Welcome back!", {
           description: "You have successfully signed in to your account.",
         });

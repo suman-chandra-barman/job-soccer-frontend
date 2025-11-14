@@ -15,7 +15,7 @@ const userApi = baseApi.injectEndpoints({
       async onQueryStarted(arg, { dispatch, queryFulfilled }) {
         try {
           const { data } = await queryFulfilled;
-          const token = localStorage.getItem("tempAccessToken");
+          const token = localStorage.getItem("accessToken");
 
           if (token) {
             dispatch(setCredentials({ user: data.data, token }));
