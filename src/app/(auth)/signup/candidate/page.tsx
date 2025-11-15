@@ -35,6 +35,7 @@ import { ScoutVideoForm } from "@/components/forms/ScoutVideoForm";
 import { TechnicalDirectorVideoForm } from "@/components/forms/TechnicalDirectorVideoForm";
 import { AcademyDirectorVideoForm } from "@/components/forms/AcademyDirectorVideoForm";
 import { DirectorOfCoachingVideoForm } from "@/components/forms/DirectorOfCoachingVideoForm";
+import { OfficeStaffVideoForm } from "@/components/forms/OfficeStaffVideoForm";
 
 export default function CandidateProfilePage() {
   const [currentStep, setCurrentStep] = useState(1);
@@ -347,6 +348,13 @@ export default function CandidateProfilePage() {
       steps,
     };
 
+    // For office staff, render their specific form
+    switch (userRole) {
+      case CandidateRole.OFFICE_STAFF:
+        return <OfficeStaffVideoForm {...videoProps} />;
+    }
+
+    // For on-field staff, render based on specific position
     switch (fieldStaffPosition) {
       // ------ On field staff positions ------
       // Head Coach

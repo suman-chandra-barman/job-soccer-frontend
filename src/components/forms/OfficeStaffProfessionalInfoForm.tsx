@@ -19,6 +19,7 @@ import { TOfficeStaffProfessionalInfo } from "@/types/profile";
 import {
   availabilityOptions,
   countryList,
+  genderOptions,
   officeStaffPositionOptions,
 } from "@/constants/selectOptions";
 
@@ -67,6 +68,34 @@ export function OfficeStaffProfessionalInfoForm({
       <form className="space-y-8">
         <FormSection title="Professional Information">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            {/* Current Employer */}
+            <FormField
+              label="Current Employer"
+              error={errors.currentClub?.message}
+            >
+              <Input
+                {...register("currentClub")}
+                placeholder="Ex. Real Madrid"
+                className="bg-gray-50 border-0"
+              />
+            </FormField>
+
+            {/* Gender */}
+            <FormField label="Gender" error={errors.gender?.message}>
+              <Select onValueChange={(value) => setValue("gender", value)}>
+                <SelectTrigger className="bg-gray-50 border-0 w-full">
+                  <SelectValue placeholder="Gender" />
+                </SelectTrigger>
+                <SelectContent>
+                  {genderOptions.map((item) => (
+                    <SelectItem key={item} value={item}>
+                      {item}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </FormField>
+
             {/* Availability */}
             <FormField
               label="Availability"
