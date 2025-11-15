@@ -73,7 +73,6 @@ export function AmateurPlayerProfessionalInfoForm({
       <form className="space-y-8">
         <FormSection title="Professional Information">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-
             {/* Gender */}
             <FormField label="Gender" error={errors.gender?.message}>
               <Select
@@ -128,7 +127,9 @@ export function AmateurPlayerProfessionalInfoForm({
             <FormField label="Height" error={errors.height?.size?.message}>
               <div className="flex space-x-2">
                 <Input
-                  {...register("height.size" as const)}
+                  type="number"
+                  step="any"
+                  {...register("height.size" as const, { valueAsNumber: true })}
                   placeholder="Ex. 5.7"
                   className="bg-gray-50 border-0"
                 />
@@ -162,7 +163,9 @@ export function AmateurPlayerProfessionalInfoForm({
             <FormField label="Weight" error={errors.weight?.size?.message}>
               <div className="flex space-x-2">
                 <Input
-                  {...register("weight.size" as const)}
+                  type="number"
+                  step="any"
+                  {...register("weight.size" as const, { valueAsNumber: true })}
                   placeholder="Ex. 75"
                   className="bg-gray-50 border-0"
                 />
@@ -314,7 +317,6 @@ export function AmateurPlayerProfessionalInfoForm({
                 className="bg-gray-50 border-0"
               />
             </FormField>
-            
           </div>
         </FormSection>
       </form>

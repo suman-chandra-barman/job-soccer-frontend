@@ -36,6 +36,7 @@ import { TechnicalDirectorVideoForm } from "@/components/forms/TechnicalDirector
 import { AcademyDirectorVideoForm } from "@/components/forms/AcademyDirectorVideoForm";
 import { DirectorOfCoachingVideoForm } from "@/components/forms/DirectorOfCoachingVideoForm";
 import { OfficeStaffVideoForm } from "@/components/forms/OfficeStaffVideoForm";
+import { PlayerVideoForm } from "@/components/forms/PlayerVideoForm";
 
 export default function CandidateProfilePage() {
   const [currentStep, setCurrentStep] = useState(1);
@@ -148,8 +149,13 @@ export default function CandidateProfilePage() {
   const handleVideoNext = async (data: TVideo) => {
     // Format the complete form data for API submission
     const videoData = data as TVideo & {
-      videoTitles?: VideoType[];
+      videoTitles?: string[];
       videos?: File[];
+      videoMeta?: Array<{
+        type: VideoType;
+        title?: string;
+        description?: string;
+      }>;
     };
 
     // Debug logs: show current stored formData (userInfo) and incoming video payload
@@ -190,31 +196,32 @@ export default function CandidateProfilePage() {
       formDataToSend.append("image", imageFile);
     }
 
-    // Append videoMeta array as JSON string (type, title, description)
-    const videoMeta = (
-      videoData as unknown as {
-        videoMeta?: Array<{
-          type: VideoType;
-          title?: string;
-          description?: string;
-        }>;
+    // Check if this is a player role (has videoTitles instead of videoMeta)
+    if (videoData.videoTitles && Array.isArray(videoData.videoTitles)) {
+      // For players: append videoTitles as JSON array
+      formDataToSend.append(
+        "videoTitles",
+        JSON.stringify(videoData.videoTitles)
+      );
+    } else {
+      // For staff roles: append videoMeta array as JSON string (type, title, description)
+      const videoMeta = videoData.videoMeta;
+
+      // Strip empty title/description so optional values are not sent
+      const cleanedVideoMeta =
+        videoMeta
+          ?.map((vm) => {
+            const out: Record<string, unknown> = { type: vm.type };
+            if (vm.title && vm.title.trim() !== "") out.title = vm.title.trim();
+            if (vm.description && vm.description.trim() !== "")
+              out.description = vm.description.trim();
+            return out;
+          })
+          .filter((vm) => Object.keys(vm).length > 0) ?? undefined;
+
+      if (cleanedVideoMeta && cleanedVideoMeta.length > 0) {
+        formDataToSend.append("videoMeta", JSON.stringify(cleanedVideoMeta));
       }
-    ).videoMeta;
-
-    // Strip empty title/description so optional values are not sent
-    const cleanedVideoMeta =
-      videoMeta
-        ?.map((vm) => {
-          const out: Record<string, unknown> = { type: vm.type };
-          if (vm.title && vm.title.trim() !== "") out.title = vm.title.trim();
-          if (vm.description && vm.description.trim() !== "")
-            out.description = vm.description.trim();
-          return out;
-        })
-        .filter((vm) => Object.keys(vm).length > 0) ?? undefined;
-
-    if (cleanedVideoMeta && cleanedVideoMeta.length > 0) {
-      formDataToSend.append("videoMeta", JSON.stringify(cleanedVideoMeta));
     }
 
     // Append each video file
@@ -225,7 +232,8 @@ export default function CandidateProfilePage() {
     }
 
     console.log("Data:", cleanedCombined);
-    console.log("VideoMeta:", videoMeta);
+    console.log("VideoTitles:", videoData.videoTitles);
+    console.log("VideoMeta:", videoData.videoMeta);
     console.log("Videos:", videoData.videos);
     // Log FormData contents in a readable way (files will show name/size)
     for (const pair of formDataToSend.entries()) {
@@ -352,6 +360,13 @@ export default function CandidateProfilePage() {
     switch (userRole) {
       case CandidateRole.OFFICE_STAFF:
         return <OfficeStaffVideoForm {...videoProps} />;
+
+      // For all player roles, render player video form
+      case CandidateRole.PROFESSIONAL_PLAYER:
+      case CandidateRole.AMATEUR_PLAYER:
+      case CandidateRole.HIGH_SCHOOL:
+      case CandidateRole.COLLEGE_UNIVERSITY:
+        return <PlayerVideoForm {...videoProps} />;
     }
 
     // For on-field staff, render based on specific position

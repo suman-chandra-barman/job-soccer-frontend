@@ -26,11 +26,11 @@ export const amateurPlayerProfessionalInfoSchema = z.object({
   gender: z.enum(["Male", "Female", "Other"]),
   availability: z.enum(["Now", "Soon", "Later"]),
   height: z.object({
-    size: z.string().min(1, "Height is required"),
+    size: z.number().min(1, "Height is required"),
     unit: z.enum(["cm", "m", "in", "ft"]),
   }),
   weight: z.object({
-    size: z.string().min(1, "Weight is required"),
+    size: z.number().min(1, "Weight is required"),
     unit: z.enum(["kg", "lb"]),
   }),
   currentClub: z.string().min(1, "Current club is required"),
@@ -67,11 +67,11 @@ export const collegeOrUniversityPlayerProfessionalInfoSchema = z.object({
   gender: z.string().min(1, "Gender is required"),
   availability: z.string().min(1, "Availability is required"),
   height: z.object({
-    size: z.string().min(1, "Height is required"),
+    size: z.number().min(1, "Height is required"),
     unit: z.enum(["cm", "m", "in", "ft"]),
   }),
   weight: z.object({
-    size: z.string().min(1, "Weight is required"),
+    size: z.number().min(1, "Weight is required"),
     unit: z.enum(["kg", "lb"]),
   }),
   currentClub: z.string().min(1, "Current club is required"),
@@ -93,11 +93,11 @@ export const collegeOrUniversityPlayerProfessionalInfoSchema = z.object({
 export const highSchoolPlayerProfessionalInfoSchema = z.object({
   gender: z.string().min(1, "Gender is required"),
   height: z.object({
-    size: z.string().min(1, "Height is required"),
+    size: z.number().min(1, "Height is required"),
     unit: z.enum(["cm", "m", "in", "ft"]),
   }),
   weight: z.object({
-    size: z.string().min(1, "Weight is required"),
+    size: z.number().min(1, "Weight is required"),
     unit: z.enum(["kg", "lb"]),
   }),
   availability: z.string().min(1, "Availability is required"),
@@ -119,11 +119,11 @@ export const highSchoolPlayerProfessionalInfoSchema = z.object({
 export const professionalPlayerProfessionalInfoSchema = z.object({
   gender: z.string().min(1, "Gender is required"),
   height: z.object({
-    size: z.string().min(1, "Height is required"),
+    size: z.number().min(1, "Height is required"),
     unit: z.enum(["cm", "m", "in", "ft"]),
   }),
   weight: z.object({
-    size: z.string().min(1, "Weight is required"),
+    size: z.number().min(1, "Weight is required"),
     unit: z.enum(["kg", "lb"]),
   }),
   nationalTeamCategory: z.string().min(1, "National Team Category is required"),

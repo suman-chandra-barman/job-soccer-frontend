@@ -141,7 +141,9 @@ export function ProfessionalPlayerProfessionalInfoForm({
             <FormField label="Height" error={errors.height?.size?.message}>
               <div className="flex space-x-2">
                 <Input
-                  {...register("height.size" as const)}
+                  type="number"
+                  step="any"
+                  {...register("height.size" as const, { valueAsNumber: true })}
                   placeholder="Ex. 5.7"
                   className="bg-gray-50 border-0"
                 />
@@ -176,7 +178,9 @@ export function ProfessionalPlayerProfessionalInfoForm({
             <FormField label="Weight" error={errors.weight?.size?.message}>
               <div className="flex space-x-2">
                 <Input
-                  {...register("weight.size" as const)}
+                  type="number"
+                  step="any"
+                  {...register("weight.size" as const, { valueAsNumber: true })}
                   placeholder="Ex. 75"
                   className="bg-gray-50 border-0"
                 />
