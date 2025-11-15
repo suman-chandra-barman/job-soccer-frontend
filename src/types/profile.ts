@@ -32,6 +32,22 @@ export type TOfficeStaffProfessionalInfo = z.infer<
   typeof officeStaffProfessionalInfoSchema
 >;
 
+export interface IVideoFormProps {
+  onNext: (data: TVideo) => void;
+  onPrev: () => void;
+  initialData?: Partial<TVideo>;
+  steps?: Array<{
+    id: number;
+    label: string;
+    completed?: boolean;
+    active?: boolean;
+  }>;
+}
+// Internal video map structure
+export interface IVideoMap {
+  [key: string]: File | null;
+}
+
 // Role enums
 export enum CandidateRole {
   PROFESSIONAL_PLAYER = "Professional Player",
@@ -51,4 +67,3 @@ export enum EmployerRole {
   COLLEGE_UNIVERSITY = "College/University",
   AGENT = "Agent",
 }
-

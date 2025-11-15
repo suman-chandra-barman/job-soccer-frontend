@@ -23,12 +23,18 @@ import { FieldStaffProfessionalInfoForm } from "@/components/forms/FieldStaffPro
 import { OfficeStaffProfessionalInfoForm } from "@/components/forms/OfficeStaffProfessionalInfoForm";
 import { useAppSelector } from "@/redux/hooks";
 import { Spinner } from "@/components/ui/spinner";
-import { HeadCourseVideoForm } from "@/components/forms/HeadCourseVideoForm";
 import { FieldStaffPosition, VideoType } from "@/constants/video.constant";
 import { useCreateUserProfileMutation } from "@/redux/features/user/userApi";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { IoMdArrowBack } from "react-icons/io";
+import { HeadCoachVideoForm } from "@/components/forms/HeadCoachVideoForm";
+import { GKCoachVideoForm } from "@/components/forms/GKCoachVideoForm";
+import { SpecificCoachVideoForm } from "@/components/forms/SpecificCoachVideoForm";
+import { ScoutVideoForm } from "@/components/forms/ScoutVideoForm";
+import { TechnicalDirectorVideoForm } from "@/components/forms/TechnicalDirectorVideoForm";
+import { AcademyDirectorVideoForm } from "@/components/forms/AcademyDirectorVideoForm";
+import { DirectorOfCoachingVideoForm } from "@/components/forms/DirectorOfCoachingVideoForm";
 
 export default function CandidateProfilePage() {
   const [currentStep, setCurrentStep] = useState(1);
@@ -345,11 +351,55 @@ export default function CandidateProfilePage() {
       // ------ On field staff positions ------
       // Head Coach
       case FieldStaffPosition.HEAD_COACH:
-        return <HeadCourseVideoForm {...videoProps} />;
+        return <HeadCoachVideoForm {...videoProps} />;
 
       // Assistant Coach
       case FieldStaffPosition.ASSISTANT_COACH:
-        return <HeadCourseVideoForm {...videoProps} />;
+        return <HeadCoachVideoForm {...videoProps} />;
+
+      // GK Coach
+      case FieldStaffPosition.GK_COACH:
+        return <GKCoachVideoForm {...videoProps} />;
+
+      // Mental Coach
+      case FieldStaffPosition.MENTAL_COACH:
+        return <GKCoachVideoForm {...videoProps} />;
+
+      // Video Analyst Coach
+      case FieldStaffPosition.VIDEO_ANALYST_COACH:
+        return <GKCoachVideoForm {...videoProps} />;
+
+      // Specific Offensive Coach
+      case FieldStaffPosition.SPECIFIC_OFFENSIVE_COACH:
+        return <SpecificCoachVideoForm {...videoProps} />;
+
+      // Specific Defensive Coach
+      case FieldStaffPosition.SPECIFIC_DEFENSIVE_COACH:
+        return <SpecificCoachVideoForm {...videoProps} />;
+
+      // Specific Technical Coach
+      case FieldStaffPosition.SPECIFIC_TECHNICAL_COACH:
+        return <SpecificCoachVideoForm {...videoProps} />;
+
+      // Specific Technical Coach
+      case FieldStaffPosition.SPECIFIC_TECHNICAL_COACH:
+        return <SpecificCoachVideoForm {...videoProps} />;
+
+      // Scouting Technical Coach
+      case FieldStaffPosition.SCOUT:
+        return <ScoutVideoForm {...videoProps} />;
+
+      // Technical Director
+      case FieldStaffPosition.TECHNICAL_DIRECTOR:
+        return <TechnicalDirectorVideoForm {...videoProps} />;
+
+      // Academy Director
+      case FieldStaffPosition.ACADEMY_DIRECTOR:
+        return <AcademyDirectorVideoForm {...videoProps} />;
+
+      // Director of Coaching
+      case FieldStaffPosition.DIRECTOR_OF_COACHING:
+        return <DirectorOfCoachingVideoForm {...videoProps} />;
     }
   };
 

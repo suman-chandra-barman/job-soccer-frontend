@@ -7,26 +7,9 @@ import { FormLayout } from "@/components/form/FormLayout";
 import { IndividualVideoUpload } from "../form/fields/IndividualVideoUpload";
 import { VideoType } from "@/constants/video.constant";
 import { videoSchema } from "@/shchemas/profileValidation";
-import { TVideo } from "@/types/profile";
+import { IVideoFormProps, IVideoMap, TVideo } from "@/types/profile";
 
-interface IVideoFormProps {
-  onNext: (data: TVideo) => void;
-  onPrev: () => void;
-  initialData?: Partial<TVideo>;
-  steps?: Array<{
-    id: number;
-    label: string;
-    completed?: boolean;
-    active?: boolean;
-  }>;
-}
-
-// Internal video map structure
-interface VideoMap {
-  [key: string]: File | null;
-}
-
-export function HeadCourseVideoForm({
+export function AcademyDirectorVideoForm({
   onNext,
   onPrev,
   initialData,
@@ -46,21 +29,18 @@ export function HeadCourseVideoForm({
   });
 
   // Maintain a map of video types to files
-  const [videoMap, setVideoMap] = useState<VideoMap>(() => {
+  const [videoMap, setVideoMap] = useState<IVideoMap>(() => {
     // Initialize from initialData if available
     if (initialData?.videos && initialData.videos.length > 0) {
       return {
         [VideoType.PRE_RECORDED_INTERVIEW]: initialData.videos[0] || null,
-        [VideoType.TECHNICAL]: initialData.videos[1] || null,
-        [VideoType.TACTICAL]: initialData.videos[2] || null,
-        [VideoType.GAME_PRINCIPALS]: initialData.videos[3] || null,
+        [VideoType.YOUTH_DEVELOPMENT_METHODOLOGY]:
+          initialData.videos[1] || null,
       };
     }
     return {
       [VideoType.PRE_RECORDED_INTERVIEW]: null,
-      [VideoType.TECHNICAL]: null,
-      [VideoType.TACTICAL]: null,
-      [VideoType.GAME_PRINCIPALS]: null,
+      [VideoType.YOUTH_DEVELOPMENT_METHODOLOGY]: null,
     };
   });
 
@@ -86,9 +66,7 @@ export function HeadCourseVideoForm({
     // Maintain specific order
     const orderedVideoTypes = [
       VideoType.PRE_RECORDED_INTERVIEW,
-      VideoType.TECHNICAL,
-      VideoType.TACTICAL,
-      VideoType.GAME_PRINCIPALS,
+      VideoType.YOUTH_DEVELOPMENT_METHODOLOGY,
     ];
 
     orderedVideoTypes.forEach((videoType) => {
@@ -119,9 +97,7 @@ export function HeadCourseVideoForm({
   // Check if all required videos are uploaded
   const hasAllRequiredVideos =
     videoMap[VideoType.PRE_RECORDED_INTERVIEW] !== null &&
-    videoMap[VideoType.TECHNICAL] !== null &&
-    videoMap[VideoType.TACTICAL] !== null &&
-    videoMap[VideoType.GAME_PRINCIPALS] !== null;
+    videoMap[VideoType.YOUTH_DEVELOPMENT_METHODOLOGY] !== null;
 
   return (
     <FormLayout
@@ -155,51 +131,21 @@ export function HeadCourseVideoForm({
 
           {/* Video 2 - Required */}
           <IndividualVideoUpload
-            label={VideoType.TECHNICAL}
-            description="Upload your technical video"
+            label={VideoType.YOUTH_DEVELOPMENT_METHODOLOGY}
+            description="Upload your youth development methodology video"
             required={true}
             maxDuration={180}
-            value={videoMap[VideoType.TECHNICAL]}
+            value={videoMap[VideoType.YOUTH_DEVELOPMENT_METHODOLOGY]}
             onChange={(file) =>
-              handleVideoChangeByType(VideoType.TECHNICAL, file)
-            }
-            error={
-              hasSubmitted && errors.videos && !videoMap[VideoType.TECHNICAL]
-                ? "This video is required"
-                : undefined
-            }
-          />
-          {/* Video 3 - Required */}
-          <IndividualVideoUpload
-            label={VideoType.TACTICAL}
-            description="Upload your tactical video"
-            required={true}
-            maxDuration={180}
-            value={videoMap[VideoType.TACTICAL]}
-            onChange={(file) =>
-              handleVideoChangeByType(VideoType.TACTICAL, file)
-            }
-            error={
-              hasSubmitted && errors.videos && !videoMap[VideoType.TACTICAL]
-                ? "This video is required"
-                : undefined
-            }
-          />
-
-          {/* Video 4 - Required */}
-          <IndividualVideoUpload
-            label={VideoType.GAME_PRINCIPALS}
-            description="Upload your game principles video"
-            required={true}
-            maxDuration={180}
-            value={videoMap[VideoType.GAME_PRINCIPALS]}
-            onChange={(file) =>
-              handleVideoChangeByType(VideoType.GAME_PRINCIPALS, file)
+              handleVideoChangeByType(
+                VideoType.YOUTH_DEVELOPMENT_METHODOLOGY,
+                file
+              )
             }
             error={
               hasSubmitted &&
               errors.videos &&
-              !videoMap[VideoType.GAME_PRINCIPALS]
+              !videoMap[VideoType.YOUTH_DEVELOPMENT_METHODOLOGY]
                 ? "This video is required"
                 : undefined
             }
