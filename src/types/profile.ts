@@ -10,6 +10,7 @@ import {
   academyEmployerProfileSchema,
   agentEmployerProfileSchema,
   amateurClubEmployerProfileSchema,
+  collegeOrUniversityEmployerProfileSchema,
 } from "@/shchemas/profileValidation";
 import z from "zod";
 
@@ -43,6 +44,10 @@ export type TAgentEmployerProfile = z.infer<typeof agentEmployerProfileSchema>;
 
 export type TAmateurClubEmployerProfile = z.infer<
   typeof amateurClubEmployerProfileSchema
+>;
+
+export type TCollegeOrUniversityEmployerProfile = z.infer<
+  typeof collegeOrUniversityEmployerProfileSchema
 >;
 
 export interface IVideoFormProps {

@@ -49,17 +49,25 @@ export default function RoleSelect({
     };
   }, []);
 
-  const handleRoleSelect = (role: string) => {
+  const handleCandidateRoleSelect = (role: string) => {
     setSelectedRole(role);
     onValueChange?.(role);
-    // Determine whether the selected role belongs to candidates or employers
-    const lowerRole = role.toString();
-    const isCandidate = candidateRoles.includes(lowerRole);
-    const userType = isCandidate ? "candidate" : "employer";
 
-    // Inform parent about the user type (keeps existing prop name `setUserRype`)
     try {
-      setUserRype(userType);
+      setUserRype("candidate");
+    } catch {
+      // If caller didn't pass a setter or it throws, ignore silently
+    }
+
+    setOpen(false);
+  };
+
+  const handleEmployerRoleSelect = (role: string) => {
+    setSelectedRole(role);
+    onValueChange?.(role);
+
+    try {
+      setUserRype("employer");
     } catch {
       // If caller didn't pass a setter or it throws, ignore silently
     }
@@ -89,16 +97,16 @@ export default function RoleSelect({
             {/* Candidates Section */}
             <div>
               <h3 className="font-semibold text-gray-900 mb-3">Candidates</h3>
-              <RadioGroup value={selectedRole} onValueChange={handleRoleSelect}>
+              <RadioGroup value={selectedRole} onValueChange={handleCandidateRoleSelect}>
                 {candidateRoles.map((role) => (
-                  <div key={role} className="flex items-center space-x-2">
+                  <div key={`candidate-${role}`} className="flex items-center space-x-2">
                     <RadioGroupItem
                       value={role}
-                      id={role}
+                      id={`candidate-${role}`}
                       className="border-gray-300 text-blue-600"
                     />
                     <Label
-                      htmlFor={role}
+                      htmlFor={`candidate-${role}`}
                       className="text-gray-700 cursor-pointer font-normal"
                     >
                       {role}
@@ -111,16 +119,16 @@ export default function RoleSelect({
             {/* Employers Section */}
             <div>
               <h3 className="font-semibold text-gray-900 mb-3">Employers</h3>
-              <RadioGroup value={selectedRole} onValueChange={handleRoleSelect}>
+              <RadioGroup value={selectedRole} onValueChange={handleEmployerRoleSelect}>
                 {employerRoles.map((role) => (
-                  <div key={role} className="flex items-center space-x-2">
+                  <div key={`employer-${role}`} className="flex items-center space-x-2">
                     <RadioGroupItem
                       value={role}
-                      id={role}
+                      id={`employer-${role}`}
                       className="border-gray-300 text-blue-600"
                     />
                     <Label
-                      htmlFor={role}
+                      htmlFor={`employer-${role}`}
                       className="text-gray-700 cursor-pointer font-normal"
                     >
                       {role}

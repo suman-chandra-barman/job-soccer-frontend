@@ -10,6 +10,7 @@ import {
   TAcademyEmployerProfile,
   TAgentEmployerProfile,
   TAmateurClubEmployerProfile,
+  TCollegeOrUniversityEmployerProfile,
 } from "@/types/profile";
 import { useCreateUserProfileMutation } from "@/redux/features/user/userApi";
 import { useRouter } from "next/navigation";
@@ -18,13 +19,15 @@ import { IoMdArrowBack } from "react-icons/io";
 import { AcademyEmployerProfileForm } from "@/components/forms/AcademyEmployerProfileForm";
 import { AgentEmployerProfileForm } from "@/components/forms/AgentEmployerProfileForm";
 import { AmateurClubEmployerProfileForm } from "@/components/forms/AmateurClubEmployerProfileForm";
+import { CollegeOrUniversityEmployerProfileForm } from "@/components/forms/CollegeOrUniversityEmployerProfileForm";
 
 export default function EmployerProfilePage() {
   const [formData, setFormData] = useState<{
     profileInfo?:
       | TAcademyEmployerProfile
       | TAgentEmployerProfile
-      | TAmateurClubEmployerProfile;
+      | TAmateurClubEmployerProfile
+      | TCollegeOrUniversityEmployerProfile;
   }>({});
 
   const user = useAppSelector((state) => state.auth.user);
@@ -79,6 +82,7 @@ export default function EmployerProfilePage() {
       | TAcademyEmployerProfile
       | TAgentEmployerProfile
       | TAmateurClubEmployerProfile
+      | TCollegeOrUniversityEmployerProfile
   ) => {
     const logoFile =
       "logo" in data && data.logo instanceof File ? data.logo : null;
@@ -129,6 +133,14 @@ export default function EmployerProfilePage() {
       case EmployerRole.AMATEUR_CLUB:
         return (
           <AmateurClubEmployerProfileForm
+            onNext={handleProfileNext}
+            initialData={formData.profileInfo as any}
+          />
+        );
+
+      case EmployerRole.COLLEGE_UNIVERSITY:
+        return (
+          <CollegeOrUniversityEmployerProfileForm
             onNext={handleProfileNext}
             initialData={formData.profileInfo as any}
           />
