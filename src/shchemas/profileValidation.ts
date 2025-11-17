@@ -283,3 +283,33 @@ export const collegeOrUniversityEmployerProfileSchema = z.object({
   clubContact: z.string().trim().min(1, "Club contact is required"),
   clubDescription: z.string().trim().min(1, "Club description is required"),
 });
+
+// Consulting Company Employer Profile Schema
+export const consultingCompanyEmployerProfileSchema = z.object({
+  logo: z
+    .instanceof(File, { message: "Please upload a logo" })
+    .refine((file) => file.size > 0, "Logo is required"),
+  clubName: z.string().trim().min(1, "Club name is required"),
+  country: z.string().min(1, "Country is required"),
+  address: z.string().trim().min(1, "Address is required"),
+  founded: z
+    .string()
+    .refine(
+      (date) => {
+        const parsedDate = new Date(date);
+        return !isNaN(parsedDate.getTime()) && parsedDate < new Date();
+      },
+      {
+        message: "Founded date must be a valid date in the past",
+      }
+    )
+    .transform((date) => new Date(date)),
+  nationality: z.string().trim().min(1, "Nationality is required"),
+  position: z.string().trim().min(1, "Position is required"),
+  location: z.string().trim().min(1, "Location is required"),
+  level: z.enum(["Division 1", "Division 2", "Division 3", "Division 4"]),
+  website: z.string().trim().min(1, "Website is required"),
+  phoneNumber: z.string().trim().min(1, "Phone number is required"),
+  clubContact: z.string().trim().min(1, "Club contact is required"),
+  clubDescription: z.string().trim().min(1, "Club description is required"),
+});

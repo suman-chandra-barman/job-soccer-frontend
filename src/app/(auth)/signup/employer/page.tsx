@@ -11,6 +11,7 @@ import {
   TAgentEmployerProfile,
   TAmateurClubEmployerProfile,
   TCollegeOrUniversityEmployerProfile,
+  TConsultingCompanyEmployerProfile,
 } from "@/types/profile";
 import { useCreateUserProfileMutation } from "@/redux/features/user/userApi";
 import { useRouter } from "next/navigation";
@@ -20,6 +21,7 @@ import { AcademyEmployerProfileForm } from "@/components/forms/AcademyEmployerPr
 import { AgentEmployerProfileForm } from "@/components/forms/AgentEmployerProfileForm";
 import { AmateurClubEmployerProfileForm } from "@/components/forms/AmateurClubEmployerProfileForm";
 import { CollegeOrUniversityEmployerProfileForm } from "@/components/forms/CollegeOrUniversityEmployerProfileForm";
+import { ConsultingCompanyEmployerProfileForm } from "@/components/forms/ConsultingCompanyEmployerProfileForm";
 
 export default function EmployerProfilePage() {
   const [formData, setFormData] = useState<{
@@ -27,7 +29,8 @@ export default function EmployerProfilePage() {
       | TAcademyEmployerProfile
       | TAgentEmployerProfile
       | TAmateurClubEmployerProfile
-      | TCollegeOrUniversityEmployerProfile;
+      | TCollegeOrUniversityEmployerProfile
+      | TConsultingCompanyEmployerProfile;
   }>({});
 
   const user = useAppSelector((state) => state.auth.user);
@@ -83,6 +86,7 @@ export default function EmployerProfilePage() {
       | TAgentEmployerProfile
       | TAmateurClubEmployerProfile
       | TCollegeOrUniversityEmployerProfile
+      | TConsultingCompanyEmployerProfile
   ) => {
     const logoFile =
       "logo" in data && data.logo instanceof File ? data.logo : null;
@@ -141,6 +145,14 @@ export default function EmployerProfilePage() {
       case EmployerRole.COLLEGE_UNIVERSITY:
         return (
           <CollegeOrUniversityEmployerProfileForm
+            onNext={handleProfileNext}
+            initialData={formData.profileInfo as any}
+          />
+        );
+
+      case EmployerRole.CONSULTING_COMPANY:
+        return (
+          <ConsultingCompanyEmployerProfileForm
             onNext={handleProfileNext}
             initialData={formData.profileInfo as any}
           />
