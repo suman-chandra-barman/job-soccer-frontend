@@ -5,16 +5,21 @@ import React, { useState } from "react";
 import { toast } from "sonner";
 import { useAppSelector } from "@/redux/hooks";
 import { Spinner } from "@/components/ui/spinner";
-import { EmployerRole, TAcademyEmployerProfile } from "@/types/profile";
+import {
+  EmployerRole,
+  TAcademyEmployerProfile,
+  TAgentEmployerProfile,
+} from "@/types/profile";
 import { useCreateUserProfileMutation } from "@/redux/features/user/userApi";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { IoMdArrowBack } from "react-icons/io";
 import { AcademyEmployerProfileForm } from "@/components/forms/AcademyEmployerProfileForm";
+import { AgentEmployerProfileForm } from "@/components/forms/AgentEmployerProfileForm";
 
 export default function EmployerProfilePage() {
   const [formData, setFormData] = useState<{
-    profileInfo?: TAcademyEmployerProfile;
+    profileInfo?: TAcademyEmployerProfile | TAgentEmployerProfile;
   }>({});
 
   const user = useAppSelector((state) => state.auth.user);
@@ -64,11 +69,16 @@ export default function EmployerProfilePage() {
     return undefined;
   };
 
-  const handleProfileNext = async (data: TAcademyEmployerProfile) => {
-    const logoFile = data.logo instanceof File ? data.logo : null;
+  const handleProfileNext = async (
+    data: TAcademyEmployerProfile | TAgentEmployerProfile
+  ) => {
+    const logoFile =
+      "logo" in data && data.logo instanceof File ? data.logo : null;
 
     const dataWithoutLogo = { ...data };
-    delete (dataWithoutLogo as { logo?: File }).logo;
+    if ("logo" in dataWithoutLogo) {
+      delete (dataWithoutLogo as { logo?: File }).logo;
+    }
 
     const cleanedData = removeEmptyFields(dataWithoutLogo) ?? {};
 
@@ -95,6 +105,14 @@ export default function EmployerProfilePage() {
       case EmployerRole.ACADEMY:
         return (
           <AcademyEmployerProfileForm
+            onNext={handleProfileNext}
+            initialData={formData.profileInfo as any}
+          />
+        );
+
+      case EmployerRole.AGENT:
+        return (
+          <AgentEmployerProfileForm
             onNext={handleProfileNext}
             initialData={formData.profileInfo as any}
           />

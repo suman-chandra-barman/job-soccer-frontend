@@ -8,6 +8,7 @@ import {
   professionalPlayerProfessionalInfoSchema,
   videoSchema,
   academyEmployerProfileSchema,
+  agentEmployerProfileSchema,
 } from "@/shchemas/profileValidation";
 import z from "zod";
 
@@ -36,6 +37,8 @@ export type TOfficeStaffProfessionalInfo = z.infer<
 export type TAcademyEmployerProfile = z.infer<
   typeof academyEmployerProfileSchema
 >;
+
+export type TAgentEmployerProfile = z.infer<typeof agentEmployerProfileSchema>;
 
 export interface IVideoFormProps {
   onNext: (data: TVideo) => void;

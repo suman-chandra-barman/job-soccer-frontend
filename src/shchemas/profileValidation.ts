@@ -179,7 +179,7 @@ export const videoSchema = z.object({
 
 // Academy Employer Profile Schema
 export const academyEmployerProfileSchema = z.object({
-  logo: z.instanceof(File).refine(file => file.size > 0, "Logo is required"),
+  logo: z.instanceof(File).refine((file) => file.size > 0, "Logo is required"),
   clubName: z.string().trim().min(1, "Club name is required"),
   country: z.string().min(1, "Country is required"),
   address: z.string().trim().min(1, "Address is required"),
@@ -203,4 +203,19 @@ export const academyEmployerProfileSchema = z.object({
   phoneNumber: z.string().trim().min(1, "Phone number is required"),
   clubContact: z.string().trim().min(1, "Club contact is required"),
   clubDescription: z.string().trim().min(1, "Club description is required"),
+});
+
+// Agent Employer Profile Schema
+export const agentEmployerProfileSchema = z.object({
+  logo: z.instanceof(File).refine((file) => file.size > 0, "Logo is required"),
+  companyName: z.string().trim().min(1, "Company name is required"),
+  phoneNumber: z.string().trim().min(1, "Phone number is required"),
+  country: z.string().min(1, "Country is required"),
+  nationality: z.string().trim().min(1, "Nationality is required"),
+  socialMedia: z.string().trim().min(1, "Social media is required"),
+  website: z.string().trim().min(1, "Website is required"),
+  fifaLicenseNumber: z
+    .string()
+    .trim()
+    .min(1, "FIFA license number is required"),
 });
