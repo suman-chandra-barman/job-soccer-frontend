@@ -25,7 +25,7 @@ function EmployersPage() {
           <Skeleton className="h-8" />
         </div>
       </div>
-      <CardSkeletonGrid className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-3 md:gap-4 "/>
+      <CardSkeletonGrid className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-3 md:gap-4 " />
     </div>
   );
 
@@ -58,7 +58,7 @@ function EmployersPage() {
           <div className="flex items-center justify-between py-4">
             <span className="text-2xl font-bold">Academy</span>
             <Button variant="link" className="text-black">
-              <Link href="/job-board">See All</Link>
+              <Link href="jobs">See All</Link>
             </Button>
           </div>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-3 md:gap-4">
@@ -75,7 +75,7 @@ function EmployersPage() {
           <div className="flex items-center justify-between py-4">
             <span className="text-2xl font-bold">High School</span>
             <Button variant="link" className="text-black">
-              <Link href="/job-board">See All</Link>
+              <Link href="jobs">See All</Link>
             </Button>
           </div>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-3 md:gap-4">
@@ -92,7 +92,7 @@ function EmployersPage() {
           <div className="flex items-center justify-between py-4">
             <span className="text-2xl font-bold">College/University</span>
             <Button variant="link" className="text-black">
-              <Link href="/job-board">See All</Link>
+              <Link href="jobs">See All</Link>
             </Button>
           </div>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-3 md:gap-4">
@@ -109,7 +109,7 @@ function EmployersPage() {
           <div className="flex items-center justify-between py-4">
             <span className="text-2xl font-bold">Professional Club</span>
             <Button variant="link" className="text-black">
-              <Link href="/job-board">See All</Link>
+              <Link href="jobs">See All</Link>
             </Button>
           </div>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-3 md:gap-4">
@@ -126,7 +126,7 @@ function EmployersPage() {
           <div className="flex items-center justify-between py-4">
             <span className="text-2xl font-bold">Amateur Club</span>
             <Button variant="link" className="text-black">
-              <Link href="/job-board">See All</Link>
+              <Link href="jobs">See All</Link>
             </Button>
           </div>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-3 md:gap-4">
@@ -143,7 +143,7 @@ function EmployersPage() {
           <div className="flex items-center justify-between py-4">
             <span className="text-2xl font-bold">Agent</span>
             <Button variant="link" className="text-black">
-              <Link href="/job-board">See All</Link>
+              <Link href="jobs">See All</Link>
             </Button>
           </div>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-3 md:gap-4">
@@ -158,7 +158,7 @@ function EmployersPage() {
           <div className="flex items-center justify-between py-4">
             <span className="text-2xl font-bold">Consulting Company</span>
             <Button variant="link" className="text-black">
-              <Link href="/job-board">See All</Link>
+              <Link href="jobs">See All</Link>
             </Button>
           </div>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-3 md:gap-4">

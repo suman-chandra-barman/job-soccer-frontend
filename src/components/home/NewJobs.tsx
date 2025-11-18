@@ -71,7 +71,7 @@ export function NewJobs() {
 
       <div className="flex justify-end">
         <Button className="bg-yellow-300 hover:bg-yellow-400 text-black font-semibold px-6 py-3 rounded-lg">
-         <Link href="/job-board">See All Jobs</Link>
+          <Link href="jobs">See All Jobs</Link>
         </Button>
       </div>
     </div>

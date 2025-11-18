@@ -1,7 +1,6 @@
 "use client";
 
-import { useState } from "react";
-import Link from "next/link";
+import { useState, useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { toast } from "sonner";
@@ -20,13 +19,25 @@ import {
   createPasswordSchema,
   type CreatePasswordFormData,
 } from "@/shchemas/passwordValidation";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
+import { useResetPasswordMutation } from "@/redux/features/auth/authApi";
+import { Spinner } from "@/components/ui/spinner";
 
 export default function CreateNewPasswordPage() {
   const [showNewPassword, setShowNewPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
-  const [isLoading, setIsLoading] = useState(false);
   const router = useRouter();
+  const searchParams = useSearchParams();
+  const token = searchParams.get("token");
+
+  const [resetPassword, { isLoading }] = useResetPasswordMutation();
+
+  // Redirect if no token is provided
+  useEffect(() => {
+    if (!token) {
+      router.replace("/forgot-password");
+    }
+  }, [token, router]);
 
   const form = useForm<CreatePasswordFormData>({
     resolver: zodResolver(createPasswordSchema),
@@ -37,23 +48,44 @@ export default function CreateNewPasswordPage() {
   });
 
   const onSubmit = async (data: CreatePasswordFormData) => {
-    setIsLoading(true);
+    if (!token) {
+      toast.error("Reset token is required");
+      return;
+    }
+
     try {
-      // Simulate API call
-      await new Promise((resolve) => setTimeout(resolve, 2000));
-      console.log("Password reset data:", data);
-      toast.success("Password updated successfully!", {
-        description: "You can now log in with your new password.",
-      });
-      // Reset form after successful submission
-      form.reset();
-      router.push("/signin");
+      const payload = {
+        newPassword: data.newPassword,
+        token,
+      };
+
+      const res = await resetPassword(payload).unwrap();
+
+      if (res.success) {
+        toast.success("Password updated successfully!", {
+          description: "You can now log in with your new password.",
+        });
+        // Reset form after successful submission
+        form.reset();
+        router.push("/signin");
+      }
     } catch (error) {
+      const err = error as { data?: { message?: string } };
+      const errorMessage = err?.data?.message || "Please try again later.";
+
       toast.error("Failed to update password!", {
-        description: "Please try again later.",
+        description: errorMessage,
       });
-    } finally {
-      setIsLoading(false);
+
+      // If token expired, redirect to forgot password page
+      if (
+        errorMessage.includes("Token expired") ||
+        errorMessage.includes("expired")
+      ) {
+        setTimeout(() => {
+          router.push("/forgot-password");
+        }, 2000);
+      }
     }
   };
 
@@ -156,27 +188,16 @@ export default function CreateNewPasswordPage() {
                 )}
               />
 
-              {/* Verify Button */}
+              {/* Reset Password Button */}
               <Button
                 type="submit"
-                disabled={isLoading}
+                disabled={isLoading || !token}
                 className="w-full cursor-pointer bg-primary text-[#252525] hover:bg-amber-300 py-3 rounded-md"
               >
-                {isLoading ? "Verifying..." : "Verify"}
+                {isLoading ? <Spinner /> : "Create Password"}
               </Button>
             </form>
           </Form>
-
-          {/* Back to sign in link */}
-          <div className="text-center text-sm text-gray-600 mt-4">
-            Remember your password?{" "}
-            <Link
-              href="/signin"
-              className="underline text-primary-fill-primary"
-            >
-              Sign in
-            </Link>
-          </div>
         </div>
       </div>
     </div>

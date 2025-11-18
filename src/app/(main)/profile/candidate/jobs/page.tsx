@@ -296,7 +296,7 @@ const JobsList: React.FC = () => {
       <div className="flex justify-between items-center mb-6">
         <h1 className="text-2xl font-bold text-gray-900">Jobs list</h1>
         <Button className="bg-green-500 hover:bg-green-600 text-white">
-          <Link href="/job-boards"> Find More Job</Link>
+          <Link href="jobss"> Find More Job</Link>
         </Button>
       </div>
 

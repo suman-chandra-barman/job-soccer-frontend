@@ -41,11 +41,16 @@ export default function EmailVerificationPage() {
   }, [email, router, reason]);
 
   useEffect(() => {
+    if (reason === "password_reset") {
+      // Don't redirect based on user type for password reset
+      return;
+    }
+
     if (user?.data.userType) {
       if (user.data.userType === "candidate") router.push(`/signup/candidate`);
       else router.push(`/signup/employer`);
     }
-  }, [user, router]);
+  }, [user, router, reason]);
 
   useEffect(() => {
     if (resendTimer > 0) {
@@ -108,6 +113,16 @@ export default function EmailVerificationPage() {
 
       if (res.success) {
         toast.success("Email verified successfully!");
+
+        // Redirect based on reason
+        if (reason === "password_reset") {
+          // Redirect to create new password page with reset token
+          const resetToken = res.data;
+          router.push(
+            `/create-new-password?token=${encodeURIComponent(resetToken)}`
+          );
+        }
+        // For account_verification, the useEffect will handle redirection
       }
     } catch (error) {
       toast.error("Failed to verify email. Please try again.");

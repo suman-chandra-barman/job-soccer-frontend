@@ -16,9 +16,9 @@ const authApi = baseApi.injectEndpoints({
           if (data?.data.accessToken) {
             const token = data.data.accessToken;
             console.log("Token -->", token);
-            console.log("user --->", {user: data.data.user})
+            console.log("user --->", { user: data.data.user });
             localStorage.setItem("accessToken", token);
-            const test =  localStorage.getItem("accessToken");
+            const test = localStorage.getItem("accessToken");
             console.log("Test Token -->", test);
             dispatch(setCredentials({ user: data.data.user, token }));
           } else {
@@ -82,10 +82,13 @@ const authApi = baseApi.injectEndpoints({
 
     // RESET PASSWORD
     resetPassword: builder.mutation({
-      query: (data) => ({
+      query: ({ newPassword, token }) => ({
         url: "/auth/reset-password",
         method: "POST",
-        body: data,
+        body: { newPassword },
+        headers: {
+          Authorization: token,
+        },
       }),
     }),
 
@@ -108,7 +111,7 @@ const authApi = baseApi.injectEndpoints({
         try {
           const { data } = await queryFulfilled;
           const token = localStorage.getItem("accessToken");
-          
+
           if (token) {
             dispatch(setCredentials({ user: data.data, token }));
           }

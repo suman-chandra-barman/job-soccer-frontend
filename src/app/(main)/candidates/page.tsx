@@ -60,7 +60,7 @@ function CandidatesPage() {
               High School Players
             </span>
             <Button variant="link" className="text-black">
-              <Link href="/job-board"> See All</Link>
+              <Link href="jobs"> See All</Link>
             </Button>
           </div>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-3 md:gap-4">
@@ -79,7 +79,7 @@ function CandidatesPage() {
               College/University Players
             </span>
             <Button variant="link" className="text-black">
-              <Link href="/job-board"> See All</Link>
+              <Link href="jobs"> See All</Link>
             </Button>
           </div>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-3 md:gap-4">
@@ -98,7 +98,7 @@ function CandidatesPage() {
               Professional Players
             </span>
             <Button variant="link" className="text-black">
-              <Link href="/job-board"> See All</Link>
+              <Link href="jobs"> See All</Link>
             </Button>
           </div>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-3 md:gap-4">
@@ -117,7 +117,7 @@ function CandidatesPage() {
               Amateur Players
             </span>
             <Button variant="link" className="text-black">
-              <Link href="/job-board"> See All</Link>
+              <Link href="jobs"> See All</Link>
             </Button>
           </div>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-3 md:gap-4">
@@ -136,7 +136,7 @@ function CandidatesPage() {
               On-field Staff
             </span>
             <Button variant="link" className="text-black">
-              <Link href="/job-board"> See All</Link>
+              <Link href="jobs"> See All</Link>
             </Button>
           </div>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-3 md:gap-4">
@@ -153,7 +153,7 @@ function CandidatesPage() {
           <div className="flex items-center justify-between py-4">
             <span className="text-xl md:text-2xl font-bold">Office Staff</span>
             <Button variant="link" className="text-black">
-              <Link href="/job-board"> See All</Link>
+              <Link href="jobs"> See All</Link>
             </Button>
           </div>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-3 md:gap-4">

@@ -58,7 +58,7 @@ export function Navbar() {
         { name: "Home", href: "/", icon: Home },
         { name: "Candidates", href: "/candidates", icon: Users },
         { name: "Employers", href: "/employers", icon: Building2 },
-        { name: "Job Board", href: "/job-board", icon: Briefcase },
+        { name: "Job Board", href: "jobs", icon: Briefcase },
         { name: "My Network", href: "/my-network", icon: UserSquare },
         { name: "Upgrade", href: "/upgrade", icon: Crown },
         { name: "Message", href: "/messages", icon: MessageCircle },
@@ -73,7 +73,7 @@ export function Navbar() {
         { name: "Home", href: "/", icon: Home },
         { name: "Candidates", href: "/candidates", icon: Users },
         { name: "Employers", href: "/employers", icon: Building2 },
-        { name: "Job Board", href: "/job-board", icon: Briefcase },
+        { name: "Job Board", href: "jobs", icon: Briefcase },
         { name: "Upgrade", href: "/upgrade", icon: Crown },
         { name: "Messages", href: "/messages", icon: MessageCircle },
       ];

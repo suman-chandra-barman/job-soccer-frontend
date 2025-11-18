@@ -59,7 +59,7 @@ export function JobCategories() {
             Your complete hub for soccer talents jobs and connections
           </h2>
           <Button className="bg-yellow-300 hover:bg-yellow-400 text-black font-semibold px-6 py-3 rounded-lg">
-            <Link href="/job-board">See All Jobs</Link>
+            <Link href="jobs">See All Jobs</Link>
           </Button>
         </div>
 
@@ -70,7 +70,7 @@ export function JobCategories() {
             return (
               <Link
                 key={category.id}
-                href={`/job-board?category=${category.id}`}
+                href={`jobs?category=${category.id}`}
                 className="group bg-white rounded-full p-3 border border-gray-200 hover:bg-[#504A20] hover:text-white transition-all duration-200 cursor-pointer"
               >
                 <div className="flex items-center justify-between">
