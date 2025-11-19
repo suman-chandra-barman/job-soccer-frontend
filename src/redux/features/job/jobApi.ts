@@ -9,7 +9,14 @@ const jobApi = baseApi.injectEndpoints({
         params: filters,
       }),
     }),
+
+    getNewFourJobs: builder.mutation({
+      query: () => ({
+        url: "/job/last-four",
+        method: "GET",
+      }),
+    }),
   }),
 });
 
-export const { useGetJobsWithFiltersMutation } = jobApi;
+export const { useGetJobsWithFiltersMutation, useGetNewFourJobsMutation } = jobApi;

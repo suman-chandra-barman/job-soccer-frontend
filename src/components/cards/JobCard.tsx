@@ -1,13 +1,65 @@
 import { Bookmark, Clock, MapPin, MessageCircle } from "lucide-react";
 import { TNewJobPost } from "../home/NewJobs";
+import { TJob } from "@/types/job";
 import Image from "next/image";
 import employerLogo from "@/assets/employers/compony logo.png";
 import { Button } from "../ui/button";
 import Link from "next/link";
+import user1 from "@/assets/candidates/user1.png";
+import user2 from "@/assets/candidates/user2.png";
+import user3 from "@/assets/candidates/user3.png";
+import user4 from "@/assets/candidates/user4.png";
 
-export function JobCard({ job }: { job: TNewJobPost }) {
+type JobCardProps = {
+  job: TNewJobPost | TJob;
+};
+
+function isApiJob(job: TNewJobPost | TJob): job is TJob {
+  return "_id" in job;
+}
+
+function formatTimeAgo(dateString: string): string {
+  const date = new Date(dateString);
+  const now = new Date();
+  const diffInMs = now.getTime() - date.getTime();
+  const diffInDays = Math.floor(diffInMs / (1000 * 60 * 60 * 24));
+
+  if (diffInDays === 0) return "Today";
+  if (diffInDays === 1) return "1 day ago";
+  if (diffInDays < 30) return `${diffInDays} days ago`;
+
+  const diffInMonths = Math.floor(diffInDays / 30);
+  if (diffInMonths === 1) return "1 month ago";
+  return `${diffInMonths} months ago`;
+}
+
+export function JobCard({ job }: JobCardProps) {
+  const isApi = isApiJob(job);
+
+  const jobData = isApi
+    ? {
+        id: job._id,
+        company: `${job.creator.creatorId.firstName} ${job.creator.creatorId.lastName}`,
+        location: job.location,
+        applicantCount: job.applicationCount,
+        salary: `$${(job.salary.min / 1000).toFixed(0)}K-${(
+          job.salary.max / 1000
+        ).toFixed(0)}K`,
+        postedTime: formatTimeAgo(job.createdAt),
+        applicantImages: [user1, user2, user3, user4],
+      }
+    : {
+        id: job.id,
+        company: job.company,
+        location: job.location,
+        applicantCount: job.applicantCount,
+        salary: job.salary,
+        postedTime: job.postedTime,
+        applicantImages: job.applicantImages,
+      };
+
   return (
-    <Link href={`jobs/${job.id}`} className="block">
+    <Link href={`jobs/${jobData.id}`} className="block">
       <div className="bg-gradient-to-br from-white to-[#FDF9E3] rounded-xl p-4 shadow-sm border border-gray-100">
         <div className="flex items-center gap-3 mb-4 border-b border-gray-200 pb-4">
           <div
@@ -21,11 +73,11 @@ export function JobCard({ job }: { job: TNewJobPost }) {
           </div>
           <div className="flex-1 min-w-0">
             <h3 className="font-semibold text-gray-900 text-lg">
-              {job.company}
+              {jobData.company}
             </h3>
             <div className="flex items-center gap-1 text-gray-500 text-sm mt-1">
               <MapPin className="w-4 h-4" />
-              <span>{job.location}</span>
+              <span>{jobData.location}</span>
             </div>
           </div>
           <div>
@@ -36,7 +88,7 @@ export function JobCard({ job }: { job: TNewJobPost }) {
         {/* Applicant avatars */}
         <div className="flex items-center gap-2 mb-4">
           <div className="flex -space-x-4">
-            {job.applicantImages.map((image, index: number) => (
+            {jobData.applicantImages.map((image, index: number) => (
               <div key={index} className="relative">
                 <Image
                   src={image || "/placeholder.svg"}
@@ -55,15 +107,17 @@ export function JobCard({ job }: { job: TNewJobPost }) {
         <div className="flex items-center justify-between mb-4">
           <div className="flex flex-col gap-1">
             <span className="text-gray-600 text-sm">
-              {job.applicantCount} Applicant
+              {jobData.applicantCount} Applicant
             </span>
             <div className="flex items-center gap-1 text-gray-400 text-xs">
               <Clock className="w-3 h-3" />
-              <span>{job.postedTime}</span>
+              <span>{jobData.postedTime}</span>
             </div>
           </div>
           <div className="text-right">
-            <div className="text-2xl font-bold text-gray-900">{job.salary}</div>
+            <div className="text-2xl font-bold text-gray-900">
+              {jobData.salary}
+            </div>
             <div className="text-gray-500 text-sm">/mo</div>
           </div>
         </div>

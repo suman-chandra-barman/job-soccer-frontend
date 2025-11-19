@@ -6,7 +6,16 @@ import { Search, MapPin } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { useRouter } from "next/navigation";
-import SelectJobCategory from "../input/SelectJobCategory";
+import {
+  Select,
+  SelectContent,
+  SelectGroup,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "../ui/select";
+import { candidateRoles } from "@/shchemas/signupValidation";
+import { Label } from "../ui/label";
 
 const popularSearches = [
   "Goal Kipper",
@@ -54,13 +63,20 @@ export function JobSearch() {
             />
           </div>
 
-          {/* Category Select */}
-          <div className="w-full lg:w-64">
-            <SelectJobCategory
-              value={selectedCategory}
-              onValueChange={setSelectedCategory}
-            />
-          </div>
+          <Select>
+            <SelectTrigger className="w-full lg:w-64 border-none shadow-none">
+              <SelectValue placeholder="Select job category" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectGroup>
+                {candidateRoles.map((role) => (
+                  <SelectItem key={role} value={role}>
+                    {role}
+                  </SelectItem>
+                ))}
+              </SelectGroup>
+            </SelectContent>
+          </Select>
 
           {/* Location */}
           <div className="relative w-full lg:w-64">
