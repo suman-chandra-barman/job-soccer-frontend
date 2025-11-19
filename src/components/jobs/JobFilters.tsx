@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { ChevronDown } from "lucide-react";
+import { ChevronDown, RotateCcw } from "lucide-react";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -61,55 +61,121 @@ function FilterDropdown({
   );
 }
 
-export function JobFilters() {
-  const [timeFilter, setTimeFilter] = useState("last-week");
-  const [aiScoreFilter, setAiScoreFilter] = useState("");
-  const [experienceFilter, setExperienceFilter] = useState("");
-  const [jobTypeFilter, setJobTypeFilter] = useState("");
+interface JobFiltersProps {
+  onFiltersChange?: (filters: {
+    dateFilter?: string;
+    aiScoreLevel?: string;
+    experience?: string;
+  }) => void;
+  onReset?: () => void;
+  dateFilter?: string;
+  aiScoreLevel?: string;
+  experience?: string;
+}
+
+export function JobFilters({
+  onFiltersChange,
+  onReset,
+  dateFilter: initialDateFilter,
+  aiScoreLevel: initialAiScore,
+  experience: initialExperience,
+}: JobFiltersProps) {
+  const [timeFilter, setTimeFilter] = useState(initialDateFilter || "");
+  const [aiScoreFilter, setAiScoreFilter] = useState(initialAiScore || "");
+  const [experienceFilter, setExperienceFilter] = useState(
+    initialExperience || ""
+  );
+
+  const handleReset = () => {
+    setTimeFilter("");
+    setAiScoreFilter("");
+    setExperienceFilter("");
+    onReset?.();
+  };
+
+  const handleTimeFilterChange = (value: string) => {
+    setTimeFilter(value);
+    onFiltersChange?.({
+      dateFilter: value,
+      aiScoreLevel: aiScoreFilter,
+      experience: experienceFilter,
+    });
+  };
+
+  const handleAiScoreChange = (value: string) => {
+    setAiScoreFilter(value);
+    onFiltersChange?.({
+      dateFilter: timeFilter,
+      aiScoreLevel: value,
+      experience: experienceFilter,
+    });
+  };
+
+  const handleExperienceChange = (value: string) => {
+    setExperienceFilter(value);
+    onFiltersChange?.({
+      dateFilter: timeFilter,
+      aiScoreLevel: value,
+      experience: value,
+    });
+  };
 
   const timeOptions: FilterOption[] = [
-    { label: "Last Week", value: "last-week" },
-    { label: "This Month", value: "this-month" },
-    { label: "Any Time", value: "any-time" },
+    { label: "Last Week", value: "Last Week" },
+    { label: "Last Month", value: "Last Month" },
+    { label: "Last 3 Months", value: "Last 3 Months" },
+    { label: "Last 6 Months", value: "Last 6 Months" },
   ];
 
   const aiScoreOptions: FilterOption[] = [
-    { label: "Low 10% - 29%", value: "10-29" },
-    { label: "Medium 30% - 59%", value: "30-59" },
-    { label: "Good 60% - 79%", value: "60-79" },
-    { label: "High 80% - 100%", value: "80-100" },
+    { label: "Low (10% - 29%)", value: "Low" },
+    { label: "Medium (30% - 59%)", value: "Medium" },
+    { label: "Good (60% - 79%)", value: "Good" },
+    { label: "High (80% - 100%)", value: "High" },
   ];
 
   const experienceOptions: FilterOption[] = [
-    { label: "Entry Level", value: "entry" },
-    { label: "Intermediate", value: "intermediate" },
-    { label: "Mid-Level", value: "mid" },
-    { label: "Mid-Senior", value: "mid-senior" },
-    { label: "Senior", value: "senior" },
+    { label: "Entry Level", value: "Entry Level" },
+    { label: "Intermediate", value: "Intermediate" },
+    { label: "Mid-Level", value: "Mid-Level" },
+    { label: "Mid-Senior", value: "Mid-Senior" },
+    { label: "Senior", value: "Senior" },
   ];
+
+  const hasActiveFilters = timeFilter || aiScoreFilter || experienceFilter;
 
   return (
     <div className="flex flex-wrap items-center justify-center gap-3 p-4 rounded-lg">
       <FilterDropdown
-        label="Last Week"
+        label="Date Filter"
         options={timeOptions}
         value={timeFilter}
-        onValueChange={setTimeFilter}
+        onValueChange={handleTimeFilterChange}
       />
 
       <FilterDropdown
         label="AI Score"
         options={aiScoreOptions}
         value={aiScoreFilter}
-        onValueChange={setAiScoreFilter}
+        onValueChange={handleAiScoreChange}
       />
 
       <FilterDropdown
         label="Experience level"
         options={experienceOptions}
         value={experienceFilter}
-        onValueChange={setExperienceFilter}
+        onValueChange={handleExperienceChange}
       />
+
+      {hasActiveFilters && (
+        <button
+          onClick={handleReset}
+          className="flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium bg-red-500 hover:bg-red-600 text-white transition-colors"
+        >
+          <RotateCcw className="w-4 h-4" />
+          Reset Filters
+        </button>
+      )}
     </div>
   );
 }

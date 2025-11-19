@@ -15,7 +15,6 @@ import {
   SelectValue,
 } from "../ui/select";
 import { candidateRoles } from "@/shchemas/signupValidation";
-import { Label } from "../ui/label";
 
 const popularSearches = [
   "Goal Kipper",
@@ -33,9 +32,9 @@ export function JobSearch() {
 
   const handleSearch = () => {
     const params = new URLSearchParams();
-    if (searchTerm) params.set("search", searchTerm);
-    if (selectedCategory) params.set("category", selectedCategory);
-    if (selectedLocation) params.set("location", selectedLocation);
+    if (searchTerm) params.set("searchTerm", searchTerm);
+    if (selectedCategory) params.set("jobCategory", selectedCategory);
+    if (selectedLocation) params.set("country", selectedLocation);
 
     router.push(`/jobs?${params.toString()}`);
   };
@@ -44,6 +43,12 @@ export function JobSearch() {
     if (e.key === "Enter") {
       handleSearch();
     }
+  };
+
+  const handlePopularSearch = (search: string) => {
+    const params = new URLSearchParams();
+    params.set("searchTerm", search);
+    router.push(`/jobs?${params.toString()}`);
   };
 
   return (
@@ -63,7 +68,7 @@ export function JobSearch() {
             />
           </div>
 
-          <Select>
+          <Select value={selectedCategory} onValueChange={setSelectedCategory}>
             <SelectTrigger className="w-full lg:w-64 border-none shadow-none">
               <SelectValue placeholder="Select job category" />
             </SelectTrigger>
@@ -108,7 +113,7 @@ export function JobSearch() {
           {popularSearches.map((search) => (
             <button
               key={search}
-              onClick={() => setSearchTerm(search)}
+              onClick={() => handlePopularSearch(search)}
               className="px-4 py-1 border bg-gray-100 hover:bg-gray-200 text-gray-700 rounded-full text-sm transition-colors"
             >
               {search}

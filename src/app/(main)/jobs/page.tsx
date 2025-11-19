@@ -2,7 +2,7 @@
 
 import { JobSearch } from "@/components/search/JobSearch";
 import { JobFilters } from "@/components/jobs/JobFilters";
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { JobCard } from "@/components/cards/JobCard";
 import {
   useGetNewFourJobsMutation,
@@ -10,18 +10,68 @@ import {
 } from "@/redux/features/job/jobApi";
 import { TJob } from "@/types/job";
 import { CardSkeleton } from "@/components/skeleton/CardSkeleton";
+import { useSearchParams } from "next/navigation";
 
 function JobPage() {
+  const searchParams = useSearchParams();
+  const [filters, setFilters] = useState<Record<string, string>>({});
+
   const [getNewFourJobs, { data: newJobsData, isLoading: newJobsLoading }] =
     useGetNewFourJobsMutation();
 
   const [getJobsWithFilters, { data: allJobsData, isLoading: allJobsLoading }] =
     useGetJobsWithFiltersMutation();
 
+  // Initialize filters from URL params
+  useEffect(() => {
+    const urlFilters: Record<string, string> = {};
+
+    const searchTerm = searchParams.get("searchTerm");
+    const jobCategory = searchParams.get("jobCategory");
+    const country = searchParams.get("country");
+    const dateFilter = searchParams.get("dateFilter");
+    const aiScoreLevel = searchParams.get("aiScoreLevel");
+    const experience = searchParams.get("experience");
+
+    if (searchTerm) urlFilters.searchTerm = searchTerm;
+    if (jobCategory) urlFilters.jobCategory = jobCategory;
+    if (country) urlFilters.country = country;
+    if (dateFilter) urlFilters.dateFilter = dateFilter;
+    if (aiScoreLevel) urlFilters.aiScoreLevel = aiScoreLevel;
+    if (experience) urlFilters.experience = experience;
+
+    setFilters(urlFilters);
+  }, [searchParams]);
+
+  // Fetch jobs when filters change
   useEffect(() => {
     getNewFourJobs({});
-    getJobsWithFilters({});
-  }, [getNewFourJobs, getJobsWithFilters]);
+    getJobsWithFilters(filters);
+  }, [filters, getNewFourJobs, getJobsWithFilters]);
+
+  const handleFiltersChange = (newFilters: {
+    dateFilter?: string;
+    aiScoreLevel?: string;
+    experience?: string;
+  }) => {
+    setFilters((prev) => ({
+      ...prev,
+      ...newFilters,
+    }));
+  };
+
+  const handleReset = () => {
+    const baseFilters: Record<string, string> = {};
+    const searchTerm = searchParams.get("searchTerm");
+    const jobCategory = searchParams.get("jobCategory");
+    const country = searchParams.get("country");
+
+    if (searchTerm) baseFilters.searchTerm = searchTerm;
+    if (jobCategory) baseFilters.jobCategory = jobCategory;
+    if (country) baseFilters.country = country;
+
+    setFilters(baseFilters);
+  };
 
   return (
     <div>
@@ -32,14 +82,20 @@ function JobPage() {
           Search Companion
         </h2>
         <JobSearch />
-        <JobFilters />
+        <JobFilters
+          onFiltersChange={handleFiltersChange}
+          onReset={handleReset}
+          dateFilter={filters.dateFilter}
+          aiScoreLevel={filters.aiScoreLevel}
+          experience={filters.experience}
+        />
       </div>
 
       {/* Jobs */}
       <div className="container mx-auto px-4 md:px-0">
         {/* New Jobs */}
         <div>
-          <h2 className="text-2xl md:text-4xl text-red-400 font-semibold my-10">
+          <h2 className="text-2xl md:text-4xl text-green-400 font-semibold my-10">
             New Jobs
           </h2>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-3 md:gap-4 mb-8">
