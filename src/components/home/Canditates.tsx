@@ -1,55 +1,23 @@
+"use client";
+
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
-import user1 from "@/assets/candidates/user1.png";
-import user2 from "@/assets/candidates/user2.png";
 import CandidateCard from "../cards/CandidateCard";
-import { StaticImageData } from "next/image";
-
-export interface TCandidate {
-  id: number;
-  name: string;
-  role: string;
-  location: string;
-  nationality: string;
-  avatar: StaticImageData;
-}
-
-const candidates: TCandidate[] = [
-  {
-    id: 1,
-    name: "Jacob Jones",
-    role: "Head Coach",
-    location: "Rio, Brazil",
-    nationality: "Brazil",
-    avatar: user1,
-  },
-  {
-    id: 2,
-    name: "Courtney Henry",
-    role: "Marketing Manager",
-    location: "Dallas, USA",
-    nationality: "USA",
-    avatar: user2,
-  },
-  {
-    id: 3,
-    name: "Wade Warren",
-    role: "Technical Director",
-    location: "Glasgow, Scotland",
-    nationality: "Scottish",
-    avatar: user1,
-  },
-  {
-    id: 4,
-    name: "John Doe",
-    role: "Striker (Player)",
-    location: "Madrid, Spain",
-    nationality: "Bangladeshi",
-    avatar: user2,
-  },
-];
+import { useGetCandidateFeaturedQuery } from "@/redux/features/candidate/candidateApi";
+import { ICandidate } from "@/types/user";
+import { Skeleton } from "../ui/skeleton";
 
 export function Candidates() {
+  const {
+    data: candidatesData,
+    isLoading,
+    isError,
+  } = useGetCandidateFeaturedQuery(undefined);
+
+  // Extract Professional Players from the grouped data
+  const professionalPlayers: ICandidate[] =
+    candidatesData?.data?.ProfessionalPlayer || [];
+
   return (
     <section className="py-16 bg-white">
       <div className="container mx-auto px-4">
@@ -78,9 +46,26 @@ export function Candidates() {
 
           {/* Candidates Grid */}
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6">
-            {candidates.map((candidate: TCandidate) => (
-              <CandidateCard key={candidate.id} candidate={candidate} />
-            ))}
+            {isLoading ? (
+              Array.from({ length: 4 }).map((_, index) => (
+                <Skeleton
+                  key={`skeleton-${index}`}
+                  className="h-[400px] rounded-lg"
+                />
+              ))
+            ) : isError ? (
+              <div className="col-span-full text-center py-8 text-red-500">
+                Failed to load candidates. Please try again later.
+              </div>
+            ) : professionalPlayers.length === 0 ? (
+              <div className="col-span-full text-center py-8 text-gray-500">
+                No professional players available at the moment.
+              </div>
+            ) : (
+              professionalPlayers.map((candidate: ICandidate) => (
+                <CandidateCard key={candidate._id} candidate={candidate} />
+              ))
+            )}
           </div>
         </div>
       </div>
