@@ -296,7 +296,7 @@ export function Navbar() {
   }, []);
 
   return (
-    <nav className="bg-[#FFF8CC] border-b sticky top-0 z-50 text-[#362F05] shadow-sm">
+    <nav className="bg-[#FFF8CC] sticky top-0 z-50 text-[#362F05]">
       <div className="container mx-auto px-4">
         <div className="flex items-center gap-4 justify-between py-2">
           {/* Logo */}
