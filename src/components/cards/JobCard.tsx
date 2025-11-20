@@ -41,6 +41,7 @@ export function JobCard({ job }: JobCardProps) {
         id: job._id,
         company: `${job.creator.creatorId.firstName} ${job.creator.creatorId.lastName}`,
         location: job.location,
+        image: job.creator.creatorId.profileImage,
         applicantCount: job.applicationCount,
         salary: `$${(job.salary.min / 1000).toFixed(0)}K-${(
           job.salary.max / 1000
@@ -58,6 +59,7 @@ export function JobCard({ job }: JobCardProps) {
         applicantImages: job.applicantImages,
       };
 
+  console.log("JobData --->", job);
   return (
     <Link href={`jobs/${jobData.id}`} className="block">
       <div className="bg-gradient-to-br from-white to-[#FDF9E3] rounded-xl p-4 shadow-sm border border-gray-100">
@@ -66,7 +68,7 @@ export function JobCard({ job }: JobCardProps) {
             className={`w-12 h-12 rounded-xl flex items-center justify-center border border-gray-200 bg-white`}
           >
             <Image
-              src={employerLogo}
+              src={isApi && jobData.image ? jobData.image : employerLogo}
               alt="Logo"
               className="object-contain rounded-xl"
             />

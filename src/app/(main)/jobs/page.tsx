@@ -5,7 +5,7 @@ import { JobFilters } from "@/components/jobs/JobFilters";
 import React, { useEffect, useState } from "react";
 import { JobCard } from "@/components/cards/JobCard";
 import {
-  useGetNewFourJobsMutation,
+  useGetNewFourJobsQuery,
   useGetJobsWithFiltersMutation,
 } from "@/redux/features/job/jobApi";
 import { TJob } from "@/types/job";
@@ -16,8 +16,8 @@ function JobPage() {
   const searchParams = useSearchParams();
   const [filters, setFilters] = useState<Record<string, string>>({});
 
-  const [getNewFourJobs, { data: newJobsData, isLoading: newJobsLoading }] =
-    useGetNewFourJobsMutation();
+  const { data: newJobsData, isLoading: newJobsLoading } =
+    useGetNewFourJobsQuery(undefined);
 
   const [getJobsWithFilters, { data: allJobsData, isLoading: allJobsLoading }] =
     useGetJobsWithFiltersMutation();
@@ -45,9 +45,8 @@ function JobPage() {
 
   // Fetch jobs when filters change
   useEffect(() => {
-    getNewFourJobs({});
     getJobsWithFilters(filters);
-  }, [filters, getNewFourJobs, getJobsWithFilters]);
+  }, [filters, getJobsWithFilters]);
 
   const handleFiltersChange = (newFilters: {
     dateFilter?: string;
@@ -83,13 +82,13 @@ function JobPage() {
         </h2>
         <JobSearch />
         {/* <div className="absolute buttom-0 "> */}
-          <JobFilters
-            onFiltersChange={handleFiltersChange}
-            onReset={handleReset}
-            dateFilter={filters.dateFilter}
-            aiScoreLevel={filters.aiScoreLevel}
-            experience={filters.experience}
-          />
+        <JobFilters
+          onFiltersChange={handleFiltersChange}
+          onReset={handleReset}
+          dateFilter={filters.dateFilter}
+          aiScoreLevel={filters.aiScoreLevel}
+          experience={filters.experience}
+        />
         {/* </div> */}
       </div>
 

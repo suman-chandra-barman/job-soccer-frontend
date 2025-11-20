@@ -1,11 +1,12 @@
+"use client";
+
 import { Button } from "@/components/ui/button";
-import { NewJobCard } from "../cards/NewJobCard";
-import user1 from "@/assets/candidates/user1.png";
-import user2 from "@/assets/candidates/user2.png";
-import user3 from "@/assets/candidates/user3.png";
-import user4 from "@/assets/candidates/user4.png";
 import { StaticImageData } from "next/image";
 import Link from "next/link";
+import { useGetNewFourJobsQuery } from "@/redux/features/job/jobApi";
+import { TJob } from "@/types/job";
+import { CardSkeleton } from "../skeleton/CardSkeleton";
+import { JobCard } from "../cards/JobCard";
 
 export interface TNewJobPost {
   id: string;
@@ -17,46 +18,10 @@ export interface TNewJobPost {
   applicantImages: StaticImageData[];
 }
 
-const jobPosts: TNewJobPost[] = [
-  {
-    id: "1",
-    company: "Trappes FC",
-    location: "Trappes, France",
-    applicantCount: 120,
-    salary: "$30K",
-    postedTime: "2 days ago",
-    applicantImages: [user1, user2, user3, user4],
-  },
-  {
-    id: "2",
-    company: "Bordeaux AC",
-    location: "Trappes, France",
-    applicantCount: 120,
-    salary: "$30K",
-    postedTime: "2 days ago",
-    applicantImages: [user1, user2, user3, user4],
-  },
-  {
-    id: "3",
-    company: "Greece FC",
-    location: "Trappes, France",
-    applicantCount: 120,
-    salary: "$30K",
-    postedTime: "2 days ago",
-    applicantImages: [user1, user2, user3, user4],
-  },
-  {
-    id: "4",
-    company: "Tunis FC",
-    location: "Trappes, France",
-    applicantCount: 120,
-    salary: "$30K",
-    postedTime: "2 days ago",
-    applicantImages: [user1, user2, user3, user4],
-  },
-];
-
 export function NewJobs() {
+  const { data: jobsData, isLoading } = useGetNewFourJobsQuery(undefined);
+  const jobs: TJob[] = jobsData?.data || [];
+
   return (
     <div className="bg-[#F7F6F2] rounded-3xl p-4 md:p-8">
       <div className="flex items-center justify-between mb-8">
@@ -64,9 +29,17 @@ export function NewJobs() {
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6 mb-8">
-        {jobPosts.map((job) => (
-          <NewJobCard key={job.id} job={job} />
-        ))}
+        {isLoading ? (
+          Array.from({ length: 4 }).map((_, index) => (
+            <CardSkeleton key={index} />
+          ))
+        ) : jobs.length > 0 ? (
+          jobs.map((job) => <JobCard key={job._id} job={job} />)
+        ) : (
+          <p className="col-span-full text-center text-gray-500">
+            No new jobs available
+          </p>
+        )}
       </div>
 
       <div className="flex justify-end">

@@ -10,11 +10,12 @@ const jobApi = baseApi.injectEndpoints({
       }),
     }),
 
-    getNewFourJobs: builder.mutation({
+    getNewFourJobs: builder.query({
       query: () => ({
         url: "/job/last-four",
         method: "GET",
       }),
+      keepUnusedDataFor: 300, // Cache for 5 minutes
     }),
 
     getSingleJob: builder.mutation({
@@ -34,7 +35,7 @@ const jobApi = baseApi.injectEndpoints({
 
 export const {
   useGetJobsWithFiltersMutation,
-  useGetNewFourJobsMutation,
+  useGetNewFourJobsQuery,
   useGetSingleJobMutation,
   useGetPopularSearchMutation,
 } = jobApi;

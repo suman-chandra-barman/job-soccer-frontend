@@ -13,10 +13,9 @@ const FindYourNextJob = () => {
   return (
     <div className="min-h-screen bg-white">
       <div className="container mx-auto px-4 py-8 lg:py-16">
-
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12 items-start">
+        <div className="grid grid-cols-1 lg:grid-cols-5 gap-8 lg:gap-12 items-start">
           {/* Left Column - Opportunities */}
-          <div className={`space-y-6 py-8`}>
+          <div className={`space-y-6 py-8 lg:col-span-2`}>
             <h2 className="text-2xl md:text-4xl font-bold text-[#362F05] leading-tight">
               Find the Right Opportunity for You
             </h2>
@@ -34,8 +33,8 @@ const FindYourNextJob = () => {
           </div>
 
           {/* Right Column - Jobs */}
-          <div>
-           <NewJobs />
+          <div className="lg:col-span-3">
+            <NewJobs />
           </div>
         </div>
       </div>
