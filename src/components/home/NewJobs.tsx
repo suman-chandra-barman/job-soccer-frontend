@@ -23,12 +23,12 @@ export function NewJobs() {
   const jobs: TJob[] = jobsData?.data || [];
 
   return (
-    <div className="bg-[#F7F6F2] rounded-3xl p-4 md:p-8">
-      <div className="flex items-center justify-between mb-8">
+    <div className="bg-[#F7F6F2] rounded-3xl p-4 md:p-6">
+      <div className="flex items-center justify-between mb-4">
         <h2 className="text-2xl md:4xl font-bold text-gray-900">New Jobs</h2>
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6 mb-8">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
         {isLoading ? (
           Array.from({ length: 4 }).map((_, index) => (
             <CardSkeleton key={index} />
@@ -44,7 +44,7 @@ export function NewJobs() {
 
       <div className="flex justify-end">
         <Button className="bg-yellow-300 hover:bg-yellow-400 text-black font-semibold px-6 py-3 rounded-lg">
-          <Link href="jobs">See All Jobs</Link>
+          <Link href="jobs">See All</Link>
         </Button>
       </div>
     </div>

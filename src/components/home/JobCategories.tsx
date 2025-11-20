@@ -59,7 +59,7 @@ export function JobCategories() {
             Your complete hub for soccer talents jobs and connections
           </h2>
           <Button className="bg-yellow-300 hover:bg-yellow-400 text-black font-semibold px-6 py-3 rounded-lg">
-            <Link href="jobs">See All Jobs</Link>
+            <Link href="jobs">See All</Link>
           </Button>
         </div>
 

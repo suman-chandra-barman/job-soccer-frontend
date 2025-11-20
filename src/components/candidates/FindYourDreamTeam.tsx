@@ -22,9 +22,9 @@ const FindYourDreamTeam = () => {
             Find your dream job!
           </h2>
         </div>
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 items-start">
+        <div className="grid grid-cols-1 lg:grid-cols-5 gap-8 items-start">
           {/* Left Column - Opportunities */}
-          <div className={`space-y-6 py-8`}>
+          <div className={`space-y-6 py-8 lg:col-span-2`}>
             <h2 className="text-2xl md:text-4xl font-bold text-[#362F05] leading-tight">
               Find the Right Opportunity for You
             </h2>
@@ -41,7 +41,7 @@ const FindYourDreamTeam = () => {
           </div>
 
           {/* Right Column - Jobs */}
-          <div className="bg-[#F7F6F2] rounded-3xl p-4 md:p-6 w-full">
+          <div className="bg-[#F7F6F2] rounded-3xl p-4 md:p-6 w-full lg:col-span-3">
             <div className="flex items-center justify-between mb-6">
               <h2 className="text-2xl md:text-3xl font-bold text-gray-900">
                 Employers
