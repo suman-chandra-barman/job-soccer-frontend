@@ -79,3 +79,32 @@ export interface IEmployer {
     __v: number;
   };
 }
+
+export interface IFriend {
+  _id: string;
+  friend: {
+    _id: string;
+    email: string;
+    role: string;
+    userType: "candidate" | "employer";
+    createdAt: string;
+    firstName?: string;
+    lastName?: string;
+    profileImage?: string | null;
+    profile?: Profile | IEmployer["profile"];
+  };
+  friendshipDate: string;
+}
+
+export interface IFriendsResponse {
+  success: boolean;
+  message: string;
+  meta: {
+    page: number;
+    limit: number;
+    totalPage: number;
+    total: number;
+  };
+  data: IFriend[];
+  requestId: string;
+}

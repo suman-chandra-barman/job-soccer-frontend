@@ -1,11 +1,7 @@
 "use client";
 
-import React, { useState } from "react";
-import user1 from "@/assets/candidates/user1.png";
-import user2 from "@/assets/candidates/user2.png";
+import React, { useState, useMemo } from "react";
 import CandidateCard from "@/components/cards/CandidateCard";
-import { TCandidate } from "@/components/home/Canditates";
-import { TClub } from "../all-employer/page";
 import { EmployerCard } from "@/components/cards/EmployerCard";
 import { Search, Settings2 } from "lucide-react";
 import {
@@ -16,97 +12,81 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Input } from "@/components/ui/input";
-
-const candidates: TCandidate[] = [
-  {
-    id: 1,
-    name: "Jacob Jones",
-    role: "Head Coach",
-    location: "Rio, Brazil",
-    nationality: "Brazil",
-    avatar: user1,
-  },
-  {
-    id: 2,
-    name: "Courtney Henry",
-    role: "Marketing Manager",
-    location: "Dallas, USA",
-    nationality: "USA",
-    avatar: user2,
-  },
-  {
-    id: 3,
-    name: "Wade Warren",
-    role: "Technical Director",
-    location: "Glasgow, Scotland",
-    nationality: "Scottish",
-    avatar: user1,
-  },
-  {
-    id: 4,
-    name: "John Doe",
-    role: "Striker (Player)",
-    location: "Madrid, Spain",
-    nationality: "Bangladeshi",
-    avatar: user2,
-  },
-];
-
-const clubsData: TClub[] = [
-  {
-    id: 1,
-    name: "Barcelona FC",
-    location: "Barcelona, Spain",
-    logo: "🔵",
-    verified: true,
-    clubType: "Professional Club",
-    activeJobPosts: 8,
-    followers: 125430,
-    following: 45,
-  },
-  {
-    id: 2,
-    name: "Manchester United",
-    location: "Manchester, England",
-    logo: "🔴",
-    verified: true,
-    clubType: "Professional Club",
-    activeJobPosts: 12,
-    followers: 98750,
-    following: 67,
-  },
-  {
-    id: 3,
-    name: "Bayern Munich",
-    location: "Munich, Germany",
-    logo: "⚪",
-    verified: true,
-    clubType: "Professional Club",
-    activeJobPosts: 7,
-    followers: 87643,
-    following: 52,
-  },
-  {
-    id: 4,
-    name: "Ajax Amsterdam",
-    location: "Amsterdam, Netherlands",
-    logo: "🟡",
-    verified: true,
-    clubType: "Professional Club",
-    activeJobPosts: 5,
-    followers: 54320,
-    following: 89,
-  },
-];
+import { useGetFriendsQuery } from "@/redux/features/friend/friendApi";
+import { IFriend, ICandidate, IEmployer } from "@/types/user";
+import {
+  CandidateCardSkeletonGrid,
+  EmployerCardSkeletonGrid,
+} from "@/components/skeleton";
 
 function MyNetworkPage() {
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedFilter, setSelectedFilter] = useState("all");
+  const page = 1;
+  const limit = 20;
+
+  // Fetch friends with dynamic filters
+  const {
+    data: friendsData,
+    isLoading,
+    error,
+  } = useGetFriendsQuery({
+    search: searchTerm,
+    page,
+    limit,
+  });
+
+  // Separate friends by userType
+  const { candidates, employers } = useMemo(() => {
+    if (!friendsData?.data) return { candidates: [], employers: [] };
+
+    const filteredFriends = friendsData.data.filter((item: IFriend) => {
+      if (selectedFilter === "all") return true;
+      if (selectedFilter === "player")
+        return item.friend.userType === "candidate";
+      if (selectedFilter === "club") return item.friend.userType === "employer";
+      return true;
+    });
+
+    const candidatesList: ICandidate[] = [];
+    const employersList: IEmployer[] = [];
+
+    filteredFriends.forEach((item: IFriend) => {
+      if (item.friend.userType === "candidate") {
+        candidatesList.push(item.friend as ICandidate);
+      } else if (item.friend.userType === "employer") {
+        employersList.push(item.friend as IEmployer);
+      }
+    });
+
+    return { candidates: candidatesList, employers: employersList };
+  }, [friendsData, selectedFilter]);
+
+  // Handle error state
+  if (error) {
+    return (
+      <div className="container mx-auto px-4 md:px-0 py-16">
+        <div className="text-center py-12">
+          <p className="text-red-500 text-lg">
+            Failed to load friends. Please try again.
+          </p>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="container mx-auto px-4 md:px-0 py-16">
-      <div className=" flex items-center justify-between mb-8">
-        <h2 className="text-2xl md:text-3xl font-bold text-gray-900">My Network</h2>
+      {/* Header with Search and Filter */}
+      <div className="flex items-center justify-between mb-8">
+        <h2 className="text-2xl md:text-3xl font-bold text-gray-900">
+          My Network
+          {friendsData?.meta && (
+            <span className="text-lg text-gray-500 ml-2">
+              ({friendsData.meta.total})
+            </span>
+          )}
+        </h2>
         <div className="flex gap-4 items-center">
           {/* Search Bar */}
           <div className="flex-1 relative">
@@ -115,7 +95,7 @@ function MyNetworkPage() {
             </div>
             <Input
               type="text"
-              placeholder="Search..."
+              placeholder="Search friends..."
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
               className="block w-full pl-10 pr-3 py-3 border border-gray-300 rounded-xl leading-5 bg-white placeholder-gray-500 focus:outline-none focus:placeholder-gray-400 focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm"
@@ -129,42 +109,63 @@ function MyNetworkPage() {
             </SelectTrigger>
             <SelectContent>
               <SelectItem value="all">All</SelectItem>
-              <SelectItem value="player">Player</SelectItem>
-              <SelectItem value="club">Club</SelectItem>
-              <SelectItem value="agent">Agent</SelectItem>
+              <SelectItem value="player">Players</SelectItem>
+              <SelectItem value="club">Clubs</SelectItem>
             </SelectContent>
           </Select>
         </div>
       </div>
 
-      {/* Clubs */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-3 md:gap-4">
-        {clubsData.map((job) => (
-          <EmployerCard key={job.id} job={job} />
-        ))}
-      </div>
-      {/* Players */}
-      <div className="my-8">
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-3 md:gap-4">
-          {candidates.map((candidate: TCandidate) => (
-            <CandidateCard key={candidate.id} candidate={candidate} />
-          ))}
+      {/* Employers Section */}
+      {(isLoading || employers.length > 0) && (
+        <section className="mb-8">
+          {employers.length > 0 && !isLoading && (
+            <h3 className="text-xl font-semibold text-gray-800 mb-4">
+              Clubs & Organizations ({employers.length})
+            </h3>
+          )}
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-3 md:gap-4">
+            {isLoading ? (
+              <EmployerCardSkeletonGrid count={4} className="contents" />
+            ) : (
+              employers.map((employer) => (
+                <EmployerCard key={employer._id} employer={employer} />
+              ))
+            )}
+          </div>
+        </section>
+      )}
+
+      {/* Candidates Section */}
+      {(isLoading || candidates.length > 0) && (
+        <section className="mb-8">
+          {candidates.length > 0 && !isLoading && (
+            <h3 className="text-xl font-semibold text-gray-800 mb-4">
+              Players & Staff ({candidates.length})
+            </h3>
+          )}
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-3 md:gap-4">
+            {isLoading ? (
+              <CandidateCardSkeletonGrid count={4} className="contents" />
+            ) : (
+              candidates.map((candidate) => (
+                <CandidateCard key={candidate._id} candidate={candidate} />
+              ))
+            )}
+          </div>
+        </section>
+      )}
+
+      {/* Empty State */}
+      {!isLoading && candidates.length === 0 && employers.length === 0 && (
+        <div className="text-center py-12">
+          <p className="text-gray-500 text-lg">
+            {searchTerm || selectedFilter !== "all"
+              ? "No friends found matching your criteria."
+              : "You haven't added any friends yet."}
+          </p>
         </div>
-      </div>
-      {/* Clubs */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-3 md:gap-4">
-        {clubsData.map((job) => (
-          <EmployerCard key={job.id} job={job} />
-        ))}
-      </div>
-      {/* Players */}
-      <div className="my-8">
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-3 md:gap-4">
-          {candidates.map((candidate: TCandidate) => (
-            <CandidateCard key={candidate.id} candidate={candidate} />
-          ))}
-        </div>
-      </div>
+      )}
     </div>
   );
 }
