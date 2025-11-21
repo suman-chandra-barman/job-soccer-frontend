@@ -72,19 +72,26 @@ export function JobCard({ job }: JobCardProps) {
     }
   };
 
+  const handleApplyClick = (e: React.MouseEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    window.location.href = `jobs/${jobData.id}`;
+  };
+
   return (
-    <Link href={`jobs/${jobData.id}`} className="block">
+    <>
       <div className="bg-gradient-to-br from-white to-[#FDF9E3] rounded-xl p-4 shadow-sm border border-gray-100">
         <div className="flex items-center gap-3 mb-4 border-b border-gray-200 pb-4">
-          <div
-            className={`w-12 h-12 rounded-xl flex items-center justify-center border border-gray-200 bg-white`}
+          <Link
+            href={`jobs/${jobData.id}`}
+            className="w-12 h-12 rounded-xl flex items-center justify-center border border-gray-200 bg-white"
           >
             <Image
               src={jobData.image || employerLogo}
               alt="Logo"
               className="object-contain rounded-xl"
             />
-          </div>
+          </Link>
           <div className="flex-1 min-w-0">
             <h3 className="font-semibold text-gray-900 text-lg">
               {jobData.company}
@@ -94,8 +101,11 @@ export function JobCard({ job }: JobCardProps) {
               <span>{jobData.location}</span>
             </div>
           </div>
-          <div onClick={handleBookmarkClick} className="cursor-pointer">
-            <Bookmark className="w-7 h-7" />
+          <div
+            onClick={handleBookmarkClick}
+            className="cursor-pointer hover:scale-110 transition-transform duration-200"
+          >
+            <Bookmark className="w-7 h-7 hover:fill-yellow-400 hover:stroke-yellow-400 transition-colors" />
           </div>
         </div>
 
@@ -138,19 +148,22 @@ export function JobCard({ job }: JobCardProps) {
         <div className="border-t border-gray-200 pt-4 flex gap-4 items-center">
           <Button
             variant="outline"
-            className="flex-1 bg-transparent"
+            className="flex-1 hover:scale-105 transition-transform duration-200"
             onClick={handleShortlistClick}
             disabled={isShortlistLoading}
           >
             <Bookmark className="w-6 h-6" />
             {isShortlistLoading ? "Saving..." : "Shortlist"}
           </Button>
-          <Button className="flex-1">
+          <Button
+            className="flex-1 hover:scale-105 transition-transform duration-200"
+            onClick={handleApplyClick}
+          >
             <MessageCircle className="w-6 h-6" />
             Apply
           </Button>
         </div>
       </div>
-    </Link>
+    </>
   );
 }

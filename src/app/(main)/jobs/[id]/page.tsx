@@ -1,14 +1,19 @@
 "use client";
 
-import React, { useEffect } from "react";
+import React, { useState } from "react";
 import { MapPin, SquareCheck } from "lucide-react";
 import {
   useGetSingleJobQuery,
   useGetJobsWithFiltersQuery,
 } from "@/redux/features/job/jobApi";
+import { useApplyJobMutation } from "@/redux/features/jobApplication/jobApplicationApi";
+import { addAppliedJobId } from "@/redux/features/jobApplication/jobApplicationSlice";
+import { useAppDispatch } from "@/redux/hooks";
 import { TJob } from "@/types/job";
 import { Skeleton } from "@/components/ui/skeleton";
 import { JobCard } from "@/components/cards/JobCard";
+import UploadResumeModal from "@/components/modals/UploadResumeModal";
+import { toast } from "sonner";
 import { use } from "react";
 
 interface PageProps {
@@ -17,6 +22,9 @@ interface PageProps {
 
 const JobDetailsPage = ({ params }: PageProps) => {
   const { id } = use(params);
+  const dispatch = useAppDispatch();
+  const [showResumeModal, setShowResumeModal] = useState(false);
+  const [applyJob, { isLoading: isApplying }] = useApplyJobMutation();
 
   const { data: jobResponse, isLoading } = useGetSingleJobQuery(id);
   const jobData: TJob | undefined = jobResponse?.data;
@@ -55,6 +63,24 @@ const JobDetailsPage = ({ params }: PageProps) => {
       </div>
     );
   }
+
+  const handleApplyClick = () => {
+    setShowResumeModal(true);
+  };
+
+  const handleResumeSubmitSuccess = async () => {
+    try {
+      const result = await applyJob(id).unwrap();
+      if (result.success) {
+        dispatch(addAppliedJobId(id));
+        toast.success("Application submitted successfully!");
+      }
+    } catch (error) {
+      const err = error as { data?: { message?: string } };
+      toast.error(err.data?.message || "Failed to apply. Please try again.");
+      console.error("Failed to apply:", error);
+    }
+  };
 
   const formatDate = (dateString: string) => {
     const date = new Date(dateString);
@@ -253,8 +279,12 @@ const JobDetailsPage = ({ params }: PageProps) => {
                       <button className="flex-1 px-6 py-2 border border-gray-300 text-gray-700 rounded-md hover:bg-gray-50 transition-colors">
                         Save Job
                       </button>
-                      <button className="flex-1 px-8 py-2 bg-green-500 text-white rounded-md hover:bg-green-600 transition-colors">
-                        Apply Now
+                      <button
+                        onClick={handleApplyClick}
+                        disabled={isApplying}
+                        className="flex-1 px-8 py-2 bg-green-500 text-white rounded-md hover:bg-green-600 transition-colors disabled:opacity-50"
+                      >
+                        {isApplying ? "Applying..." : "Apply Now"}
                       </button>
                     </div>
                   </div>
@@ -330,8 +360,12 @@ const JobDetailsPage = ({ params }: PageProps) => {
                         <button className="w-full px-4 py-2 border border-gray-300 text-gray-700 rounded-md hover:bg-gray-50 transition-colors text-sm">
                           Save Job
                         </button>
-                        <button className="w-full px-4 py-2 bg-green-500 text-white rounded-md hover:bg-green-600 transition-colors text-sm">
-                          Apply Now
+                        <button
+                          onClick={handleApplyClick}
+                          disabled={isApplying}
+                          className="w-full px-4 py-2 bg-green-500 text-white rounded-md hover:bg-green-600 transition-colors text-sm disabled:opacity-50"
+                        >
+                          {isApplying ? "Applying..." : "Apply Now"}
                         </button>
                       </div>
                     </div>
@@ -342,6 +376,12 @@ const JobDetailsPage = ({ params }: PageProps) => {
           </div>
         </div>
       </div>
+      <UploadResumeModal
+        isOpen={showResumeModal}
+        onClose={() => setShowResumeModal(false)}
+        jobId={id}
+        onSubmitSuccess={handleResumeSubmitSuccess}
+      />
     </div>
   );
 };

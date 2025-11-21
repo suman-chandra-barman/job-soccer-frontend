@@ -1,7 +1,8 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
 
 import React, { useState, useRef } from "react";
-import { Upload, FileText, X } from "lucide-react";
+import { Upload, FileText, X, Check } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
@@ -10,26 +11,44 @@ import {
   DialogTitle,
   DialogFooter,
 } from "@/components/ui/dialog";
+import {
+  useCreateResumeMutation,
+  useGetUserResumeQuery,
+} from "@/redux/features/resume/resumeApi";
+import { useAppSelector } from "@/redux/hooks";
+import { toast } from "sonner";
 
 interface UploadedFile {
   id: string;
   name: string;
   size: number;
-  type: string;
+  file: File;
 }
 
 interface UploadResumeModalProps {
   isOpen: boolean;
   onClose: () => void;
+  jobId: string;
+  onSubmitSuccess?: () => void;
 }
 
 export default function UploadResumeModal({
   isOpen,
   onClose,
+  jobId,
+  onSubmitSuccess,
 }: UploadResumeModalProps) {
+  const userId = useAppSelector((state) => state.auth.user?._id);
   const [uploadedFiles, setUploadedFiles] = useState<UploadedFile[]>([]);
   const [isDragOver, setIsDragOver] = useState(false);
+  const [selectedResumeId, setSelectedResumeId] = useState<string | null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
+
+  const [createResume, { isLoading: isCreating }] = useCreateResumeMutation();
+  const { data: existingResumes, isLoading: isLoadingResumes } =
+    useGetUserResumeQuery(userId || "", {
+      skip: !userId,
+    });
 
   const handleDragOver = (e: React.DragEvent) => {
     e.preventDefault();
@@ -64,10 +83,11 @@ export default function UploadResumeModal({
       id: Math.random().toString(36).substr(2, 9),
       name: file.name,
       size: file.size,
-      type: file.type,
+      file: file,
     }));
 
-    setUploadedFiles((prev) => [...prev, ...newFiles]);
+    setUploadedFiles(newFiles);
+    setSelectedResumeId(null);
   };
 
   const removeFile = (fileId: string) => {
@@ -82,10 +102,40 @@ export default function UploadResumeModal({
     return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + " " + sizes[i];
   };
 
-  const handleSubmit = () => {
-    // Handle file submission logic here
-    console.log("Submitting files:", uploadedFiles);
-    onClose();
+  const handleSubmit = async () => {
+    if (!userId) {
+      toast.error("User not authenticated");
+      return;
+    }
+
+    try {
+      // If user uploaded a new file
+      if (uploadedFiles.length > 0) {
+        const formData = new FormData();
+        formData.append("data", JSON.stringify({ userId }));
+        formData.append("doc", uploadedFiles[0].file);
+
+        await createResume(formData).unwrap();
+        toast.success("Resume uploaded successfully!");
+      } else if (selectedResumeId) {
+        // User selected an existing resume
+        toast.success("Resume selected successfully!");
+      } else {
+        toast.error("Please upload or select a resume");
+        return;
+      }
+
+      onSubmitSuccess?.();
+      onClose();
+    } catch (error: any) {
+      toast.error(error.data?.message || "Failed to upload resume");
+      console.error("Failed to upload resume:", error);
+    }
+  };
+
+  const handleSelectExistingResume = (resumeId: string) => {
+    setSelectedResumeId(resumeId);
+    setUploadedFiles([]);
   };
 
   return (
@@ -124,7 +174,7 @@ export default function UploadResumeModal({
                   </button>{" "}
                   to upload
                 </p>
-                <p className="text-sm text-gray-500 mt-1">pdf or doc</p>
+                <p className="text-sm text-gray-500 mt-1">pdf</p>
               </div>
             </div>
           </div>
@@ -139,11 +189,47 @@ export default function UploadResumeModal({
             className="hidden"
           />
 
-          {/* Uploaded Files Section */}
+          {/* Existing Resumes Section */}
+          {existingResumes?.data && existingResumes.data.length > 0 && (
+            <div className="space-y-3">
+              <h4 className="text-sm font-medium text-gray-700">
+                Your Uploaded Resumes
+              </h4>
+              <div className="space-y-2">
+                {existingResumes.data.map((resume: any) => (
+                  <div
+                    key={resume._id}
+                    onClick={() => handleSelectExistingResume(resume._id)}
+                    className={`flex items-center justify-between p-3 rounded-lg cursor-pointer transition-all ${
+                      selectedResumeId === resume._id
+                        ? "bg-green-50 border border-green-500"
+                        : "bg-gray-50 border border-gray-200 hover:bg-gray-100"
+                    }`}
+                  >
+                    <div className="flex items-center space-x-3">
+                      <div className="w-8 h-8 bg-red-500 rounded flex items-center justify-center">
+                        <FileText className="w-4 h-4 text-white" />
+                      </div>
+                      <div>
+                        <p className="text-sm font-medium text-gray-900">
+                          {resume.resumeFileName || "Resume.pdf"}
+                        </p>
+                        <p className="text-xs text-gray-500">
+                          {new Date(resume.createdAt).toLocaleDateString()}
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
+
+          {/* Newly Uploaded Files Section */}
           {uploadedFiles.length > 0 && (
             <div className="space-y-3">
               <h4 className="text-sm font-medium text-gray-700">
-                Uploaded Files
+                New File to Upload
               </h4>
               <div className="space-y-2">
                 {uploadedFiles.map((file) => (
@@ -178,15 +264,17 @@ export default function UploadResumeModal({
         </div>
 
         <DialogFooter className="flex-row justify-between sm:justify-between">
-          <Button variant="outline" onClick={onClose}>
+          <Button variant="outline" onClick={onClose} disabled={isCreating}>
             Cancel
           </Button>
           <Button
             onClick={handleSubmit}
-            disabled={uploadedFiles.length === 0}
+            disabled={
+              (uploadedFiles.length === 0 && !selectedResumeId) || isCreating
+            }
             className="bg-green-600 hover:bg-green-700 text-white"
           >
-            Submit Now
+            {isCreating ? "Uploading..." : "Submit Now"}
           </Button>
         </DialogFooter>
       </DialogContent>
