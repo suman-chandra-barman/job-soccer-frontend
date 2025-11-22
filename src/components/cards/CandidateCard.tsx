@@ -6,8 +6,45 @@ import { Button } from "../ui/button";
 import { ICandidate } from "@/types/user";
 import { Avatar, AvatarFallback } from "../ui/avatar";
 import Image from "next/image";
+import {
+  useShortlistCandidateMutation,
+  useRemoveFromShortlistMutation,
+} from "@/redux/features/candidateShortlist/candidateShortlistApi";
+import { useAppDispatch, useAppSelector } from "@/redux/hooks";
+import {
+  addToShortlist,
+  removeFromShortlist,
+} from "@/redux/features/candidateShortlist/candidateShortlistSlice";
+import { toast } from "sonner";
 
 function CandidateCard({ candidate }: { candidate: ICandidate }) {
+  const dispatch = useAppDispatch();
+  const shortlistedIds = useAppSelector(
+    (state) => state.candidateShortlist.shortlistedIds
+  );
+  const isShortlisted = shortlistedIds.includes(candidate._id);
+
+  const [shortlistCandidate, { isLoading: isShortlisting }] =
+    useShortlistCandidateMutation();
+  const [removeFromShortlistApi, { isLoading: isRemoving }] =
+    useRemoveFromShortlistMutation();
+
+  const handleShortlist = async () => {
+    try {
+      if (isShortlisted) {
+        await removeFromShortlistApi(candidate._id).unwrap();
+        dispatch(removeFromShortlist(candidate._id));
+        toast.success("Removed from shortlist");
+      } else {
+        await shortlistCandidate(candidate._id).unwrap();
+        dispatch(addToShortlist(candidate._id));
+        toast.success("Added to shortlist");
+      }
+    } catch (error) {
+      const err = error as { data?: { message?: string } };
+      toast.error(err?.data?.message || "Failed to update shortlist");
+    }
+  };
   return (
     <div>
       <Card className="bg-gradient-to-br from-white to-[#FDF9E3] border-0 shadow-sm hover:shadow-md transition-shadow">
@@ -72,10 +109,29 @@ function CandidateCard({ candidate }: { candidate: ICandidate }) {
             <Button
               variant="outline"
               size="sm"
-              className="w-full text-xs bg-transparent"
+              onClick={handleShortlist}
+              disabled={isShortlisting || isRemoving}
+              className={`w-full text-xs hover:scale-105 transition-transform duration-200 ${
+                isShortlisted
+                  ? "bg-green-50 border-green-500 text-green-700"
+                  : "bg-transparent"
+              }`}
             >
-              <Bookmark className="w-3 h-3 mr-1" />
-              Shortlist
+              {isShortlisting || isRemoving ? (
+                <>
+                  <span className="w-3 h-3 mr-1 border-2 border-gray-400 border-t-transparent rounded-full animate-spin" />
+                  {isShortlisted ? "Removing..." : "Adding..."}
+                </>
+              ) : (
+                <>
+                  <Bookmark
+                    className={`w-3 h-3 mr-1 ${
+                      isShortlisted ? "fill-current" : ""
+                    }`}
+                  />
+                  {isShortlisted ? "Shortlisted" : "Shortlist"}
+                </>
+              )}
             </Button>
 
             <Button
@@ -90,7 +146,7 @@ function CandidateCard({ candidate }: { candidate: ICandidate }) {
 
             <Button
               size="sm"
-              className="w-full text-xs bg-yellow-300 hover:bg-yellow-400 text-black font-medium py-3"
+              className="w-full text-xs bg-yellow-300 hover:scale-105 transition-transform duration-200"
             >
               <MessageCircle className="w-3 h-3 mr-1" />
               Message
