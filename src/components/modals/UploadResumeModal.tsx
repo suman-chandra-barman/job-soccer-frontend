@@ -2,7 +2,7 @@
 "use client";
 
 import React, { useState, useRef } from "react";
-import { Upload, FileText, X } from "lucide-react";
+import { Upload, FileText, X, Check } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
@@ -45,7 +45,7 @@ export default function UploadResumeModal({
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   const [createResume, { isLoading: isCreating }] = useCreateResumeMutation();
-  const { data: existingResumes} =
+  const { data: existingResumes, isLoading: isLoadingResumes } =
     useGetUserResumeQuery(userId || "", {
       skip: !userId,
     });
@@ -117,6 +117,9 @@ export default function UploadResumeModal({
 
         await createResume(formData).unwrap();
         toast.success("Resume uploaded successfully!");
+      } else if (selectedResumeId) {
+        // User selected an existing resume
+        toast.success("Resume selected successfully!");
       } else {
         toast.error("Please upload or select a resume");
         return;
