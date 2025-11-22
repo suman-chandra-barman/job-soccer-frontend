@@ -7,6 +7,7 @@ import {
   useGetJobsWithFiltersQuery,
 } from "@/redux/features/job/jobApi";
 import { useApplyJobMutation } from "@/redux/features/jobApplication/jobApplicationApi";
+import { useSaveJobMutation } from "@/redux/features/savedJobs/savedJobsApi";
 import { addAppliedJobId } from "@/redux/features/jobApplication/jobApplicationSlice";
 import { useAppDispatch } from "@/redux/hooks";
 import { TJob } from "@/types/job";
@@ -25,6 +26,7 @@ const JobDetailsPage = ({ params }: PageProps) => {
   const dispatch = useAppDispatch();
   const [showResumeModal, setShowResumeModal] = useState(false);
   const [applyJob, { isLoading: isApplying }] = useApplyJobMutation();
+  const [saveJob, { isLoading: isSaving }] = useSaveJobMutation();
 
   const { data: jobResponse, isLoading } = useGetSingleJobQuery(id);
   const jobData: TJob | undefined = jobResponse?.data;
@@ -66,6 +68,19 @@ const JobDetailsPage = ({ params }: PageProps) => {
 
   const handleApplyClick = () => {
     setShowResumeModal(true);
+  };
+
+  const handleSaveJob = async () => {
+    try {
+      const result = await saveJob(id).unwrap();
+      if (result.success) {
+        toast.success("Job saved successfully!");
+      }
+    } catch (error) {
+      const err = error as { data?: { message?: string } };
+      toast.error(err.data?.message || "Failed to save job. Please try again.");
+      console.error("Failed to save job:", error);
+    }
   };
 
   const handleResumeSubmitSuccess = async () => {
@@ -276,8 +291,12 @@ const JobDetailsPage = ({ params }: PageProps) => {
 
                     {/* Mobile Action Buttons */}
                     <div className="lg:hidden flex flex-col sm:flex-row gap-3 pt-6">
-                      <button className="flex-1 px-6 py-2 border border-gray-300 text-gray-700 rounded-md hover:bg-gray-50 transition-colors">
-                        Save Job
+                      <button
+                        onClick={handleSaveJob}
+                        disabled={isSaving}
+                        className="flex-1 px-6 py-2 border border-gray-300 text-gray-700 rounded-md hover:bg-gray-50 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                      >
+                        {isSaving ? "Saving..." : "Save Job"}
                       </button>
                       <button
                         onClick={handleApplyClick}
@@ -357,8 +376,12 @@ const JobDetailsPage = ({ params }: PageProps) => {
 
                       {/* Desktop Action Buttons */}
                       <div className="mt-6 flex flex-col gap-3">
-                        <button className="w-full px-4 py-2 border border-gray-300 text-gray-700 rounded-md hover:bg-gray-50 transition-colors text-sm">
-                          Save Job
+                        <button
+                          onClick={handleSaveJob}
+                          disabled={isSaving}
+                          className="w-full px-4 py-2 border border-gray-300 text-gray-700 rounded-md hover:bg-gray-50 transition-colors text-sm disabled:opacity-50 disabled:cursor-not-allowed"
+                        >
+                          {isSaving ? "Saving..." : "Save Job"}
                         </button>
                         <button
                           onClick={handleApplyClick}
