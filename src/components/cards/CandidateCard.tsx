@@ -4,7 +4,8 @@ import { Bookmark, Lock, MapPin, MessageCircle, SquarePen } from "lucide-react";
 import { FaPlayCircle } from "react-icons/fa";
 import { Button } from "../ui/button";
 import { ICandidate } from "@/types/user";
-import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
+import { Avatar, AvatarFallback } from "../ui/avatar";
+import Image from "next/image";
 
 function CandidateCard({ candidate }: { candidate: ICandidate }) {
   return (
@@ -13,18 +14,26 @@ function CandidateCard({ candidate }: { candidate: ICandidate }) {
         <CardContent className="p-6">
           {/* Profile Header */}
           <div className="flex items-center gap-3 mb-4">
-            <Avatar className="w-12 h-12">
-              <AvatarImage
-                src={candidate?.profileImage || ""}
-                alt={`${candidate?.firstName || ""} 
-                }`}
-                className="object-cover"
-              />
-              <AvatarFallback className="text-base font-medium">
-                {candidate?.firstName?.charAt(0)}
-                {candidate?.lastName?.charAt(0)}
-              </AvatarFallback>
-            </Avatar>
+            {candidate?.profileImage ? (
+              <div className="w-12 h-12 rounded-full overflow-hidden border-2 border-transparent hover:border-green-500 transition-colors">
+                <Image
+                  src={`${process.env.NEXT_PUBLIC_IMAGE_BASE_URL}${candidate.profileImage}`}
+                  alt={`${candidate?.firstName || ""} ${
+                    candidate?.lastName || ""
+                  }`}
+                  width={48}
+                  height={48}
+                  className="w-full h-full object-cover"
+                />
+              </div>
+            ) : (
+              <Avatar className="w-12 h-12">
+                <AvatarFallback className="text-base font-medium">
+                  {candidate?.firstName?.charAt(0)}
+                  {candidate?.lastName?.charAt(0)}
+                </AvatarFallback>
+              </Avatar>
+            )}
             <div>
               <h4 className="font-semibold text-gray-900">
                 {candidate.firstName + " " + candidate.lastName}

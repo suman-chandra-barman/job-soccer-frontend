@@ -5,33 +5,43 @@ import { useState } from "react";
 import { Search, MapPin } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { useRouter } from "next/navigation";
-import SelectJobCategory from "../input/SelectJobCategory";
-
-const popularSearches = [
-  "Goal Keeper",
-  "Defence Player",
-  "Midfielder",
-  "Forward",
-  "Goalkeeper",
-];
+import {
+  Select,
+  SelectContent,
+  SelectGroup,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "../ui/select";
+import { candidateRoles } from "@/shchemas/signupValidation";
+import { useGetPopularSearchQuery } from "@/redux/features/job/jobApi";
 
 export function CandidateSearch() {
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedCategory, setSelectedCategory] = useState("");
   const [selectedLocation, setSelectedLocation] = useState("");
+  const [selectedPopular, setSelectedPopular] = useState<string>("");
+
+  const { data: popularSearchData } = useGetPopularSearchQuery(undefined);
+  const popularSearches: string[] = popularSearchData?.data?.candidates || [];
 
   const handleSearch = () => {
     const params = new URLSearchParams();
     if (searchTerm) params.set("search", searchTerm);
     if (selectedCategory) params.set("category", selectedCategory);
     if (selectedLocation) params.set("location", selectedLocation);
+    // TODO: Add navigation logic here if needed
   };
 
   const handleKeyPress = (e: React.KeyboardEvent) => {
     if (e.key === "Enter") {
       handleSearch();
     }
+  };
+
+  const handlePopularSearch = (search: string) => {
+    setSelectedPopular(search);
+    setSearchTerm(search);
   };
 
   return (
@@ -52,12 +62,20 @@ export function CandidateSearch() {
           </div>
 
           {/* Category Select */}
-          <div className="w-full lg:w-64">
-            <SelectJobCategory
-              value={selectedCategory}
-              onValueChange={setSelectedCategory}
-            />
-          </div>
+          <Select value={selectedCategory} onValueChange={setSelectedCategory}>
+            <SelectTrigger className="w-full lg:w-64 border-none shadow-none">
+              <SelectValue placeholder="Select category" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectGroup>
+                {candidateRoles.map((role) => (
+                  <SelectItem key={role} value={role}>
+                    {role}
+                  </SelectItem>
+                ))}
+              </SelectGroup>
+            </SelectContent>
+          </Select>
 
           {/* Location */}
           <div className="relative w-full lg:w-64">
@@ -83,20 +101,26 @@ export function CandidateSearch() {
       </div>
 
       {/* Popular Searches */}
-      <div className="flex flex-wrap items-center justify-center gap-4 w-full">
-        <span className="text-gray-600 font-medium">Popular Searches:</span>
-        <div className="flex flex-wrap gap-2">
-          {popularSearches.map((search) => (
-            <button
-              key={search}
-              onClick={() => setSearchTerm(search)}
-              className="px-4 py-1 border bg-gray-100 hover:bg-gray-200 text-gray-700 rounded-full text-sm transition-colors"
-            >
-              {search}
-            </button>
-          ))}
+      {popularSearches.length > 0 && (
+        <div className="flex flex-wrap items-center justify-center gap-4 w-full">
+          <span className="text-gray-600 font-medium">Popular Searches:</span>
+          <div className="flex flex-wrap gap-2">
+            {popularSearches.map((search, index) => (
+              <button
+                key={index}
+                onClick={() => handlePopularSearch(search)}
+                className={`px-4 py-1 border rounded-full text-sm transition-colors capitalize ${
+                  selectedPopular === search
+                    ? "bg-[#5D4E37] text-white hover:bg-[#6B5B3A]"
+                    : "bg-gray-100 hover:bg-gray-200 text-gray-700"
+                }`}
+              >
+                {search}
+              </button>
+            ))}
+          </div>
         </div>
-      </div>
+      )}
     </div>
   );
 }
