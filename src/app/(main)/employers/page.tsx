@@ -9,35 +9,36 @@ import { IEmployer } from "@/types/user";
 import { useGetEmployerFeaturedQuery } from "@/redux/features/employer/employerApi";
 import { EmployerCardSkeletonGrid } from "@/components/skeleton";
 import Link from "next/link";
+import { EmployerRole } from "@/types/profile";
 
 // Employer category configuration
 const EMPLOYER_CATEGORIES = [
-  { key: "Academy", label: "Academy", href: "/all-employer?category=academy" },
+  { key: "Academy", label: "Academy", category: EmployerRole.ACADEMY },
   {
     key: "HighSchool",
     label: "High School",
-    href: "/all-employer?category=high-school",
+    category: EmployerRole.HIGH_SCHOOL,
   },
   {
     key: "CollegeUniversity",
     label: "College/University",
-    href: "/all-employer?category=college-university",
+    category: EmployerRole.COLLEGE_UNIVERSITY,
   },
   {
     key: "ProfessionalClub",
     label: "Professional Club",
-    href: "/all-employer?category=professional-club",
+    category: EmployerRole.PROFESSIONAL_CLUB,
   },
   {
     key: "AmateurClub",
     label: "Amateur Club",
-    href: "/all-employer?category=amateur-club",
+    category: EmployerRole.AMATEUR_CLUB,
   },
-  { key: "Agent", label: "Agent", href: "/all-employer?category=agent" },
+  { key: "Agent", label: "Agent", category: EmployerRole.AGENT },
   {
     key: "ConsultingCompany",
     label: "Consulting Company",
-    href: "/all-employer?category=consulting-company",
+    category: EmployerRole.CONSULTING_COMPANY,
   },
 ] as const;
 
@@ -48,20 +49,24 @@ interface EmployerSectionProps {
   title: string;
   employers?: IEmployer[];
   isLoading?: boolean;
-  href: string;
+  category: string;
 }
 
 const EmployerSection = ({
   title,
   employers,
   isLoading,
-  href,
+  category,
 }: EmployerSectionProps) => (
   <section className="my-8">
     <div className="flex items-center justify-between py-4">
       <h2 className="text-2xl font-bold text-gray-900">{title}</h2>
       <Button variant="link" className="text-black hover:text-green-500">
-        <Link href={href}>See All</Link>
+        <Link
+          href={`/employers/search?role=${encodeURIComponent(category)}`}
+        >
+          See All
+        </Link>
       </Button>
     </div>
     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-3 md:gap-4">
@@ -99,7 +104,7 @@ function EmployersPage() {
             title={category.label}
             employers={featuredEmployersData?.data?.[category.key]}
             isLoading={isLoading}
-            href={category.href}
+            category={category.category}
           />
         ))}
       </div>

@@ -15,11 +15,7 @@ const authApi = baseApi.injectEndpoints({
           const { data } = await queryFulfilled;
           if (data?.data.accessToken) {
             const token = data.data.accessToken;
-            console.log("Token -->", token);
-            console.log("user --->", { user: data.data.user });
             localStorage.setItem("accessToken", token);
-            const test = localStorage.getItem("accessToken");
-            console.log("Test Token -->", test);
             dispatch(setCredentials({ user: data.data.user, token }));
           } else {
             console.warn("No token found in verification response:", data);

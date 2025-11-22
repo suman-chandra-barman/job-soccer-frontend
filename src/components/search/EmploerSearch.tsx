@@ -5,32 +5,41 @@ import { useState } from "react";
 import { Search, MapPin } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import SelectJobCategory from "../input/SelectJobCategory";
-
-const popularSearches = [
-  "Goal Keeper",
-  "Defence Player",
-  "Midfielder",
-  "Forward",
-  "Goalkeeper",
-];
+import SelectEmployerCategory from "../input/SelectEmployerCategory";
+import { useGetPopularSearchQuery } from "@/redux/features/job/jobApi";
+import { useRouter } from "next/navigation";
 
 export function EmployerSearch() {
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedCategory, setSelectedCategory] = useState("");
   const [selectedLocation, setSelectedLocation] = useState("");
+  const [selectedPopular, setSelectedPopular] = useState<string>("");
+  const router = useRouter();
+
+  const { data: popularSearchData } = useGetPopularSearchQuery(undefined);
+  const popularSearches: string[] = popularSearchData?.data?.employers || [];
 
   const handleSearch = () => {
     const params = new URLSearchParams();
-    if (searchTerm) params.set("search", searchTerm);
-    if (selectedCategory) params.set("category", selectedCategory);
-    if (selectedLocation) params.set("location", selectedLocation);
+    if (searchTerm) params.set("searchTerm", searchTerm);
+    if (selectedCategory) params.set("role", selectedCategory);
+    if (selectedLocation) params.set("country", selectedLocation);
+
+    router.push(`/employers/search?${params.toString()}`);
   };
 
   const handleKeyPress = (e: React.KeyboardEvent) => {
     if (e.key === "Enter") {
       handleSearch();
     }
+  };
+
+  const handlePopularSearch = (search: string) => {
+    setSelectedPopular(search);
+    setSearchTerm(search);
+    const params = new URLSearchParams();
+    params.set("searchTerm", search);
+    router.push(`/employers/search?${params.toString()}`);
   };
 
   return (
@@ -52,7 +61,7 @@ export function EmployerSearch() {
 
           {/* Category Select */}
           <div className="w-full lg:w-64">
-            <SelectJobCategory
+            <SelectEmployerCategory
               value={selectedCategory}
               onValueChange={setSelectedCategory}
             />
@@ -82,20 +91,26 @@ export function EmployerSearch() {
       </div>
 
       {/* Popular Searches */}
-      <div className="flex flex-wrap items-center justify-center gap-4 w-full">
-        <span className="text-gray-600 font-medium">Popular Searches:</span>
-        <div className="flex flex-wrap gap-2">
-          {popularSearches.map((search) => (
-            <button
-              key={search}
-              onClick={() => setSearchTerm(search)}
-              className="px-4 py-1 border bg-gray-100 hover:bg-gray-200 text-gray-700 rounded-full text-sm transition-colors"
-            >
-              {search}
-            </button>
-          ))}
+      {popularSearches.length > 0 && (
+        <div className="flex flex-wrap items-center justify-center gap-4 w-full">
+          <span className="text-gray-600 font-medium">Popular Searches:</span>
+          <div className="flex flex-wrap gap-2">
+            {popularSearches.map((search, index) => (
+              <button
+                key={index}
+                onClick={() => handlePopularSearch(search)}
+                className={`px-4 py-1 border rounded-full text-sm transition-colors capitalize ${
+                  selectedPopular === search
+                    ? "bg-[#5D4E37] text-white hover:bg-[#6B5B3A]"
+                    : "bg-gray-100 hover:bg-gray-200 text-gray-700"
+                }`}
+              >
+                {search}
+              </button>
+            ))}
+          </div>
         </div>
-      </div>
+      )}
     </div>
   );
 }
