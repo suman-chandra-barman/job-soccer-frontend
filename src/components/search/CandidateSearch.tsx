@@ -15,22 +15,25 @@ import {
 } from "../ui/select";
 import { candidateRoles } from "@/shchemas/signupValidation";
 import { useGetPopularSearchQuery } from "@/redux/features/job/jobApi";
+import { useRouter } from "next/navigation";
 
 export function CandidateSearch() {
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedCategory, setSelectedCategory] = useState("");
   const [selectedLocation, setSelectedLocation] = useState("");
   const [selectedPopular, setSelectedPopular] = useState<string>("");
+  const router = useRouter();
 
   const { data: popularSearchData } = useGetPopularSearchQuery(undefined);
   const popularSearches: string[] = popularSearchData?.data?.candidates || [];
 
   const handleSearch = () => {
     const params = new URLSearchParams();
-    if (searchTerm) params.set("search", searchTerm);
-    if (selectedCategory) params.set("category", selectedCategory);
-    if (selectedLocation) params.set("location", selectedLocation);
-    // TODO: Add navigation logic here if needed
+    if (searchTerm) params.set("searchTerm", searchTerm);
+    if (selectedCategory) params.set("role", selectedCategory);
+    if (selectedLocation) params.set("country", selectedLocation);
+
+    router.push(`/candidates/search?${params.toString()}`);
   };
 
   const handleKeyPress = (e: React.KeyboardEvent) => {
@@ -42,6 +45,9 @@ export function CandidateSearch() {
   const handlePopularSearch = (search: string) => {
     setSelectedPopular(search);
     setSearchTerm(search);
+    const params = new URLSearchParams();
+    params.set("searchTerm", search);
+    router.push(`/candidates/search?${params.toString()}`);
   };
 
   return (
