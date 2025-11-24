@@ -10,8 +10,27 @@ import Image from "next/image";
 import { Button } from "../ui/button";
 import { IEmployer } from "@/types/user";
 import { Avatar, AvatarFallback } from "../ui/avatar";
+import { useFollowEmployerMutation } from "@/redux/features/follow/followApi";
+import { useAppDispatch } from "@/redux/hooks";
+import { addToFollowing } from "@/redux/features/follow/followSlice";
+import { toast } from "sonner";
 
 export function EmployerCard({ employer }: { employer: IEmployer }) {
+  const dispatch = useAppDispatch();
+
+  const [followEmployer, { isLoading: isFollowLoading }] =
+    useFollowEmployerMutation();
+
+  const handleFollow = async () => {
+    try {
+      await followEmployer(employer._id).unwrap();
+      dispatch(addToFollowing(employer._id));
+      toast.success("Followed successfully");
+    } catch (error) {
+      const err = error as { data?: { message?: string } };
+      toast.error(err?.data?.message || "Failed to follow employer");
+    }
+  };
   // Get profile image URL
   const getEmployerLogoUrl = () => {
     if (employer?.profileImage) {
@@ -90,15 +109,25 @@ export function EmployerCard({ employer }: { employer: IEmployer }) {
       </div>
 
       {/* Footer - Always at bottom */}
-      <div className="border-t border-gray-200 pt-4 flex flex-wrap gap-2 items-center mt-auto">
+      <div className="border-t border-gray-200 pt-4 flex gap-2 items-center mt-auto">
         <Button
+          onClick={handleFollow}
+          disabled={isFollowLoading}
           variant="outline"
-          className="flex-1 hover:scale-105 transition-transform duration-200 font-semibold px-6 py-3"
+          className="w-1/2 hover:scale-105 transition-transform duration-200 font-semibold px-6 py-3"
         >
-          <UserRoundPlus className="w-6 h-6" />
-          Follow
+          {isFollowLoading ? (
+            <>
+              Following...
+            </>
+          ) : (
+            <>
+              <UserRoundPlus className="w-6 h-6" />
+              Follow
+            </>
+          )}
         </Button>
-        <Button className="flex-1 hover:scale-105 transition-transform duration-200 font-semibold px-6 py-3">
+        <Button className="w-1/2 hover:scale-105 transition-transform duration-200 font-semibold px-6 py-3">
           <MessageCircle className="w-6 h-6" />
           Message
         </Button>

@@ -4,6 +4,7 @@ import savedJobsReducer from "@/redux/features/savedJobs/savedJobsSlice";
 import jobApplicationReducer from "@/redux/features/jobApplication/jobApplicationSlice";
 import resumeReducer from "@/redux/features/resume/resumeSlice";
 import candidateShortlistReducer from "@/redux/features/candidateShortlist/candidateShortlistSlice";
+import followReducer from "@/redux/features/follow/followSlice";
 import { baseApi } from "./api/baseApi";
 
 // Create a single store instance for the app
@@ -15,6 +16,7 @@ export const store = configureStore({
     jobApplication: jobApplicationReducer,
     resume: resumeReducer,
     candidateShortlist: candidateShortlistReducer,
+    follow: followReducer,
   },
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware().concat(baseApi.middleware),
