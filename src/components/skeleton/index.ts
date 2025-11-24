@@ -32,6 +32,7 @@ export {
   EmployerCardSkeletonGrid,
 } from "./EmployerCardSkeleton";
 export { JobCardSkeleton, JobCardSkeletonGrid } from "./JobCardSkeleton";
+export { ProfileSkeleton } from "./ProfileSkeleton";
 
 // Re-export base Skeleton component from shadcn/ui
 export { Skeleton } from "@/components/ui/skeleton";

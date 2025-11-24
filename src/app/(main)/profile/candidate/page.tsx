@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
 
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -13,13 +14,13 @@ import {
   GraduationCap,
   LayoutGrid,
   Upload,
-  Camera,
+  Mail,
 } from "lucide-react";
 import Image from "next/image";
 import AddExperienceModal, {
   TExperience,
 } from "@/components/modals/AddExperienceModal";
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
 import AddLicensesOrCertificationsModal from "@/components/modals/AddLicensesOrCertificationsModal";
 import AddEducationModal from "@/components/modals/AddEducationModal";
 import UploadResumeModal from "@/components/modals/UploadResumeModal";
@@ -30,31 +31,7 @@ import EditLicenseOrCertificationsModal from "@/components/modals/EditLicensesOr
 import EditEducationModal from "@/components/modals/EditEducationModal";
 import AddVideoModal from "@/components/modals/AddVideoModal";
 import { useAppSelector } from "@/redux/hooks";
-
-interface PersonalContact {
-  position: string;
-  phone: string;
-  dob: string;
-  address: string;
-  placeOfBirth: string;
-  socialMedia: string;
-}
-
-interface PlayerDetails {
-  contractExpires: string;
-  marketValue: string;
-  onLoanFrom: string;
-  currentClub: string;
-  shortlist: string;
-  agent: string;
-  height: string;
-  age: string;
-  weight: string;
-  position: string;
-  gender: string;
-  languages: string;
-  nationalTeamCareer: string;
-}
+import { ProfileSkeleton } from "@/components/skeleton";
 
 const initialUser = {
   name: "Suman Barman",
@@ -202,31 +179,6 @@ export default function MyProfilePage() {
   const [isEditExperienceModalOpen, setIsEditExperienceModalOpen] =
     useState(false);
 
-  const [personalContact, setPersonalContact] = useState<PersonalContact>({
-    position: "Striker",
-    phone: "+880 1636-828200",
-    dob: "12 May, 1992 (age-32)",
-    address: "33 Pendergast Avenue, GA, 30736",
-    placeOfBirth: "Uganda",
-    socialMedia: "Connect your Social Media",
-  });
-
-  const [playerDetails, setPlayerDetails] = useState<PlayerDetails>({
-    contractExpires: "June 2025",
-    marketValue: "$42,000",
-    onLoanFrom: "Not on loan",
-    currentClub: "Real Madrid CF",
-    shortlist: "42 games",
-    agent: "Sports Agent Pro",
-    height: "5'10\"",
-    age: "36",
-    weight: "68kg",
-    position: "Striker",
-    gender: "Male",
-    languages: "English, Spanish",
-    nationalTeamCareer: "English, Spanish",
-  });
-
   const [editExperienceData, setEditExperienceData] = useState<any>(null);
   const [editLicensesOrCertifications, setEditLicensesOrCertifications] =
     useState<any>(null);
@@ -234,6 +186,7 @@ export default function MyProfilePage() {
 
   const [user, setUser] = useState(initialUser);
   const [bannerImage, setBannerImage] = useState<string>("");
+  const [isLoading, setIsLoading] = useState(true);
 
   const bannerInputRef = useRef<HTMLInputElement>(null);
   const profileInputRef = useRef<HTMLInputElement>(null);
@@ -276,13 +229,29 @@ export default function MyProfilePage() {
     : user.avatar;
   const displayRole = currentUser?.role || user.title;
 
+  // Handle loading state
+  useEffect(() => {
+    if (currentUser) {
+      // Simulate minimal loading time for smooth transition
+      const timer = setTimeout(() => {
+        setIsLoading(false);
+      }, 300);
+      return () => clearTimeout(timer);
+    }
+  }, [currentUser]);
+
   // Log user data for debugging
   console.log("Current User from Redux:", currentUser);
+
+  // Show loading skeleton while data is loading
+  if (isLoading || !currentUser) {
+    return <ProfileSkeleton />;
+  }
 
   return (
     <div className="px-4">
       <div className="relative mb-8">
-        <div className="relative h-48 lg:h-64 bg-gradient-to-br from-blue-100 via-blue-50 to-green-50 rounded-lg overflow-hidden group">
+        <div className="relative h-48 lg:h-64 bg-gradient-to-br from-gray-100 via-gray-50 to-gray-50 rounded-lg overflow-hidden group">
           {bannerImage ? (
             <Image
               src={bannerImage}
@@ -369,9 +338,20 @@ export default function MyProfilePage() {
       </div>
 
       {/* Profile Info */}
-      <div className="mt-20 mb-8">
+      <div className="mt-20 mb-8 px-4">
         <div className="mb-6">
           <h2 className="text-3xl font-bold text-gray-900">{displayName}</h2>
+
+          {/* Contact Information */}
+          <div className="flex flex-wrap gap-4 mt-2 mb-4 text-gray-600">
+            {currentUser?.email && (
+              <div className="flex items-center gap-2">
+                <Mail className="h-4 w-4" />
+                <span className="text-sm">{currentUser.email}</span>
+              </div>
+            )}
+          </div>
+
           <div className="flex gap-2 flex-wrap mt-4">
             <Badge className="bg-yellow-100 border-yellow-200 px-4 rounded-full">
               {displayRole}
@@ -423,11 +403,11 @@ export default function MyProfilePage() {
       </div>
 
       <div className="p-4 md:p-6 border rounded-2xl shadow">
-        {/* Personal Contact Section */}
-        <div className="bg-white rounded-lg border shadow border-gray-200 p-6 mb-6">
+        {/* Profile Information Section */}
+        <div className="bg-white rounded-lg border shadow border-gray-200 p-6">
           <div className="flex items-center justify-between mb-6">
             <h2 className="text-xl font-semibold text-gray-900">
-              Personal Contact
+              Profile Information
             </h2>
             <div className="flex items-center gap-3">
               <Button
@@ -443,142 +423,312 @@ export default function MyProfilePage() {
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-6">
-            <div>
-              <label className="text-sm text-gray-500 mb-1 block">
-                Position
-              </label>
-              <p className="text-gray-900 font-medium">Striker</p>
-            </div>
-            <div>
-              <label className="text-sm text-gray-500 mb-1 block">
-                Phone number
-              </label>
-              <p className="text-gray-900 font-medium">+880 1636-828200</p>
-            </div>
-            <div>
-              <label className="text-sm text-gray-500 mb-1 block">
-                Date of birth
-              </label>
-              <p className="text-gray-900 font-medium">12 May, 1992 (age-32)</p>
-            </div>
-            <div>
-              <label className="text-sm text-gray-500 mb-1 block">
-                Address
-              </label>
-              <p className="text-gray-900 font-medium">
-                33 Pendergast Aven e, GA, 30736
-              </p>
-            </div>
-            <div>
-              <label className="text-sm text-gray-500 mb-1 block">
-                Place of birth
-              </label>
-              <p className="text-gray-900 font-medium">Uganda</p>
-            </div>
-            <div>
-              <label className="text-sm text-gray-500 mb-1 block">
-                Social Media
-              </label>
-              <p className="text-blue-600 font-medium cursor-pointer hover:underline">
-                Connect your Social Media
-              </p>
-            </div>
-          </div>
-        </div>
+            {/* Personal Information Fields */}
+            {currentUser?.profile?.dateOfBirth && (
+              <div>
+                <label className="text-sm text-gray-500 mb-1 block">
+                  Date of birth
+                </label>
+                <p className="text-gray-900 font-medium">
+                  {new Date(currentUser.profile.dateOfBirth).toLocaleDateString(
+                    "en-US",
+                    {
+                      year: "numeric",
+                      month: "long",
+                      day: "numeric",
+                    }
+                  )}
+                </p>
+              </div>
+            )}
 
-        {/* Player Details Section */}
-        <div className="bg-white rounded-lg shadow border border-gray-200 p-6">
-          <div className="flex items-center justify-between mb-6">
-            <div className="flex items-center gap-2">
-              <h2 className="text-xl font-semibold text-gray-900">
-                Player Details
-              </h2>
-            </div>
-            <Button
-              variant="ghost"
-              size="sm"
-              className="text-gray-600 hover:text-gray-900"
-              onClick={() => setIsPlayerDetailsModalOpen(true)}
-            >
-              <Edit className="w-4 h-4 mr-1" />
-              Edit
-            </Button>
-          </div>
+            {currentUser?.profile?.placeOfBirth && (
+              <div>
+                <label className="text-sm text-gray-500 mb-1 block">
+                  Place of birth
+                </label>
+                <p className="text-gray-900 font-medium">
+                  {currentUser.profile.placeOfBirth}
+                </p>
+              </div>
+            )}
 
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-6">
-            <div>
-              <label className="text-sm text-gray-500 mb-1 block">
-                Contract Expires
-              </label>
-              <p className="text-gray-900 font-medium">Contract Expires</p>
-            </div>
-            <div>
-              <label className="text-sm text-gray-500 mb-1 block">
-                Market Value
-              </label>
-              <p className="text-gray-900 font-medium">$42,0000</p>
-            </div>
+            {currentUser?.profile?.nationality && (
+              <div>
+                <label className="text-sm text-gray-500 mb-1 block">
+                  Nationality
+                </label>
+                <p className="text-gray-900 font-medium">
+                  {currentUser.profile.nationality}
+                </p>
+              </div>
+            )}
 
-            <div>
-              <label className="text-sm text-gray-500 mb-1 block">
-                On loan From
-              </label>
-              <p className="text-gray-900 font-medium">On loan From</p>
-            </div>
-            <div>
-              <label className="text-sm text-gray-500 mb-1 block">
-                Current Club
-              </label>
-              <p className="text-gray-900 font-medium">Real Madrid CF</p>
-            </div>
+            {currentUser?.profile?.phoneNumber && (
+              <div>
+                <label className="text-sm text-gray-500 mb-1 block">
+                  Phone number
+                </label>
+                <p className="text-gray-900 font-medium">
+                  {currentUser.profile.phoneNumber}
+                </p>
+              </div>
+            )}
 
-            <div>
-              <label className="text-sm text-gray-500 mb-1 block">
-                Shortlist
-              </label>
-              <p className="text-gray-900 font-medium">42 games</p>
-            </div>
-            <div>
-              <label className="text-sm text-gray-500 mb-1 block">Agent</label>
-              <p className="text-gray-900 font-medium">Agent</p>
-            </div>
-            <div>
-              <label className="text-sm text-gray-500 mb-1 block">Height</label>
-              <p className="text-gray-900 font-medium">5&apos;10</p>
-            </div>
-            <div>
-              <label className="text-sm text-gray-500 mb-1 block">Age</label>
-              <p className="text-gray-900 font-medium">36</p>
-            </div>
+            {/* Professional Information Fields */}
+            {currentUser?.profile?.gender && (
+              <div>
+                <label className="text-sm text-gray-500 mb-1 block">
+                  Gender
+                </label>
+                <p className="text-gray-900 font-medium">
+                  {currentUser.profile.gender}
+                </p>
+              </div>
+            )}
 
-            <div>
-              <label className="text-sm text-gray-500 mb-1 block">
-                Position
-              </label>
-              <p className="text-gray-900 font-medium">Striker</p>
-            </div>
-            <div>
-              <label className="text-sm text-gray-500 mb-1 block">Weight</label>
-              <p className="text-gray-900 font-medium">68kg</p>
-            </div>
+            {currentUser?.profile?.position && (
+              <div>
+                <label className="text-sm text-gray-500 mb-1 block">
+                  Position
+                </label>
+                <p className="text-gray-900 font-medium">
+                  {currentUser.profile.position}
+                </p>
+              </div>
+            )}
 
-            <div>
-              <label className="text-sm text-gray-500 mb-1 block">Gender</label>
-              <p className="text-gray-900 font-medium">Male</p>
-            </div>
+            {currentUser?.profile?.height && (
+              <div>
+                <label className="text-sm text-gray-500 mb-1 block">
+                  Height
+                </label>
+                <p className="text-gray-900 font-medium">
+                  {currentUser.profile.height.size}{" "}
+                  {currentUser.profile.height.unit}
+                </p>
+              </div>
+            )}
 
-            <div>
-              <label className="text-sm text-gray-500 mb-1 block">
-                Languages
-              </label>
-              <p className="text-gray-900 font-medium">English, Spanish</p>
-            </div>
-            <div>
-              <label className="text-sm text-gray-500 mb-1 block">
-                National Team Career
-              </label>
-              <p className="text-gray-900 font-medium">English, Spanish</p>
-            </div>
+            {currentUser?.profile?.weight && (
+              <div>
+                <label className="text-sm text-gray-500 mb-1 block">
+                  Weight
+                </label>
+                <p className="text-gray-900 font-medium">
+                  {currentUser.profile.weight.size}{" "}
+                  {currentUser.profile.weight.unit}
+                </p>
+              </div>
+            )}
+
+            {currentUser?.profile?.currentClub && (
+              <div>
+                <label className="text-sm text-gray-500 mb-1 block">
+                  Current Club
+                </label>
+                <p className="text-gray-900 font-medium">
+                  {currentUser.profile.currentClub}
+                </p>
+              </div>
+            )}
+
+            {currentUser?.profile?.availability && (
+              <div>
+                <label className="text-sm text-gray-500 mb-1 block">
+                  Availability
+                </label>
+                <p className="text-gray-900 font-medium">
+                  {currentUser.profile.availability}
+                </p>
+              </div>
+            )}
+
+            {currentUser?.profile?.foot && (
+              <div>
+                <label className="text-sm text-gray-500 mb-1 block">Foot</label>
+                <p className="text-gray-900 font-medium">
+                  {currentUser.profile.foot}
+                </p>
+              </div>
+            )}
+
+            {currentUser?.profile?.league && (
+              <div>
+                <label className="text-sm text-gray-500 mb-1 block">
+                  League
+                </label>
+                <p className="text-gray-900 font-medium">
+                  {currentUser.profile.league}
+                </p>
+              </div>
+            )}
+
+            {currentUser?.profile?.country && (
+              <div>
+                <label className="text-sm text-gray-500 mb-1 block">
+                  Country
+                </label>
+                <p className="text-gray-900 font-medium">
+                  {currentUser.profile.country}
+                </p>
+              </div>
+            )}
+
+            {currentUser?.profile?.agent && (
+              <div>
+                <label className="text-sm text-gray-500 mb-1 block">
+                  Agent
+                </label>
+                <p className="text-gray-900 font-medium">
+                  {currentUser.profile.agent}
+                </p>
+              </div>
+            )}
+
+            {currentUser?.profile?.socialMedia && (
+              <div>
+                <label className="text-sm text-gray-500 mb-1 block">
+                  Social Media
+                </label>
+                <p className="text-blue-600 font-medium cursor-pointer hover:underline">
+                  {currentUser.profile.socialMedia}
+                </p>
+              </div>
+            )}
+
+            {/* Professional Player specific fields */}
+            {currentUser?.profile?.contractExpires && (
+              <div>
+                <label className="text-sm text-gray-500 mb-1 block">
+                  Contract Expires
+                </label>
+                <p className="text-gray-900 font-medium">
+                  {currentUser.profile.contractExpires}
+                </p>
+              </div>
+            )}
+
+            {currentUser?.profile?.division && (
+              <div>
+                <label className="text-sm text-gray-500 mb-1 block">
+                  Division
+                </label>
+                <p className="text-gray-900 font-medium">
+                  {currentUser.profile.division}
+                </p>
+              </div>
+            )}
+
+            {currentUser?.profile?.nationalTeamCategory && (
+              <div>
+                <label className="text-sm text-gray-500 mb-1 block">
+                  National Team Category
+                </label>
+                <p className="text-gray-900 font-medium">
+                  {currentUser.profile.nationalTeamCategory}
+                </p>
+              </div>
+            )}
+
+            {currentUser?.profile?.nationalTeamGames && (
+              <div>
+                <label className="text-sm text-gray-500 mb-1 block">
+                  National Team Games
+                </label>
+                <p className="text-gray-900 font-medium">
+                  {currentUser.profile.nationalTeamGames}
+                </p>
+              </div>
+            )}
+
+            {currentUser?.profile?.teamsJoined && (
+              <div>
+                <label className="text-sm text-gray-500 mb-1 block">
+                  Teams Joined
+                </label>
+                <p className="text-gray-900 font-medium">
+                  {currentUser.profile.teamsJoined}
+                </p>
+              </div>
+            )}
+
+            {/* College/High School specific fields */}
+            {currentUser?.profile?.schoolName && (
+              <div>
+                <label className="text-sm text-gray-500 mb-1 block">
+                  School Name
+                </label>
+                <p className="text-gray-900 font-medium">
+                  {currentUser.profile.schoolName}
+                </p>
+              </div>
+            )}
+
+            {currentUser?.profile?.collegeOrUniversity && (
+              <div>
+                <label className="text-sm text-gray-500 mb-1 block">
+                  College/University
+                </label>
+                <p className="text-gray-900 font-medium">
+                  {currentUser.profile.collegeOrUniversity}
+                </p>
+              </div>
+            )}
+
+            {currentUser?.profile?.diploma && (
+              <div>
+                <label className="text-sm text-gray-500 mb-1 block">
+                  Diploma
+                </label>
+                <p className="text-gray-900 font-medium">
+                  {currentUser.profile.diploma}
+                </p>
+              </div>
+            )}
+
+            {currentUser?.profile?.gpa && (
+              <div>
+                <label className="text-sm text-gray-500 mb-1 block">GPA</label>
+                <p className="text-gray-900 font-medium">
+                  {currentUser.profile.gpa}
+                </p>
+              </div>
+            )}
+
+            {currentUser?.profile?.satOrAct && (
+              <div>
+                <label className="text-sm text-gray-500 mb-1 block">
+                  SAT/ACT
+                </label>
+                <p className="text-gray-900 font-medium">
+                  {currentUser.profile.satOrAct}
+                </p>
+              </div>
+            )}
+
+            {currentUser?.profile?.category && (
+              <div>
+                <label className="text-sm text-gray-500 mb-1 block">
+                  Category
+                </label>
+                <p className="text-gray-900 font-medium">
+                  {currentUser.profile.category}
+                </p>
+              </div>
+            )}
+
+            {/* Office Staff specific fields */}
+            {currentUser?.profile?.languages && (
+              <div>
+                <label className="text-sm text-gray-500 mb-1 block">
+                  Languages
+                </label>
+                <p className="text-gray-900 font-medium">
+                  {currentUser.profile.languages}
+                </p>
+              </div>
+            )}
           </div>
         </div>
 
@@ -902,12 +1052,12 @@ export default function MyProfilePage() {
       <EditPersonalInformationModal
         isOpen={isEditPersonalInformationModalOpen}
         onClose={() => setIsEditPersonalInformationModalOpen(false)}
-        initialData={personalContact}
+        initialData={currentUser?.profile || {}}
       />
       <EditPlayerDetailsModal
         isOpen={isEditPlayerDetailsModalOpen}
         onClose={() => setIsPlayerDetailsModalOpen(false)}
-        initialData={playerDetails}
+        initialData={currentUser?.profile || {}}
       />
       {editExperienceData && (
         <EditExperienceModal
