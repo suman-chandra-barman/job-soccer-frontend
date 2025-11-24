@@ -19,7 +19,7 @@ export default function EmployersPreview() {
   }
 
   return (
-    <div className="grid grid-cols-1 md:grid-cols-2 gap-3 md:gap-4 mb-6">
+    <div className="grid grid-cols-1 md:grid-cols-2 gap-3 md:gap-4 mb-4">
       {employersData.data.slice(0, 4).map((employer: IEmployer) => (
         <EmployerCard key={employer._id} employer={employer} />
       ))}

@@ -42,7 +42,7 @@ const FindYourDreamTeam = () => {
 
           {/* Right Column - Jobs */}
           <div className="bg-[#F7F6F2] rounded-3xl p-4 md:p-6 w-full lg:col-span-3">
-            <div className="flex items-center justify-between mb-6">
+            <div className="flex items-center justify-between mb-4">
               <h2 className="text-2xl md:text-3xl font-bold text-gray-900">
                 Employers
               </h2>
@@ -52,7 +52,7 @@ const FindYourDreamTeam = () => {
               <EmployersPreview />
             </Suspense>
 
-            <div className="flex justify-end">
+            <div className="flex justify-end mt-4">
               <Button className="bg-yellow-300  hover:scale-105 transition-transform duration-200 font-semibold px-6 py-3">
                 <Link href="/employers">See All</Link>
               </Button>
