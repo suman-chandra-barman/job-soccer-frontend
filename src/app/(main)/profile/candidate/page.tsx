@@ -16,19 +16,12 @@ import {
   Camera,
 } from "lucide-react";
 import Image from "next/image";
-import userImg from "@/assets/candidates/user1.png";
-import banner from "@/assets/banner.jpg";
 import AddExperienceModal, {
   TExperience,
-  type FormData as ExperienceFormData,
 } from "@/components/modals/AddExperienceModal";
 import { useState, useRef } from "react";
-import AddLicensesOrCertificationsModal, {
-  type FormData as CertificationFormData,
-} from "@/components/modals/AddLicensesOrCertificationsModal";
-import AddEducationModal, {
-  FormData as EducationFormData,
-} from "@/components/modals/AddEducationModal";
+import AddLicensesOrCertificationsModal from "@/components/modals/AddLicensesOrCertificationsModal";
+import AddEducationModal from "@/components/modals/AddEducationModal";
 import UploadResumeModal from "@/components/modals/UploadResumeModal";
 import EditPersonalInformationModal from "@/components/modals/EditPersonalInformationModal";
 import EditPlayerDetailsModal from "@/components/modals/EditPlayerDetailsModal";
@@ -36,6 +29,7 @@ import EditExperienceModal from "@/components/modals/EditExperienceModal";
 import EditLicenseOrCertificationsModal from "@/components/modals/EditLicensesOrCertificationsModal";
 import EditEducationModal from "@/components/modals/EditEducationModal";
 import AddVideoModal from "@/components/modals/AddVideoModal";
+import { useAppSelector } from "@/redux/hooks";
 
 interface PersonalContact {
   position: string;
@@ -72,6 +66,7 @@ const initialUser = {
     personal: true,
   },
 };
+
 const experiences: TExperience[] = [
   {
     title: "Forward Striker",
@@ -179,6 +174,9 @@ const videos = [
 ];
 
 export default function MyProfilePage() {
+  // Get user data from Redux store
+  const currentUser = useAppSelector((state) => state.auth.user);
+
   const [isAddExperienceModalOpen, setIsAddExperienceModalOpen] =
     useState(false);
   const [
@@ -229,15 +227,13 @@ export default function MyProfilePage() {
     nationalTeamCareer: "English, Spanish",
   });
 
-  const [editExperienceData, setEditExperienceData] = useState(null);
+  const [editExperienceData, setEditExperienceData] = useState<any>(null);
   const [editLicensesOrCertifications, setEditLicensesOrCertifications] =
-    useState(null);
-  const [editEducation, setEditEducation] = useState(null);
+    useState<any>(null);
+  const [editEducation, setEditEducation] = useState<any>(null);
 
   const [user, setUser] = useState(initialUser);
-  const [bannerImage, setBannerImage] = useState(
-    "https://images.pexels.com/photos/274422/pexels-photo-274422.jpeg?auto=compress&cs=tinysrgb&w=800&h=400&dpr=1"
-  );
+  const [bannerImage, setBannerImage] = useState<string>("");
 
   const bannerInputRef = useRef<HTMLInputElement>(null);
   const profileInputRef = useRef<HTMLInputElement>(null);
@@ -269,17 +265,54 @@ export default function MyProfilePage() {
       reader.readAsDataURL(file);
     }
   };
+
+  // Prepare display data from Redux store
+  const displayName = currentUser
+    ? `${currentUser.firstName} ${currentUser.lastName}`
+    : user.name;
+
+  const displayAvatar = currentUser?.profileImage
+    ? `${process.env.NEXT_PUBLIC_BASE_URL}${currentUser.profileImage}`
+    : user.avatar;
+  const displayRole = currentUser?.role || user.title;
+
+  // Log user data for debugging
+  console.log("Current User from Redux:", currentUser);
+
   return (
     <div className="px-4">
       <div className="relative mb-8">
-        <div className="relative h-48 lg:h-64 bg-gradient-to-r from-blue-500 to-green-400 rounded-lg overflow-hidden group">
-          <img
-            src={bannerImage}
-            alt="Soccer player"
-            className="w-full h-full object-cover"
-          />
-          {/* Banner Edit Button */}
-          <div className="absolute inset-0 bg-black/0 group-hover:bg-black/50 transition-all duration-300 flex items-center justify-center">
+        <div className="relative h-48 lg:h-64 bg-gradient-to-br from-blue-100 via-blue-50 to-green-50 rounded-lg overflow-hidden group">
+          {bannerImage ? (
+            <Image
+              src={bannerImage}
+              alt="Profile banner"
+              fill
+              className="object-cover"
+              priority
+            />
+          ) : (
+            <div className="w-full h-full flex items-center justify-center">
+              <div className="text-center text-gray-400">
+                <svg
+                  className="w-16 h-16 mx-auto mb-2 opacity-50"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={1.5}
+                    d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"
+                  />
+                </svg>
+              </div>
+            </div>
+          )}
+
+          {/* Banner Edit Button - Top Left */}
+          <div className="absolute top-4 right-4">
             <input
               type="file"
               accept="image/*"
@@ -291,39 +324,46 @@ export default function MyProfilePage() {
               onClick={() => bannerInputRef.current?.click()}
               variant="secondary"
               size="sm"
-              className="opacity-0 group-hover:opacity-100 transition-opacity duration-300 bg-white/90 hover:bg-white text-gray-800"
+              className="bg-white cursor-pointer hover:bg-gray-100 text-gray-700 shadow-md rounded-full px-3 py-2 flex items-center gap-2"
             >
-              <Camera className="h-4 w-4 mr-2" />
-              Edit Banner
+              {bannerImage ? (
+                <Edit className="h-4 w-4" />
+              ) : (
+                <Plus className="h-4 w-4" />
+              )}
+              <span className="hidden sm:inline text-sm font-medium">
+                {bannerImage ? "Edit" : "Add"}
+              </span>
             </Button>
           </div>
         </div>
 
         <div className="absolute -bottom-16 left-4 lg:left-8">
-          <div className="relative group">
-            <img
-              src={user.avatar}
-              alt={user.name}
-              className="w-24 h-24 lg:w-32 lg:h-32 rounded-full border-4 border-white object-cover"
-            />
-            {/* Profile Image Edit Button */}
-            <div className="absolute inset-0 bg-opacity-0 group-hover:bg-opacity-50 transition-all duration-300 rounded-full flex items-center justify-center bg-black/0 group-hover:bg-black/50">
-              <input
-                type="file"
-                accept="image/*"
-                onChange={handleProfileImageChange}
-                className="hidden"
-                ref={profileInputRef}
+          <div className="relative">
+            <div className="relative w-24 h-24 lg:w-32 lg:h-32 rounded-full border-4 border-white overflow-hidden bg-white">
+              <Image
+                src={displayAvatar}
+                alt={displayName}
+                fill
+                className="object-cover"
+                priority
               />
-              <Button
-                onClick={() => profileInputRef.current?.click()}
-                variant="secondary"
-                size="sm"
-                className="opacity-0 group-hover:opacity-100 transition-opacity duration-300 bg-white/90 hover:bg-white text-gray-800 rounded-full p-2"
-              >
-                <Camera className="h-4 w-4" />
-              </Button>
             </div>
+            {/* Profile Image Edit Button - Bottom Right Badge */}
+            <input
+              type="file"
+              accept="image/*"
+              onChange={handleProfileImageChange}
+              className="hidden"
+              ref={profileInputRef}
+            />
+            <button
+              onClick={() => profileInputRef.current?.click()}
+              className="absolute cursor-pointer bottom-0 right-0 w-6 h-6 lg:w-10 lg:h-10 bg-white rounded-full shadow-md hover:shadow-lg transition-shadow flex items-center justify-center border-2 border-white"
+              aria-label="Edit profile picture"
+            >
+              <Edit className="h-3 w-3 lg:h-4 lg:w-4 text-gray-700" />
+            </button>
           </div>
         </div>
       </div>
@@ -331,17 +371,17 @@ export default function MyProfilePage() {
       {/* Profile Info */}
       <div className="mt-20 mb-8">
         <div className="mb-6">
-          <h2 className="text-3xl font-bold text-gray-900">{user.name}</h2>
+          <h2 className="text-3xl font-bold text-gray-900">{displayName}</h2>
           <div className="flex gap-2 flex-wrap mt-4">
             <Badge className="bg-yellow-100 border-yellow-200 px-4 rounded-full">
-              {user.title}
+              {displayRole}
             </Badge>
             <Button
               variant="outline"
               size="sm"
               className="bg-gray-100 rounded-full hover:bg-gray-200"
             >
-              <Award className="!w-5 !h-5" /> Age Verification Badge
+              <Award className="!w-5 !h-5" /> Add Verification Badge
             </Button>
           </div>
         </div>
@@ -599,9 +639,9 @@ export default function MyProfilePage() {
             </div>
           </CardHeader>
           <CardContent className="space-y-6 px-0">
-            {experiences.map((exp) => (
+            {experiences.map((exp, index) => (
               <div
-                key={exp.id}
+                key={index}
                 className="flex space-x-4 p-4 hover:bg-gray-50 transition-colors"
               >
                 <div className="flex-shrink-0">
@@ -814,11 +854,12 @@ export default function MyProfilePage() {
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
               {videos.map((video) => (
                 <div key={video.id} className="relative group cursor-pointer">
-                  <div className="aspect-video bg-gray-200 rounded-lg overflow-hidden">
-                    <img
+                  <div className="relative aspect-video bg-gray-200 rounded-lg overflow-hidden">
+                    <Image
                       src={video.thumbnail}
                       alt={video.title}
-                      className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                      fill
+                      className="object-cover group-hover:scale-105 transition-transform duration-300"
                     />
                     <div className="absolute inset-0 bg-black bg-opacity-30 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300">
                       <div className="w-12 h-12 bg-white bg-opacity-90 rounded-full flex items-center justify-center">
@@ -852,6 +893,7 @@ export default function MyProfilePage() {
       <UploadResumeModal
         isOpen={isUploadModalOpen}
         onClose={() => setIsUploadModalOpen(false)}
+        jobId=""
       />
       <AddVideoModal
         isOpen={isAddVideoModalOpen}
