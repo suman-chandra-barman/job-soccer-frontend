@@ -28,7 +28,7 @@ export function EmployerCard({ employer }: { employer: IEmployer }) {
   const lastNameInitial = employer?.lastName?.charAt(0)?.toUpperCase() || "";
 
   return (
-    <div className="bg-gradient-to-br from-white to-[#FDF9E3] rounded-xl p-4 shadow-sm border border-gray-100">
+    <div className="bg-gradient-to-br from-white to-[#FDF9E3] rounded-xl p-4 shadow-sm border border-gray-100 flex flex-col h-full">
       <div className="border-b border-gray-200 pb-4">
         <div className="flex items-center gap-3 mb-4 ">
           {logoUrl ? (
@@ -74,7 +74,7 @@ export function EmployerCard({ employer }: { employer: IEmployer }) {
       </div>
 
       {/* Bottom section with applicant count, salary, and time */}
-      <div className="flex items-center justify-between">
+      <div className="flex items-center justify-between flex-grow">
         <div className="flex flex-col gap-4 py-4">
           <div className="text-gray-600 text-sm">
             <Star className="w-4 h-4 inline-block text-yellow-500 mr-2" />
@@ -88,7 +88,9 @@ export function EmployerCard({ employer }: { employer: IEmployer }) {
           </div>
         </div>
       </div>
-      <div className="border-t border-gray-200 pt-4 flex flex-wrap gap-2 items-center">
+
+      {/* Footer - Always at bottom */}
+      <div className="border-t border-gray-200 pt-4 flex flex-wrap gap-2 items-center mt-auto">
         <Button
           variant="outline"
           className="flex-1 hover:scale-105 transition-transform duration-200 font-semibold px-6 py-3"
