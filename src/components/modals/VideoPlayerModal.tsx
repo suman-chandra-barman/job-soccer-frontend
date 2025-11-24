@@ -1,6 +1,12 @@
 "use client";
 
-import React, { useState, useRef, useEffect } from "react";
+import React, {
+  useState,
+  useRef,
+  useEffect,
+  useCallback,
+  useMemo,
+} from "react";
 import {
   Dialog,
   DialogContent,
@@ -46,9 +52,122 @@ export default function VideoPlayerModal({
   const [currentTime, setCurrentTime] = useState(0);
   const videoRef = useRef<HTMLVideoElement>(null);
 
-  const currentVideo = videos[currentIndex];
+  const currentVideo = useMemo(
+    () => videos[currentIndex],
+    [videos, currentIndex]
+  );
 
-  // Reset state when video changes
+  // Utility functions
+  const formatTime = useCallback((seconds: number): string => {
+    if (!isFinite(seconds) || isNaN(seconds)) return "0:00";
+
+    const mins = Math.floor(seconds / 60);
+    const secs = Math.floor(seconds % 60);
+    return `${mins}:${secs.toString().padStart(2, "0")}`;
+  }, []);
+
+  const getVideoUrl = useCallback((video: Video): string => {
+    if (!video?.url) return "";
+
+    if (video.url.startsWith("http")) {
+      return video.url;
+    }
+    return `${process.env.NEXT_PUBLIC_BASE_URL}/${video.url}`;
+  }, []);
+
+  const videoUrl = useMemo(
+    () => getVideoUrl(currentVideo),
+    [currentVideo, getVideoUrl]
+  );
+
+  // Event handlers
+  const handlePlayPause = useCallback(() => {
+    if (!videoRef.current) return;
+
+    if (isPlaying) {
+      videoRef.current.pause();
+    } else {
+      videoRef.current.play().catch((error) => {
+        console.error("Error playing video:", error);
+      });
+    }
+    setIsPlaying(!isPlaying);
+  }, [isPlaying]);
+
+  const handleMuteUnmute = useCallback(() => {
+    if (!videoRef.current) return;
+
+    videoRef.current.muted = !isMuted;
+    setIsMuted(!isMuted);
+  }, [isMuted]);
+
+  const handleFullscreen = useCallback(() => {
+    if (!videoRef.current) return;
+
+    if (document.fullscreenElement) {
+      document.exitFullscreen();
+    } else if (videoRef.current.requestFullscreen) {
+      videoRef.current.requestFullscreen();
+    }
+  }, []);
+
+  const handleTimeUpdate = useCallback(() => {
+    if (!videoRef.current) return;
+
+    const current = videoRef.current.currentTime;
+    const total = videoRef.current.duration;
+
+    if (!isNaN(current) && !isNaN(total) && total > 0) {
+      setCurrentTime(current);
+      setProgress((current / total) * 100);
+    }
+  }, []);
+
+  const handleLoadedMetadata = useCallback(() => {
+    if (!videoRef.current) return;
+
+    setDuration(videoRef.current.duration);
+    setIsLoading(false);
+  }, []);
+
+  const handleProgressClick = useCallback(
+    (e: React.MouseEvent<HTMLDivElement>) => {
+      if (!videoRef.current || !duration) return;
+
+      const rect = e.currentTarget.getBoundingClientRect();
+      const clickX = e.clientX - rect.left;
+      const percentage = Math.max(0, Math.min(1, clickX / rect.width));
+      const newTime = percentage * duration;
+
+      videoRef.current.currentTime = newTime;
+      setProgress(percentage * 100);
+      setCurrentTime(newTime);
+    },
+    [duration]
+  );
+
+  const handleVideoError = useCallback(
+    (e: React.SyntheticEvent<HTMLVideoElement, Event>) => {
+      console.error("Video loading error:", {
+        currentVideo,
+        videoUrl,
+        error: e,
+        videoElement: videoRef.current,
+      });
+      setIsLoading(false);
+    },
+    [currentVideo, videoUrl]
+  );
+
+  const goToPrevious = useCallback(() => {
+    setCurrentIndex((prev) => (prev > 0 ? prev - 1 : videos.length - 1));
+  }, [videos.length]);
+
+  const goToNext = useCallback(() => {
+    setCurrentIndex((prev) => (prev < videos.length - 1 ? prev + 1 : 0));
+  }, [videos.length]);
+
+  // Effects
   useEffect(() => {
     if (isOpen) {
       setIsLoading(true);
@@ -58,97 +177,71 @@ export default function VideoPlayerModal({
     }
   }, [currentIndex, isOpen]);
 
-  // Reset when modal opens
   useEffect(() => {
     if (isOpen) {
       setCurrentIndex(initialVideoIndex);
     }
   }, [isOpen, initialVideoIndex]);
 
-  const handlePlayPause = () => {
-    if (videoRef.current) {
-      if (isPlaying) {
-        videoRef.current.pause();
-      } else {
-        videoRef.current.play();
+  useEffect(() => {
+    if (!isOpen && videoRef.current) {
+      videoRef.current.pause();
+      setIsPlaying(false);
+    }
+  }, [isOpen]);
+
+  useEffect(() => {
+    if (!isOpen) return;
+
+    const handleKeyPress = (e: KeyboardEvent) => {
+      switch (e.key) {
+        case " ":
+        case "k":
+          e.preventDefault();
+          handlePlayPause();
+          break;
+        case "ArrowLeft":
+          if (videos.length > 1) {
+            e.preventDefault();
+            goToPrevious();
+          }
+          break;
+        case "ArrowRight":
+          if (videos.length > 1) {
+            e.preventDefault();
+            goToNext();
+          }
+          break;
+        case "m":
+          e.preventDefault();
+          handleMuteUnmute();
+          break;
+        case "f":
+          e.preventDefault();
+          handleFullscreen();
+          break;
+        case "Escape":
+          onClose();
+          break;
       }
-      setIsPlaying(!isPlaying);
-    }
-  };
+    };
 
-  const handleMuteUnmute = () => {
-    if (videoRef.current) {
-      videoRef.current.muted = !isMuted;
-      setIsMuted(!isMuted);
-    }
-  };
+    window.addEventListener("keydown", handleKeyPress);
+    return () => window.removeEventListener("keydown", handleKeyPress);
+  }, [
+    isOpen,
+    videos.length,
+    handlePlayPause,
+    handleMuteUnmute,
+    handleFullscreen,
+    goToPrevious,
+    goToNext,
+    onClose,
+  ]);
 
-  const handleFullscreen = () => {
-    if (videoRef.current) {
-      if (videoRef.current.requestFullscreen) {
-        videoRef.current.requestFullscreen();
-      }
-    }
-  };
-
-  const handleTimeUpdate = () => {
-    if (videoRef.current) {
-      const current = videoRef.current.currentTime;
-      const total = videoRef.current.duration;
-      setCurrentTime(current);
-      setProgress((current / total) * 100);
-    }
-  };
-
-  const handleLoadedMetadata = () => {
-    if (videoRef.current) {
-      setDuration(videoRef.current.duration);
-      setIsLoading(false);
-    }
-  };
-
-  const handleProgressClick = (e: React.MouseEvent<HTMLDivElement>) => {
-    if (videoRef.current) {
-      const rect = e.currentTarget.getBoundingClientRect();
-      const clickX = e.clientX - rect.left;
-      const percentage = clickX / rect.width;
-      const newTime = percentage * duration;
-      videoRef.current.currentTime = newTime;
-      setProgress(percentage * 100);
-    }
-  };
-
-  const goToPrevious = () => {
-    setCurrentIndex((prev) => (prev > 0 ? prev - 1 : videos.length - 1));
-  };
-
-  const goToNext = () => {
-    setCurrentIndex((prev) => (prev < videos.length - 1 ? prev + 1 : 0));
-  };
-
-  const formatTime = (seconds: number) => {
-    const mins = Math.floor(seconds / 60);
-    const secs = Math.floor(seconds % 60);
-    return `${mins}:${secs.toString().padStart(2, "0")}`;
-  };
-
-  const getVideoUrl = (video: Video) => {
-    if (video.url.startsWith("http")) {
-      return video.url;
-    }
-    return `${process.env.NEXT_PUBLIC_BASE_URL}/${video.url}`;
-  };
-
-  const handleVideoError = (
-    e: React.SyntheticEvent<HTMLVideoElement, Event>
-  ) => {
-    console.error("Video loading error:", {
-      currentVideo,
-      videoUrl: getVideoUrl(currentVideo),
-      error: e,
-    });
-    setIsLoading(false);
-  };
+  if (!currentVideo) {
+    return null;
+  }
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
@@ -185,18 +278,17 @@ export default function VideoPlayerModal({
             )}
             <video
               ref={videoRef}
-              src={getVideoUrl(currentVideo)}
+              src={videoUrl}
               className="w-full h-full"
               onTimeUpdate={handleTimeUpdate}
               onLoadedMetadata={handleLoadedMetadata}
               onEnded={() => setIsPlaying(false)}
               onClick={handlePlayPause}
               onError={handleVideoError}
-              onLoadStart={() =>
-                console.log("Video loading started:", getVideoUrl(currentVideo))
-              }
               crossOrigin="anonymous"
               playsInline
+              preload="metadata"
+              aria-label={currentVideo?.title || `Video ${currentIndex + 1}`}
             />
 
             {/* Play/Pause Overlay */}
