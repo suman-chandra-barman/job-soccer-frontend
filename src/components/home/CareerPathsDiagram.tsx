@@ -112,7 +112,7 @@ ConnectionLine.displayName = "ConnectionLine";
 // Central Logo Component
 const CentralLogo = memo(() => (
   <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-10">
-    <div className="relative w-32 h-32 animate-breathing-glow">
+    <div className="relative w-32 h-32 animate-breathing-glow rounded-full">
       {/* Outer decorative rings */}
       <div className="absolute inset-0 rounded-full border border-gray-200 opacity-30 animate-pulse" />
       <div className="absolute inset-2 rounded-full border border-gray-300 opacity-40" />

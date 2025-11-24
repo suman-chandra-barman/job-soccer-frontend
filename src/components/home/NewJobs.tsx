@@ -10,8 +10,7 @@ import { JobCard } from "../cards/JobCard";
 export function NewJobs() {
   const { data: jobsData, isLoading } = useGetNewFourJobsQuery(undefined);
   const jobs: TJob[] = jobsData?.data || [];
-
-  console.log("New job data ---> ", jobsData);
+  
   return (
     <div className="bg-[#F7F6F2] rounded-3xl p-4 md:p-6">
       <div className="flex items-center justify-between mb-4">
