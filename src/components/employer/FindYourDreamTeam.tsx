@@ -15,7 +15,7 @@ const FindYourDreamTeam = () => {
     <div className=" bg-white">
       <div className="container mx-auto px-4 py-8 lg:py-16">
         <div className="text-center mb-12">
-          <h2 className="text-xl md:text-4xl font-bold text-[#362F05] mb-1">
+          <h2 className="text-xl md:text-4xl font-bold text-[#362F05]">
             Find Your Dream Team
           </h2>
         </div>

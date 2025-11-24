@@ -18,14 +18,14 @@ const FindYourDreamTeam = () => {
     <div className="min-h-screen bg-white">
       <div className="container mx-auto px-4 py-8 lg:py-16">
         <div className="text-center mb-12">
-          <h2 className="text-2xl md:text-4xl font-bold text-[#362F05] mb-1">
-            Find your dream job!
+          <h2 className="text-xl md:text-4xl font-bold text-[#362F05]">
+            Find Your Dream Job
           </h2>
         </div>
         <div className="grid grid-cols-1 lg:grid-cols-5 gap-8 items-start">
           {/* Left Column - Opportunities */}
           <div className={`space-y-6 py-8 lg:col-span-2`}>
-            <h2 className="text-2xl md:text-4xl font-bold text-[#362F05] leading-tight">
+            <h2 className="text-xl md:text-4xl font-bold text-[#362F05] leading-tight">
               Find the Right Opportunity for You
             </h2>
             <div className="space-y-8 text-[#504A20]">
