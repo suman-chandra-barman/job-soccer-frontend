@@ -15,7 +15,7 @@ export function EmployerCard({ employer }: { employer: IEmployer }) {
   // Get profile image URL
   const getEmployerLogoUrl = () => {
     if (employer?.profileImage) {
-      return `${process.env.NEXT_PUBLIC_IMAGE_BASE_URL}${employer.profileImage}`;
+      return `${process.env.NEXT_PUBLIC_BASE_URL}${employer.profileImage}`;
     }
     return null;
   };
@@ -89,7 +89,10 @@ export function EmployerCard({ employer }: { employer: IEmployer }) {
         </div>
       </div>
       <div className="border-t border-gray-200 pt-4 flex flex-wrap gap-2 items-center">
-        <Button variant="outline" className="flex-1 hover:scale-105 transition-transform duration-200 font-semibold px-6 py-3">
+        <Button
+          variant="outline"
+          className="flex-1 hover:scale-105 transition-transform duration-200 font-semibold px-6 py-3"
+        >
           <UserRoundPlus className="w-6 h-6" />
           Follow
         </Button>

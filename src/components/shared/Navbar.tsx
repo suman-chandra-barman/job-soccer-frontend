@@ -256,7 +256,7 @@ const getNavLinks = (
 
 const getProfileImageUrl = (profileImage?: string): string | undefined => {
   if (!profileImage) return undefined;
-  return `${process.env.NEXT_PUBLIC_IMAGE_BASE_URL}${profileImage}`;
+  return `${process.env.NEXT_PUBLIC_BASE_URL}${profileImage}`;
 };
 
 // ==================== Main Component ====================

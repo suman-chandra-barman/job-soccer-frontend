@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { Card, CardContent } from "../ui/card";
 import { Bookmark, Lock, MapPin, MessageCircle, SquarePen } from "lucide-react";
 import { FaPlayCircle } from "react-icons/fa";
@@ -16,8 +16,10 @@ import {
   removeFromShortlist,
 } from "@/redux/features/candidateShortlist/candidateShortlistSlice";
 import { toast } from "sonner";
+import VideoPlayerModal from "../modals/VideoPlayerModal";
 
 function CandidateCard({ candidate }: { candidate: ICandidate }) {
+  const [isVideoModalOpen, setIsVideoModalOpen] = useState(false);
   const dispatch = useAppDispatch();
   const shortlistedIds = useAppSelector(
     (state) => state.candidateShortlist.shortlistedIds
@@ -45,6 +47,8 @@ function CandidateCard({ candidate }: { candidate: ICandidate }) {
       toast.error(err?.data?.message || "Failed to update shortlist");
     }
   };
+
+  console.log("candidate data--->", candidate);
   return (
     <div>
       <Card className="bg-gradient-to-br from-white to-[#FDF9E3] border-0 shadow-sm hover:shadow-md transition-shadow">
@@ -54,7 +58,7 @@ function CandidateCard({ candidate }: { candidate: ICandidate }) {
             {candidate?.profileImage ? (
               <div className="w-12 h-12 rounded-full overflow-hidden border-2 border-transparent hover:border-green-500 transition-colors">
                 <Image
-                  src={`${process.env.NEXT_PUBLIC_IMAGE_BASE_URL}${candidate.profileImage}`}
+                  src={`${process.env.NEXT_PUBLIC_BASE_URL}${candidate.profileImage}`}
                   alt={`${candidate?.firstName || ""} ${
                     candidate?.lastName || ""
                   }`}
@@ -99,9 +103,16 @@ function CandidateCard({ candidate }: { candidate: ICandidate }) {
             <SquarePen className="w-4 h-4" />
             View Profile
           </button>
-          <button className="flex mb-6 items-center gap-1 text-sm  transition-colors">
+          <button
+            onClick={() => setIsVideoModalOpen(true)}
+            disabled={!candidate?.profile?.videos?.length}
+            className="flex mb-6 items-center gap-1 text-sm transition-colors cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
+          >
             <FaPlayCircle className="w-4 h-4 text-red-500 hover:text-red-600" />
-            Watch Interview
+            Watch Interview{" "}
+            {candidate?.profile?.videos?.length
+              ? `(${candidate.profile.videos.length})`
+              : ""}
           </button>
 
           {/* Action Buttons */}
@@ -154,6 +165,16 @@ function CandidateCard({ candidate }: { candidate: ICandidate }) {
           </div>
         </CardContent>
       </Card>
+
+      {/* Video Player Modal */}
+      {candidate?.profile?.videos?.length > 0 && (
+        <VideoPlayerModal
+          isOpen={isVideoModalOpen}
+          onClose={() => setIsVideoModalOpen(false)}
+          videos={candidate.profile.videos}
+          candidateName={`${candidate.firstName} ${candidate.lastName}`}
+        />
+      )}
     </div>
   );
 }
