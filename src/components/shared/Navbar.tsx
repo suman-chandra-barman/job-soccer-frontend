@@ -53,6 +53,7 @@ interface NavLink {
 interface UserProfileMenuProps {
   profileImageUrl?: string;
   userName?: string;
+  userType?: "candidate" | "employer";
   onLogout: () => void;
   size?: "sm" | "md";
 }
@@ -121,10 +122,20 @@ const MOCK_NOTIFICATIONS: NotificationItem[] = [
 const UserProfileMenu: React.FC<UserProfileMenuProps> = ({
   profileImageUrl,
   userName = "U",
+  userType,
   onLogout,
   size = "md",
 }) => {
+  const router = useRouter();
   const avatarSize = size === "sm" ? "w-11 h-11" : "w-13 h-13";
+
+  const handleProfileClick = () => {
+    if (userType === "candidate") {
+      router.push("/profile/candidate");
+    } else if (userType === "employer") {
+      router.push("/profile/employer");
+    }
+  };
 
   return (
     <DropdownMenu>
@@ -154,7 +165,12 @@ const UserProfileMenu: React.FC<UserProfileMenuProps> = ({
         </button>
       </DropdownMenuTrigger>
       <DropdownMenuContent className="w-56" align="end">
-        <DropdownMenuItem className="cursor-pointer">Profile</DropdownMenuItem>
+        <DropdownMenuItem
+          onClick={handleProfileClick}
+          className="cursor-pointer"
+        >
+          Profile
+        </DropdownMenuItem>
         <DropdownMenuSeparator />
         <DropdownMenuItem
           onClick={onLogout}
@@ -345,6 +361,7 @@ export function Navbar() {
               <UserProfileMenu
                 profileImageUrl={profileImageUrl}
                 userName={user?.data?.firstName}
+                userType={user?.data?.userType}
                 onLogout={handleLogout}
                 size="sm"
               />
@@ -368,6 +385,7 @@ export function Navbar() {
                 <UserProfileMenu
                   profileImageUrl={profileImageUrl}
                   userName={user?.data?.firstName}
+                  userType={user?.data?.userType}
                   onLogout={handleLogout}
                   size="md"
                 />
