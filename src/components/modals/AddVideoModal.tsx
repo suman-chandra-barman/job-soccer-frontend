@@ -19,15 +19,33 @@ interface UploadedVideo {
   duration?: number;
 }
 
+interface Video {
+  _id: string;
+  url: string;
+  title: string;
+  duration: number;
+  uploadedAt: string;
+}
+
 interface AddVideoModalProps {
   isOpen: boolean;
   onClose: () => void;
+  initialData?: Video;
+  userId?: string;
 }
 
-export default function AddVideoModal({ isOpen, onClose }: AddVideoModalProps) {
+export default function AddVideoModal({
+  isOpen,
+  onClose,
+  initialData,
+  userId,
+}: AddVideoModalProps) {
   const [uploadedVideos, setUploadedVideos] = useState<UploadedVideo[]>([]);
   const [isDragOver, setIsDragOver] = useState(false);
+  const [videoTitle, setVideoTitle] = useState(initialData?.title || "");
   const fileInputRef = useRef<HTMLInputElement>(null);
+
+  const isEditMode = !!initialData;
 
   const handleDragOver = (e: React.DragEvent) => {
     e.preventDefault();
@@ -95,6 +113,7 @@ export default function AddVideoModal({ isOpen, onClose }: AddVideoModalProps) {
 
   const handleClose = () => {
     setUploadedVideos([]);
+    setVideoTitle("");
     onClose();
   };
 
@@ -103,43 +122,65 @@ export default function AddVideoModal({ isOpen, onClose }: AddVideoModalProps) {
       <DialogContent className="sm:max-w-[500px] md:max-w-[600px] max-h-[90vh] overflow-y-auto">
         <DialogHeader>
           <DialogTitle className="text-left text-gray-900 font-medium">
-            Upload your highlight videos or training footage
+            {isEditMode
+              ? "Edit Video"
+              : "Upload your highlight videos or training footage"}
           </DialogTitle>
         </DialogHeader>
 
         <div className="space-y-4">
+          {/* Video Title Input */}
+          <div>
+            <label
+              htmlFor="videoTitle"
+              className="block text-sm font-medium text-gray-700 mb-2"
+            >
+              Video Title
+            </label>
+            <input
+              id="videoTitle"
+              type="text"
+              value={videoTitle}
+              onChange={(e) => setVideoTitle(e.target.value)}
+              placeholder="e.g., Match Highlights - Championship Game"
+              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+            />
+          </div>
+
           {/* Upload Area */}
-          <div
-            className={`border-2 border-dashed rounded-lg p-8 text-center transition-colors ${
-              isDragOver
-                ? "border-blue-400 bg-blue-50"
-                : "border-gray-300 bg-gray-50"
-            }`}
-            onDragOver={handleDragOver}
-            onDragLeave={handleDragLeave}
-            onDrop={handleDrop}
-          >
-            <div className="flex flex-col items-center space-y-3">
-              <div className="w-12 h-12 bg-gray-200 rounded-lg flex items-center justify-center">
-                <Upload className="w-6 h-6 text-gray-500" />
-              </div>
-              <div>
-                <p className="text-gray-700 font-medium">
-                  Drag & Drop or{" "}
-                  <button
-                    onClick={() => fileInputRef.current?.click()}
-                    className="text-blue-600 hover:text-blue-700 underline font-medium"
-                  >
-                    Choose files
-                  </button>{" "}
-                  to upload
-                </p>
-                <p className="text-sm text-gray-500 mt-1">
-                  MP4, AVI, MOV, WMV, WEBM (Max 100MB per file)
-                </p>
+          {!isEditMode && (
+            <div
+              className={`border-2 border-dashed rounded-lg p-8 text-center transition-colors ${
+                isDragOver
+                  ? "border-blue-400 bg-blue-50"
+                  : "border-gray-300 bg-gray-50"
+              }`}
+              onDragOver={handleDragOver}
+              onDragLeave={handleDragLeave}
+              onDrop={handleDrop}
+            >
+              <div className="flex flex-col items-center space-y-3">
+                <div className="w-12 h-12 bg-gray-200 rounded-lg flex items-center justify-center">
+                  <Upload className="w-6 h-6 text-gray-500" />
+                </div>
+                <div>
+                  <p className="text-gray-700 font-medium">
+                    Drag & Drop or{" "}
+                    <button
+                      onClick={() => fileInputRef.current?.click()}
+                      className="text-blue-600 hover:text-blue-700 underline font-medium"
+                    >
+                      Choose files
+                    </button>{" "}
+                    to upload
+                  </p>
+                  <p className="text-sm text-gray-500 mt-1">
+                    MP4, AVI, MOV, WMV, WEBM (Max 100MB per file)
+                  </p>
+                </div>
               </div>
             </div>
-          </div>
+          )}
 
           {/* Hidden File Input */}
           <input
@@ -198,10 +239,16 @@ export default function AddVideoModal({ isOpen, onClose }: AddVideoModalProps) {
           </Button>
           <Button
             onClick={handleSubmit}
-            disabled={uploadedVideos.length === 0}
+            disabled={
+              isEditMode
+                ? !videoTitle
+                : uploadedVideos.length === 0 || !videoTitle
+            }
             className="bg-blue-600 hover:bg-blue-700 text-white"
           >
-            Upload Videos ({uploadedVideos.length})
+            {isEditMode
+              ? "Update Video"
+              : `Upload Videos (${uploadedVideos.length})`}
           </Button>
         </DialogFooter>
       </DialogContent>

@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
 
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -9,24 +8,21 @@ import {
   UserPlus,
   Edit,
   Award,
-  Play,
-  GraduationCap,
   LayoutGrid,
   Upload,
   Mail,
 } from "lucide-react";
 import Image from "next/image";
 import { useState, useRef, useEffect } from "react";
-import AddEducationModal from "@/components/modals/AddEducationModal";
 import UploadResumeModal from "@/components/modals/UploadResumeModal";
 import EditPersonalInformationModal from "@/components/modals/EditPersonalInformationModal";
 import EditPlayerDetailsModal from "@/components/modals/EditPlayerDetailsModal";
-import EditEducationModal from "@/components/modals/EditEducationModal";
-import AddVideoModal from "@/components/modals/AddVideoModal";
 import { useAppSelector } from "@/redux/hooks";
 import { ProfileSkeleton } from "@/components/skeleton";
 import ExperienceSection from "@/components/profile/ExperienceSection";
 import CertificateSection from "@/components/profile/CertificateSection";
+import EducationSection from "@/components/profile/EducationSection";
+import VideoSection from "@/components/profile/VideoSection";
 
 const initialUser = {
   name: "Suman Barman",
@@ -39,72 +35,17 @@ const initialUser = {
   },
 };
 
-const education = [
-  {
-    id: "edu-001",
-    schoolName: "University of Barcelona",
-    degree: "Bachelor of Science",
-    fieldOfStudy: "Sports Science and Physical Education",
-    grade: "3.8 GPA",
-    startMonth: "September",
-    startYear: "2010",
-    endMonth: "June",
-    endYear: "2014",
-    description:
-      "Comprehensive study of sports science including biomechanics, exercise physiology, sports psychology, and nutrition. Specialized in football performance analysis and athlete development. Completed thesis on 'Impact of High-Intensity Training on Professional Football Players' which received academic recognition.",
-  },
-  {
-    id: "edu-002",
-    schoolName: "Real Madrid Graduate School - Universidad Europea",
-    degree: "Master of Science",
-    fieldOfStudy: "Football Management and Analytics",
-    grade: "4.0 GPA",
-    startMonth: "January",
-    startYear: "2015",
-    endMonth: "December",
-    endYear: "2016",
-    description:
-      "Advanced program focusing on modern football management, data analytics, tactical analysis, and sports business administration. Collaborated with Real Madrid coaching staff on research projects involving player performance metrics and team strategy optimization. Graduated summa cum laude with specialization in youth academy development.",
-  },
-];
-const videos = [
-  {
-    id: "1",
-    thumbnail:
-      "https://images.pexels.com/photos/274422/pexels-photo-274422.jpeg?auto=compress&cs=tinysrgb&w=300&h=200&dpr=1",
-    title: "Training Session 1",
-  },
-  {
-    id: "2",
-    thumbnail:
-      "https://images.pexels.com/photos/1618200/pexels-photo-1618200.jpeg?auto=compress&cs=tinysrgb&w=300&h=200&dpr=1",
-    title: "Match Highlights",
-  },
-  {
-    id: "3",
-    thumbnail:
-      "https://images.pexels.com/photos/1618269/pexels-photo-1618269.jpeg?auto=compress&cs=tinysrgb&w=300&h=200&dpr=1",
-    title: "Skills Training",
-  },
-];
-
 export default function MyProfilePage() {
   // Get user data from Redux store
   const currentUser = useAppSelector((state) => state.auth.user);
 
-  const [isAddEducationModalOpen, setIsAddEducationModalOpen] = useState(false);
-  const [isEditEducationModalOpen, setIsEditEducationModalOpen] =
-    useState(false);
   const [isUploadModalOpen, setIsUploadModalOpen] = useState(false);
-  const [isAddVideoModalOpen, setIsAddVideoModalOpen] = useState(false);
   const [
     isEditPersonalInformationModalOpen,
     setIsEditPersonalInformationModalOpen,
   ] = useState(false);
   const [isEditPlayerDetailsModalOpen, setIsPlayerDetailsModalOpen] =
     useState(false);
-
-  const [editEducation, setEditEducation] = useState<any>(null);
 
   const [user, setUser] = useState(initialUser);
   const [bannerImage, setBannerImage] = useState<string>("");
@@ -290,14 +231,6 @@ export default function MyProfilePage() {
         </div>
 
         <div className="flex flex-wrap gap-3">
-          <Button
-            variant="outline"
-            className="flex items-center rounded-full"
-            onClick={() => setIsAddEducationModalOpen(true)}
-          >
-            <Plus className="mr-1 h-4 w-4" />
-            Add Education
-          </Button>
           <Button
             variant="outline"
             className="flex items-center rounded-full"
@@ -687,134 +620,20 @@ export default function MyProfilePage() {
         <CertificateSection userId={currentUser?._id || ""} />
 
         {/* -------------------------Education Section----------------------- */}
-        <Card className="mb-6">
-          <CardHeader>
-            <div className="flex items-center justify-between">
-              <CardTitle className="text-lg lg:text-xl">Education</CardTitle>
-              <Button
-                variant="ghost"
-                size="sm"
-                onClick={() => setIsAddEducationModalOpen(true)}
-              >
-                <Plus className="h-4 w-4" />
-                <span className="hidden sm:inline ml-1">Add</span>
-              </Button>
-            </div>
-          </CardHeader>
-          <CardContent className="space-y-4 lg:space-y-6 px-0">
-            {education.map((edu) => (
-              <div
-                key={edu.id}
-                className="flex space-x-3 lg:space-x-4 p-3 lg:p-4 hover:bg-gray-50 transition-colors"
-              >
-                <div className="flex-shrink-0">
-                  <div className="w-10 h-10 lg:w-12 lg:h-12 bg-gray-100 rounded-lg flex items-center justify-center">
-                    <GraduationCap className="h-5 w-5 lg:h-6 lg:w-6 text-gray-600" />
-                  </div>
-                </div>
-
-                <div className="flex-1 min-w-0">
-                  <div className="flex items-start justify-between">
-                    <div>
-                      <h3 className="font-semibold text-gray-900 text-sm lg:text-base">
-                        {edu.schoolName}
-                      </h3>
-                      <p className="text-xs lg:text-sm text-gray-600">
-                        Degree: {edu.degree}
-                      </p>
-                      <p className="text-xs lg:text-sm text-gray-600">
-                        Field of study: {edu.fieldOfStudy}
-                      </p>
-                      <p className="text-xs lg:text-sm text-gray-600">
-                        Grade: {edu.grade}
-                      </p>
-                      <p className="text-xs lg:text-sm text-gray-500">
-                        {edu.startMonth} {edu.startYear} -{" "}
-                        {`${
-                          !edu.endMonth
-                            ? "Present"
-                            : `${edu.endMonth}
-                              ${edu.endYear}`
-                        }`}
-                      </p>
-                    </div>
-                    <Button
-                      variant="ghost"
-                      size="sm"
-                      onClick={() => {
-                        setEditEducation(edu);
-                        setIsEditEducationModalOpen(true);
-                      }}
-                    >
-                      <Edit className="h-3 w-3 lg:h-4 lg:w-4" />
-                      Edit
-                    </Button>
-                  </div>
-
-                  <p className="mt-2 lg:mt-3 text-xs lg:text-sm text-gray-700 line-clamp-3">
-                    {edu.description}
-                  </p>
-                </div>
-              </div>
-            ))}
-          </CardContent>
-        </Card>
+        <EducationSection userId={currentUser?._id || ""} />
 
         {/* -------------------------Videos Section----------------------- */}
-        <Card>
-          <CardHeader>
-            <div className="flex items-center justify-between">
-              <CardTitle className="text-lg lg:text-xl">Videos</CardTitle>
-              <Button
-                variant="ghost"
-                size="sm"
-                onClick={() => setIsAddVideoModalOpen(true)}
-              >
-                <Plus className="h-4 w-4" />
-                <span className="hidden sm:inline ml-1">Add</span>
-              </Button>
-            </div>
-          </CardHeader>
-          <CardContent>
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-              {videos.map((video) => (
-                <div key={video.id} className="relative group cursor-pointer">
-                  <div className="relative aspect-video bg-gray-200 rounded-lg overflow-hidden">
-                    <Image
-                      src={video.thumbnail}
-                      alt={video.title}
-                      fill
-                      className="object-cover group-hover:scale-105 transition-transform duration-300"
-                    />
-                    <div className="absolute inset-0 bg-black bg-opacity-30 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                      <div className="w-12 h-12 bg-white bg-opacity-90 rounded-full flex items-center justify-center">
-                        <Play className="h-6 w-6 text-gray-800 ml-1" />
-                      </div>
-                    </div>
-                  </div>
-                  <p className="mt-2 text-sm font-medium text-gray-900">
-                    {video.title}
-                  </p>
-                </div>
-              ))}
-            </div>
-          </CardContent>
-        </Card>
+        <VideoSection
+          videos={currentUser?.profile?.videos || []}
+          userId={currentUser?._id || ""}
+        />
       </div>
 
       {/* ------------------Modals --------------------*/}
-      <AddEducationModal
-        isOpen={isAddEducationModalOpen}
-        onClose={() => setIsAddEducationModalOpen(false)}
-      />
       <UploadResumeModal
         isOpen={isUploadModalOpen}
         onClose={() => setIsUploadModalOpen(false)}
         jobId=""
-      />
-      <AddVideoModal
-        isOpen={isAddVideoModalOpen}
-        onClose={() => setIsAddVideoModalOpen(false)}
       />
       <EditPersonalInformationModal
         isOpen={isEditPersonalInformationModalOpen}
@@ -826,13 +645,6 @@ export default function MyProfilePage() {
         onClose={() => setIsPlayerDetailsModalOpen(false)}
         initialData={currentUser?.profile || {}}
       />
-      {editEducation && (
-        <EditEducationModal
-          isOpen={isEditEducationModalOpen}
-          onClose={() => setIsEditEducationModalOpen(false)}
-          educationData={editEducation}
-        />
-      )}
     </div>
   );
 }

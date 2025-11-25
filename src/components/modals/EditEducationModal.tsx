@@ -1,8 +1,8 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
 
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import * as z from "zod";
 import { useEffect } from "react";
 import {
   Dialog,
@@ -28,39 +28,20 @@ import {
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
+import { Checkbox } from "@/components/ui/checkbox";
 import { months, years } from "@/constants/profile";
-
-const formSchema = z.object({
-  schoolName: z.string().min(1, "School Name is required"),
-  degree: z.string().min(1, "Degree is required"),
-  fieldOfStudy: z.string().min(1, "Field of Study is required"),
-  grade: z.string().min(1, "Grade is required"),
-  startMonth: z.string().min(1, "Start month is required"),
-  startYear: z.string().min(1, "Start year is required"),
-  endMonth: z.string().optional(),
-  endYear: z.string().optional(),
-  description: z.string().min(1, "Description is required"),
-});
-
-export type FormData = z.infer<typeof formSchema>;
-
-export interface EducationData {
-  id?: string;
-  schoolName: string;
-  degree: string;
-  fieldOfStudy: string;
-  grade: string;
-  startMonth: string;
-  startYear: string;
-  endMonth?: string;
-  endYear?: string;
-  description: string;
-}
+import { useUpdateEducationMutation } from "@/redux/api/educationApi";
+import { EducationData } from "@/types/education";
+import { toast } from "sonner";
+import {
+  educationFormSchema,
+  EducationFormData,
+} from "@/shchemas/educationValidation";
 
 interface EditEducationModalProps {
   isOpen: boolean;
   onClose: () => void;
-  educationData: EducationData | null;
+  educationData: EducationData;
 }
 
 export default function EditEducationModal({
@@ -68,42 +49,77 @@ export default function EditEducationModal({
   onClose,
   educationData,
 }: EditEducationModalProps) {
-  const form = useForm<z.infer<typeof formSchema>>({
-    resolver: zodResolver(formSchema),
+  const [updateEducation, { isLoading }] = useUpdateEducationMutation();
+
+  const form = useForm<EducationFormData>({
+    resolver: zodResolver(educationFormSchema),
     defaultValues: {
-      schoolName: "",
+      instituteName: "",
       degree: "",
       fieldOfStudy: "",
-      grade: "",
       startMonth: "",
       startYear: "",
       endMonth: "",
       endYear: "",
+      grade: "",
+      isCurrentlyStudying: false,
       description: "",
     },
   });
+
+  const isCurrentlyStudying = form.watch("isCurrentlyStudying");
 
   // Pre-populate form when educationData changes
   useEffect(() => {
     if (educationData && isOpen) {
       form.reset({
-        schoolName: educationData.schoolName,
+        instituteName: educationData.instituteName,
         degree: educationData.degree,
         fieldOfStudy: educationData.fieldOfStudy,
-        grade: educationData.grade,
         startMonth: educationData.startMonth,
-        startYear: educationData.startYear,
+        startYear: educationData.startYear.toString(),
         endMonth: educationData.endMonth || "",
-        endYear: educationData.endYear || "",
-        description: educationData.description,
+        endYear: educationData.endYear?.toString() || "",
+        grade: educationData.grade || "",
+        isCurrentlyStudying: educationData.isCurrentlyStudying || false,
+        description: educationData.description || "",
       });
     }
   }, [educationData, isOpen, form]);
 
-  const onSubmit = (data: FormData) => {
-    console.log("Updated education data", data);
-    form.reset();
-    onClose();
+  const onSubmit = async (data: EducationFormData) => {
+    if (!educationData._id) return;
+
+    try {
+      const updateData = {
+        instituteName: data.instituteName,
+        degree: data.degree,
+        fieldOfStudy: data.fieldOfStudy,
+        startMonth: data.startMonth,
+        startYear: parseInt(data.startYear),
+        isCurrentlyStudying: data.isCurrentlyStudying,
+        ...(data.grade && { grade: data.grade }),
+        ...(data.description && { description: data.description }),
+        ...(data.endMonth && { endMonth: data.endMonth }),
+        ...(data.endYear && { endYear: parseInt(data.endYear) }),
+      };
+
+      const result = await updateEducation({
+        id: educationData._id,
+        body: updateData,
+      }).unwrap();
+
+      if (result.success) {
+        toast.success(result.message || "Education updated successfully!");
+        form.reset();
+        onClose();
+      }
+    } catch (error: any) {
+      toast.error(
+        error?.data?.message || "Failed to update education. Please try again."
+      );
+      console.error("Error updating education:", error);
+    }
   };
 
   const handleClose = () => {
@@ -124,18 +140,18 @@ export default function EditEducationModal({
 
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
-            {/* School Name */}
+            {/* Institute Name */}
             <FormField
               control={form.control}
-              name="schoolName"
+              name="instituteName"
               render={({ field }) => (
                 <FormItem>
                   <FormLabel className="text-sm font-medium text-gray-700">
-                    School Name
+                    Institute Name
                   </FormLabel>
                   <FormControl>
                     <Input
-                      placeholder="Ex: Harvard University"
+                      placeholder="Ex: University of Dhaka"
                       {...field}
                       className="mt-1"
                     />
@@ -177,7 +193,7 @@ export default function EditEducationModal({
                   </FormLabel>
                   <FormControl>
                     <Input
-                      placeholder="Ex: Sports Science"
+                      placeholder="Ex: Computer Science and Engineering"
                       {...field}
                       className="mt-1"
                     />
@@ -187,23 +203,23 @@ export default function EditEducationModal({
               )}
             />
 
-            {/* Grade */}
+            {/* Currently Studying Checkbox */}
             <FormField
               control={form.control}
-              name="grade"
+              name="isCurrentlyStudying"
               render={({ field }) => (
-                <FormItem>
-                  <FormLabel className="text-sm font-medium text-gray-700">
-                    Grade
-                  </FormLabel>
+                <FormItem className="flex flex-row items-start space-x-3 space-y-0">
                   <FormControl>
-                    <Input
-                      placeholder="Ex: 3.5 GPA"
-                      {...field}
-                      className="mt-1"
+                    <Checkbox
+                      checked={field.value}
+                      onCheckedChange={field.onChange}
                     />
                   </FormControl>
-                  <FormMessage />
+                  <div className="space-y-1 leading-none">
+                    <FormLabel className="text-sm font-normal text-gray-700">
+                      I&apos;m currently studying here
+                    </FormLabel>
+                  </div>
                 </FormItem>
               )}
             />
@@ -230,10 +246,7 @@ export default function EditEducationModal({
                         </FormControl>
                         <SelectContent>
                           {months.map((month) => (
-                            <SelectItem
-                              key={month}
-                              value={month}
-                            >
+                            <SelectItem key={month} value={month}>
                               {month}
                             </SelectItem>
                           ))}
@@ -272,82 +285,102 @@ export default function EditEducationModal({
               </div>
             </div>
 
-            {/* End Date */}
-            <div>
-              <FormLabel className="text-sm font-medium text-gray-700 mb-2 block">
-                End date
-              </FormLabel>
-              <div className="grid grid-cols-2 gap-4">
-                <FormField
-                  control={form.control}
-                  name="endMonth"
-                  render={({ field }) => (
-                    <FormItem>
-                      <Select
-                        onValueChange={field.onChange}
-                        value={field.value || ""}
-                      >
-                        <FormControl className="w-full">
-                          <SelectTrigger>
-                            <SelectValue placeholder="Month" />
-                          </SelectTrigger>
-                        </FormControl>
-                        <SelectContent>
-                          {months.map((month) => (
-                            <SelectItem
-                              key={month}
-                              value={month}
-                            >
-                              {month}
-                            </SelectItem>
-                          ))}
-                        </SelectContent>
-                      </Select>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-                <FormField
-                  control={form.control}
-                  name="endYear"
-                  render={({ field }) => (
-                    <FormItem>
-                      <Select
-                        onValueChange={field.onChange}
-                        value={field.value || ""}
-                      >
-                        <FormControl className="w-full">
-                          <SelectTrigger>
-                            <SelectValue placeholder="Year" />
-                          </SelectTrigger>
-                        </FormControl>
-                        <SelectContent>
-                          {years.map((year) => (
-                            <SelectItem key={year} value={year}>
-                              {year}
-                            </SelectItem>
-                          ))}
-                        </SelectContent>
-                      </Select>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
+            {/* End Date - Only show if not currently studying */}
+            {!isCurrentlyStudying && (
+              <div>
+                <FormLabel className="text-sm font-medium text-gray-700 mb-2 block">
+                  End date
+                </FormLabel>
+                <div className="grid grid-cols-2 gap-4">
+                  <FormField
+                    control={form.control}
+                    name="endMonth"
+                    render={({ field }) => (
+                      <FormItem>
+                        <Select
+                          onValueChange={field.onChange}
+                          value={field.value || ""}
+                        >
+                          <FormControl className="w-full">
+                            <SelectTrigger>
+                              <SelectValue placeholder="Month" />
+                            </SelectTrigger>
+                          </FormControl>
+                          <SelectContent>
+                            {months.map((month) => (
+                              <SelectItem key={month} value={month}>
+                                {month}
+                              </SelectItem>
+                            ))}
+                          </SelectContent>
+                        </Select>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                  <FormField
+                    control={form.control}
+                    name="endYear"
+                    render={({ field }) => (
+                      <FormItem>
+                        <Select
+                          onValueChange={field.onChange}
+                          value={field.value || ""}
+                        >
+                          <FormControl className="w-full">
+                            <SelectTrigger>
+                              <SelectValue placeholder="Year" />
+                            </SelectTrigger>
+                          </FormControl>
+                          <SelectContent>
+                            {years.map((year) => (
+                              <SelectItem key={year} value={year}>
+                                {year}
+                              </SelectItem>
+                            ))}
+                          </SelectContent>
+                        </Select>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                </div>
               </div>
-            </div>
+            )}
 
-            {/* Description */}
+            {/* Grade (Optional) */}
+            <FormField
+              control={form.control}
+              name="grade"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel className="text-sm font-medium text-gray-700">
+                    Grade (Optional)
+                  </FormLabel>
+                  <FormControl>
+                    <Input
+                      placeholder="Ex: 3.85 CGPA"
+                      {...field}
+                      className="mt-1"
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+
+            {/* Description (Optional) */}
             <FormField
               control={form.control}
               name="description"
               render={({ field }) => (
                 <FormItem>
                   <FormLabel className="text-sm font-medium text-gray-700">
-                    Description
+                    Description (Optional)
                   </FormLabel>
                   <FormControl>
                     <Textarea
-                      placeholder="Describe your education experience"
+                      placeholder="Describe your education experience..."
                       className="mt-1 min-h-[100px] resize-none"
                       {...field}
                     />
@@ -359,14 +392,20 @@ export default function EditEducationModal({
 
             {/* Action Buttons */}
             <div className="flex justify-end space-x-3 pt-4">
-              <Button type="button" variant="outline" onClick={handleClose}>
+              <Button
+                type="button"
+                variant="outline"
+                onClick={handleClose}
+                disabled={isLoading}
+              >
                 Cancel
               </Button>
               <Button
                 type="submit"
                 className="bg-black hover:bg-gray-800 text-white"
+                disabled={isLoading}
               >
-                Update
+                {isLoading ? "Updating..." : "Update"}
               </Button>
             </div>
           </form>

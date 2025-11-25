@@ -1,8 +1,8 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
 
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import * as z from "zod";
 import {
   Dialog,
   DialogContent,
@@ -27,51 +27,72 @@ import {
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
+import { Checkbox } from "@/components/ui/checkbox";
 import { months, years } from "@/constants/profile";
+import { useCreateEducationMutation } from "@/redux/api/educationApi";
+import { toast } from "sonner";
+import {
+  educationFormSchema,
+  EducationFormData,
+} from "@/shchemas/educationValidation";
 
-const formSchema = z.object({
-  schoolName: z.string().min(1, "School Name is required"),
-  degree: z.string().min(1, "Degree is required"),
-  fieldOfStudy: z.string().min(1, "Field of Study is required"),
-  grade: z.string().min(1, "Grade is required"),
-  startMonth: z.string().min(1, "Start month is required"),
-  startYear: z.string().min(1, "Start year is required"),
-  endMonth: z.string().optional(),
-  endYear: z.string().optional(),
-  description: z.string().min(1, "Description is required"),
-});
-
-export type FormData = z.infer<typeof formSchema>;
-
-interface AddExperienceModalProps {
+interface AddEducationModalProps {
   isOpen: boolean;
   onClose: () => void;
 }
 
-
-export default function AddExperienceOrCertificationsModal({
+export default function AddEducationModal({
   isOpen,
   onClose,
-}: AddExperienceModalProps) {
-  const form = useForm<z.infer<typeof formSchema>>({
-    resolver: zodResolver(formSchema),
+}: AddEducationModalProps) {
+  const [createEducation, { isLoading }] = useCreateEducationMutation();
+
+  const form = useForm<EducationFormData>({
+    resolver: zodResolver(educationFormSchema),
     defaultValues: {
-      schoolName: "",
+      instituteName: "",
       degree: "",
       fieldOfStudy: "",
-      grade: "",
       startMonth: "",
       startYear: "",
       endMonth: "",
       endYear: "",
+      grade: "",
+      isCurrentlyStudying: false,
       description: "",
     },
   });
 
-  const onSubmit = (data: FormData) => {
-    console.log("Educaiton data", data);
-    form.reset();
-    onClose();
+  const isCurrentlyStudying = form.watch("isCurrentlyStudying");
+
+  const onSubmit = async (data: EducationFormData) => {
+    try {
+      const educationData = {
+        instituteName: data.instituteName,
+        degree: data.degree,
+        fieldOfStudy: data.fieldOfStudy,
+        startMonth: data.startMonth,
+        startYear: parseInt(data.startYear),
+        isCurrentlyStudying: data.isCurrentlyStudying,
+        ...(data.grade && { grade: data.grade }),
+        ...(data.description && { description: data.description }),
+        ...(data.endMonth && { endMonth: data.endMonth }),
+        ...(data.endYear && { endYear: parseInt(data.endYear) }),
+      };
+
+      const result = await createEducation(educationData).unwrap();
+
+      if (result.success) {
+        toast.success(result.message || "Education added successfully!");
+        form.reset();
+        onClose();
+      }
+    } catch (error: any) {
+      toast.error(
+        error?.data?.message || "Failed to add education. Please try again."
+      );
+      console.error("Error creating education:", error);
+    }
   };
 
   const handleClose = () => {
@@ -92,18 +113,18 @@ export default function AddExperienceOrCertificationsModal({
 
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
-            {/* Name */}
+            {/* Institute Name */}
             <FormField
               control={form.control}
-              name="schoolName"
+              name="instituteName"
               render={({ field }) => (
                 <FormItem>
                   <FormLabel className="text-sm font-medium text-gray-700">
-                    School Name
+                    Institute Name
                   </FormLabel>
                   <FormControl>
                     <Input
-                      placeholder="Ex: Harvard University"
+                      placeholder="Ex: University of Dhaka"
                       {...field}
                       className="mt-1"
                     />
@@ -123,7 +144,11 @@ export default function AddExperienceOrCertificationsModal({
                     Degree
                   </FormLabel>
                   <FormControl>
-                    <Input placeholder="Ex: UEFA" {...field} className="mt-1" />
+                    <Input
+                      placeholder="Ex: Bachelor of Science"
+                      {...field}
+                      className="mt-1"
+                    />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -141,12 +166,33 @@ export default function AddExperienceOrCertificationsModal({
                   </FormLabel>
                   <FormControl>
                     <Input
-                      placeholder="Ex: Business"
+                      placeholder="Ex: Computer Science and Engineering"
                       {...field}
                       className="mt-1"
                     />
                   </FormControl>
                   <FormMessage />
+                </FormItem>
+              )}
+            />
+
+            {/* Currently Studying Checkbox */}
+            <FormField
+              control={form.control}
+              name="isCurrentlyStudying"
+              render={({ field }) => (
+                <FormItem className="flex flex-row items-start space-x-3 space-y-0">
+                  <FormControl>
+                    <Checkbox
+                      checked={field.value}
+                      onCheckedChange={field.onChange}
+                    />
+                  </FormControl>
+                  <div className="space-y-1 leading-none">
+                    <FormLabel className="text-sm font-normal text-gray-700">
+                      I&apos;m currently studying here
+                    </FormLabel>
+                  </div>
                 </FormItem>
               )}
             />
@@ -172,11 +218,8 @@ export default function AddExperienceOrCertificationsModal({
                           </SelectTrigger>
                         </FormControl>
                         <SelectContent>
-                          {months.map((month, index) => (
-                            <SelectItem
-                              key={month}
-                              value={(index + 1).toString()}
-                            >
+                          {months.map((month) => (
+                            <SelectItem key={month} value={month}>
                               {month}
                             </SelectItem>
                           ))}
@@ -215,99 +258,102 @@ export default function AddExperienceOrCertificationsModal({
               </div>
             </div>
 
-            {/* End Date */}
-            <div>
-              <FormLabel className="text-sm font-medium text-gray-700 mb-2 block">
-                End date
-              </FormLabel>
-              <div className="grid grid-cols-2 gap-4">
-                <FormField
-                  control={form.control}
-                  name="endMonth"
-                  render={({ field }) => (
-                    <FormItem>
-                      <Select
-                        onValueChange={field.onChange}
-                        defaultValue={field.value}
-                      >
-                        <FormControl className="w-full">
-                          <SelectTrigger>
-                            <SelectValue placeholder="Month" />
-                          </SelectTrigger>
-                        </FormControl>
-                        <SelectContent>
-                          {months.map((month, index) => (
-                            <SelectItem
-                              key={month}
-                              value={(index + 1).toString()}
-                            >
-                              {month}
-                            </SelectItem>
-                          ))}
-                        </SelectContent>
-                      </Select>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-                <FormField
-                  control={form.control}
-                  name="endYear"
-                  render={({ field }) => (
-                    <FormItem>
-                      <Select
-                        onValueChange={field.onChange}
-                        defaultValue={field.value}
-                      >
-                        <FormControl className="w-full">
-                          <SelectTrigger>
-                            <SelectValue placeholder="Year" />
-                          </SelectTrigger>
-                        </FormControl>
-                        <SelectContent>
-                          {years.map((year) => (
-                            <SelectItem key={year} value={year}>
-                              {year}
-                            </SelectItem>
-                          ))}
-                        </SelectContent>
-                      </Select>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
+            {/* End Date - Only show if not currently studying */}
+            {!isCurrentlyStudying && (
+              <div>
+                <FormLabel className="text-sm font-medium text-gray-700 mb-2 block">
+                  End date
+                </FormLabel>
+                <div className="grid grid-cols-2 gap-4">
+                  <FormField
+                    control={form.control}
+                    name="endMonth"
+                    render={({ field }) => (
+                      <FormItem>
+                        <Select
+                          onValueChange={field.onChange}
+                          defaultValue={field.value}
+                        >
+                          <FormControl className="w-full">
+                            <SelectTrigger>
+                              <SelectValue placeholder="Month" />
+                            </SelectTrigger>
+                          </FormControl>
+                          <SelectContent>
+                            {months.map((month) => (
+                              <SelectItem key={month} value={month}>
+                                {month}
+                              </SelectItem>
+                            ))}
+                          </SelectContent>
+                        </Select>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                  <FormField
+                    control={form.control}
+                    name="endYear"
+                    render={({ field }) => (
+                      <FormItem>
+                        <Select
+                          onValueChange={field.onChange}
+                          defaultValue={field.value}
+                        >
+                          <FormControl className="w-full">
+                            <SelectTrigger>
+                              <SelectValue placeholder="Year" />
+                            </SelectTrigger>
+                          </FormControl>
+                          <SelectContent>
+                            {years.map((year) => (
+                              <SelectItem key={year} value={year}>
+                                {year}
+                              </SelectItem>
+                            ))}
+                          </SelectContent>
+                        </Select>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                </div>
               </div>
-            </div>
+            )}
 
-            {/* Grade */}
+            {/* Grade (Optional) */}
             <FormField
               control={form.control}
               name="grade"
               render={({ field }) => (
                 <FormItem>
                   <FormLabel className="text-sm font-medium text-gray-700">
-                    Grade
+                    Grade (Optional)
                   </FormLabel>
                   <FormControl>
-                    <Input placeholder="Ex: 3.5" {...field} className="mt-1" />
+                    <Input
+                      placeholder="Ex: 3.85 CGPA"
+                      {...field}
+                      className="mt-1"
+                    />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
               )}
             />
 
-            {/* Description */}
+            {/* Description (Optional) */}
             <FormField
               control={form.control}
               name="description"
               render={({ field }) => (
                 <FormItem>
                   <FormLabel className="text-sm font-medium text-gray-700">
-                    Description
+                    Description (Optional)
                   </FormLabel>
                   <FormControl>
                     <Textarea
-                      placeholder="Describe your education"
+                      placeholder="Describe your education experience..."
                       className="mt-1 min-h-[100px] resize-none"
                       {...field}
                     />
@@ -319,14 +365,20 @@ export default function AddExperienceOrCertificationsModal({
 
             {/* Action Buttons */}
             <div className="flex justify-end space-x-3 pt-4">
-              <Button type="button" variant="outline" onClick={handleClose}>
+              <Button
+                type="button"
+                variant="outline"
+                onClick={handleClose}
+                disabled={isLoading}
+              >
                 Cancel
               </Button>
               <Button
                 type="submit"
                 className="bg-black hover:bg-gray-800 text-white"
+                disabled={isLoading}
               >
-                Save
+                {isLoading ? "Saving..." : "Save"}
               </Button>
             </div>
           </form>
