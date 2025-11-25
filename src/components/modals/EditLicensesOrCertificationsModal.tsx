@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
 
 import { useForm } from "react-hook-form";
@@ -29,38 +30,28 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
 import { months, years } from "@/constants/profile";
+import { useUpdateCertificateMutation } from "@/redux/api/certificateApi";
+import { toast } from "sonner";
+import { CertificateData } from "@/types/certificate";
 
 const formSchema = z.object({
   name: z.string().min(1, "Name is required"),
   issuingOrganization: z.string().min(1, "Issuing organization is required"),
-  credentialId: z.string().min(1, "Credential ID is required"),
-  credentialUrl: z.string().min(1, "Credential URL is required"),
+  credentialId: z.string().optional(),
+  credentialUrl: z.string().optional(),
   startMonth: z.string().min(1, "Start month is required"),
   startYear: z.string().min(1, "Start year is required"),
   endMonth: z.string().optional(),
   endYear: z.string().optional(),
-  description: z.string().min(1, "Description is required"),
+  description: z.string().optional(),
 });
 
 export type FormData = z.infer<typeof formSchema>;
 
-export interface LicenseOrCertificationData {
-  id?: string;
-  name: string;
-  issuingOrganization: string;
-  credentialId: string;
-  credentialUrl: string;
-  startMonth: string;
-  startYear: string;
-  endMonth?: string;
-  endYear?: string;
-  description: string;
-}
-
 interface EditLicenseOrCertificationsModalProps {
   isOpen: boolean;
   onClose: () => void;
-  certificationData: LicenseOrCertificationData | null;
+  certificationData: CertificateData | null;
 }
 
 export default function EditLicenseOrCertificationsModal({
@@ -68,6 +59,8 @@ export default function EditLicenseOrCertificationsModal({
   onClose,
   certificationData,
 }: EditLicenseOrCertificationsModalProps) {
+  const [updateCertificate, { isLoading }] = useUpdateCertificateMutation();
+
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -86,24 +79,68 @@ export default function EditLicenseOrCertificationsModal({
   // Pre-populate form when certificationData changes
   useEffect(() => {
     if (certificationData && isOpen) {
+      // Convert month name to ensure it matches the select options
+      const normalizeMonth = (month: string | undefined) => {
+        if (!month) return "";
+        // If it's a number, convert to month name
+        const monthNum = parseInt(month);
+        if (!isNaN(monthNum) && monthNum >= 1 && monthNum <= 12) {
+          return months[monthNum - 1];
+        }
+        // Otherwise, return the month name as is
+        return month;
+      };
+
       form.reset({
         name: certificationData.name,
         issuingOrganization: certificationData.issuingOrganization,
-        credentialId: certificationData.credentialId,
-        credentialUrl: certificationData.credentialUrl,
-        startMonth: certificationData.startMonth,
-        startYear: certificationData.startYear,
-        endMonth: certificationData.endMonth || "",
-        endYear: certificationData.endYear || "",
-        description: certificationData.description,
+        credentialId: certificationData.credentialId || "",
+        credentialUrl: certificationData.credentialUrl || "",
+        startMonth: normalizeMonth(certificationData.startMonth),
+        startYear: certificationData.startYear.toString(),
+        endMonth: normalizeMonth(certificationData.endMonth),
+        endYear: certificationData.endYear?.toString() || "",
+        description: certificationData.description || "",
       });
     }
   }, [certificationData, isOpen, form]);
 
-  const onSubmit = (data: FormData) => {
-    console.log("Updated license/certification data", data);
-    form.reset();
-    onClose();
+  const onSubmit = async (data: FormData) => {
+    if (!certificationData?._id) {
+      toast.error("Certificate ID is missing");
+      return;
+    }
+
+    try {
+      const updateData = {
+        name: data.name,
+        issuingOrganization: data.issuingOrganization,
+        startMonth: data.startMonth,
+        startYear: parseInt(data.startYear),
+        ...(data.endMonth && { endMonth: data.endMonth }),
+        ...(data.endYear && { endYear: parseInt(data.endYear) }),
+        ...(data.credentialId && { credentialId: data.credentialId }),
+        ...(data.credentialUrl && { credentialUrl: data.credentialUrl }),
+        ...(data.description && { description: data.description }),
+      };
+
+      const result = await updateCertificate({
+        id: certificationData._id,
+        body: updateData,
+      }).unwrap();
+
+      if (result.success) {
+        toast.success(result.message || "Certificate updated successfully!");
+        form.reset();
+        onClose();
+      }
+    } catch (error: any) {
+      toast.error(
+        error?.data?.message ||
+          "Failed to update certificate. Please try again."
+      );
+      console.error("Error updating certificate:", error);
+    }
   };
 
   const handleClose = () => {
@@ -175,6 +212,7 @@ export default function EditLicenseOrCertificationsModal({
                     <FormItem>
                       <Select
                         onValueChange={field.onChange}
+                        defaultValue={field.value}
                         value={field.value}
                       >
                         <FormControl className="w-full">
@@ -183,11 +221,8 @@ export default function EditLicenseOrCertificationsModal({
                           </SelectTrigger>
                         </FormControl>
                         <SelectContent>
-                          {months.map((month, index) => (
-                            <SelectItem
-                              key={month}
-                              value={month}
-                            >
+                          {months.map((month) => (
+                            <SelectItem key={month} value={month}>
                               {month}
                             </SelectItem>
                           ))}
@@ -204,6 +239,7 @@ export default function EditLicenseOrCertificationsModal({
                     <FormItem>
                       <Select
                         onValueChange={field.onChange}
+                        defaultValue={field.value}
                         value={field.value}
                       >
                         <FormControl className="w-full">
@@ -239,7 +275,8 @@ export default function EditLicenseOrCertificationsModal({
                     <FormItem>
                       <Select
                         onValueChange={field.onChange}
-                        value={field.value || ""}
+                        defaultValue={field.value}
+                        value={field.value}
                       >
                         <FormControl className="w-full">
                           <SelectTrigger>
@@ -247,11 +284,8 @@ export default function EditLicenseOrCertificationsModal({
                           </SelectTrigger>
                         </FormControl>
                         <SelectContent>
-                          {months.map((month, index) => (
-                            <SelectItem
-                              key={month}
-                              value={month}
-                            >
+                          {months.map((month) => (
+                            <SelectItem key={month} value={month}>
                               {month}
                             </SelectItem>
                           ))}
@@ -268,7 +302,8 @@ export default function EditLicenseOrCertificationsModal({
                     <FormItem>
                       <Select
                         onValueChange={field.onChange}
-                        value={field.value || ""}
+                        defaultValue={field.value}
+                        value={field.value}
                       >
                         <FormControl className="w-full">
                           <SelectTrigger>
@@ -355,14 +390,20 @@ export default function EditLicenseOrCertificationsModal({
 
             {/* Action Buttons */}
             <div className="flex justify-end space-x-3 pt-4">
-              <Button type="button" variant="outline" onClick={handleClose}>
+              <Button
+                type="button"
+                variant="outline"
+                onClick={handleClose}
+                disabled={isLoading}
+              >
                 Cancel
               </Button>
               <Button
                 type="submit"
                 className="bg-black hover:bg-gray-800 text-white"
+                disabled={isLoading}
               >
-                Update
+                {isLoading ? "Updating..." : "Update"}
               </Button>
             </div>
           </form>

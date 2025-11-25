@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
 
 import { useForm } from "react-hook-form";
@@ -28,17 +29,19 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
 import { months, years } from "@/constants/profile";
+import { useCreateCertificateMutation } from "@/redux/api/certificateApi";
+import { toast } from "sonner";
 
 const formSchema = z.object({
   name: z.string().min(1, "Name is required"),
   issuingOrganization: z.string().min(1, "Issuing organization is required"),
-  credentialId: z.string().min(1, "Credential ID is required"),
-  credentialUrl: z.string().min(1, "Credential URL is required"),
+  credentialId: z.string().optional(),
+  credentialUrl: z.string().optional(),
   startMonth: z.string().min(1, "Start month is required"),
   startYear: z.string().min(1, "Start year is required"),
   endMonth: z.string().optional(),
   endYear: z.string().optional(),
-  description: z.string().min(1, "Description is required"),
+  description: z.string().optional(),
 });
 
 export type FormData = z.infer<typeof formSchema>;
@@ -48,11 +51,12 @@ interface AddExperienceModalProps {
   onClose: () => void;
 }
 
-
 export default function AddExperienceOrCertificationsModal({
   isOpen,
   onClose,
 }: AddExperienceModalProps) {
+  const [createCertificate, { isLoading }] = useCreateCertificateMutation();
+
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -68,10 +72,33 @@ export default function AddExperienceOrCertificationsModal({
     },
   });
 
-  const onSubmit = (data: FormData) => {
-    console.log("LicensesOrCertificaitons data", data);
-    form.reset();
-    onClose();
+  const onSubmit = async (data: FormData) => {
+    try {
+      const certificateData = {
+        name: data.name,
+        issuingOrganization: data.issuingOrganization,
+        startMonth: data.startMonth,
+        startYear: parseInt(data.startYear),
+        ...(data.endMonth && { endMonth: data.endMonth }),
+        ...(data.endYear && { endYear: parseInt(data.endYear) }),
+        ...(data.credentialId && { credentialId: data.credentialId }),
+        ...(data.credentialUrl && { credentialUrl: data.credentialUrl }),
+        ...(data.description && { description: data.description }),
+      };
+
+      const result = await createCertificate(certificateData).unwrap();
+
+      if (result.success) {
+        toast.success(result.message || "Certificate added successfully!");
+        form.reset();
+        onClose();
+      }
+    } catch (error: any) {
+      toast.error(
+        error?.data?.message || "Failed to add certificate. Please try again."
+      );
+      console.error("Error creating certificate:", error);
+    }
   };
 
   const handleClose = () => {
@@ -152,10 +179,7 @@ export default function AddExperienceOrCertificationsModal({
                         </FormControl>
                         <SelectContent>
                           {months.map((month, index) => (
-                            <SelectItem
-                              key={month}
-                              value={(index + 1).toString()}
-                            >
+                            <SelectItem key={month} value={month}>
                               {month}
                             </SelectItem>
                           ))}
@@ -216,10 +240,7 @@ export default function AddExperienceOrCertificationsModal({
                         </FormControl>
                         <SelectContent>
                           {months.map((month, index) => (
-                            <SelectItem
-                              key={month}
-                              value={(index + 1).toString()}
-                            >
+                            <SelectItem key={month} value={month}>
                               {month}
                             </SelectItem>
                           ))}
@@ -323,14 +344,20 @@ export default function AddExperienceOrCertificationsModal({
 
             {/* Action Buttons */}
             <div className="flex justify-end space-x-3 pt-4">
-              <Button type="button" variant="outline" onClick={handleClose}>
+              <Button
+                type="button"
+                variant="outline"
+                onClick={handleClose}
+                disabled={isLoading}
+              >
                 Cancel
               </Button>
               <Button
                 type="submit"
                 className="bg-black hover:bg-gray-800 text-white"
+                disabled={isLoading}
               >
-                Save
+                {isLoading ? "Saving..." : "Save"}
               </Button>
             </div>
           </form>

@@ -17,17 +17,16 @@ import {
 } from "lucide-react";
 import Image from "next/image";
 import { useState, useRef, useEffect } from "react";
-import AddLicensesOrCertificationsModal from "@/components/modals/AddLicensesOrCertificationsModal";
 import AddEducationModal from "@/components/modals/AddEducationModal";
 import UploadResumeModal from "@/components/modals/UploadResumeModal";
 import EditPersonalInformationModal from "@/components/modals/EditPersonalInformationModal";
 import EditPlayerDetailsModal from "@/components/modals/EditPlayerDetailsModal";
-import EditLicenseOrCertificationsModal from "@/components/modals/EditLicensesOrCertificationsModal";
 import EditEducationModal from "@/components/modals/EditEducationModal";
 import AddVideoModal from "@/components/modals/AddVideoModal";
 import { useAppSelector } from "@/redux/hooks";
 import { ProfileSkeleton } from "@/components/skeleton";
 import ExperienceSection from "@/components/profile/ExperienceSection";
+import CertificateSection from "@/components/profile/CertificateSection";
 
 const initialUser = {
   name: "Suman Barman",
@@ -39,35 +38,7 @@ const initialUser = {
     personal: true,
   },
 };
-const certificates = [
-  {
-    id: "cert-001",
-    name: "UEFA Pro License",
-    issuingOrganization: "UEFA",
-    credentialId: "UEFA-PRO-2023-001234",
-    credentialUrl: "https://www.uefa.com/certificates/pro-license/001234",
-    startMonth: "March",
-    startYear: "2023",
-    endMonth: "December",
-    endYear: "2025",
-    description:
-      "The highest coaching qualification in European football, covering advanced tactical analysis, leadership development, and elite-level coaching methodologies. This certification enables coaching at the highest professional levels including international teams and top-tier clubs.",
-  },
-  {
-    id: "cert-002",
-    name: "FIFA Coaching Certificate Level A",
-    issuingOrganization: "FIFA",
-    credentialId: "FIFA-COACH-A-2022-005678",
-    credentialUrl:
-      "https://www.fifa.com/development/coaching/certificates/005678",
-    startMonth: "June",
-    startYear: "2022",
-    endMonth: "",
-    endYear: "",
-    description:
-      "Comprehensive coaching certification covering modern football tactics, player development, sports psychology, and team management. Focuses on developing coaching skills for professional and semi-professional football environments with emphasis on youth development and performance optimization.",
-  },
-];
+
 const education = [
   {
     id: "edu-001",
@@ -121,15 +92,6 @@ export default function MyProfilePage() {
   // Get user data from Redux store
   const currentUser = useAppSelector((state) => state.auth.user);
 
-  const [
-    isAddLicensesOrCertificationsModalOpen,
-    setIsAddLicensesOrCertificationsModalOpen,
-  ] = useState(false);
-  const [
-    isEditLicensesOrCertificationsModalOpen,
-    setIsEditLicensesOrCertificationsModalOpen,
-  ] = useState(false);
-
   const [isAddEducationModalOpen, setIsAddEducationModalOpen] = useState(false);
   const [isEditEducationModalOpen, setIsEditEducationModalOpen] =
     useState(false);
@@ -142,8 +104,6 @@ export default function MyProfilePage() {
   const [isEditPlayerDetailsModalOpen, setIsPlayerDetailsModalOpen] =
     useState(false);
 
-  const [editLicensesOrCertifications, setEditLicensesOrCertifications] =
-    useState<any>(null);
   const [editEducation, setEditEducation] = useState<any>(null);
 
   const [user, setUser] = useState(initialUser);
@@ -330,14 +290,6 @@ export default function MyProfilePage() {
         </div>
 
         <div className="flex flex-wrap gap-3">
-          <Button
-            variant="outline"
-            className="flex items-center rounded-full"
-            onClick={() => setIsAddLicensesOrCertificationsModalOpen(true)}
-          >
-            <Plus className="mr-1 h-4 w-4" />
-            Add Licenses or Certifications
-          </Button>
           <Button
             variant="outline"
             className="flex items-center rounded-full"
@@ -732,71 +684,7 @@ export default function MyProfilePage() {
         <ExperienceSection userId={currentUser?._id || ""} />
 
         {/* -------------------------Certificates Section----------------------- */}
-        <Card className="mb-6">
-          <CardHeader>
-            <div className="flex items-center justify-between">
-              <CardTitle className="text-lg lg:text-xl">Certificate</CardTitle>
-              <Button
-                variant="ghost"
-                size="sm"
-                onClick={() => setIsAddLicensesOrCertificationsModalOpen(true)}
-              >
-                <Plus className="h-4 w-4" />
-                <span className="hidden sm:inline ml-1">Add</span>
-              </Button>
-            </div>
-          </CardHeader>
-          <CardContent className="space-y-4 lg:space-y-6 px-0">
-            {certificates.map((cert) => (
-              <div
-                key={cert.id}
-                className="flex space-x-3 lg:space-x-4 p-3 lg:p-4 hover:bg-gray-50 transition-colors"
-              >
-                <div className="flex-shrink-0">
-                  <div className="w-10 h-10 lg:w-12 lg:h-12 bg-green-600 rounded-lg flex items-center justify-center text-white font-bold text-xs lg:text-sm">
-                    UE
-                  </div>
-                </div>
-
-                <div className="flex-1 min-w-0">
-                  <div className="flex items-start justify-between">
-                    <div>
-                      <h3 className="font-semibold text-gray-900 text-sm lg:text-base">
-                        {cert.name}
-                      </h3>
-                      <p className="text-xs lg:text-sm text-gray-600">
-                        {cert.issuingOrganization}
-                      </p>
-                      <p className="text-xs lg:text-sm text-gray-500">
-                        {cert.startMonth} {cert.startYear} -{" "}
-                        {`${
-                          !cert.endMonth
-                            ? "Present"
-                            : `${cert.endMonth}
-                              ${cert.endYear}`
-                        }`}
-                      </p>
-                    </div>
-                    <Button
-                      variant="ghost"
-                      size="sm"
-                      onClick={() => {
-                        setEditLicensesOrCertifications(cert);
-                        setIsEditLicensesOrCertificationsModalOpen(true);
-                      }}
-                    >
-                      <Edit className="h-3 w-3 lg:h-4 lg:w-4" />
-                    </Button>
-                  </div>
-
-                  <p className="mt-2 lg:mt-3 text-xs lg:text-sm text-gray-700 line-clamp-3">
-                    {cert.description}
-                  </p>
-                </div>
-              </div>
-            ))}
-          </CardContent>
-        </Card>
+        <CertificateSection userId={currentUser?._id || ""} />
 
         {/* -------------------------Education Section----------------------- */}
         <Card className="mb-6">
@@ -915,10 +803,6 @@ export default function MyProfilePage() {
       </div>
 
       {/* ------------------Modals --------------------*/}
-      <AddLicensesOrCertificationsModal
-        isOpen={isAddLicensesOrCertificationsModalOpen}
-        onClose={() => setIsAddLicensesOrCertificationsModalOpen(false)}
-      />
       <AddEducationModal
         isOpen={isAddEducationModalOpen}
         onClose={() => setIsAddEducationModalOpen(false)}
@@ -942,13 +826,6 @@ export default function MyProfilePage() {
         onClose={() => setIsPlayerDetailsModalOpen(false)}
         initialData={currentUser?.profile || {}}
       />
-      {editLicensesOrCertifications && (
-        <EditLicenseOrCertificationsModal
-          isOpen={isEditLicensesOrCertificationsModalOpen}
-          onClose={() => setIsEditLicensesOrCertificationsModalOpen(false)}
-          certificationData={editLicensesOrCertifications}
-        />
-      )}
       {editEducation && (
         <EditEducationModal
           isOpen={isEditEducationModalOpen}
