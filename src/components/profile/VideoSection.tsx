@@ -10,6 +10,7 @@ interface Video {
   title: string;
   duration: number;
   uploadedAt: string;
+  videoType?: string;
 }
 
 interface VideoSectionProps {
@@ -80,20 +81,8 @@ export default function VideoSection({ videos = [] }: VideoSectionProps) {
                   {/* Video Title and Info */}
                   <div className="mt-2">
                     <p className="text-sm font-medium text-gray-900 line-clamp-2">
-                      {video.title}
+                      {video?.videoType ? video.videoType : "Highlights Video"}
                     </p>
-                    {video.uploadedAt && (
-                      <p className="text-xs text-gray-500 mt-1">
-                        {new Date(video.uploadedAt).toLocaleDateString(
-                          "en-US",
-                          {
-                            year: "numeric",
-                            month: "short",
-                            day: "numeric",
-                          }
-                        )}
-                      </p>
-                    )}
                   </div>
                 </div>
               );
