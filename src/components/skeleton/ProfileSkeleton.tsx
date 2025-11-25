@@ -9,39 +9,32 @@ import { Card, CardContent, CardHeader } from "@/components/ui/card";
  */
 export function ProfileSkeleton() {
   return (
-    <div className="px-4">
+    <div className="w-full px-4">
       {/* Banner and Profile Picture Skeleton */}
-      <div className="relative mb-8">
-        <Skeleton className="h-48 lg:h-64 rounded-lg" />
+      <div className="relative mb-8 w-full">
+        <Skeleton className="h-48 lg:h-64 w-full rounded-lg" />
         <div className="absolute -bottom-16 left-4 lg:left-8">
           <Skeleton className="w-24 h-24 lg:w-32 lg:h-32 rounded-full border-4 border-white" />
         </div>
       </div>
 
       {/* Profile Info Skeleton */}
-      <div className="mt-20 mb-8 px-4">
+      <div className="mt-20 mb-8 px-4 w-full">
         <div className="mb-6">
           <Skeleton className="h-9 w-64 mb-2" />
           <div className="flex flex-wrap gap-4 mt-2 mb-4">
             <Skeleton className="h-4 w-48" />
-            <Skeleton className="h-4 w-36" />
           </div>
           <div className="flex gap-2 flex-wrap mt-4">
-            <Skeleton className="h-8 w-32 rounded-full" />
-            <Skeleton className="h-8 w-48 rounded-full" />
+            <Skeleton className="h-8 w-24 rounded-full" />
+            <Skeleton className="h-10 w-52 rounded-full" />
+            <Skeleton className="h-10 w-36 rounded-full" />
           </div>
-        </div>
-
-        <div className="flex flex-wrap gap-3">
-          <Skeleton className="h-10 w-36 rounded-full" />
-          <Skeleton className="h-10 w-52 rounded-full" />
-          <Skeleton className="h-10 w-36 rounded-full" />
-          <Skeleton className="h-10 w-36 rounded-full" />
         </div>
       </div>
 
       {/* Profile Information Section Skeleton */}
-      <div className="p-4 md:p-6 border rounded-2xl shadow">
+      <div className="w-full p-4 md:p-6 border rounded-2xl shadow">
         <div className="bg-white rounded-lg border shadow border-gray-200 p-6">
           <div className="flex items-center justify-between mb-6">
             <Skeleton className="h-6 w-48" />
