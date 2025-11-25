@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
 
 import { useForm } from "react-hook-form";
@@ -30,6 +31,8 @@ import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
 import { months, years } from "@/constants/profile";
+import { useUpdateExperienceMutation } from "@/redux/api/experienceApi";
+import { toast } from "sonner";
 
 const formSchema = z.object({
   title: z.string().min(1, "Title is required"),
@@ -47,6 +50,7 @@ const formSchema = z.object({
 export type FormData = z.infer<typeof formSchema>;
 
 export interface ExperienceData {
+  _id?: string;
   id?: string;
   title: string;
   employmentType: string;
@@ -54,9 +58,9 @@ export interface ExperienceData {
   location: string;
   isCurrentlyWorking: boolean;
   startMonth: string;
-  startYear: string;
+  startYear: string | number;
   endMonth?: string;
-  endYear?: string;
+  endYear?: string | number;
   description: string;
 }
 
@@ -71,6 +75,8 @@ export default function EditExperienceModal({
   onClose,
   experienceData,
 }: EditExperienceModalProps) {
+  const [updateExperience, { isLoading }] = useUpdateExperienceMutation();
+
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -99,18 +105,51 @@ export default function EditExperienceModal({
         location: experienceData.location,
         isCurrentlyWorking: experienceData.isCurrentlyWorking,
         startMonth: experienceData.startMonth,
-        startYear: experienceData.startYear,
+        startYear: String(experienceData.startYear),
         endMonth: experienceData.endMonth || "",
-        endYear: experienceData.endYear || "",
+        endYear: experienceData.endYear ? String(experienceData.endYear) : "",
         description: experienceData.description,
       });
     }
   }, [experienceData, isOpen, form]);
 
-  const onSubmit = (data: FormData) => {
-    console.log("Updated experience data", data);
-    form.reset();
-    onClose();
+  const onSubmit = async (data: FormData) => {
+    if (!experienceData?._id && !experienceData?.id) {
+      toast.error("Experience ID is missing");
+      return;
+    }
+
+    try {
+      const experienceId = experienceData._id || experienceData.id;
+      const updateData = {
+        title: data.title,
+        employmentType: data.employmentType,
+        club: data.club,
+        location: data.location,
+        startMonth: data.startMonth,
+        startYear: parseInt(data.startYear),
+        isCurrentlyWorking: data.isCurrentlyWorking,
+        description: data.description,
+        ...(data.endMonth && { endMonth: data.endMonth }),
+        ...(data.endYear && { endYear: parseInt(data.endYear) }),
+      };
+
+      const result = await updateExperience({
+        id: experienceId!,
+        body: updateData,
+      }).unwrap();
+
+      if (result.success) {
+        toast.success(result.message || "Experience updated successfully!");
+        form.reset();
+        onClose();
+      }
+    } catch (error: any) {
+      toast.error(
+        error?.data?.message || "Failed to update experience. Please try again."
+      );
+      console.error("Error updating experience:", error);
+    }
   };
 
   const handleClose = () => {
@@ -168,8 +207,9 @@ export default function EditExperienceModal({
                       </SelectTrigger>
                     </FormControl>
                     <SelectContent>
-                      <SelectItem value="Full-time">Full Time</SelectItem>
-                      <SelectItem value="Part-time">Part Time</SelectItem>
+                      <SelectItem value="FullTime">Full Time</SelectItem>
+                      <SelectItem value="PartTime">Part Time</SelectItem>
+                      <SelectItem value="Contract">Contract</SelectItem>
                     </SelectContent>
                   </Select>
                   <FormMessage />
@@ -324,10 +364,7 @@ export default function EditExperienceModal({
                           </FormControl>
                           <SelectContent>
                             {months.map((month, index) => (
-                              <SelectItem
-                                key={month}
-                                value={month}
-                              >
+                              <SelectItem key={month} value={month}>
                                 {month}
                               </SelectItem>
                             ))}
@@ -390,14 +427,20 @@ export default function EditExperienceModal({
 
             {/* Action Buttons */}
             <div className="flex justify-end space-x-3 pt-4">
-              <Button type="button" variant="outline" onClick={handleClose}>
+              <Button
+                type="button"
+                variant="outline"
+                onClick={handleClose}
+                disabled={isLoading}
+              >
                 Cancel
               </Button>
               <Button
                 type="submit"
                 className="bg-black hover:bg-gray-800 text-white"
+                disabled={isLoading}
               >
-                Update
+                {isLoading ? "Updating..." : "Update"}
               </Button>
             </div>
           </form>

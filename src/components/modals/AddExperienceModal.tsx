@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
 
 import { useForm } from "react-hook-form";
@@ -29,6 +30,8 @@ import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
 import { months, years } from "@/constants/profile";
+import { useCreateExperienceMutation } from "@/redux/api/experienceApi";
+import { toast } from "sonner";
 
 const formSchema = z.object({
   title: z.string().min(1, "Title is required"),
@@ -43,7 +46,7 @@ const formSchema = z.object({
   description: z.string().min(1, "Description is required"),
 });
 
-export type TExperience = z.infer<typeof formSchema>
+export type TExperience = z.infer<typeof formSchema>;
 
 interface AddExperienceModalProps {
   isOpen: boolean;
@@ -54,6 +57,8 @@ export default function AddExperienceModal({
   isOpen,
   onClose,
 }: AddExperienceModalProps) {
+  const [createExperience, { isLoading }] = useCreateExperienceMutation();
+
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -72,10 +77,34 @@ export default function AddExperienceModal({
 
   const isCurrentlyWorking = form.watch("isCurrentlyWorking");
 
-  const onSubmit = (data: TExperience) => {
-    console.log("Experience data", data);
-    form.reset();
-    onClose();
+  const onSubmit = async (data: TExperience) => {
+    try {
+      const experienceData = {
+        title: data.title,
+        employmentType: data.employmentType,
+        club: data.club,
+        location: data.location,
+        startMonth: data.startMonth,
+        startYear: parseInt(data.startYear),
+        isCurrentlyWorking: data.isCurrentlyWorking,
+        description: data.description,
+        ...(data.endMonth && { endMonth: data.endMonth }),
+        ...(data.endYear && { endYear: parseInt(data.endYear) }),
+      };
+
+      const result = await createExperience(experienceData).unwrap();
+
+      if (result.success) {
+        toast.success(result.message || "Experience added successfully!");
+        form.reset();
+        onClose();
+      }
+    } catch (error: any) {
+      toast.error(
+        error?.data?.message || "Failed to add experience. Please try again."
+      );
+      console.error("Error creating experience:", error);
+    }
   };
 
   const handleClose = () => {
@@ -136,8 +165,9 @@ export default function AddExperienceModal({
                       </SelectTrigger>
                     </FormControl>
                     <SelectContent>
-                      <SelectItem value="full-time">Full Time</SelectItem>
-                      <SelectItem value="part-time">Part Time</SelectItem>
+                      <SelectItem value="FullTime">Full Time</SelectItem>
+                      <SelectItem value="PartTime">Part Time</SelectItem>
+                      <SelectItem value="Contract">Contract</SelectItem>
                     </SelectContent>
                   </Select>
                   <FormMessage />
@@ -229,11 +259,8 @@ export default function AddExperienceModal({
                           </SelectTrigger>
                         </FormControl>
                         <SelectContent>
-                          {months.map((month, index) => (
-                            <SelectItem
-                              key={month}
-                              value={(index + 1).toString()}
-                            >
+                          {months.map((month) => (
+                            <SelectItem key={month} value={month}>
                               {month}
                             </SelectItem>
                           ))}
@@ -294,11 +321,8 @@ export default function AddExperienceModal({
                             </SelectTrigger>
                           </FormControl>
                           <SelectContent>
-                            {months.map((month, index) => (
-                              <SelectItem
-                                key={month}
-                                value={(index + 1).toString()}
-                              >
+                            {months.map((month) => (
+                              <SelectItem key={month} value={month}>
                                 {month}
                               </SelectItem>
                             ))}
@@ -349,7 +373,7 @@ export default function AddExperienceModal({
                   </FormLabel>
                   <FormControl>
                     <Textarea
-                      placeholder="List your major duties and successes, highlighting specific projects"
+                      placeholder="Write a description of your experience..."
                       className="mt-1 min-h-[100px] resize-none"
                       {...field}
                     />
@@ -361,14 +385,20 @@ export default function AddExperienceModal({
 
             {/* Action Buttons */}
             <div className="flex justify-end space-x-3 pt-4">
-              <Button type="button" variant="outline" onClick={handleClose}>
+              <Button
+                type="button"
+                variant="outline"
+                onClick={handleClose}
+                disabled={isLoading}
+              >
                 Cancel
               </Button>
               <Button
                 type="submit"
                 className="bg-black hover:bg-gray-800 text-white"
+                disabled={isLoading}
               >
-                Save
+                {isLoading ? "Saving..." : "Save"}
               </Button>
             </div>
           </form>

@@ -17,9 +17,7 @@ import {
   Mail,
 } from "lucide-react";
 import Image from "next/image";
-import AddExperienceModal, {
-  TExperience,
-} from "@/components/modals/AddExperienceModal";
+import AddExperienceModal from "@/components/modals/AddExperienceModal";
 import { useState, useRef, useEffect } from "react";
 import AddLicensesOrCertificationsModal from "@/components/modals/AddLicensesOrCertificationsModal";
 import AddEducationModal from "@/components/modals/AddEducationModal";
@@ -32,6 +30,8 @@ import EditEducationModal from "@/components/modals/EditEducationModal";
 import AddVideoModal from "@/components/modals/AddVideoModal";
 import { useAppSelector } from "@/redux/hooks";
 import { ProfileSkeleton } from "@/components/skeleton";
+import { useGetUserExperiencesQuery } from "@/redux/api/experienceApi";
+import { Loader2 } from "lucide-react";
 
 const initialUser = {
   name: "Suman Barman",
@@ -43,35 +43,6 @@ const initialUser = {
     personal: true,
   },
 };
-
-const experiences: TExperience[] = [
-  {
-    title: "Forward Striker",
-    employmentType: "Full-time",
-    club: "FC Barcelona",
-    location: "Barcelona, Spain",
-    isCurrentlyWorking: true,
-    startMonth: "August",
-    startYear: "2022",
-    endMonth: undefined, // optional
-    endYear: undefined, // optional
-    description:
-      "Playing as the main forward, responsible for scoring and assisting goals during league and international matches.",
-  },
-  {
-    title: "Midfielder",
-    employmentType: "Part-time",
-    club: "Manchester United",
-    location: "Manchester, UK",
-    isCurrentlyWorking: false,
-    startMonth: "January",
-    startYear: "2020",
-    endMonth: "June",
-    endYear: "2021",
-    description:
-      "Worked as a central midfielder, managing ball distribution and supporting both defense and attack during matches.",
-  },
-];
 const certificates = [
   {
     id: "cert-001",
@@ -153,6 +124,15 @@ const videos = [
 export default function MyProfilePage() {
   // Get user data from Redux store
   const currentUser = useAppSelector((state) => state.auth.user);
+
+  // Fetch user experiences
+  const {
+    data: experiencesData,
+    isLoading: isLoadingExperiences,
+    error: experiencesError,
+  } = useGetUserExperiencesQuery(currentUser?._id || "", {
+    skip: !currentUser?._id,
+  });
 
   const [isAddExperienceModalOpen, setIsAddExperienceModalOpen] =
     useState(false);
@@ -251,6 +231,7 @@ export default function MyProfilePage() {
   return (
     <div className="px-4">
       <div className="relative mb-8">
+        {/* ------------------------Banner and Profile Picture--------------------------- */}
         <div className="relative h-48 lg:h-64 bg-gradient-to-br from-gray-100 via-gray-50 to-gray-50 rounded-lg overflow-hidden group">
           {bannerImage ? (
             <Image
@@ -403,7 +384,7 @@ export default function MyProfilePage() {
       </div>
 
       <div className="p-4 md:p-6 border rounded-2xl shadow">
-        {/* Profile Information Section */}
+        {/* ------------------------Profile  Information Section------------------- */}
         <div className="bg-white rounded-lg border shadow border-gray-200 p-6">
           <div className="flex items-center justify-between mb-6">
             <h2 className="text-xl font-semibold text-gray-900">
@@ -464,16 +445,16 @@ export default function MyProfilePage() {
               </div>
             )}
 
-            {currentUser?.profile?.phoneNumber && (
-              <div>
-                <label className="text-sm text-gray-500 mb-1 block">
-                  Phone number
-                </label>
-                <p className="text-gray-900 font-medium">
-                  {currentUser.profile.phoneNumber}
-                </p>
-              </div>
-            )}
+            <div>
+              <label className="text-sm text-gray-500 mb-1 block">
+                Phone number
+              </label>
+              <p className="text-gray-900 font-medium">
+                {currentUser?.profile?.phoneNumber
+                  ? currentUser.profile.phoneNumber
+                  : "N/A"}
+              </p>
+            </div>
 
             {/* Professional Information Fields */}
             {currentUser?.profile?.gender && (
@@ -732,7 +713,7 @@ export default function MyProfilePage() {
           </div>
         </div>
 
-        {/* Analytics Cards */}
+        {/* -------------------------Analytics Cards----------------------- */}
         <div className="my-6">
           <Card>
             <CardHeader>
@@ -773,7 +754,7 @@ export default function MyProfilePage() {
           </Card>
         </div>
 
-        {/* Experience Section */}
+        {/* -------------------------Experience Section----------------------- */}
         <Card className="mb-6">
           <CardHeader>
             <div className="flex items-center justify-between">
@@ -788,63 +769,105 @@ export default function MyProfilePage() {
               </Button>
             </div>
           </CardHeader>
-          <CardContent className="space-y-6 px-0">
-            {experiences.map((exp, index) => (
-              <div
-                key={index}
-                className="flex space-x-4 p-4 hover:bg-gray-50 transition-colors"
-              >
-                <div className="flex-shrink-0">
-                  <div className="w-12 h-12 bg-blue-600 rounded-lg flex items-center justify-center text-white font-bold text-sm">
-                    NC
-                  </div>
+          <CardContent className="px-0">
+            {isLoadingExperiences ? (
+              <div className="flex items-center justify-center py-12">
+                <Loader2 className="h-8 w-8 animate-spin text-gray-400" />
+              </div>
+            ) : experiencesError ? (
+              <div className="text-center py-12">
+                <p className="text-red-600 mb-2">Failed to load experiences</p>
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={() => window.location.reload()}
+                >
+                  Try Again
+                </Button>
+              </div>
+            ) : !experiencesData?.data || experiencesData.data.length === 0 ? (
+              <div className="text-center py-12 px-4">
+                <div className="w-16 h-16 mx-auto mb-4 bg-gray-100 rounded-full flex items-center justify-center">
+                  <Award className="h-8 w-8 text-gray-400" />
                 </div>
-
-                <div className="flex-1 min-w-0">
-                  <div className="flex items-start justify-between">
-                    <div>
-                      <h3 className="font-semibold text-gray-900">
-                        {exp.club}
-                      </h3>
-                      <p className="text-sm text-gray-600">{exp.title}</p>
-                      <p className="text-sm text-gray-500">
-                        {exp.startMonth} {exp.startYear} -{" "}
-                        {`${
-                          exp.isCurrentlyWorking && !exp.endMonth
-                            ? "Present"
-                            : `${exp.endMonth}
-                              ${exp.endYear}`
-                        }`}
-                      </p>
-                      <div className="flex items-center mt-1">
-                        <MapPin className="h-4 w-4 text-gray-400 mr-1" />
-                        <span className="text-sm text-gray-500">
-                          {exp.location}
-                        </span>
+                <h3 className="text-lg font-semibold text-gray-900 mb-2">
+                  No Experience Added Yet
+                </h3>
+                <p className="text-gray-600 mb-4 max-w-md mx-auto">
+                  Showcase your professional journey by adding your work
+                  experience. This helps employers understand your background
+                  and expertise.
+                </p>
+                <Button
+                  onClick={() => setIsAddExperienceModalOpen(true)}
+                  className="bg-black hover:bg-gray-800 text-white"
+                >
+                  <Plus className="h-4 w-4 mr-2" />
+                  Add Your First Experience
+                </Button>
+              </div>
+            ) : (
+              <div className="space-y-6">
+                {experiencesData.data.map((exp: any) => (
+                  <div
+                    key={exp._id}
+                    className="flex space-x-4 p-4 hover:bg-gray-50 transition-colors"
+                  >
+                    <div className="flex-shrink-0">
+                      <div className="w-12 h-12 bg-blue-600 rounded-lg flex items-center justify-center text-white font-bold text-sm">
+                        {exp.club.substring(0, 2).toUpperCase()}
                       </div>
                     </div>
-                    <Button
-                      variant="ghost"
-                      size="sm"
-                      onClick={() => {
-                        setEditExperienceData(exp);
-                        setIsEditExperienceModalOpen(true);
-                      }}
-                    >
-                      <Edit className="h-4 w-4" />
-                    </Button>
-                  </div>
 
-                  <p className="mt-3 text-sm text-gray-700 line-clamp-3">
-                    {exp.description}
-                  </p>
-                </div>
+                    <div className="flex-1 min-w-0">
+                      <div className="flex items-start justify-between">
+                        <div>
+                          <h3 className="font-semibold text-gray-900">
+                            {exp.club}
+                          </h3>
+                          <p className="text-sm text-gray-600">{exp.title}</p>
+                          <p className="text-sm text-gray-500">
+                            {exp.employmentType
+                              .replace(/([A-Z])/g, " $1")
+                              .trim()}
+                          </p>
+                          <p className="text-sm text-gray-500">
+                            {exp.startMonth} {exp.startYear} -{" "}
+                            {exp.isCurrentlyWorking
+                              ? "Present"
+                              : `${exp.endMonth} ${exp.endYear}`}
+                          </p>
+                          <div className="flex items-center mt-1">
+                            <MapPin className="h-4 w-4 text-gray-400 mr-1" />
+                            <span className="text-sm text-gray-500">
+                              {exp.location}
+                            </span>
+                          </div>
+                        </div>
+                        <Button
+                          variant="ghost"
+                          size="sm"
+                          onClick={() => {
+                            setEditExperienceData(exp);
+                            setIsEditExperienceModalOpen(true);
+                          }}
+                        >
+                          <Edit className="h-4 w-4" />
+                        </Button>
+                      </div>
+
+                      <p className="mt-3 text-sm text-gray-700 line-clamp-3">
+                        {exp.description}
+                      </p>
+                    </div>
+                  </div>
+                ))}
               </div>
-            ))}
+            )}
           </CardContent>
         </Card>
 
-        {/* Certificates Section */}
+        {/* -------------------------Certificates Section----------------------- */}
         <Card className="mb-6">
           <CardHeader>
             <div className="flex items-center justify-between">
@@ -911,7 +934,7 @@ export default function MyProfilePage() {
           </CardContent>
         </Card>
 
-        {/* Education Section */}
+        {/* -------------------------Education Section----------------------- */}
         <Card className="mb-6">
           <CardHeader>
             <div className="flex items-center justify-between">
@@ -985,7 +1008,7 @@ export default function MyProfilePage() {
           </CardContent>
         </Card>
 
-        {/* Videos Section */}
+        {/* -------------------------Videos Section----------------------- */}
         <Card>
           <CardHeader>
             <div className="flex items-center justify-between">
@@ -1027,7 +1050,7 @@ export default function MyProfilePage() {
         </Card>
       </div>
 
-      {/* Modals */}
+      {/* ------------------Modals --------------------*/}
       <AddExperienceModal
         isOpen={isAddExperienceModalOpen}
         onClose={() => setIsAddExperienceModalOpen(false)}
