@@ -24,17 +24,6 @@ import CertificateSection from "@/components/profile/CertificateSection";
 import EducationSection from "@/components/profile/EducationSection";
 import VideoSection from "@/components/profile/VideoSection";
 
-const initialUser = {
-  name: "Suman Barman",
-  title: "Professional Player",
-  avatar:
-    "https://images.pexels.com/photos/1043471/pexels-photo-1043471.jpeg?auto=compress&cs=tinysrgb&w=150&h=150&dpr=1",
-  verification: {
-    age: true,
-    personal: true,
-  },
-};
-
 export default function MyProfilePage() {
   // Get user data from Redux store
   const currentUser = useAppSelector((state) => state.auth.user);
@@ -47,7 +36,6 @@ export default function MyProfilePage() {
   const [isEditPlayerDetailsModalOpen, setIsPlayerDetailsModalOpen] =
     useState(false);
 
-  const [user, setUser] = useState(initialUser);
   const [bannerImage, setBannerImage] = useState<string>("");
   const [isLoading, setIsLoading] = useState(true);
 
@@ -57,12 +45,13 @@ export default function MyProfilePage() {
   const handleProfileImageChange = (
     event: React.ChangeEvent<HTMLInputElement>
   ) => {
-    const file = event.target.files?.[0];
+    const file = event.target?.files?.[0];
     if (file) {
       const reader = new FileReader();
       reader.onload = (e) => {
         const result = e.target?.result as string;
-        setUser((prev) => ({ ...prev, avatar: result }));
+        // TODO: Upload profile image to server via API
+        console.log("Profile image selected:", result);
       };
       reader.readAsDataURL(file);
     }
@@ -85,12 +74,12 @@ export default function MyProfilePage() {
   // Prepare display data from Redux store
   const displayName = currentUser
     ? `${currentUser.firstName} ${currentUser.lastName}`
-    : user.name;
+    : "User";
 
   const displayAvatar = currentUser?.profileImage
     ? `${process.env.NEXT_PUBLIC_BASE_URL}${currentUser.profileImage}`
-    : user.avatar;
-  const displayRole = currentUser?.role || user.title;
+    : "https://images.pexels.com/photos/1043471/pexels-photo-1043471.jpeg?auto=compress&cs=tinysrgb&w=150&h=150&dpr=1";
+  const displayRole = currentUser?.role || "Professional Player";
 
   // Handle loading state
   useEffect(() => {
@@ -220,20 +209,17 @@ export default function MyProfilePage() {
             <Badge className="bg-yellow-100 border-yellow-200 px-4 rounded-full">
               {displayRole}
             </Badge>
-            <Button
-              variant="outline"
-              className="rounded-full"
-            >
+            <Button variant="outline" className="rounded-full">
               <Award size={20} height={20} /> Add Verification Badge
             </Button>
             <Button
-            variant="outline"
-            className="flex items-center rounded-full"
-            onClick={() => setIsUploadModalOpen(true)}
-          >
-            <Upload size={20} height={20} />
-            Upload Resume
-          </Button>
+              variant="outline"
+              className="flex items-center rounded-full"
+              onClick={() => setIsUploadModalOpen(true)}
+            >
+              <Upload size={20} height={20} />
+              Upload Resume
+            </Button>
           </div>
         </div>
       </div>
