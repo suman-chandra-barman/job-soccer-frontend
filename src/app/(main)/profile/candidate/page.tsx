@@ -222,23 +222,19 @@ export default function MyProfilePage() {
             </Badge>
             <Button
               variant="outline"
-              size="sm"
-              className="bg-gray-100 rounded-full hover:bg-gray-200"
+              className="rounded-full"
             >
-              <Award className="!w-5 !h-5" /> Add Verification Badge
+              <Award size={20} height={20} /> Add Verification Badge
             </Button>
-          </div>
-        </div>
-
-        <div className="flex flex-wrap gap-3">
-          <Button
+            <Button
             variant="outline"
             className="flex items-center rounded-full"
             onClick={() => setIsUploadModalOpen(true)}
           >
-            <Upload className="mr-1 h-4 w-4" />
+            <Upload size={20} height={20} />
             Upload Resume
           </Button>
+          </div>
         </div>
       </div>
 
@@ -613,16 +609,10 @@ export default function MyProfilePage() {
           </Card>
         </div>
 
-        {/* -------------------------Experience Section----------------------- */}
+        {/* ------------------ Experience, Certificate, Education, and Video Sections --------------------*/}
         <ExperienceSection userId={currentUser?._id || ""} />
-
-        {/* -------------------------Certificates Section----------------------- */}
         <CertificateSection userId={currentUser?._id || ""} />
-
-        {/* -------------------------Education Section----------------------- */}
         <EducationSection userId={currentUser?._id || ""} />
-
-        {/* -------------------------Videos Section----------------------- */}
         <VideoSection
           videos={currentUser?.profile?.videos || []}
           userId={currentUser?._id || ""}
