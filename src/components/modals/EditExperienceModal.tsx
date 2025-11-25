@@ -3,7 +3,6 @@
 
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import * as z from "zod";
 import { useEffect } from "react";
 import {
   Dialog,
@@ -33,36 +32,11 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { months, years } from "@/constants/profile";
 import { useUpdateExperienceMutation } from "@/redux/api/experienceApi";
 import { toast } from "sonner";
-
-const formSchema = z.object({
-  title: z.string().min(1, "Title is required"),
-  employmentType: z.string().min(1, "Employment type is required"),
-  club: z.string().min(1, "Club is required"),
-  location: z.string().min(1, "Job location is required"),
-  isCurrentlyWorking: z.boolean(),
-  startMonth: z.string().min(1, "Start month is required"),
-  startYear: z.string().min(1, "Start year is required"),
-  endMonth: z.string().optional(),
-  endYear: z.string().optional(),
-  description: z.string().min(1, "Description is required"),
-});
-
-export type FormData = z.infer<typeof formSchema>;
-
-export interface ExperienceData {
-  _id?: string;
-  id?: string;
-  title: string;
-  employmentType: string;
-  club: string;
-  location: string;
-  isCurrentlyWorking: boolean;
-  startMonth: string;
-  startYear: string | number;
-  endMonth?: string;
-  endYear?: string | number;
-  description: string;
-}
+import {
+  experienceFormSchema,
+  ExperienceFormData,
+} from "@/shchemas/experienceValidation";
+import { ExperienceData } from "@/types/experience";
 
 interface EditExperienceModalProps {
   isOpen: boolean;
@@ -77,8 +51,8 @@ export default function EditExperienceModal({
 }: EditExperienceModalProps) {
   const [updateExperience, { isLoading }] = useUpdateExperienceMutation();
 
-  const form = useForm<z.infer<typeof formSchema>>({
-    resolver: zodResolver(formSchema),
+  const form = useForm<ExperienceFormData>({
+    resolver: zodResolver(experienceFormSchema),
     defaultValues: {
       title: "",
       employmentType: "",
@@ -113,7 +87,7 @@ export default function EditExperienceModal({
     }
   }, [experienceData, isOpen, form]);
 
-  const onSubmit = async (data: FormData) => {
+  const onSubmit = async (data: ExperienceFormData) => {
     if (!experienceData?._id && !experienceData?.id) {
       toast.error("Experience ID is missing");
       return;
@@ -363,7 +337,7 @@ export default function EditExperienceModal({
                             </SelectTrigger>
                           </FormControl>
                           <SelectContent>
-                            {months.map((month, index) => (
+                            {months.map((month) => (
                               <SelectItem key={month} value={month}>
                                 {month}
                               </SelectItem>

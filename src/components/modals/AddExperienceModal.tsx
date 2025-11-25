@@ -3,7 +3,6 @@
 
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import * as z from "zod";
 import {
   Dialog,
   DialogContent,
@@ -32,21 +31,10 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { months, years } from "@/constants/profile";
 import { useCreateExperienceMutation } from "@/redux/api/experienceApi";
 import { toast } from "sonner";
-
-const formSchema = z.object({
-  title: z.string().min(1, "Title is required"),
-  employmentType: z.string().min(1, "Employment type is required"),
-  club: z.string().min(1, "Club is required"),
-  location: z.string().min(1, "Job location is required"),
-  isCurrentlyWorking: z.boolean(),
-  startMonth: z.string().min(1, "Start month is required"),
-  startYear: z.string().min(1, "Start year is required"),
-  endMonth: z.string().optional(),
-  endYear: z.string().optional(),
-  description: z.string().min(1, "Description is required"),
-});
-
-export type TExperience = z.infer<typeof formSchema>;
+import {
+  experienceFormSchema,
+  ExperienceFormData,
+} from "@/shchemas/experienceValidation";
 
 interface AddExperienceModalProps {
   isOpen: boolean;
@@ -59,8 +47,8 @@ export default function AddExperienceModal({
 }: AddExperienceModalProps) {
   const [createExperience, { isLoading }] = useCreateExperienceMutation();
 
-  const form = useForm<z.infer<typeof formSchema>>({
-    resolver: zodResolver(formSchema),
+  const form = useForm<ExperienceFormData>({
+    resolver: zodResolver(experienceFormSchema),
     defaultValues: {
       title: "",
       employmentType: "",
@@ -77,7 +65,7 @@ export default function AddExperienceModal({
 
   const isCurrentlyWorking = form.watch("isCurrentlyWorking");
 
-  const onSubmit = async (data: TExperience) => {
+  const onSubmit = async (data: ExperienceFormData) => {
     try {
       const experienceData = {
         title: data.title,
