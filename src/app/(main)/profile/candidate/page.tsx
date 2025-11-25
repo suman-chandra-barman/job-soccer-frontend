@@ -3,17 +3,13 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
+import { UserPlus, Edit, Award, LayoutGrid, Upload, Mail } from "lucide-react";
+import { useState, useEffect } from "react";
+import { toast } from "sonner";
 import {
-  Plus,
-  UserPlus,
-  Edit,
-  Award,
-  LayoutGrid,
-  Upload,
-  Mail,
-} from "lucide-react";
-import Image from "next/image";
-import { useState, useRef, useEffect } from "react";
+  useUpdateProfileImageMutation,
+  useUpdateBannerImageMutation,
+} from "@/redux/features/user/userApi";
 import UploadResumeModal from "@/components/modals/UploadResumeModal";
 import EditPersonalInformationModal from "@/components/modals/EditPersonalInformationModal";
 import EditPlayerDetailsModal from "@/components/modals/EditPlayerDetailsModal";
@@ -23,6 +19,8 @@ import ExperienceSection from "@/components/profile/ExperienceSection";
 import CertificateSection from "@/components/profile/CertificateSection";
 import EducationSection from "@/components/profile/EducationSection";
 import VideoSection from "@/components/profile/VideoSection";
+import ProfileBanner from "@/components/profile/ProfileBanner";
+import ProfileAvatar from "@/components/profile/ProfileAvatar";
 
 export default function MyProfilePage() {
   // Get user data from Redux store
@@ -36,50 +34,65 @@ export default function MyProfilePage() {
   const [isEditPlayerDetailsModalOpen, setIsPlayerDetailsModalOpen] =
     useState(false);
 
-  const [bannerImage, setBannerImage] = useState<string>("");
   const [isLoading, setIsLoading] = useState(true);
 
-  const bannerInputRef = useRef<HTMLInputElement>(null);
-  const profileInputRef = useRef<HTMLInputElement>(null);
+  // API mutations
+  const [updateProfileImage, { isLoading: isUpdatingProfile }] =
+    useUpdateProfileImageMutation();
+  const [updateBannerImage, { isLoading: isUpdatingBanner }] =
+    useUpdateBannerImageMutation();
 
-  const handleProfileImageChange = (
-    event: React.ChangeEvent<HTMLInputElement>
-  ) => {
-    const file = event.target?.files?.[0];
-    if (file) {
-      const reader = new FileReader();
-      reader.onload = (e) => {
-        const result = e.target?.result as string;
-        // TODO: Upload profile image to server via API
-        console.log("Profile image selected:", result);
-      };
-      reader.readAsDataURL(file);
+  // Handler for profile image update
+  const handleProfileImageUpdate = async (file: File) => {
+    try {
+      const formData = new FormData();
+      formData.append("image", file);
+
+      await updateProfileImage(formData).unwrap();
+      toast.success("Profile image updated successfully");
+    } catch (error) {
+      const errorMessage =
+        error && typeof error === "object" && "data" in error
+          ? (error.data as { message?: string })?.message
+          : "Failed to update profile image";
+      toast.error(errorMessage);
+      throw error; // Re-throw to let component handle cleanup
     }
   };
 
-  const handleBannerImageChange = (
-    event: React.ChangeEvent<HTMLInputElement>
-  ) => {
-    const file = event.target.files?.[0];
-    if (file) {
-      const reader = new FileReader();
-      reader.onload = (e) => {
-        const result = e.target?.result as string;
-        setBannerImage(result);
-      };
-      reader.readAsDataURL(file);
+  // Handler for banner image update
+  const handleBannerImageUpdate = async (file: File) => {
+    try {
+      const formData = new FormData();
+      formData.append("banner", file);
+
+      await updateBannerImage(formData).unwrap();
+      toast.success("Banner image updated successfully");
+    } catch (error) {
+      const errorMessage =
+        error && typeof error === "object" && "data" in error
+          ? (error.data as { message?: string })?.message
+          : "Failed to update banner image";
+      toast.error(errorMessage);
+      throw error; // Re-throw to let component handle cleanup
     }
   };
 
   // Prepare display data from Redux store
+  const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL || "";
   const displayName = currentUser
-    ? `${currentUser.firstName} ${currentUser.lastName}`
+    ? `${currentUser.firstName} ${currentUser.lastName}`.trim()
     : "User";
 
   const displayAvatar = currentUser?.profileImage
-    ? `${process.env.NEXT_PUBLIC_BASE_URL}${currentUser.profileImage}`
-    : "https://images.pexels.com/photos/1043471/pexels-photo-1043471.jpeg?auto=compress&cs=tinysrgb&w=150&h=150&dpr=1";
-  const displayRole = currentUser?.role || "Professional Player";
+    ? `${BASE_URL}${currentUser.profileImage}`
+    : null;
+
+  const displayBanner = currentUser?.bannerImage
+    ? `${BASE_URL}${currentUser.bannerImage}`
+    : null;
+
+  const displayRole = currentUser?.role;
 
   // Handle loading state
   useEffect(() => {
@@ -92,9 +105,6 @@ export default function MyProfilePage() {
     }
   }, [currentUser]);
 
-  // Log user data for debugging
-  console.log("Current User from Redux:", currentUser);
-
   // Show loading skeleton while data is loading
   if (isLoading || !currentUser) {
     return <ProfileSkeleton />;
@@ -102,92 +112,19 @@ export default function MyProfilePage() {
 
   return (
     <div className="px-4">
+      {/* Banner and Profile Picture Section */}
       <div className="relative mb-8">
-        {/* ------------------------Banner and Profile Picture--------------------------- */}
-        <div className="relative h-48 lg:h-64 bg-gradient-to-br from-gray-100 via-gray-50 to-gray-50 rounded-lg overflow-hidden group">
-          {bannerImage ? (
-            <Image
-              src={bannerImage}
-              alt="Profile banner"
-              fill
-              className="object-cover"
-              priority
-            />
-          ) : (
-            <div className="w-full h-full flex items-center justify-center">
-              <div className="text-center text-gray-400">
-                <svg
-                  className="w-16 h-16 mx-auto mb-2 opacity-50"
-                  fill="none"
-                  stroke="currentColor"
-                  viewBox="0 0 24 24"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={1.5}
-                    d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"
-                  />
-                </svg>
-              </div>
-            </div>
-          )}
-
-          {/* Banner Edit Button - Top Left */}
-          <div className="absolute top-4 right-4">
-            <input
-              type="file"
-              accept="image/*"
-              onChange={handleBannerImageChange}
-              className="hidden"
-              ref={bannerInputRef}
-            />
-            <Button
-              onClick={() => bannerInputRef.current?.click()}
-              variant="secondary"
-              size="sm"
-              className="bg-white cursor-pointer hover:bg-gray-100 text-gray-700 shadow-md rounded-full px-3 py-2 flex items-center gap-2"
-            >
-              {bannerImage ? (
-                <Edit className="h-4 w-4" />
-              ) : (
-                <Plus className="h-4 w-4" />
-              )}
-              <span className="hidden sm:inline text-sm font-medium">
-                {bannerImage ? "Edit" : "Add"}
-              </span>
-            </Button>
-          </div>
-        </div>
-
-        <div className="absolute -bottom-16 left-4 lg:left-8">
-          <div className="relative">
-            <div className="relative w-24 h-24 lg:w-32 lg:h-32 rounded-full border-4 border-white overflow-hidden bg-white">
-              <Image
-                src={displayAvatar}
-                alt={displayName}
-                fill
-                className="object-cover"
-                priority
-              />
-            </div>
-            {/* Profile Image Edit Button - Bottom Right Badge */}
-            <input
-              type="file"
-              accept="image/*"
-              onChange={handleProfileImageChange}
-              className="hidden"
-              ref={profileInputRef}
-            />
-            <button
-              onClick={() => profileInputRef.current?.click()}
-              className="absolute cursor-pointer bottom-0 right-0 w-6 h-6 lg:w-10 lg:h-10 bg-white rounded-full shadow-md hover:shadow-lg transition-shadow flex items-center justify-center border-2 border-white"
-              aria-label="Edit profile picture"
-            >
-              <Edit className="h-3 w-3 lg:h-4 lg:w-4 text-gray-700" />
-            </button>
-          </div>
-        </div>
+        <ProfileBanner
+          bannerUrl={displayBanner}
+          onBannerUpdate={handleBannerImageUpdate}
+          isUpdating={isUpdatingBanner}
+        />
+        <ProfileAvatar
+          avatarUrl={displayAvatar}
+          displayName={displayName}
+          onAvatarUpdate={handleProfileImageUpdate}
+          isUpdating={isUpdatingProfile}
+        />
       </div>
 
       {/* Profile Info */}
@@ -206,9 +143,11 @@ export default function MyProfilePage() {
           </div>
 
           <div className="flex gap-2 flex-wrap mt-4">
-            <Badge className="bg-yellow-100 border-yellow-200 px-4 rounded-full">
-              {displayRole}
-            </Badge>
+            {displayRole && (
+              <Badge className="bg-yellow-100 border-yellow-200 px-4 rounded-full">
+                {displayRole}
+              </Badge>
+            )}
             <Button variant="outline" className="rounded-full">
               <Award size={20} height={20} /> Add Verification Badge
             </Button>

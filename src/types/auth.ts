@@ -10,6 +10,7 @@ export type TUser = {
   lastName: string;
   email: string;
   profileImage: string | null;
+  bannerImage?: string | null;
   profileId: string | null;
   authId: string;
   isVerified: boolean;

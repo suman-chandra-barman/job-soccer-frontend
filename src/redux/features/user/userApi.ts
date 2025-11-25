@@ -26,8 +26,55 @@ const userApi = baseApi.injectEndpoints({
       },
       invalidatesTags: [{ type: "User" }],
     }),
-    
+
+    // UPDATE PROFILE IMAGE
+    updateProfileImage: builder.mutation({
+      query: (formData: FormData) => ({
+        url: "/user/profile",
+        method: "PATCH",
+        body: formData,
+      }),
+      async onQueryStarted(arg, { dispatch, queryFulfilled }) {
+        try {
+          const { data } = await queryFulfilled;
+          const token = localStorage.getItem("accessToken");
+
+          if (token) {
+            dispatch(setCredentials({ user: data.data, token }));
+          }
+        } catch (err) {
+          console.error("Update profile image failed:", err);
+        }
+      },
+      invalidatesTags: [{ type: "User" }],
+    }),
+
+    // UPDATE BANNER IMAGE
+    updateBannerImage: builder.mutation({
+      query: (formData: FormData) => ({
+        url: "/user/profile",
+        method: "PATCH",
+        body: formData,
+      }),
+      async onQueryStarted(arg, { dispatch, queryFulfilled }) {
+        try {
+          const { data } = await queryFulfilled;
+          const token = localStorage.getItem("accessToken");
+
+          if (token) {
+            dispatch(setCredentials({ user: data.data, token }));
+          }
+        } catch (err) {
+          console.error("Update banner image failed:", err);
+        }
+      },
+      invalidatesTags: [{ type: "User" }],
+    }),
   }),
 });
 
-export const { useCreateUserProfileMutation } = userApi;
+export const {
+  useCreateUserProfileMutation,
+  useUpdateProfileImageMutation,
+  useUpdateBannerImageMutation,
+} = userApi;
