@@ -173,7 +173,7 @@ const UserProfileMenu: React.FC<UserProfileMenuProps> = ({
           className="cursor-pointer"
         >
           <User className="h-4 w-4" />
-         My Profile
+          My Profile
         </DropdownMenuItem>
         <DropdownMenuSeparator />
         <DropdownMenuItem
