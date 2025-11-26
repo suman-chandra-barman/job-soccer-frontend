@@ -28,15 +28,17 @@ interface UploadedFile {
 interface UploadResumeModalProps {
   isOpen: boolean;
   onClose: () => void;
-  jobId: string;
+  jobId?: string;
   onSubmitSuccess?: () => void;
+  mode?: "profile" | "jobApplication"; // Add mode prop
 }
 
 export default function UploadResumeModal({
   isOpen,
   onClose,
-  jobId,
+  jobId = "",
   onSubmitSuccess,
+  mode = "jobApplication",
 }: UploadResumeModalProps) {
   const userId = useAppSelector((state) => state.auth.user?._id);
   const [uploadedFiles, setUploadedFiles] = useState<UploadedFile[]>([]);
@@ -117,9 +119,17 @@ export default function UploadResumeModal({
 
         await createResume(formData).unwrap();
         toast.success("Resume uploaded successfully!");
+
+        // Reset form
+        setUploadedFiles([]);
+        setSelectedResumeId(null);
       } else if (selectedResumeId) {
         // User selected an existing resume
-        toast.success("Resume selected successfully!");
+        if (mode === "profile") {
+          toast.success("Resume already in your profile!");
+        } else {
+          toast.success("Resume selected successfully!");
+        }
       } else {
         toast.error("Please upload or select a resume");
         return;
@@ -143,7 +153,9 @@ export default function UploadResumeModal({
       <DialogContent className="sm:max-w-[500px] md:max-w-[600px] max-h-[90vh] overflow-y-auto">
         <DialogHeader>
           <DialogTitle className="text-left text-gray-900 font-medium">
-            You have to upload you resume (pdf) for applying this job
+            {mode === "profile"
+              ? "Upload Your Resume"
+              : "You have to upload your resume (pdf) for applying this job"}
           </DialogTitle>
         </DialogHeader>
 
@@ -274,7 +286,11 @@ export default function UploadResumeModal({
             }
             className="bg-green-600 hover:bg-green-700 text-white"
           >
-            {isCreating ? "Uploading..." : "Submit Now"}
+            {isCreating
+              ? "Uploading..."
+              : mode === "profile"
+              ? "Upload Resume"
+              : "Submit Now"}
           </Button>
         </DialogFooter>
       </DialogContent>

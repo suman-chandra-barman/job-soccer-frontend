@@ -548,7 +548,7 @@ export default function MyProfilePage() {
       <UploadResumeModal
         isOpen={isUploadModalOpen}
         onClose={() => setIsUploadModalOpen(false)}
-        jobId=""
+        mode="profile"
       />
       <EditPersonalInformationModal
         isOpen={isEditPersonalInformationModalOpen}
