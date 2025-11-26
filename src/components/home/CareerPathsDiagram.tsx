@@ -54,7 +54,7 @@ const CareerNode = memo<CareerNodeProps>(
         transition-all duration-300 px-4 py-2 border
         ${
           isHovered
-            ? "bg-green-100 border-green-400 scale-110 shadow-green-400/40 shadow-xl"
+            ? "bg-yellow-100 border-yellow-400 scale-110 shadow-yellow-400/40 shadow-xl"
             : "bg-white border-gray-200 hover:bg-gray-50 hover:border-gray-300 shadow-md animate-float"
         }
         ${className}
@@ -97,7 +97,7 @@ const ConnectionLine = memo<ConnectionLineProps>(
         y1={startY}
         x2={endX}
         y2={endY}
-        stroke={isHovered ? "#10B981" : "#D1D5DB"}
+        stroke={isHovered ? "#F59E0B" : "#D1D5DB"}
         strokeWidth="2"
         strokeDasharray="5,5"
         className="transition-all duration-300"
