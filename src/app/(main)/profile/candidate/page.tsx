@@ -22,7 +22,7 @@ import {
 } from "@/redux/features/user/userApi";
 import { useRequestAdminVerificationMutation } from "@/redux/features/adminVerification/adminVerificationApi";
 import UploadResumeModal from "@/components/modals/UploadResumeModal";
-import EditProfileModal from "@/components/modals/EditPersonalInformationModal";
+import EditProfileModal from "@/components/modals/EditProfileModal";
 import EditPlayerDetailsModal from "@/components/modals/EditPlayerDetailsModal";
 import { useAppSelector } from "@/redux/hooks";
 import { ProfileSkeleton } from "@/components/skeleton";
