@@ -70,6 +70,28 @@ const userApi = baseApi.injectEndpoints({
       },
       invalidatesTags: [{ type: "User" }],
     }),
+
+    // UPDATE PROFILE (with form-data)
+    updateProfile: builder.mutation({
+      query: (formData: FormData) => ({
+        url: "/user/profile",
+        method: "PATCH",
+        body: formData,
+      }),
+      async onQueryStarted(arg, { dispatch, queryFulfilled }) {
+        try {
+          const { data } = await queryFulfilled;
+          const token = localStorage.getItem("accessToken");
+
+          if (token) {
+            dispatch(setCredentials({ user: data.data, token }));
+          }
+        } catch (err) {
+          console.error("Update profile failed:", err);
+        }
+      },
+      invalidatesTags: [{ type: "User" }],
+    }),
   }),
 });
 
@@ -77,4 +99,5 @@ export const {
   useCreateUserProfileMutation,
   useUpdateProfileImageMutation,
   useUpdateBannerImageMutation,
+  useUpdateProfileMutation,
 } = userApi;

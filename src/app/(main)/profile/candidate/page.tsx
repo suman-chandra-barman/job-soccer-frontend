@@ -22,7 +22,7 @@ import {
 } from "@/redux/features/user/userApi";
 import { useRequestAdminVerificationMutation } from "@/redux/features/adminVerification/adminVerificationApi";
 import UploadResumeModal from "@/components/modals/UploadResumeModal";
-import EditPersonalInformationModal from "@/components/modals/EditPersonalInformationModal";
+import EditProfileModal from "@/components/modals/EditPersonalInformationModal";
 import EditPlayerDetailsModal from "@/components/modals/EditPlayerDetailsModal";
 import { useAppSelector } from "@/redux/hooks";
 import { ProfileSkeleton } from "@/components/skeleton";
@@ -38,10 +38,7 @@ export default function MyProfilePage() {
   const currentUser = useAppSelector((state) => state.auth.user);
 
   const [isUploadModalOpen, setIsUploadModalOpen] = useState(false);
-  const [
-    isEditPersonalInformationModalOpen,
-    setIsEditPersonalInformationModalOpen,
-  ] = useState(false);
+  const [isEditProfileModalOpen, setIsEditProfileModalOpen] = useState(false);
   const [isEditPlayerDetailsModalOpen, setIsPlayerDetailsModalOpen] =
     useState(false);
 
@@ -257,7 +254,7 @@ export default function MyProfilePage() {
                 variant="ghost"
                 size="sm"
                 className="text-gray-600 hover:text-gray-900"
-                onClick={() => setIsEditPersonalInformationModalOpen(true)}
+                onClick={() => setIsEditProfileModalOpen(true)}
               >
                 <Edit className="w-4 h-4 mr-1" />
                 Edit
@@ -632,10 +629,12 @@ export default function MyProfilePage() {
         onClose={() => setIsUploadModalOpen(false)}
         mode="profile"
       />
-      <EditPersonalInformationModal
-        isOpen={isEditPersonalInformationModalOpen}
-        onClose={() => setIsEditPersonalInformationModalOpen(false)}
+      <EditProfileModal
+        isOpen={isEditProfileModalOpen}
+        onClose={() => setIsEditProfileModalOpen(false)}
         initialData={currentUser?.profile || {}}
+        userRole={currentUser?.role || ""}
+        userType={currentUser?.userType || "candidate"}
       />
       <EditPlayerDetailsModal
         isOpen={isEditPlayerDetailsModalOpen}
