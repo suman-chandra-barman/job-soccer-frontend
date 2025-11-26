@@ -5,7 +5,10 @@ import { cn } from "@/lib/utils";
 import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
+import { useAppDispatch } from "@/redux/hooks";
+import { logout } from "@/redux/features/auth/authSlice";
+import LogoutModal from "@/components/modals/LogoutModal";
 
 const navigationItems = [
   { id: "/", label: "My Profile" },
@@ -16,16 +19,34 @@ const navigationItems = [
 
 export default function ProfileSidebar() {
   const pathname = usePathname();
+  const router = useRouter();
+  const dispatch = useAppDispatch();
   const [sidebarOpen, setSidebarOpen] = useState(false);
+  const [showLogoutModal, setShowLogoutModal] = useState(false);
 
   useEffect(() => {
     setSidebarOpen(false);
   }, [pathname]);
 
+  const handleLogoutClick = () => {
+    setShowLogoutModal(true);
+  };
+
+  const confirmLogout = () => {
+    dispatch(logout());
+    localStorage.removeItem("token");
+    setShowLogoutModal(false);
+    router.push("/signin");
+  };
+
+  const cancelLogout = () => {
+    setShowLogoutModal(false);
+  };
+
   // Extract active section from pathname
   let activeSection = pathname.replace(/^\/profile\/candidate\/?/, "");
   if (activeSection === "") {
-    activeSection = "/"; 
+    activeSection = "/";
   } else if (activeSection.includes("/")) {
     activeSection = activeSection.split("/")[0];
   }
@@ -62,20 +83,39 @@ export default function ProfileSidebar() {
             >
               <X className="h-6 w-6" />
             </button>
-            <SidebarContent activeSection={activeSection} />
+            <SidebarContent
+              activeSection={activeSection}
+              onLogout={handleLogoutClick}
+            />
           </aside>
         </div>
       )}
 
       {/* Desktop Sidebar */}
-      <div className="hidden md:block w-60 lg:flex-shrink-0 bg-white border rounded-2xl border-gray-200 h-full">
-        <SidebarContent activeSection={activeSection} />
+      <div className="hidden md:block w-60 lg:shrink-0 bg-white border rounded-2xl border-gray-200 h-full">
+        <SidebarContent
+          activeSection={activeSection}
+          onLogout={handleLogoutClick}
+        />
       </div>
+
+      {/* Logout Confirmation Modal */}
+      <LogoutModal
+        isOpen={showLogoutModal}
+        onConfirm={confirmLogout}
+        onCancel={cancelLogout}
+      />
     </>
   );
 }
 
-function SidebarContent({ activeSection }: { activeSection: string }) {
+function SidebarContent({
+  activeSection,
+  onLogout,
+}: {
+  activeSection: string;
+  onLogout: () => void;
+}) {
   return (
     <div className="flex flex-col h-full">
       {/* Navigation */}
@@ -111,13 +151,14 @@ function SidebarContent({ activeSection }: { activeSection: string }) {
       </nav>
       {/* Logout */}
       <div className="p-4 border-t">
-        <button
-          onClick={() => console.log("Logout clicked")}
-          className="w-full flex items-center px-4 py-3 text-sm font-medium text-red-600 rounded-lg hover:bg-red-50 transition-colors duration-200"
+        <Button
+          onClick={onLogout}
+          variant="ghost"
+          className="w-full justify-start text-red-600 hover:text-red-700 hover:bg-red-50"
         >
           <LogOut className="mr-3 h-5 w-5" />
           Logout
-        </button>
+        </Button>
       </div>
     </div>
   );

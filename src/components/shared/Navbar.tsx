@@ -13,6 +13,8 @@ import {
   Menu,
   UserSquare,
   LucideIcon,
+  LogOut,
+  UserCircle,
 } from "lucide-react";
 import { usePathname, useRouter } from "next/navigation";
 import Image from "next/image";
@@ -20,6 +22,7 @@ import Link from "next/link";
 
 import logo from "@/assets/logo.png";
 import NotificationModal from "../modals/NotificationModal";
+import LogoutModal from "../modals/LogoutModal";
 import { Sheet, SheetContent, SheetHeader, SheetTitle } from "../ui/sheet";
 import {
   DropdownMenu,
@@ -169,13 +172,15 @@ const UserProfileMenu: React.FC<UserProfileMenuProps> = ({
           onClick={handleProfileClick}
           className="cursor-pointer"
         >
+          <UserCircle className="mr-1 h-4 w-4" />
           Profile
         </DropdownMenuItem>
         <DropdownMenuSeparator />
         <DropdownMenuItem
           onClick={onLogout}
-          className="cursor-pointer text-red-600"
+          className="cursor-pointer text-red-600 hover:text-red-700 hover:bg-red-50 focus:text-red-700 focus:bg-red-50"
         >
+          <LogOut className="mr-1 h-4 w-4" />
           Log out
         </DropdownMenuItem>
       </DropdownMenuContent>
@@ -279,6 +284,7 @@ const getProfileImageUrl = (profileImage?: string): string | undefined => {
 export function Navbar() {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isNotificationOpen, setIsNotificationOpen] = useState(false);
+  const [isLogoutModalOpen, setIsLogoutModalOpen] = useState(false);
 
   const pathname = usePathname();
   const router = useRouter();
@@ -304,11 +310,20 @@ export function Navbar() {
     [pathname]
   );
 
-  const handleLogout = useCallback(() => {
+  const handleLogoutClick = useCallback(() => {
+    setIsLogoutModalOpen(true);
+  }, []);
+
+  const confirmLogout = useCallback(() => {
     dispatch(logout());
     localStorage.removeItem("token");
+    setIsLogoutModalOpen(false);
     router.push("/signin");
   }, [dispatch, router]);
+
+  const cancelLogout = useCallback(() => {
+    setIsLogoutModalOpen(false);
+  }, []);
 
   const closeMobileMenu = useCallback(() => {
     setIsMobileMenuOpen(false);
@@ -362,7 +377,7 @@ export function Navbar() {
                 profileImageUrl={profileImageUrl}
                 userName={user?.data?.firstName}
                 userType={user?.data?.userType}
-                onLogout={handleLogout}
+                onLogout={handleLogoutClick}
                 size="sm"
               />
             ) : (
@@ -386,7 +401,7 @@ export function Navbar() {
                   profileImageUrl={profileImageUrl}
                   userName={user?.data?.firstName}
                   userType={user?.data?.userType}
-                  onLogout={handleLogout}
+                  onLogout={handleLogoutClick}
                   size="md"
                 />
               ) : (
@@ -428,6 +443,13 @@ export function Navbar() {
         isOpen={isNotificationOpen}
         onClose={() => setIsNotificationOpen(false)}
         notifications={MOCK_NOTIFICATIONS}
+      />
+
+      {/* Logout Confirmation Modal */}
+      <LogoutModal
+        isOpen={isLogoutModalOpen}
+        onConfirm={confirmLogout}
+        onCancel={cancelLogout}
       />
     </nav>
   );
