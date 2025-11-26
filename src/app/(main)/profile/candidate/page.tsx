@@ -3,13 +3,24 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { UserPlus, Edit, Award, LayoutGrid, Upload, Mail } from "lucide-react";
+import {
+  UserPlus,
+  Edit,
+  Award,
+  LayoutGrid,
+  Upload,
+  Mail,
+  BadgeCheck,
+  Clock,
+  XCircle,
+} from "lucide-react";
 import { useState, useEffect } from "react";
 import { toast } from "sonner";
 import {
   useUpdateProfileImageMutation,
   useUpdateBannerImageMutation,
 } from "@/redux/features/user/userApi";
+import { useRequestAdminVerificationMutation } from "@/redux/features/adminVerification/adminVerificationApi";
 import UploadResumeModal from "@/components/modals/UploadResumeModal";
 import EditPersonalInformationModal from "@/components/modals/EditPersonalInformationModal";
 import EditPlayerDetailsModal from "@/components/modals/EditPlayerDetailsModal";
@@ -41,6 +52,8 @@ export default function MyProfilePage() {
     useUpdateProfileImageMutation();
   const [updateBannerImage, { isLoading: isUpdatingBanner }] =
     useUpdateBannerImageMutation();
+  const [requestAdminVerification, { isLoading: isRequestingVerification }] =
+    useRequestAdminVerificationMutation();
 
   // Handler for profile image update
   const handleProfileImageUpdate = async (file: File) => {
@@ -76,6 +89,72 @@ export default function MyProfilePage() {
       toast.error(errorMessage);
       throw error; // Re-throw to let component handle cleanup
     }
+  };
+
+  // Handler for admin verification request
+  const handleRequestVerification = async () => {
+    try {
+      await requestAdminVerification().unwrap();
+      toast.success("Verification request submitted successfully");
+    } catch (error) {
+      const errorMessage =
+        error && typeof error === "object" && "data" in error
+          ? (error.data as { message?: string })?.message
+          : "Failed to submit verification request";
+      toast.error(errorMessage);
+    }
+  };
+
+  // Get verification status
+  const verificationStatus = currentUser?.adminVerificationStatus;
+
+  // Render verification badge button based on status
+  const renderVerificationBadge = () => {
+    // Don't show button when verified - badge is shown next to name
+    if (verificationStatus?.status === "approved") {
+      return null;
+    }
+
+    if (
+      verificationStatus?.status === "pending" ||
+      verificationStatus?.hasRequest
+    ) {
+      return (
+        <Button
+          variant="outline"
+          className="rounded-full bg-yellow-50 border-yellow-200 text-yellow-700 cursor-default"
+        >
+          <Clock size={20} height={20} /> Verification Pending
+        </Button>
+      );
+    }
+
+    if (verificationStatus?.status === "rejected") {
+      return (
+        <Button
+          variant="outline"
+          className="rounded-full bg-red-50 border-red-200 text-red-700"
+          onClick={handleRequestVerification}
+          disabled={isRequestingVerification}
+        >
+          <XCircle size={20} height={20} />{" "}
+          {isRequestingVerification ? "Requesting..." : "Request Again"}
+        </Button>
+      );
+    }
+
+    // Default: No request yet
+    return (
+      <Button
+        variant="outline"
+        className="rounded-full"
+        onClick={handleRequestVerification}
+        disabled={isRequestingVerification}
+      >
+        <Award size={20} height={20} />{" "}
+        {isRequestingVerification ? "Requesting..." : "Add Verification Badge"}
+      </Button>
+    );
   };
 
   // Prepare display data from Redux store
@@ -130,7 +209,12 @@ export default function MyProfilePage() {
       {/* Profile Info */}
       <div className="mt-20 mb-8 px-4">
         <div className="mb-6">
-          <h2 className="text-3xl font-bold text-gray-900">{displayName}</h2>
+          <h2 className="text-3xl font-bold text-gray-900 flex items-center gap-2">
+            {displayName}
+            {verificationStatus?.status === "approved" && (
+              <BadgeCheck className="h-6 w-6 text-blue-500" />
+            )}
+          </h2>
 
           {/* Contact Information */}
           <div className="flex flex-wrap gap-4 mt-2 mb-4 text-gray-600">
@@ -148,9 +232,7 @@ export default function MyProfilePage() {
                 {displayRole}
               </Badge>
             )}
-            <Button variant="outline" className="rounded-full">
-              <Award size={20} height={20} /> Add Verification Badge
-            </Button>
+            {renderVerificationBadge()}
             <Button
               variant="outline"
               className="flex items-center rounded-full"

@@ -1,7 +1,14 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 export interface EmailVerificationPayload {
   email: string;
   reason: "account_verification" | "password_reset";
   oneTimeCode: string;
+}
+
+export interface AdminVerificationStatus {
+  hasRequest: boolean;
+  status: "pending" | "approved" | "rejected" | null;
+  verifiedAt: string | null;
 }
 
 export type TUser = {
@@ -21,4 +28,5 @@ export type TUser = {
   createdAt: string;
   updatedAt: string;
   profile: any | null;
+  adminVerificationStatus?: AdminVerificationStatus;
 };
