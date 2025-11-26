@@ -14,7 +14,7 @@ import {
   UserSquare,
   LucideIcon,
   LogOut,
-  UserCircle,
+  User,
 } from "lucide-react";
 import { usePathname, useRouter } from "next/navigation";
 import Image from "next/image";
@@ -172,15 +172,15 @@ const UserProfileMenu: React.FC<UserProfileMenuProps> = ({
           onClick={handleProfileClick}
           className="cursor-pointer"
         >
-          <UserCircle className="mr-1 h-4 w-4" />
-          Profile
+          <User className="h-4 w-4" />
+         My Profile
         </DropdownMenuItem>
         <DropdownMenuSeparator />
         <DropdownMenuItem
           onClick={onLogout}
           className="cursor-pointer text-red-600 hover:text-red-700 hover:bg-red-50 focus:text-red-700 focus:bg-red-50"
         >
-          <LogOut className="mr-1 h-4 w-4" />
+          <LogOut className="h-4 w-4" />
           Log out
         </DropdownMenuItem>
       </DropdownMenuContent>
