@@ -72,15 +72,9 @@ export function JobCard({ job }: JobCardProps) {
     }
   };
 
-  const handleApplyClick = (e: React.MouseEvent) => {
-    e.preventDefault();
-    e.stopPropagation();
-    window.location.href = `jobs/${jobData.id}`;
-  };
-
   return (
     <>
-      <div className="bg-gradient-to-br from-white to-[#FDF9E3] rounded-xl p-4 shadow-sm border border-gray-100">
+      <div className="bg-linear-to-br from-white to-[#FDF9E3] rounded-xl p-4 shadow-sm border border-gray-100">
         <div className="flex items-center gap-3 mb-4 border-b border-gray-200 pb-4">
           <Link
             href={`jobs/${jobData.id}`}
@@ -155,13 +149,14 @@ export function JobCard({ job }: JobCardProps) {
             <Bookmark className="w-6 h-6" />
             {isShortlistLoading ? "Saving..." : "Shortlist"}
           </Button>
-          <Button
-            className="flex-1 hover:scale-105 transition-transform duration-200"
-            onClick={handleApplyClick}
-          >
-            <MessageCircle className="w-6 h-6" />
-            Apply
-          </Button>
+          <Link href={`/jobs/${jobData.id}`} className="flex-1 ">
+            <Button
+              className="w-full hover:scale-105 transition-transform duration-200"
+            >
+              <MessageCircle className="w-6 h-6" />
+              Apply
+            </Button>
+          </Link>
         </div>
       </div>
     </>
