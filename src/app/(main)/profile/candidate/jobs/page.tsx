@@ -20,6 +20,7 @@ import {
   useGetMyApplicationsQuery,
   useDeleteJobApplicationMutation,
 } from "@/redux/api/jobApplicationsApi";
+import { JobsListSkeletonGrid } from "@/components/skeleton";
 
 // Type definitions
 interface JobItemProps {
@@ -69,25 +70,34 @@ const JobItem: React.FC<JobItemProps> = ({ item, tab, onRemove }) => {
             <p className="text-sm text-gray-600">{job.location}</p>
           </div>
 
-          <div className="flex items-center gap-2">
-            {getStatusBadge()}
-
-            <DropdownMenu>
-              <DropdownMenuTrigger asChild>
-                <Button variant="ghost" size="sm" className="p-2">
-                  <X className="h-4 w-4" />
-                </Button>
-              </DropdownMenuTrigger>
-              <DropdownMenuContent align="end" className="w-32">
-                <DropdownMenuItem
-                  onClick={() => onRemove(item._id, tab)}
-                  className="cursor-pointer text-red-600"
-                >
-                  <X className="mr-2 h-4 w-4" />
-                  Remove
-                </DropdownMenuItem>
-              </DropdownMenuContent>
-            </DropdownMenu>
+          <div className="flex flex-col items-end gap-4">
+            <div className="flex items-center gap-2">
+              {getStatusBadge()}
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <Button variant="ghost" size="sm" className="p-2">
+                    <X className="h-4 w-4" />
+                  </Button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent align="end" className="w-32">
+                  <DropdownMenuItem
+                    onClick={() => onRemove(item._id, tab)}
+                    className="cursor-pointer text-red-600"
+                  >
+                    <X className="mr-2 h-4 w-4" />
+                    Remove
+                  </DropdownMenuItem>
+                </DropdownMenuContent>
+              </DropdownMenu>
+            </div>
+            <Button
+              asChild
+              variant="outline"
+              size="sm"
+              className="bg-green-500 hover:bg-green-600 text-white hover:text-white"
+            >
+              <Link href={`/jobs/${job._id}`}>View Details</Link>
+            </Button>
           </div>
         </div>
       </CardContent>
@@ -127,18 +137,6 @@ const JobsList: React.FC = () => {
   const filteredJobs = getFilteredJobs();
   const isLoading = activeTab === "saved" ? savedLoading : appliedLoading;
 
-  if (isLoading) {
-    return (
-      <div className="max-w-4xl mx-auto p-4">
-        <div className="animate-pulse">
-          {[1, 2, 3].map((i) => (
-            <div key={i} className="bg-gray-200 h-24 rounded-lg mb-4"></div>
-          ))}
-        </div>
-      </div>
-    );
-  }
-
   return (
     <div className="w-full p-4 border rounded-2xl">
       {/* Header */}
@@ -175,7 +173,9 @@ const JobsList: React.FC = () => {
 
       {/* Jobs List */}
       <div className="space-y-4 px-6 py-4">
-        {filteredJobs.length === 0 ? (
+        {isLoading ? (
+          <JobsListSkeletonGrid count={3} />
+        ) : filteredJobs.length === 0 ? (
           <div className="text-center py-8">
             <p className="text-gray-500">
               {activeTab === "saved" && "No saved jobs found."}
