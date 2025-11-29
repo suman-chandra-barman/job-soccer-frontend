@@ -1,41 +1,38 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
+import { TSavedJob } from "@/types/job";
 
 interface SavedJobsState {
-  savedJobIds: string[];
+  savedJobs: TSavedJob[];
 }
 
 const initialState: SavedJobsState = {
-  savedJobIds: [],
+  savedJobs: [],
 };
 
 const savedJobsSlice = createSlice({
   name: "savedJobs",
   initialState,
   reducers: {
-    setSavedJobIds: (state, action: PayloadAction<string[]>) => {
-      state.savedJobIds = action.payload;
+    setSavedJobs: (state, action: PayloadAction<TSavedJob[]>) => {
+      state.savedJobs = action.payload;
     },
-    addSavedJobId: (state, action: PayloadAction<string>) => {
-      if (!state.savedJobIds.includes(action.payload)) {
-        state.savedJobIds.push(action.payload);
+    addSavedJob: (state, action: PayloadAction<TSavedJob>) => {
+      if (!state.savedJobs.find((job) => job._id === action.payload._id)) {
+        state.savedJobs.push(action.payload);
       }
     },
-    removeSavedJobId: (state, action: PayloadAction<string>) => {
-      state.savedJobIds = state.savedJobIds.filter(
-        (id) => id !== action.payload
+    removeSavedJob: (state, action: PayloadAction<string>) => {
+      state.savedJobs = state.savedJobs.filter(
+        (job) => job._id !== action.payload
       );
     },
     clearSavedJobs: (state) => {
-      state.savedJobIds = [];
+      state.savedJobs = [];
     },
   },
 });
 
-export const {
-  setSavedJobIds,
-  addSavedJobId,
-  removeSavedJobId,
-  clearSavedJobs,
-} = savedJobsSlice.actions;
+export const { setSavedJobs, addSavedJob, removeSavedJob, clearSavedJobs } =
+  savedJobsSlice.actions;
 
 export default savedJobsSlice.reducer;

@@ -1,9 +1,9 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { MoreVertical, Bookmark, X, Check } from "lucide-react";
+import { X } from "lucide-react";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -11,138 +11,48 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import Link from "next/link";
+import { TSavedJob, TAppliedJob } from "@/types/job";
+import {
+  useGetSavedJobsQuery,
+  useDeleteSavedJobMutation,
+} from "@/redux/api/savedJobsApi";
+import {
+  useGetMyApplicationsQuery,
+  useDeleteJobApplicationMutation,
+} from "@/redux/api/jobApplicationsApi";
 
 // Type definitions
-interface Job {
-  id: number;
-  title: string;
-  date: string;
-  salary: string;
-  location: string;
-  status: "shortlisted" | "saved" | "applied";
+interface JobItemProps {
+  item: TSavedJob | TAppliedJob;
+  tab: "saved" | "applied";
+  onRemove: (id: string, tab: "saved" | "applied") => void;
 }
 
-interface JobCardProps {
-  job: Job;
-  onSave: (jobId: number) => void;
-  onApply: (jobId: number) => void;
-  onRemove: (jobId: number) => void;
-  showActions?: boolean;
-}
-
-// Mock API functions - replace with your actual API calls
-const mockAPI = {
-  async getJobs(): Promise<Job[]> {
-    return [
-      {
-        id: 1,
-        title: "Defence Player",
-        date: "22/08/2024",
-        salary: "$30/mo",
-        location: "1901 Thornridge Cir. Shiloh, Hawaii 81063",
-        status: "shortlisted",
-      },
-      {
-        id: 2,
-        title: "Defence Player",
-        date: "22/08/2024",
-        salary: "$30/mo",
-        location: "1901 Thornridge Cir. Shiloh, Hawaii 81063",
-        status: "shortlisted",
-      },
-      {
-        id: 3,
-        title: "Defence Player",
-        date: "22/08/2024",
-        salary: "$30/mo",
-        location: "1901 Thornridge Cir. Shiloh, Hawaii 81063",
-        status: "applied",
-      },
-      {
-        id: 4,
-        title: "Defence Player",
-        date: "22/08/2024",
-        salary: "$30/mo",
-        location: "1901 Thornridge Cir. Shiloh, Hawaii 81063",
-        status: "saved",
-      },
-      {
-        id: 5,
-        title: "Defence Player",
-        date: "22/08/2024",
-        salary: "$30/mo",
-        location: "1901 Thornridge Cir. Shiloh, Hawaii 81063",
-        status: "shortlisted",
-      },
-    ];
-  },
-
-  async saveJob(jobId: number): Promise<{ success: boolean }> {
-    console.log("Saving job:", jobId);
-    return { success: true };
-  },
-
-  async applyJob(jobId: number): Promise<{ success: boolean }> {
-    console.log("Applying for job:", jobId);
-    return { success: true };
-  },
-
-  async removeJob(jobId: number): Promise<{ success: boolean }> {
-    console.log("Removing job:", jobId);
-    return { success: true };
-  },
-};
-
-const JobCard: React.FC<JobCardProps> = ({
-  job,
-  onSave,
-  onApply,
-  onRemove,
-  showActions = true,
-}) => {
-  const [isRemoving, setIsRemoving] = useState(false);
+const JobItem: React.FC<JobItemProps> = ({ item, tab, onRemove }) => {
+  const job = item.jobId;
+  const date =
+    tab === "saved" ? item.createdAt : (item as TAppliedJob).appliedAt;
+  const salary = `$${job.salary.min.toLocaleString()} - $${job.salary.max.toLocaleString()}`;
+  const status = tab;
 
   const getStatusBadge = () => {
-    switch (job.status) {
-      case "saved":
-        return (
-          <div className="flex items-center gap-2">
-            <span className="px-3 py-1 bg-blue-100 text-blue-700 rounded-md text-sm font-medium">
-              Saved
-            </span>
-          </div>
-        );
-      case "applied":
-        return (
-          <span className="px-3 py-1 bg-gray-100 text-gray-700 rounded-md text-sm font-medium">
-            Applied
-          </span>
-        );
-      default:
-        return null;
-    }
-  };
-
-  const getActionButtons = () => {
-    if (job.status === "shortlisted") {
+    if (status === "saved") {
       return (
-        <div className="flex gap-2">
-          <Button
-            size="sm"
-            className="bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded-md"
-            onClick={() => onApply(job.id)}
-          >
-            Apply Now
-          </Button>
+        <div className="flex items-center gap-2">
+          <span className="px-3 py-1 bg-blue-100 text-blue-700 rounded-md text-sm font-medium">
+            Saved
+          </span>
         </div>
+      );
+    } else if (status === "applied") {
+      return (
+        <span className="px-3 py-1 bg-gray-100 text-gray-700 rounded-md text-sm font-medium">
+          Applied
+        </span>
       );
     }
     return null;
   };
-
-  if (isRemoving) {
-    return null;
-  }
 
   return (
     <Card className="w-full mb-4 hover:shadow-md transition-shadow">
@@ -150,135 +60,74 @@ const JobCard: React.FC<JobCardProps> = ({
         <div className="flex justify-between items-start">
           <div className="flex-1">
             <h3 className="font-semibold text-lg text-gray-900 mb-1">
-              {job.title}
+              {job.jobTitle}
             </h3>
-            <p className="text-sm text-gray-500 mb-2">{job.date}</p>
-            <p className="text-sm text-gray-700 mb-1">{job.salary}</p>
+            <p className="text-sm text-gray-500 mb-2">
+              {new Date(date).toLocaleDateString()}
+            </p>
+            <p className="text-sm text-gray-700 mb-1">{salary}</p>
             <p className="text-sm text-gray-600">{job.location}</p>
           </div>
 
           <div className="flex items-center gap-2">
             {getStatusBadge()}
-            {getActionButtons()}
 
-            {showActions && (
-              <DropdownMenu>
-                <DropdownMenuTrigger asChild>
-                  <Button variant="ghost" size="sm" className="p-2">
-                    <MoreVertical className="h-4 w-4" />
-                  </Button>
-                </DropdownMenuTrigger>
-                <DropdownMenuContent align="end" className="w-32">
-                  {job.status === "shortlisted" && (
-                    <>
-                      <DropdownMenuItem
-                        onClick={() => onSave(job.id)}
-                        className="cursor-pointer"
-                      >
-                        <Bookmark className="mr-2 h-4 w-4" />
-                        Save
-                      </DropdownMenuItem>
-                      <DropdownMenuItem
-                        onClick={() => onRemove(job.id)}
-                        className="cursor-pointer text-red-600"
-                      >
-                        <X className="mr-2 h-4 w-4" />
-                        Remove
-                      </DropdownMenuItem>
-                    </>
-                  )}
-                  {(job.status === "saved" || job.status === "applied") && (
-                    <DropdownMenuItem
-                      onClick={() => onRemove(job.id)}
-                      className="cursor-pointer text-red-600"
-                    >
-                      <X className="mr-2 h-4 w-4" />
-                      Remove
-                    </DropdownMenuItem>
-                  )}
-                </DropdownMenuContent>
-              </DropdownMenu>
-            )}
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <Button variant="ghost" size="sm" className="p-2">
+                  <X className="h-4 w-4" />
+                </Button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="end" className="w-32">
+                <DropdownMenuItem
+                  onClick={() => onRemove(item._id, tab)}
+                  className="cursor-pointer text-red-600"
+                >
+                  <X className="mr-2 h-4 w-4" />
+                  Remove
+                </DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
           </div>
         </div>
       </CardContent>
     </Card>
   );
 };
-
 const JobsList: React.FC = () => {
-  const [jobs, setJobs] = useState<Job[]>([]);
-  const [activeTab, setActiveTab] = useState<"all" | "saved" | "applied">(
-    "all"
-  );
-  const [loading, setLoading] = useState(true);
+  const [activeTab, setActiveTab] = useState<"saved" | "applied">("saved");
 
-  useEffect(() => {
-    loadJobs();
-  }, []);
+  const { data: savedJobsData, isLoading: savedLoading } =
+    useGetSavedJobsQuery();
+  const { data: appliedJobsData, isLoading: appliedLoading } =
+    useGetMyApplicationsQuery();
+  const [deleteSavedJob] = useDeleteSavedJobMutation();
+  const [deleteJobApplication] = useDeleteJobApplicationMutation();
 
-  const loadJobs = async () => {
+  const handleRemoveJob = async (id: string, tab: "saved" | "applied") => {
     try {
-      setLoading(true);
-      const jobsData = await mockAPI.getJobs();
-      setJobs(jobsData);
-    } catch (error) {
-      console.error("Error loading jobs:", error);
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  const handleSaveJob = async (jobId: number) => {
-    try {
-      await mockAPI.saveJob(jobId);
-      setJobs(
-        jobs.map((job) =>
-          job.id === jobId ? { ...job, status: "saved" } : job
-        )
-      );
-    } catch (error) {
-      console.error("Error saving job:", error);
-    }
-  };
-
-  const handleApplyJob = async (jobId: number) => {
-    try {
-      await mockAPI.applyJob(jobId);
-      setJobs(
-        jobs.map((job) =>
-          job.id === jobId ? { ...job, status: "applied" } : job
-        )
-      );
-    } catch (error) {
-      console.error("Error applying for job:", error);
-    }
-  };
-
-  const handleRemoveJob = async (jobId: number) => {
-    try {
-      await mockAPI.removeJob(jobId);
-      setJobs(jobs.filter((job) => job.id !== jobId));
+      if (tab === "saved") {
+        await deleteSavedJob(id).unwrap();
+      } else {
+        await deleteJobApplication(id).unwrap();
+      }
     } catch (error) {
       console.error("Error removing job:", error);
     }
   };
 
-  const getFilteredJobs = (): Job[] => {
-    switch (activeTab) {
-      case "saved":
-        return jobs.filter((job) => job.status === "saved");
-      case "applied":
-        return jobs.filter((job) => job.status === "applied");
-      case "all":
-      default:
-        return jobs;
+  const getFilteredJobs = (): (TSavedJob | TAppliedJob)[] => {
+    if (activeTab === "saved") {
+      return savedJobsData?.data || [];
+    } else {
+      return appliedJobsData?.data || [];
     }
   };
 
   const filteredJobs = getFilteredJobs();
+  const isLoading = activeTab === "saved" ? savedLoading : appliedLoading;
 
-  if (loading) {
+  if (isLoading) {
     return (
       <div className="max-w-4xl mx-auto p-4">
         <div className="animate-pulse">
@@ -294,26 +143,23 @@ const JobsList: React.FC = () => {
     <div className="w-full p-4 border rounded-2xl">
       {/* Header */}
       <div className="flex justify-between items-center mb-6">
-        <h1 className="text-2xl font-bold text-gray-900">Jobs list</h1>
+        <h1 className="text-2xl font-bold text-gray-900">My Jobs</h1>
         <Button className="bg-green-500 hover:bg-green-600 text-white">
-          <Link href="jobss"> Find More Job</Link>
+          <Link href="/jobs">Find More Jobs</Link>
         </Button>
       </div>
 
       {/* Tabs */}
-      <div className=" bg-white border-b border-gray-200">
+      <div className="bg-white border-b border-gray-200">
         <div className="px-6">
           <div className="flex space-x-8">
             {[
-              { key: "all", label: "All" },
-              { key: "saved", label: "Save" },
+              { key: "saved", label: "Saved" },
               { key: "applied", label: "Applied" },
             ].map((tab) => (
               <button
                 key={tab.key}
-                onClick={() =>
-                  setActiveTab(tab.key as "all" | "saved" | "applied")
-                }
+                onClick={() => setActiveTab(tab.key as "saved" | "applied")}
                 className={`py-4 px-1 border-b-2 font-medium text-sm transition-colors ${
                   activeTab === tab.key
                     ? "border-blue-500 text-blue-600"
@@ -334,16 +180,14 @@ const JobsList: React.FC = () => {
             <p className="text-gray-500">
               {activeTab === "saved" && "No saved jobs found."}
               {activeTab === "applied" && "No applied jobs found."}
-              {activeTab === "all" && "No jobs found."}
             </p>
           </div>
         ) : (
-          filteredJobs.map((job) => (
-            <JobCard
-              key={job.id}
-              job={job}
-              onSave={handleSaveJob}
-              onApply={handleApplyJob}
+          filteredJobs.map((item) => (
+            <JobItem
+              key={item._id}
+              item={item}
+              tab={activeTab}
               onRemove={handleRemoveJob}
             />
           ))

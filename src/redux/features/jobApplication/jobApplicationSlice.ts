@@ -1,40 +1,41 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
+import { TAppliedJob } from "@/types/job";
 
 interface JobApplicationState {
-  appliedJobIds: string[];
+  appliedJobs: TAppliedJob[];
 }
 
 const initialState: JobApplicationState = {
-  appliedJobIds: [],
+  appliedJobs: [],
 };
 
 const jobApplicationSlice = createSlice({
   name: "jobApplication",
   initialState,
   reducers: {
-    setAppliedJobIds: (state, action: PayloadAction<string[]>) => {
-      state.appliedJobIds = action.payload;
+    setAppliedJobs: (state, action: PayloadAction<TAppliedJob[]>) => {
+      state.appliedJobs = action.payload;
     },
-    addAppliedJobId: (state, action: PayloadAction<string>) => {
-      if (!state.appliedJobIds.includes(action.payload)) {
-        state.appliedJobIds.push(action.payload);
+    addAppliedJob: (state, action: PayloadAction<TAppliedJob>) => {
+      if (!state.appliedJobs.find((job) => job._id === action.payload._id)) {
+        state.appliedJobs.push(action.payload);
       }
     },
-    removeAppliedJobId: (state, action: PayloadAction<string>) => {
-      state.appliedJobIds = state.appliedJobIds.filter(
-        (id) => id !== action.payload
+    removeAppliedJob: (state, action: PayloadAction<string>) => {
+      state.appliedJobs = state.appliedJobs.filter(
+        (job) => job._id !== action.payload
       );
     },
     clearApplications: (state) => {
-      state.appliedJobIds = [];
+      state.appliedJobs = [];
     },
   },
 });
 
 export const {
-  setAppliedJobIds,
-  addAppliedJobId,
-  removeAppliedJobId,
+  setAppliedJobs,
+  addAppliedJob,
+  removeAppliedJob,
   clearApplications,
 } = jobApplicationSlice.actions;
 
