@@ -118,7 +118,7 @@ const JobDetailsPage = ({ params }: PageProps) => {
   return (
     <div className="min-h-screen bg-gray-50">
       <div className="container mx-auto px-4 md:px-0 py-16">
-        <div className="flex flex-col-reverse lg:flex-row justify-between gap-4">
+        <div className="flex flex-col-reverse lg:flex-row justify-between gap-4 items-start">
           {/* left column - Related Jobs */}
           <div className="flex-1 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-1 gap-4">
             <h2 className="text-xl font-semibold mb-4">Recommended Jobs</h2>
@@ -128,7 +128,7 @@ const JobDetailsPage = ({ params }: PageProps) => {
               ))
             ) : relatedJobs.length > 0 ? (
               relatedJobs.map((job: TJob) => (
-                <JobCard key={job._id} job={job} />
+                <JobCard key={job._id} job={job}/>
               ))
             ) : (
               <p className="text-gray-500 text-center">
