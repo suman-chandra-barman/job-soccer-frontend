@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, Suspense } from "react";
 import { useSearchParams } from "next/navigation";
 import { EmployerSearch } from "@/components/search/EmploerSearch";
 import { EmployerCard } from "@/components/cards/EmployerCard";
@@ -9,7 +9,7 @@ import { IEmployer } from "@/types/user";
 import { CardSkeleton } from "@/components/skeleton/CardSkeleton";
 import { Building2 } from "lucide-react";
 
-function EmployerSearchPage() {
+function EmployerSearchPageContent() {
   const searchParams = useSearchParams();
   const [filters, setFilters] = useState<Record<string, string>>({});
 
@@ -127,4 +127,10 @@ function EmployerSearchPage() {
   );
 }
 
-export default EmployerSearchPage;
+export default function EmployerSearchPage() {
+  return (
+    <Suspense fallback={<div>Loading...</div>}>
+      <EmployerSearchPageContent />
+    </Suspense>
+  );
+}

@@ -84,8 +84,8 @@ export async function processImageForBanner(
       }
 
       // Calculate dimensions
-      let sourceWidth = img.width;
-      let sourceHeight = img.height;
+      const sourceWidth = img.width;
+      const sourceHeight = img.height;
       const sourceAspectRatio = sourceWidth / sourceHeight;
 
       // Determine crop area to match target aspect ratio

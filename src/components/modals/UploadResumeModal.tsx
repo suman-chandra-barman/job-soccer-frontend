@@ -36,7 +36,6 @@ interface UploadResumeModalProps {
 export default function UploadResumeModal({
   isOpen,
   onClose,
-  jobId = "",
   onSubmitSuccess,
   mode = "jobApplication",
 }: UploadResumeModalProps) {
@@ -47,7 +46,7 @@ export default function UploadResumeModal({
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   const [createResume, { isLoading: isCreating }] = useCreateResumeMutation();
-  const { data: existingResumes, isLoading: isLoadingResumes } =
+  const { data: existingResumes, } =
     useGetUserResumeQuery(userId || "", {
       skip: !userId,
     });

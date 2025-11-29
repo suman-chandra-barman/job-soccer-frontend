@@ -284,15 +284,13 @@ export default function UpgradePage() {
             <p className="text-lg  text-gray-600 mb-2">
               {pricingData.subtitle}
             </p>
-            <p className="text-lg text-gray-600">
-              {pricingData.description}
-            </p>
+            <p className="text-lg text-gray-600">{pricingData.description}</p>
           </div>
         </div>
 
         {/* Pricing Cards */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 max-w-6xl mx-auto">
-          {pricingData.plans.map((plan, index) => {
+          {pricingData.plans.map((plan) => {
             const isRecommended = plan.recommended;
             const isPopular = plan.popular;
 
@@ -407,7 +405,9 @@ export default function UpgradePage() {
                   <Button
                     onClick={() => handlePlanSelect(plan.id)}
                     variant={
-                      isRecommended ? "default" : (plan.buttonVariant as any)
+                      isRecommended
+                        ? "default"
+                        : plan.buttonVariant || "outline"
                     }
                     className={`w-full py-6 text-lg font-semibold transition-all duration-200 ${
                       isRecommended

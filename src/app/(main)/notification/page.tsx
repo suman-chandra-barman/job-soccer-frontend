@@ -1,10 +1,20 @@
-import React, { useState } from 'react';
-import { X, MoreHorizontal, Clock, Briefcase, Users, Star, CheckCircle } from 'lucide-react';
+"use client";
+
+import React, { useState } from "react";
+import {
+  X,
+  MoreHorizontal,
+  Clock,
+  Briefcase,
+  Users,
+  Star,
+  CheckCircle,
+} from "lucide-react";
 
 // Types for notification data
 export interface NotificationItem {
   id: string;
-  type: 'opportunity' | 'message' | 'application' | 'system';
+  type: "opportunity" | "message" | "application" | "system";
   title: string;
   description: string;
   timestamp: string;
@@ -16,85 +26,93 @@ export interface NotificationItem {
 // Mock notification data
 const mockNotifications: NotificationItem[] = [
   {
-    id: '1',
-    type: 'opportunity',
-    title: 'You have new 4 opportunity this week',
-    description: 'This week, your AI Job-finder has discovered four exciting new Cocktail opportunities...',
-    timestamp: '5h ago',
+    id: "1",
+    type: "opportunity",
+    title: "You have new 4 opportunity this week",
+    description:
+      "This week, your AI Job-finder has discovered four exciting new Cocktail opportunities...",
+    timestamp: "5h ago",
     isRead: false,
-    count: 4
+    count: 4,
   },
   {
-    id: '2',
-    type: 'opportunity',
-    title: 'You have new 4 opportunity this week',
-    description: 'This week, your AI Job-finder has discovered four exciting new Cocktail opportunities...',
-    timestamp: '5h ago',
+    id: "2",
+    type: "opportunity",
+    title: "You have new 4 opportunity this week",
+    description:
+      "This week, your AI Job-finder has discovered four exciting new Cocktail opportunities...",
+    timestamp: "5h ago",
     isRead: false,
-    count: 4
+    count: 4,
   },
   {
-    id: '3',
-    type: 'opportunity',
-    title: 'You have new 4 opportunity this week',
-    description: 'This week, your AI Job-finder has discovered four exciting new Cocktail opportunities...',
-    timestamp: '5h ago',
+    id: "3",
+    type: "opportunity",
+    title: "You have new 4 opportunity this week",
+    description:
+      "This week, your AI Job-finder has discovered four exciting new Cocktail opportunities...",
+    timestamp: "5h ago",
     isRead: false,
-    count: 4
+    count: 4,
   },
   {
-    id: '4',
-    type: 'opportunity',
-    title: 'You have new 4 opportunity this week',
-    description: 'This week, your AI Job-finder has discovered four exciting new Cocktail opportunities...',
-    timestamp: '14h ago',
+    id: "4",
+    type: "opportunity",
+    title: "You have new 4 opportunity this week",
+    description:
+      "This week, your AI Job-finder has discovered four exciting new Cocktail opportunities...",
+    timestamp: "14h ago",
     isRead: true,
-    count: 4
+    count: 4,
   },
   {
-    id: '5',
-    type: 'opportunity',
-    title: 'You have new 4 opportunity this week',
-    description: 'This week, your AI Job-finder has discovered four exciting new Cocktail opportunities...',
-    timestamp: '22h ago',
+    id: "5",
+    type: "opportunity",
+    title: "You have new 4 opportunity this week",
+    description:
+      "This week, your AI Job-finder has discovered four exciting new Cocktail opportunities...",
+    timestamp: "22h ago",
     isRead: true,
-    count: 4
+    count: 4,
   },
   {
-    id: '6',
-    type: 'opportunity',
-    title: 'You have new 4 opportunity this week',
-    description: 'This week, your AI Job-finder has discovered four exciting new Cocktail opportunities...',
-    timestamp: '1d ago',
+    id: "6",
+    type: "opportunity",
+    title: "You have new 4 opportunity this week",
+    description:
+      "This week, your AI Job-finder has discovered four exciting new Cocktail opportunities...",
+    timestamp: "1d ago",
     isRead: true,
-    count: 4
+    count: 4,
   },
   {
-    id: '7',
-    type: 'opportunity',
-    title: 'You have new 4 opportunity this week',
-    description: 'This week, your AI Job-finder has discovered four exciting new Cocktail opportunities...',
-    timestamp: '1d ago',
+    id: "7",
+    type: "opportunity",
+    title: "You have new 4 opportunity this week",
+    description:
+      "This week, your AI Job-finder has discovered four exciting new Cocktail opportunities...",
+    timestamp: "1d ago",
     isRead: true,
-    count: 4
-  }
+    count: 4,
+  },
 ];
 
 const NotificationModal = () => {
   const [isOpen, setIsOpen] = useState(true);
   const [notifications, setNotifications] = useState(mockNotifications);
-  const [activeTab, setActiveTab] = useState<'all' | 'unread'>('all');
+  const [activeTab, setActiveTab] = useState<"all" | "unread">("all");
 
-  const unreadCount = notifications.filter(n => !n.isRead).length;
-  
-  const filteredNotifications = activeTab === 'unread' 
-    ? notifications.filter(n => !n.isRead)
-    : notifications;
+  const unreadCount = notifications.filter((n) => !n.isRead).length;
+
+  const filteredNotifications =
+    activeTab === "unread"
+      ? notifications.filter((n) => !n.isRead)
+      : notifications;
 
   const handleMarkAsRead = (id: string) => {
-    setNotifications(prev => 
-      prev.map(notification => 
-        notification.id === id 
+    setNotifications((prev) =>
+      prev.map((notification) =>
+        notification.id === id
           ? { ...notification, isRead: true }
           : notification
       )
@@ -102,18 +120,18 @@ const NotificationModal = () => {
   };
 
   const handleMarkAllAsRead = () => {
-    setNotifications(prev => 
-      prev.map(notification => ({ ...notification, isRead: true }))
+    setNotifications((prev) =>
+      prev.map((notification) => ({ ...notification, isRead: true }))
     );
   };
 
   const getNotificationIcon = (type: string) => {
     switch (type) {
-      case 'opportunity':
+      case "opportunity":
         return <Briefcase className="w-5 h-5" />;
-      case 'message':
+      case "message":
         return <Users className="w-5 h-5" />;
-      case 'application':
+      case "application":
         return <Star className="w-5 h-5" />;
       default:
         return <CheckCircle className="w-5 h-5" />;
@@ -131,7 +149,7 @@ const NotificationModal = () => {
             <div>
               <h2 className="text-xl font-bold">Notifications</h2>
               <p className="text-blue-100 text-sm">
-                {unreadCount} unread notification{unreadCount !== 1 ? 's' : ''}
+                {unreadCount} unread notification{unreadCount !== 1 ? "s" : ""}
               </p>
             </div>
             <button
@@ -145,21 +163,21 @@ const NotificationModal = () => {
           {/* Tabs */}
           <div className="flex mt-4 bg-white bg-opacity-20 rounded-lg p-1">
             <button
-              onClick={() => setActiveTab('all')}
+              onClick={() => setActiveTab("all")}
               className={`flex-1 py-2 px-4 text-sm font-medium rounded-md transition-colors ${
-                activeTab === 'all'
-                  ? 'bg-white text-blue-600'
-                  : 'text-white hover:bg-white hover:bg-opacity-20'
+                activeTab === "all"
+                  ? "bg-white text-blue-600"
+                  : "text-white hover:bg-white hover:bg-opacity-20"
               }`}
             >
               All ({notifications.length})
             </button>
             <button
-              onClick={() => setActiveTab('unread')}
+              onClick={() => setActiveTab("unread")}
               className={`flex-1 py-2 px-4 text-sm font-medium rounded-md transition-colors ${
-                activeTab === 'unread'
-                  ? 'bg-white text-blue-600'
-                  : 'text-white hover:bg-white hover:bg-opacity-20'
+                activeTab === "unread"
+                  ? "bg-white text-blue-600"
+                  : "text-white hover:bg-white hover:bg-opacity-20"
               }`}
             >
               Unread ({unreadCount})
@@ -186,12 +204,13 @@ const NotificationModal = () => {
               <div className="w-16 h-16 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-4">
                 <CheckCircle className="w-8 h-8 text-gray-400" />
               </div>
-              <h3 className="text-lg font-medium text-gray-900 mb-2">All caught up!</h3>
+              <h3 className="text-lg font-medium text-gray-900 mb-2">
+                All caught up!
+              </h3>
               <p className="text-gray-500 text-sm">
-                {activeTab === 'unread' 
-                  ? 'No unread notifications'
-                  : 'You have no notifications'
-                }
+                {activeTab === "unread"
+                  ? "No unread notifications"
+                  : "You have no notifications"}
               </p>
             </div>
           ) : (
@@ -199,7 +218,7 @@ const NotificationModal = () => {
               <div
                 key={notification.id}
                 className={`relative px-6 py-4 border-b border-gray-100 hover:bg-gray-50 transition-colors cursor-pointer ${
-                  !notification.isRead ? 'bg-blue-50' : ''
+                  !notification.isRead ? "bg-blue-50" : ""
                 }`}
                 onClick={() => handleMarkAsRead(notification.id)}
               >
@@ -221,7 +240,10 @@ const NotificationModal = () => {
                     <div className="flex items-start justify-between">
                       <div className="flex-1">
                         <h4 className="text-sm font-medium text-gray-900 mb-1 leading-tight">
-                          {notification.title.replace('4', notification.count?.toString() || '4')}
+                          {notification.title.replace(
+                            "4",
+                            notification.count?.toString() || "4"
+                          )}
                         </h4>
                         <p className="text-sm text-gray-600 mb-2 leading-relaxed">
                           {notification.description}

@@ -35,9 +35,7 @@ const formSchema = z
     companyLocation: z.string().min(1, "Company location is required"),
     jobCategory: z.string().min(1, "Job category is required"),
     jobSubcategory: z.string().optional(),
-    jobType: z.enum(["full-time", "part-time"], {
-      required_error: "Job type is required",
-    }),
+    jobType: z.enum(["full-time", "part-time"]),
     experienceRequired: z.string().min(1, "Experience level is required"),
     position: z.string().min(1, "Position is required"),
     contractType: z.string().min(1, "Contract type is required"),

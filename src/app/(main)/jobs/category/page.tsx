@@ -1,17 +1,19 @@
 "use client";
 
 import React from "react";
+import { StaticImageData } from "next/image";
 import user1 from "@/assets/candidates/user1.png";
 import user2 from "@/assets/candidates/user2.png";
 import user3 from "@/assets/candidates/user3.png";
 import user4 from "@/assets/candidates/user4.png";
 import { TNewJobPost } from "@/components/home/NewJobs";
-import { JobCard } from "@/components/cards/JobCard";
+import { NewJobCard } from "@/components/cards/NewJobCard";
 import { useSearchParams } from "next/navigation";
 import { JobSearch } from "@/components/search/JobSearch";
 import { JobFilters } from "@/components/jobs/JobFilters";
+import { Suspense } from "react";
 
-function JobBoardCategoryPage() {
+function JobBoardCategoryPageContent() {
   const searchParams = useSearchParams();
   const category = searchParams.get("category");
 
@@ -154,7 +156,7 @@ function JobBoardCategoryPage() {
         </h2>
         <div className="grid grid-cols-1 md:grid-cols-4 gap-2 md:gap-4 mb-8">
           {jobPosts.map((job) => (
-            <JobCard key={job.id} job={job} />
+            <NewJobCard key={job.id} job={job} />
           ))}
         </div>
       </div>
@@ -162,4 +164,10 @@ function JobBoardCategoryPage() {
   );
 }
 
-export default JobBoardCategoryPage;
+export default function JobBoardCategoryPage() {
+  return (
+    <Suspense fallback={<div>Loading...</div>}>
+      <JobBoardCategoryPageContent />
+    </Suspense>
+  );
+}

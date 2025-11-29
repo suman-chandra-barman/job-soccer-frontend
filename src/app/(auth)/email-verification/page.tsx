@@ -1,8 +1,9 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
 
 import type React from "react";
-import { useState, useRef, useEffect } from "react";
+import { useState, useRef, useEffect, Suspense } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { useRouter, useSearchParams } from "next/navigation";
@@ -15,7 +16,7 @@ import { toast } from "sonner";
 import { useAppSelector } from "@/redux/hooks";
 import { Spinner } from "@/components/ui/spinner";
 
-export default function EmailVerificationPage() {
+function EmailVerificationPageContent() {
   const [otp, setOtp] = useState<string[]>(["", "", "", "", "", ""]);
   const [resendTimer, setResendTimer] = useState(10);
 
@@ -85,7 +86,7 @@ export default function EmailVerificationPage() {
       await resendOtp({ email, reason }).unwrap();
       setResendTimer(10);
       toast.success("Verification code resent successfully!");
-    } catch (error) {
+    } catch (error: any) {
       toast.error("Failed to resend verification code. Please try again.");
     }
   };
@@ -206,5 +207,13 @@ export default function EmailVerificationPage() {
         </div>
       </div>
     </div>
+  );
+}
+
+export default function EmailVerificationPage() {
+  return (
+    <Suspense fallback={<div>Loading...</div>}>
+      <EmailVerificationPageContent />
+    </Suspense>
   );
 }

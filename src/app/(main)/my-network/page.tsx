@@ -53,9 +53,9 @@ function MyNetworkPage() {
 
     filteredFriends.forEach((item: IFriend) => {
       if (item.friend.userType === "candidate") {
-        candidatesList.push(item.friend as ICandidate);
+        candidatesList.push(item.friend as unknown as ICandidate);
       } else if (item.friend.userType === "employer") {
-        employersList.push(item.friend as IEmployer);
+        employersList.push(item.friend as unknown as IEmployer);
       }
     });
 

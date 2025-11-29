@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, Suspense } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { toast } from "sonner";
@@ -23,7 +23,7 @@ import { useRouter, useSearchParams } from "next/navigation";
 import { useResetPasswordMutation } from "@/redux/features/auth/authApi";
 import { Spinner } from "@/components/ui/spinner";
 
-export default function CreateNewPasswordPage() {
+function CreateNewPasswordPageContent() {
   const [showNewPassword, setShowNewPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const router = useRouter();
@@ -201,5 +201,13 @@ export default function CreateNewPasswordPage() {
         </div>
       </div>
     </div>
+  );
+}
+
+export default function CreateNewPasswordPage() {
+  return (
+    <Suspense fallback={<div>Loading...</div>}>
+      <CreateNewPasswordPageContent />
+    </Suspense>
   );
 }

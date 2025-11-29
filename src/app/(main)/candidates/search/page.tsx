@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, Suspense } from "react";
 import { useSearchParams } from "next/navigation";
 import { CandidateSearch } from "@/components/search/CandidateSearch";
 import CandidateCard from "@/components/cards/CandidateCard";
@@ -9,7 +9,7 @@ import { ICandidate } from "@/types/user";
 import { CardSkeleton } from "@/components/skeleton/CardSkeleton";
 import { Users } from "lucide-react";
 
-function CandidateSearchPage() {
+function CandidateSearchPageContent() {
   const searchParams = useSearchParams();
   const [filters, setFilters] = useState<Record<string, string>>({});
 
@@ -127,4 +127,10 @@ function CandidateSearchPage() {
   );
 }
 
-export default CandidateSearchPage;
+export default function CandidateSearchPage() {
+  return (
+    <Suspense fallback={<div>Loading...</div>}>
+      <CandidateSearchPageContent />
+    </Suspense>
+  );
+}

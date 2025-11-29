@@ -2,7 +2,7 @@
 
 import { JobSearch } from "@/components/search/JobSearch";
 import { JobFilters } from "@/components/jobs/JobFilters";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, Suspense } from "react";
 import { JobCard } from "@/components/cards/JobCard";
 import {
   useGetNewFourJobsQuery,
@@ -12,7 +12,7 @@ import { TJob } from "@/types/job";
 import { CardSkeleton } from "@/components/skeleton/CardSkeleton";
 import { useSearchParams } from "next/navigation";
 
-function JobPage() {
+function JobPageContent() {
   const searchParams = useSearchParams();
   const [filters, setFilters] = useState<Record<string, string>>({});
 
@@ -139,4 +139,10 @@ function JobPage() {
   );
 }
 
-export default JobPage;
+export default function JobPage() {
+  return (
+    <Suspense fallback={<div>Loading...</div>}>
+      <JobPageContent />
+    </Suspense>
+  );
+}

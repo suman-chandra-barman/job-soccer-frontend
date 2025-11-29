@@ -95,7 +95,7 @@ const initialAcceptedRequests: Request[] = [
   },
 ];
 
-// Request Card Component for pending requests
+// Request Card Component
 const RequestCard: React.FC<RequestCardProps> = ({
   request,
   onAccept,
@@ -110,9 +110,10 @@ const RequestCard: React.FC<RequestCardProps> = ({
             alt={request.name}
             className="w-10 h-10 rounded-full object-cover"
             onError={(e) => {
-              e.target.style.display = "none";
-              (e.target as HTMLImageElement).nextSibling!.style.display =
-                "flex";
+              (e.target as HTMLImageElement).style.display = "none";
+              (
+                (e.target as HTMLImageElement).nextSibling as HTMLElement
+              ).style.display = "flex";
             }}
           />
           <div
@@ -160,9 +161,10 @@ const AcceptedRequestCard: React.FC<AcceptedRequestCardProps> = ({
             alt={request.name}
             className="w-10 h-10 rounded-full object-cover"
             onError={(e) => {
-              e.target.style.display = "none";
-              (e.target as HTMLImageElement).nextSibling!.style.display =
-                "flex";
+              (e.target as HTMLImageElement).style.display = "none";
+              (
+                (e.target as HTMLImageElement).nextSibling as HTMLElement
+              ).style.display = "flex";
             }}
           />
           <div
