@@ -127,17 +127,28 @@ export default function UploadResumeModal({
         // User selected an existing resume
         if (mode === "profile") {
           toast.success("Resume already in your profile!");
-        } else {
-          toast.success("Resume selected successfully!");
         }
+        // For job application mode, don't show toast here - let parent handle it
       } else {
         toast.error("Please upload or select a resume");
         return;
       }
 
-      onSubmitSuccess?.();
+      // Close modal first
+      console.log(
+        "=== UploadResumeModal: Closing modal and calling onSubmitSuccess ==="
+      );
       onClose();
+
+      // Call parent callback (don't await to avoid showing errors in modal context)
+      if (onSubmitSuccess) {
+        console.log(
+          "=== UploadResumeModal: Calling onSubmitSuccess callback ==="
+        );
+        onSubmitSuccess();
+      }
     } catch (error: any) {
+      console.log("=== UploadResumeModal: Error in handleSubmit ===", error);
       toast.error(error.data?.message || "Failed to upload resume");
       console.error("Failed to upload resume:", error);
     }

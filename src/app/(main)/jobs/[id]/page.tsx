@@ -8,7 +8,7 @@ import {
 } from "@/redux/features/job/jobApi";
 import { useApplyJobMutation } from "@/redux/features/jobApplication/jobApplicationApi";
 import { useSaveJobMutation } from "@/redux/features/savedJobs/savedJobsApi";
-import { addAppliedJobId } from "@/redux/features/jobApplication/jobApplicationSlice";
+import { addAppliedJob } from "@/redux/features/jobApplication/jobApplicationSlice";
 import { useAppDispatch } from "@/redux/hooks";
 import { TJob } from "@/types/job";
 import { Skeleton } from "@/components/ui/skeleton";
@@ -86,13 +86,13 @@ const JobDetailsPage = ({ params }: PageProps) => {
   const handleResumeSubmitSuccess = async () => {
     try {
       const result = await applyJob(id).unwrap();
-      if (result.success) {
-        dispatch(addAppliedJobId(id));
-        toast.success("Application submitted successfully!");
-      }
+      dispatch(addAppliedJob(result.data));
+      toast.success("Application submitted successfully!");
     } catch (error) {
       const err = error as { data?: { message?: string } };
-      toast.error(err.data?.message || "Failed to apply. Please try again.");
+      const errorMessage =
+        err.data?.message || "Failed to apply. Please try again.";
+      toast.error(errorMessage);
       console.error("Failed to apply:", error);
     }
   };
