@@ -37,22 +37,13 @@ const JobItem: React.FC<JobItemProps> = ({ item, tab, onRemove }) => {
   const status = tab;
 
   const getStatusBadge = () => {
-    if (status === "saved") {
-      return (
-        <div className="flex items-center gap-2">
-          <span className="px-3 py-1 bg-blue-100 text-blue-700 rounded-md text-sm font-medium">
-            Saved
-          </span>
-        </div>
-      );
-    } else if (status === "applied") {
-      return (
+    return (
+      <div className="flex items-center gap-2">
         <span className="px-3 py-1 bg-gray-100 text-gray-700 rounded-md text-sm font-medium">
-          Applied
+          {status === "saved" ? "Saved" : "Applied"}
         </span>
-      );
-    }
-    return null;
+      </div>
+    );
   };
 
   return (
