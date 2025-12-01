@@ -94,13 +94,13 @@ export function Footer() {
             <p className="text-gray-600 text-sm mb-4 text-center md:text-left">
               Subscribe to our email alerts
             </p>
-            <div className="flex flex-col sm:flex-row gap-2 mb-6">
+            <div className="flex flex-col sm:flex-row sm:items-center gap-2 mb-6">
               <Input
                 type="email"
                 placeholder="Enter your email"
-                className="flex-1 text-sm bg-white p-2"
+                className="flex-1 text-sm bg-white p-5"
               />
-              <Button className="bg-yellow-300 hover:bg-yellow-400 text-black px-4 py-3 rounded-lg">
+              <Button size="lg" className="bg-yellow-300 hover:bg-yellow-400 text-black px-4 py-3 rounded-lg">
                 Subscribe
               </Button>
             </div>
@@ -111,13 +111,13 @@ export function Footer() {
         {/* Social Media Icons */}
         <div className="flex space-x-4 items-center justify-center gap-4">
           <Link href="" className="text-blue-600 hover:text-blue-700">
-            <Image src={facebook} alt="Facebook" className="h-5 w-5" />
+            <Image src={facebook} alt="Facebook" className="h-6 w-6" />
           </Link>
           <Link href="" className="text-gray-900 hover:text-gray-700">
-            <Image src={X} alt="Twitter" className="h-5 w-5" />
+            <Image src={X} alt="Twitter" className="h-6 w-6" />
           </Link>
           <Link href="" className="text-red-600 hover:text-red-700">
-            <Image src={youtube} alt="Youtube" className="h-5 w-5" />
+            <Image src={youtube} alt="Youtube" className="h-6 w-6" />
           </Link>
         </div>
       </div>
