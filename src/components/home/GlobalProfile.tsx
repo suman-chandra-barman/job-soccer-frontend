@@ -1,32 +1,33 @@
+"use client";
 import Image from "next/image";
-import { Globe, Eye, Briefcase } from "lucide-react";
 import earth from "@/assets/home/earth.png";
+import { useAppSelector } from "@/redux/hooks";
+import { Button } from "../ui/button";
+import Link from "next/link";
 
 interface Feature {
-  icon: React.ElementType;
   title: string;
   description: string;
 }
 
 const features: Feature[] = [
   {
-    icon: Globe,
     title: "Global Access",
     description: "Connect with clubs and agents around the world",
   },
   {
-    icon: Eye,
     title: "Visibility",
     description: "Showcase your talent. Get scouted. Go global!",
   },
   {
-    icon: Briefcase,
     title: "Opportunities",
     description: "Discover job offers and trials worldwide",
   },
 ];
 
 export function GlobalProfile() {
+  const { user, token } = useAppSelector((state) => state.auth);
+  const isAuthenticated = !!user && !!token;
   return (
     <section className="py-16 bg-gray-50">
       <div className="container mx-auto px-4">
@@ -56,19 +57,13 @@ export function GlobalProfile() {
           {/* Right Side - Content */}
           <div className="order-1 md:order-2">
             {/* Feature Cards */}
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 text-center mb-6">
               {features.map((feature) => (
                 <div
                   key={feature.title}
-                  className="bg-white rounded-2xl p-6 border border-gray-200 shadow-sm hover:shadow-md transition-shadow duration-200"
+                  className="bg-white rounded-2xl p-4 border border-gray-200 shadow-sm hover:shadow-md transition-shadow duration-200"
                 >
                   <div className="flex items-start gap-3">
-                    <div className="flex-shrink-0 w-10 h-10 bg-green-50 rounded-lg flex items-center justify-center">
-                      <feature.icon
-                        className="w-5 h-5 text-green-600"
-                        aria-hidden="true"
-                      />
-                    </div>
                     <div className="flex-1 min-w-0">
                       <h3 className="text-lg font-semibold text-[#362F05] mb-1">
                         {feature.title}
@@ -81,6 +76,22 @@ export function GlobalProfile() {
                 </div>
               ))}
             </div>
+            {!isAuthenticated && (
+              <div className="flex flex-row justify-center items-center gap-2 md:gap-4 ">
+                <Button
+                  asChild
+                  className=" md:w-[200px] bg-yellow-300 hover:scale-105 transition-transform duration-200"
+                >
+                  <Link href="/signin">Sign In</Link>
+                </Button>
+                <Button
+                  asChild
+                  className=" md:w-[200px] bg-yellow-300 hover:scale-105 transition-transform duration-200"
+                >
+                  <Link href="/signup">Sign Up</Link>
+                </Button>
+              </div>
+            )}
           </div>
         </div>
       </div>

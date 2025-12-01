@@ -3,7 +3,7 @@
 import Image from "next/image";
 import left from "@/assets/home/discover-left.png";
 import { CareerPathsDiagram } from "./CareerPathsDiagram";
-import { diagramAnimations } from "./animations";
+import { diagramAnimations } from "../../lib/animations";
 
 export function Discover() {
   return (

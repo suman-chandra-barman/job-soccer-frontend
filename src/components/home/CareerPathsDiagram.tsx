@@ -97,11 +97,11 @@ const ConnectionLine = memo<ConnectionLineProps>(
         y1={startY}
         x2={endX}
         y2={endY}
-        stroke={isHovered ? "#F59E0B" : "#D1D5DB"}
+        stroke={isHovered ? "#F59E0B" : "#9CA3AF"}
         strokeWidth="2"
         strokeDasharray="5,5"
         className="transition-all duration-300"
-        style={{ opacity: isHovered ? 1 : 0.4 }}
+        style={{ opacity: isHovered ? 1 : 0.8 }}
       />
     );
   }
@@ -147,11 +147,12 @@ export const CareerPathsDiagram = memo(() => {
   );
 
   return (
-    <div className="relative w-[450px] h-[450px] scale-75 md:scale-90 lg:scale-100">
+    <div className="relative w-[300px] h-[300px]  md:w-[450px] md:h-[450px] scale-75 md:scale-90 lg:scale-100">
       {/* SVG for connecting lines */}
       <svg
-        width={DIAGRAM_CONFIG.svgSize}
-        height={DIAGRAM_CONFIG.svgSize}
+        width="100%"
+        height="100%"
+        viewBox={`0 0 ${DIAGRAM_CONFIG.svgSize} ${DIAGRAM_CONFIG.svgSize}`}
         className="absolute top-0 left-0"
         aria-hidden="true"
       >
