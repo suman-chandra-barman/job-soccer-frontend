@@ -29,7 +29,7 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
 import { months, years } from "@/constants/profile";
-import { useCreateCertificateMutation } from "@/redux/api/certificateApi";
+import { useCreateCertificateMutation } from "@/redux/features/certificate/certificateApi";
 import { toast } from "sonner";
 
 const formSchema = z.object({

@@ -17,7 +17,7 @@ import { Plus, Edit, Award, Loader2, Trash2 } from "lucide-react";
 import {
   useGetUserCertificatesQuery,
   useDeleteCertificateMutation,
-} from "@/redux/api/certificateApi";
+} from "@/redux/features/certificate/certificateApi";
 import { CertificateData } from "@/types/certificate";
 import { toast } from "sonner";
 import { useState } from "react";

@@ -1,4 +1,5 @@
 import { baseApi } from "@/redux/api/baseApi";
+import { TSavedJob } from "@/types/job";
 
 const savedJobsApi = baseApi.injectEndpoints({
   endpoints: (builder) => ({
@@ -8,14 +9,11 @@ const savedJobsApi = baseApi.injectEndpoints({
         method: "POST",
         body: { jobId },
       }),
-      invalidatesTags: [{ type: "Job", id: "SAVED_LIST" }],
+      invalidatesTags: [{ type: "Job", id: "SAVED_LIST" }, "SavedJobs"],
     }),
 
-    getSavedJobs: builder.query({
-      query: () => ({
-        url: "/saved-jobs",
-        method: "GET",
-      }),
+    getSavedJobs: builder.query<{ data: TSavedJob[] }, void>({
+      query: () => "/saved-jobs",
       providesTags: (result) =>
         result?.data
           ? [
@@ -24,8 +22,9 @@ const savedJobsApi = baseApi.injectEndpoints({
                 id: _id,
               })),
               { type: "Job", id: "SAVED_LIST" },
+              "SavedJobs",
             ]
-          : [{ type: "Job", id: "SAVED_LIST" }],
+          : [{ type: "Job", id: "SAVED_LIST" }, "SavedJobs"],
       keepUnusedDataFor: 300,
     }),
 
@@ -34,7 +33,18 @@ const savedJobsApi = baseApi.injectEndpoints({
         url: `/saved-jobs/${jobId}`,
         method: "DELETE",
       }),
-      invalidatesTags: [{ type: "Job", id: "SAVED_LIST" }],
+      invalidatesTags: [{ type: "Job", id: "SAVED_LIST" }, "SavedJobs"],
+    }),
+
+    deleteSavedJob: builder.mutation<
+      { success: boolean; message: string },
+      string
+    >({
+      query: (id) => ({
+        url: `/saved-jobs/${id}`,
+        method: "DELETE",
+      }),
+      invalidatesTags: [{ type: "Job", id: "SAVED_LIST" }, "SavedJobs"],
     }),
   }),
 });
@@ -44,4 +54,5 @@ export const {
   useGetSavedJobsQuery,
   useLazyGetSavedJobsQuery,
   useUnsaveJobMutation,
+  useDeleteSavedJobMutation,
 } = savedJobsApi;

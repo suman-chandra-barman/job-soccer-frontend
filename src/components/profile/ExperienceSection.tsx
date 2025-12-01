@@ -17,7 +17,7 @@ import { Plus, Edit, Award, MapPin, Loader2, Trash2 } from "lucide-react";
 import {
   useGetUserExperiencesQuery,
   useDeleteExperienceMutation,
-} from "@/redux/api/experienceApi";
+} from "@/redux/features/experience/experienceApi";
 import { ExperienceData } from "@/types/experience";
 import { toast } from "sonner";
 import { useState } from "react";

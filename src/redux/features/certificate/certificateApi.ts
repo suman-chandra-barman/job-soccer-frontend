@@ -1,4 +1,4 @@
-import { baseApi } from "./baseApi";
+import { baseApi } from "../../api/baseApi";
 import { CertificateData, CreateCertificateRequest } from "@/types/certificate";
 
 export interface GetCertificatesResponse {

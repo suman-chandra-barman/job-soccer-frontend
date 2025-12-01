@@ -29,7 +29,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
 import { months, years } from "@/constants/profile";
-import { useCreateExperienceMutation } from "@/redux/api/experienceApi";
+import { useCreateExperienceMutation } from "@/redux/features/experience/experienceApi";
 import { toast } from "sonner";
 import {
   experienceFormSchema,

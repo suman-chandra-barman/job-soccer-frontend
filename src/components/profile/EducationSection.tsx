@@ -17,7 +17,7 @@ import { Plus, Edit, GraduationCap, Loader2, Trash2 } from "lucide-react";
 import {
   useGetUserEducationsQuery,
   useDeleteEducationMutation,
-} from "@/redux/api/educationApi";
+} from "@/redux/features/education/educationApi";
 import { EducationData } from "@/types/education";
 import { toast } from "sonner";
 import { useState } from "react";

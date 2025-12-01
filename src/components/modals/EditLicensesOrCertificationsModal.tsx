@@ -30,7 +30,7 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
 import { months, years } from "@/constants/profile";
-import { useUpdateCertificateMutation } from "@/redux/api/certificateApi";
+import { useUpdateCertificateMutation } from "@/redux/features/certificate/certificateApi";
 import { toast } from "sonner";
 import { CertificateData } from "@/types/certificate";
 

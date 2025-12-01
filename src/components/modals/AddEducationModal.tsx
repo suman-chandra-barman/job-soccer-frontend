@@ -29,7 +29,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
 import { months, years } from "@/constants/profile";
-import { useCreateEducationMutation } from "@/redux/api/educationApi";
+import { useCreateEducationMutation } from "@/redux/features/education/educationApi";
 import { toast } from "sonner";
 import {
   educationFormSchema,

@@ -1,4 +1,4 @@
-import { baseApi } from "./baseApi";
+import { baseApi } from "../../api/baseApi";
 import { EducationData, CreateEducationRequest } from "@/types/education";
 
 export interface GetEducationsResponse {

@@ -15,11 +15,11 @@ import { TSavedJob, TAppliedJob } from "@/types/job";
 import {
   useGetSavedJobsQuery,
   useDeleteSavedJobMutation,
-} from "@/redux/api/savedJobsApi";
+} from "@/redux/features/savedJobs/savedJobsApi";
 import {
   useGetMyApplicationsQuery,
   useDeleteJobApplicationMutation,
-} from "@/redux/api/jobApplicationsApi";
+} from "@/redux/features/jobApplication/jobApplicationApi";
 import { JobsListSkeletonGrid } from "@/components/skeleton";
 
 // Type definitions

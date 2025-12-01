@@ -1,4 +1,5 @@
 import { baseApi } from "@/redux/api/baseApi";
+import { TAppliedJob } from "@/types/job";
 
 const jobApplicationApi = baseApi.injectEndpoints({
   endpoints: (builder) => ({
@@ -8,14 +9,11 @@ const jobApplicationApi = baseApi.injectEndpoints({
         method: "POST",
         body: { jobId },
       }),
-      invalidatesTags: [{ type: "Job", id: "APPLICATIONS" }],
+      invalidatesTags: [{ type: "Job", id: "APPLICATIONS" }, "JobApplications"],
     }),
 
-    getMyApplications: builder.query({
-      query: () => ({
-        url: "/job-applications",
-        method: "GET",
-      }),
+    getMyApplications: builder.query<{ data: TAppliedJob[] }, void>({
+      query: () => "/job-applications/my-applications",
       providesTags: (result) =>
         result?.data
           ? [
@@ -24,8 +22,9 @@ const jobApplicationApi = baseApi.injectEndpoints({
                 id: _id,
               })),
               { type: "Job", id: "APPLICATIONS" },
+              "JobApplications",
             ]
-          : [{ type: "Job", id: "APPLICATIONS" }],
+          : [{ type: "Job", id: "APPLICATIONS" }, "JobApplications"],
       keepUnusedDataFor: 300,
     }),
 
@@ -34,7 +33,18 @@ const jobApplicationApi = baseApi.injectEndpoints({
         url: `/job-applications/${applicationId}`,
         method: "DELETE",
       }),
-      invalidatesTags: [{ type: "Job", id: "APPLICATIONS" }],
+      invalidatesTags: [{ type: "Job", id: "APPLICATIONS" }, "JobApplications"],
+    }),
+
+    deleteJobApplication: builder.mutation<
+      { success: boolean; message: string },
+      string
+    >({
+      query: (id) => ({
+        url: `/job-applications/${id}`,
+        method: "DELETE",
+      }),
+      invalidatesTags: [{ type: "Job", id: "APPLICATIONS" }, "JobApplications"],
     }),
   }),
 });
@@ -44,4 +54,5 @@ export const {
   useGetMyApplicationsQuery,
   useLazyGetMyApplicationsQuery,
   useWithdrawApplicationMutation,
+  useDeleteJobApplicationMutation,
 } = jobApplicationApi;
