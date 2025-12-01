@@ -156,7 +156,7 @@ export default function MyProfilePage() {
               size="sm"
               className="bg-gray-100 rounded-full hover:bg-gray-200"
             >
-              <Award className="!w-5 !h-5" /> Age Verification Badge
+              <Award className="w-5! h-5!" /> Age Verification Badge
             </Button>
           </div>
         </div>

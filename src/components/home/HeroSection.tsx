@@ -1,8 +1,16 @@
+"use client";
+
 import bg from "@/assets/hero-bg.png";
 import Image from "next/image";
 import line from "@/assets/line.png";
+import { Button } from "../ui/button";
+import Link from "next/link";
+import { useAppSelector } from "@/redux/hooks";
 
 export function HeroSection() {
+  const { user, token } = useAppSelector((state) => state.auth);
+  const isAuthenticated = !!user && !!token;
+
   return (
     <section className="relative overflow-hidden">
       <div className="container mx-auto px-4">
@@ -26,20 +34,22 @@ export function HeroSection() {
               </h1>
             </div>
 
-            {/* <div className="flex flex-row gap-2 justify-center lg:justify-start">
-              <Button
-                asChild
-                className=" md:w-[200px] bg-yellow-300 hover:bg-yellow-400 text-black font-medium px-8 py-3 text-lg rounded-lg"
-              >
-                <Link href="/signin">Sign In</Link>
-              </Button>
-              <Button
-                asChild
-                className=" md:w-[200px] bg-yellow-300 hover:bg-yellow-400 text-black font-medium px-8 py-3 text-lg rounded-lg"
-              >
-                <Link href="/signup">Sign Up</Link>
-              </Button>
-            </div> */}
+            {!isAuthenticated && (
+              <div className="flex flex-row gap-2 justify-center lg:justify-start">
+                <Button
+                  asChild
+                  className=" md:w-[200px] bg-yellow-300 hover:scale-105 transition-transform duration-200"
+                >
+                  <Link href="/signin">Sign In</Link>
+                </Button>
+                <Button
+                  asChild
+                  className=" md:w-[200px] bg-yellow-300 hover:scale-105 transition-transform duration-200"
+                >
+                  <Link href="/signup">Sign Up</Link>
+                </Button>
+              </div>
+            )}
           </div>
 
           {/* Right Image */}
