@@ -382,7 +382,7 @@ export function Navbar() {
               />
             ) : (
               <Link href="/signin">
-                <Button className="bg-black hover:bg-gray-800 text-white rounded-md font-medium">
+                <Button className="bg-yellow-300 hover:scale-105 transition-transform duration-200 font-semibold cursor-pointer">
                   Sign In
                 </Button>
               </Link>
