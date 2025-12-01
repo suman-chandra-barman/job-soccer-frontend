@@ -48,11 +48,10 @@ function CandidateCard({ candidate }: { candidate: ICandidate }) {
     }
   };
 
-  console.log("candidate data--->", candidate);
   return (
-    <div>
-      <Card className="bg-gradient-to-br from-white to-[#FDF9E3] border-0 shadow-sm hover:shadow-md transition-shadow">
-        <CardContent className="p-6">
+    <div className="h-full">
+      <Card className="bg-linear-to-br from-white to-[#FDF9E3] border-0 shadow-sm hover:shadow-md transition-shadow h-full flex flex-col">
+        <CardContent className="p-6 flex-1 flex flex-col">
           {/* Profile Header */}
           <div className="flex items-center gap-3 mb-4">
             {candidate?.profileImage ? (
@@ -76,10 +75,12 @@ function CandidateCard({ candidate }: { candidate: ICandidate }) {
               </Avatar>
             )}
             <div>
-              <h4 className="font-semibold text-gray-900">
+              <h4 className=" text-sm xl:text-base font-semibold text-gray-900">
                 {candidate.firstName + " " + candidate.lastName}
               </h4>
-              <p className="text-sm text-gray-500">{candidate.role}</p>
+              <p className="text-xs xl:text-sm text-gray-500">
+                {candidate.role}
+              </p>
             </div>
           </div>
 
@@ -115,7 +116,10 @@ function CandidateCard({ candidate }: { candidate: ICandidate }) {
               : ""}
           </button>
 
-          {/* Action Buttons */}
+          {/* Spacer to push footer to bottom */}
+          <div className="flex-1"></div>
+
+          {/* Card Footer - Action Buttons */}
           <div className="space-y-2">
             <Button
               variant="outline"

@@ -87,7 +87,7 @@ export function JobCard({ job }: JobCardProps) {
             />
           </Link>
           <div className="flex-1 min-w-0">
-            <h3 className="font-semibold text-gray-900 text-lg">
+            <h3 className="font-semibold text-gray-900 xl:text-lg">
               {jobData.company}
             </h3>
             <div className="flex items-center gap-1 text-gray-500 text-sm mt-1">
@@ -133,7 +133,7 @@ export function JobCard({ job }: JobCardProps) {
             </div>
           </div>
           <div className="text-right">
-            <div className="text-2xl font-bold text-gray-900">
+            <div className="text-xl xl:text-2xl font-bold text-gray-900">
               {jobData.salary}
             </div>
             <div className="text-gray-500 text-sm">/mo</div>

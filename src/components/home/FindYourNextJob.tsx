@@ -11,12 +11,12 @@ const FindYourNextJob = () => {
     "College/University - Connect with Coaches and discover soccer talents",
   ];
   return (
-    <div className="min-h-screen bg-white">
+    <div className="bg-white">
       <div className="container mx-auto px-4 py-8 lg:py-16">
         <div className="grid grid-cols-1 lg:grid-cols-5 gap-8 items-start">
           {/* Left Column - Opportunities */}
           <div className={`space-y-6 py-8 lg:col-span-2`}>
-            <h2 className="text-2xl md:text-4xl font-bold text-[#362F05] leading-tight">
+            <h2 className="text-xl md:text-2xl lg:text-4xl font-bold text-[#362F05] leading-tight">
               Find the Right Opportunity for You
             </h2>
 
