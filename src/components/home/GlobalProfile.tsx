@@ -43,7 +43,7 @@ export function GlobalProfile() {
         </div>
 
         {/* Main Content */}
-        <div className="grid md:grid-cols-2 gap-8 lg:gap-12 items-center">
+        <div className="grid md:grid-cols-2 gap-2 items-center">
           {/* Left Side - Earth Image */}
           <div className="order-2 md:order-1">
             <Image
