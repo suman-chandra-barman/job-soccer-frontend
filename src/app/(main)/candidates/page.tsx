@@ -144,7 +144,7 @@ function CandidatesPage() {
       </div>
 
       {/* Main Content */}
-      <div className="container mx-auto px-4 md:px-0">
+      <div className="container mx-auto px-4">
         <FindYourDreamTeam />
 
         {/* Candidate Sections */}
