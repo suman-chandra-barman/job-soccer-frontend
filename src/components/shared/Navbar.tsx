@@ -20,7 +20,7 @@ import { usePathname, useRouter } from "next/navigation";
 import Image from "next/image";
 import Link from "next/link";
 
-import logo from "@/assets/logo.png";
+import logo from "@/assets/logo.svg";
 import NotificationModal from "../modals/NotificationModal";
 import LogoutModal from "../modals/LogoutModal";
 import { Sheet, SheetContent, SheetHeader, SheetTitle } from "../ui/sheet";
@@ -336,7 +336,7 @@ export function Navbar() {
           {/* Logo */}
           <Link
             href="/"
-            className="flex items-center bg-white p-1 rounded-full hover:shadow-md transition-shadow"
+            className="flex items-center bg-white rounded-full hover:shadow-md transition-shadow"
             aria-label="Job Soccer Home"
           >
             <Image
