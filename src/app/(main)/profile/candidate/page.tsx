@@ -32,6 +32,7 @@ import EducationSection from "@/components/profile/EducationSection";
 import VideoSection from "@/components/profile/VideoSection";
 import ProfileBanner from "@/components/profile/ProfileBanner";
 import ProfileAvatar from "@/components/profile/ProfileAvatar";
+import AnalyticsSection from "@/components/profile/AnalyticsSection";
 
 export default function MyProfilePage() {
   // Get user data from Redux store
@@ -572,46 +573,8 @@ export default function MyProfilePage() {
           </div>
         </div>
 
-        {/* -------------------------Analytics Cards----------------------- */}
-        <div className="my-6">
-          <Card>
-            <CardHeader>
-              <div className="flex items-center justify-between">
-                <CardTitle>Analytics</CardTitle>
-              </div>
-            </CardHeader>
-            <CardContent className="p-6">
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
-                <div className="flex items-center space-x-4">
-                  <div className="p-3 bg-blue-100 rounded-lg">
-                    <LayoutGrid className="h-6 w-6" />
-                  </div>
-                  <div>
-                    <h3 className="font-semibold text-gray-900">
-                      Profile View
-                    </h3>
-                    <p className="text-sm text-gray-600">
-                      Discover who&apos;s viewed your profile
-                    </p>
-                  </div>
-                </div>
-                <div className="flex items-center space-x-4">
-                  <div className="p-3 bg-green-100 rounded-lg">
-                    <UserPlus className="h-6 w-6" />
-                  </div>
-                  <div>
-                    <h3 className="font-semibold text-gray-900">
-                      Access Request
-                    </h3>
-                    <p className="text-sm text-gray-600">
-                      Discover who&apos;s viewed your profile
-                    </p>
-                  </div>
-                </div>
-              </div>
-            </CardContent>
-          </Card>
-        </div>
+        {/* -------------------------Analytics----------------------- */}
+        <AnalyticsSection />
 
         {/* ------------------ Experience, Certificate, Education, and Video Sections --------------------*/}
         <ExperienceSection userId={currentUser?._id || ""} />
