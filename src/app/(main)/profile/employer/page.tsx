@@ -2,201 +2,303 @@
 
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { useRef, useState } from "react";
-import { Award, Camera, Edit, MessageCircle } from "lucide-react";
-import Link from "next/link";
+import { useState, useEffect } from "react";
+import {
+  Award,
+  Edit,
+  BadgeCheck,
+  Clock,
+  XCircle,
+  Mail,
+  MessageCircle,
+  UserPlus,
+  UserMinus,
+} from "lucide-react";
+import { toast } from "sonner";
+import {
+  useUpdateProfileImageMutation,
+  useUpdateBannerImageMutation,
+} from "@/redux/features/user/userApi";
+import { useRequestAdminVerificationMutation } from "@/redux/features/adminVerification/adminVerificationApi";
+import { useAppSelector } from "@/redux/hooks";
+import { ProfileSkeleton } from "@/components/skeleton";
+import ProfileBanner from "@/components/profile/ProfileBanner";
+import ProfileAvatar from "@/components/profile/ProfileAvatar";
 import EditEmployerPersonalInformationModal from "@/components/modals/EditEmployerPersonalInformationModal";
-import { set } from "zod";
 
-const initialUser = {
-  name: "Suman Barman",
-  title: "Professional Player",
-  avatar:
-    "https://images.pexels.com/photos/1043471/pexels-photo-1043471.jpeg?auto=compress&cs=tinysrgb&w=150&h=150&dpr=1",
-  verification: {
-    age: true,
-    personal: true,
-  },
-};
+export default function EmployerProfilePage() {
+  // Get user data from Redux store
+  const currentUser = useAppSelector((state) => state.auth.user);
 
-export default function MyProfilePage() {
-  const [
-    isEditPersonalInformationModalOpen,
-    setIsEditPersonalInformationModalOpen,
-  ] = useState(false);
+  const [isEditProfileModalOpen, setIsEditProfileModalOpen] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
+  const [isFollowing, setIsFollowing] = useState(false);
 
-  const [personalInformation, setPersonalInformation] = useState({
-    country: "Uganda",
-    phone: "+880 1636-828200",
-    founded: "2010-01-01",
-    address: "123 Main St, Kampala",
-    socialMedia: "https://twitter.com/sumanbarman",
-    level: "Professional",
-    nationality: "Ugandan",
-    website: "https://www.sumanbarman.com",
-  });
+  // API mutations
+  const [updateProfileImage, { isLoading: isUpdatingProfile }] =
+    useUpdateProfileImageMutation();
+  const [updateBannerImage, { isLoading: isUpdatingBanner }] =
+    useUpdateBannerImageMutation();
+  const [requestAdminVerification, { isLoading: isRequestingVerification }] =
+    useRequestAdminVerificationMutation();
 
-  const [user, setUser] = useState(initialUser);
-  const [bannerImage, setBannerImage] = useState(
-    "https://images.pexels.com/photos/274422/pexels-photo-274422.jpeg?auto=compress&cs=tinysrgb&w=800&h=400&dpr=1"
-  );
+  // Handler for profile image update
+  const handleProfileImageUpdate = async (file: File) => {
+    try {
+      const formData = new FormData();
+      formData.append("image", file);
 
-  const bannerInputRef = useRef<HTMLInputElement>(null);
-  const profileInputRef = useRef<HTMLInputElement>(null);
-
-  const handleProfileImageChange = (
-    event: React.ChangeEvent<HTMLInputElement>
-  ) => {
-    const file = event.target.files?.[0];
-    if (file) {
-      const reader = new FileReader();
-      reader.onload = (e) => {
-        const result = e.target?.result as string;
-        setUser((prev) => ({ ...prev, avatar: result }));
-      };
-      reader.readAsDataURL(file);
+      await updateProfileImage(formData).unwrap();
+      toast.success("Profile image updated successfully");
+    } catch (error) {
+      const errorMessage =
+        error && typeof error === "object" && "data" in error
+          ? (error.data as { message?: string })?.message
+          : "Failed to update profile image";
+      toast.error(errorMessage);
+      throw error;
     }
   };
 
-  const handleBannerImageChange = (
-    event: React.ChangeEvent<HTMLInputElement>
-  ) => {
-    const file = event.target.files?.[0];
-    if (file) {
-      const reader = new FileReader();
-      reader.onload = (e) => {
-        const result = e.target?.result as string;
-        setBannerImage(result);
-      };
-      reader.readAsDataURL(file);
+  // Handler for banner image update
+  const handleBannerImageUpdate = async (file: File) => {
+    try {
+      const formData = new FormData();
+      formData.append("banner", file);
+
+      await updateBannerImage(formData).unwrap();
+      toast.success("Banner image updated successfully");
+    } catch (error) {
+      const errorMessage =
+        error && typeof error === "object" && "data" in error
+          ? (error.data as { message?: string })?.message
+          : "Failed to update banner image";
+      toast.error(errorMessage);
+      throw error;
     }
   };
+
+  // Handler for admin verification request
+  const handleRequestVerification = async () => {
+    try {
+      await requestAdminVerification().unwrap();
+      toast.success("Verification request submitted successfully");
+    } catch (error) {
+      const errorMessage =
+        error && typeof error === "object" && "data" in error
+          ? (error.data as { message?: string })?.message
+          : "Failed to submit verification request";
+      toast.error(errorMessage);
+    }
+  };
+
+  // Handler for follow/unfollow
+  const handleFollowToggle = () => {
+    setIsFollowing(!isFollowing);
+    toast.success(
+      isFollowing ? "Unfollowed successfully" : "Followed successfully"
+    );
+  };
+
+  // Handler for message
+  const handleMessage = () => {
+    toast.info("Message feature coming soon");
+  };
+
+  // Get verification status
+  const verificationStatus = currentUser?.adminVerificationStatus;
+
+  // Render verification badge button based on status
+  const renderVerificationBadge = () => {
+    // Don't show button when verified - badge is shown next to name
+    if (verificationStatus?.status === "approved") {
+      return null;
+    }
+
+    if (
+      verificationStatus?.status === "pending" ||
+      verificationStatus?.hasRequest
+    ) {
+      return (
+        <Button
+          variant="outline"
+          className="rounded-full bg-yellow-50 border-yellow-200 text-yellow-700 cursor-default"
+        >
+          <Clock size={20} height={20} /> Verification Pending
+        </Button>
+      );
+    }
+
+    if (verificationStatus?.status === "rejected") {
+      return (
+        <Button
+          variant="outline"
+          className="rounded-full bg-red-50 border-red-200 text-red-700"
+          onClick={handleRequestVerification}
+          disabled={isRequestingVerification}
+        >
+          <XCircle size={20} height={20} />{" "}
+          {isRequestingVerification ? "Requesting..." : "Request Again"}
+        </Button>
+      );
+    }
+
+    // Default: No request yet
+    return (
+      <Button
+        variant="outline"
+        className="rounded-full"
+        onClick={handleRequestVerification}
+        disabled={isRequestingVerification}
+      >
+        <Award size={20} height={20} />{" "}
+        {isRequestingVerification ? "Requesting..." : "Add Verification Badge"}
+      </Button>
+    );
+  };
+
+  // Prepare display data from Redux store
+  const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL || "";
+  const displayName = currentUser
+    ? `${currentUser.firstName} ${currentUser.lastName}`.trim()
+    : "User";
+
+  const displayAvatar = currentUser?.profileImage
+    ? `${BASE_URL}${currentUser.profileImage}`
+    : null;
+
+  const displayBanner = currentUser?.bannerImage
+    ? `${BASE_URL}${currentUser.bannerImage}`
+    : null;
+
+  const displayRole = currentUser?.role;
+
+  // Handle loading state
+  useEffect(() => {
+    if (currentUser) {
+      const timer = setTimeout(() => {
+        setIsLoading(false);
+      }, 300);
+      return () => clearTimeout(timer);
+    }
+  }, [currentUser]);
+
+  // Show loading skeleton while data is loading
+  if (isLoading || !currentUser) {
+    return <ProfileSkeleton />;
+  }
+
+  // Format founded date
+  const formatFoundedDate = (dateString?: string) => {
+    if (!dateString) return "N/A";
+    return new Date(dateString).toLocaleDateString("en-US", {
+      year: "numeric",
+      month: "long",
+      day: "numeric",
+    });
+  };
+
   return (
     <div className="px-4 w-full">
+      {/* Banner and Profile Picture Section */}
       <div className="relative mb-8">
-        <div className="relative h-48 lg:h-64 bg-gradient-to-r from-blue-500 to-green-400 rounded-lg overflow-hidden group">
-          <img
-            src={bannerImage}
-            alt="Soccer player"
-            className="w-full h-full object-cover"
-          />
-          {/* Banner Edit Button */}
-          <div className="absolute inset-0 bg-black/0 group-hover:bg-black/50 transition-all duration-300 flex items-center justify-center">
-            <input
-              type="file"
-              accept="image/*"
-              onChange={handleBannerImageChange}
-              className="hidden"
-              ref={bannerInputRef}
-            />
-            <Button
-              onClick={() => bannerInputRef.current?.click()}
-              variant="secondary"
-              size="sm"
-              className="opacity-0 group-hover:opacity-100 transition-opacity duration-300 bg-white/90 hover:bg-white text-gray-800"
-            >
-              <Camera className="h-4 w-4 mr-2" />
-              Edit Banner
-            </Button>
-          </div>
-        </div>
-
-        <div className="absolute -bottom-16 left-4 lg:left-8">
-          <div className="relative group">
-            <img
-              src={user.avatar}
-              alt={user.name}
-              className="w-24 h-24 lg:w-32 lg:h-32 rounded-full border-4 border-white object-cover"
-            />
-            {/* Profile Image Edit Button */}
-            <div className="absolute inset-0 bg-opacity-0 group-hover:bg-opacity-50 transition-all duration-300 rounded-full flex items-center justify-center bg-black/0 group-hover:bg-black/50">
-              <input
-                type="file"
-                accept="image/*"
-                onChange={handleProfileImageChange}
-                className="hidden"
-                ref={profileInputRef}
-              />
-              <Button
-                onClick={() => profileInputRef.current?.click()}
-                variant="secondary"
-                size="sm"
-                className="opacity-0 group-hover:opacity-100 transition-opacity duration-300 bg-white/90 hover:bg-white text-gray-800 rounded-full p-2"
-              >
-                <Camera className="h-4 w-4" />
-              </Button>
-            </div>
-          </div>
-        </div>
+        <ProfileBanner
+          bannerUrl={displayBanner}
+          onBannerUpdate={handleBannerImageUpdate}
+          isUpdating={isUpdatingBanner}
+        />
+        <ProfileAvatar
+          avatarUrl={displayAvatar}
+          displayName={displayName}
+          onAvatarUpdate={handleProfileImageUpdate}
+          isUpdating={isUpdatingProfile}
+        />
       </div>
 
       {/* Profile Info */}
-      <div className="mt-20 mb-8">
+      <div className="mt-20 mb-8 px-4">
         <div className="mb-6">
-          <div className="flex items-center justify-between gap-2">
-            <h2 className="text-3xl font-bold text-gray-900">{user.name}</h2>
-            <div className="items-center flex gap-2">
-              <Button variant="outline">
-                <Link href="/message">
-                  <span className="flex items-center gap-2">
-                    <MessageCircle />
-                    Message
-                  </span>
-                </Link>
-              </Button>
-              <Button variant="outline">Follow</Button>
-            </div>
+          <h2 className="text-3xl font-bold text-gray-900 flex items-center gap-2">
+            {displayName}
+            {verificationStatus?.status === "approved" && (
+              <BadgeCheck className="h-6 w-6 text-blue-500" />
+            )}
+          </h2>
+
+          {/* Contact Information */}
+          <div className="flex flex-wrap gap-4 mt-2 mb-4 text-gray-600">
+            {currentUser?.email && (
+              <div className="flex items-center gap-2">
+                <Mail className="h-4 w-4" />
+                <span className="text-sm">{currentUser.email}</span>
+              </div>
+            )}
           </div>
+
           <div className="flex gap-2 flex-wrap mt-4">
-            <Badge className="bg-yellow-100 border-yellow-200 px-4 rounded-full">
-              {user.title}
-            </Badge>
+            {displayRole && (
+              <Badge className="bg-yellow-100 border-yellow-200 px-4 rounded-full">
+                {displayRole}
+              </Badge>
+            )}
+            {renderVerificationBadge()}
+          </div>
+
+          {/* Action Buttons */}
+          <div className="flex gap-2 flex-wrap mt-4">
             <Button
               variant="outline"
-              size="sm"
-              className="bg-gray-100 rounded-full hover:bg-gray-200"
+              onClick={handleMessage}
+              className="flex items-center gap-2"
             >
-              <Award className="w-5! h-5!" /> Age Verification Badge
+              <MessageCircle className="h-4 w-4" />
+              Message
+            </Button>
+            <Button
+              variant="outline"
+              onClick={handleFollowToggle}
+              className="flex items-center gap-2"
+            >
+              {isFollowing ? (
+                <>
+                  <UserMinus className="h-4 w-4" />
+                  Unfollow
+                </>
+              ) : (
+                <>
+                  <UserPlus className="h-4 w-4" />
+                  Follow
+                </>
+              )}
             </Button>
           </div>
         </div>
       </div>
 
       <div className="p-4 md:p-6 border rounded-2xl shadow">
-        <div className="flex items-center justify-between mb-6">
-          <h2 className="text-xl md:text-2xl font-semibold text-gray-900">
-            Overview
-          </h2>
-          <Button
-            variant="ghost"
-            size="sm"
-            className="text-gray-600 hover:text-gray-900"
-          >
-            <Edit className="w-4 h-4 mr-1" />
-            Edit
-          </Button>
-        </div>
-        <p className="text-gray-700 mb-6">
-          This is your public profile. Share your skills, experience, and
-          achievements to attract potential employers and showcase your soccer
-          journey. Make sure to keep your information up-to-date and highlight
-          your unique qualities as a player. Stand out in the competitive world
-          of soccer and take your career to the next level!
-        </p>
+        {/* Overview Section */}
+        {currentUser?.profile?.clubDescription && (
+          <div className="mb-6">
+            <h2 className="text-xl md:text-2xl font-semibold text-gray-900 mb-4">
+              Overview
+            </h2>
+            <p className="text-gray-700 leading-relaxed">
+              {currentUser.profile.clubDescription}
+            </p>
+          </div>
+        )}
 
-        {/* Player Details Section */}
-        <div className="bg-white rounded-lg shadow border border-gray-200 p-6">
+        {/* Professional Information Section */}
+        <div className="bg-white rounded-lg border shadow border-gray-200 p-6">
           <div className="flex items-center justify-between mb-6">
-            <div className="flex items-center gap-2">
-              <h2 className="text-xl font-semibold text-gray-900">
-                Professional Information
-              </h2>
-            </div>
+            <h2 className="text-xl font-semibold text-gray-900">
+              Professional Information
+            </h2>
             <Button
               variant="ghost"
               size="sm"
               className="text-gray-600 hover:text-gray-900"
-              onClick={() => setIsEditPersonalInformationModalOpen(true)}
+              onClick={() => setIsEditProfileModalOpen(true)}
             >
               <Edit className="w-4 h-4 mr-1" />
               Edit
@@ -204,79 +306,138 @@ export default function MyProfilePage() {
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-6">
-            <div>
-              <label className="text-sm text-gray-500 mb-1 block">
-                Country
-              </label>
-              <p className="text-gray-900 font-medium">
-                {personalInformation.country}
-              </p>
-            </div>
+            {/* Club Name */}
+            {currentUser?.profile?.clubName && (
+              <div>
+                <label className="text-sm text-gray-500 mb-1 block">
+                  Club Name
+                </label>
+                <p className="text-gray-900 font-medium">
+                  {currentUser.profile.clubName}
+                </p>
+              </div>
+            )}
+
+            {/* Country */}
+            {currentUser?.profile?.country && (
+              <div>
+                <label className="text-sm text-gray-500 mb-1 block">
+                  Country
+                </label>
+                <p className="text-gray-900 font-medium">
+                  {currentUser.profile.country}
+                </p>
+              </div>
+            )}
+
+            {/* Phone Number */}
             <div>
               <label className="text-sm text-gray-500 mb-1 block">
                 Phone number
               </label>
               <p className="text-gray-900 font-medium">
-                {personalInformation.phone}
+                {currentUser?.profile?.phoneNumber || "N/A"}
               </p>
             </div>
 
-            <div>
-              <label className="text-sm text-gray-500 mb-1 block">
-                Website
-              </label>
-              <p className="text-gray-900 font-medium">
-                {personalInformation.website}
-              </p>
-            </div>
-            <div>
-              <label className="text-sm text-gray-500 mb-1 block">
-                Address
-              </label>
-              <p className="text-gray-900 font-medium">
-                {personalInformation.address}
-              </p>
-            </div>
-            <div>
-              <label className="text-sm text-gray-500 mb-1 block">
-                Founded
-              </label>
-              <p className="text-gray-900 font-medium">
-                {personalInformation.founded}
-              </p>
-            </div>
+            {/* Website */}
+            {currentUser?.profile?.website && (
+              <div>
+                <label className="text-sm text-gray-500 mb-1 block">
+                  Website
+                </label>
+                <p className="text-blue-600 font-medium cursor-pointer hover:underline">
+                  <a
+                    href={currentUser.profile.website}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
+                    {currentUser.profile.website}
+                  </a>
+                </p>
+              </div>
+            )}
 
-            <div>
-              <label className="text-sm text-gray-500 mb-1 block">
-                Nationality
-              </label>
-              <p className="text-gray-900 font-medium">
-                {personalInformation.nationality}
-              </p>
-            </div>
-            <div>
-              <label className="text-sm text-gray-500 mb-1 block">Level</label>
-              <p className="text-gray-900 font-medium">
-                {personalInformation.level}
-              </p>
-            </div>
-            <div>
-              <label className="text-sm text-gray-500 mb-1 block">
-                Social Media
-              </label>
-              <p className="text-gray-900 font-medium">
-                {personalInformation.socialMedia}
-              </p>
-            </div>
+            {/* Address */}
+            {currentUser?.profile?.address && (
+              <div>
+                <label className="text-sm text-gray-500 mb-1 block">
+                  Address
+                </label>
+                <p className="text-gray-900 font-medium">
+                  {currentUser.profile.address}
+                </p>
+              </div>
+            )}
+
+            {/* Location */}
+            {currentUser?.profile?.location && (
+              <div>
+                <label className="text-sm text-gray-500 mb-1 block">
+                  Location
+                </label>
+                <p className="text-gray-900 font-medium">
+                  {currentUser.profile.location}
+                </p>
+              </div>
+            )}
+
+            {/* Founded */}
+            {currentUser?.profile?.founded && (
+              <div>
+                <label className="text-sm text-gray-500 mb-1 block">
+                  Founded
+                </label>
+                <p className="text-gray-900 font-medium">
+                  {formatFoundedDate(currentUser.profile.founded)}
+                </p>
+              </div>
+            )}
+
+            {/* Level */}
+            {currentUser?.profile?.level && (
+              <div>
+                <label className="text-sm text-gray-500 mb-1 block">
+                  Level
+                </label>
+                <p className="text-gray-900 font-medium">
+                  {currentUser.profile.level}
+                </p>
+              </div>
+            )}
+
+            {/* Nationality */}
+            {currentUser?.profile?.nationality && (
+              <div>
+                <label className="text-sm text-gray-500 mb-1 block">
+                  Nationality
+                </label>
+                <p className="text-gray-900 font-medium">
+                  {currentUser.profile.nationality}
+                </p>
+              </div>
+            )}
+
+            {/* Club Contact */}
+            {currentUser?.profile?.clubContact && (
+              <div>
+                <label className="text-sm text-gray-500 mb-1 block">
+                  Club Contact
+                </label>
+                <p className="text-gray-900 font-medium">
+                  {currentUser.profile.clubContact}
+                </p>
+              </div>
+            )}
           </div>
         </div>
       </div>
 
-      {/* Edit Personal Information Modal */}
+      {/* Edit Profile Modal */}
       <EditEmployerPersonalInformationModal
-        isOpen={isEditPersonalInformationModalOpen}
-        onClose={() => setIsEditPersonalInformationModalOpen(false)}
-        initialData={personalInformation}
+        isOpen={isEditProfileModalOpen}
+        onClose={() => setIsEditProfileModalOpen(false)}
+        initialData={currentUser?.profile || {}}
       />
     </div>
   );
