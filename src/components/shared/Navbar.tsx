@@ -36,6 +36,7 @@ import { Avatar, AvatarFallback } from "../ui/avatar";
 import { useGetMeQuery } from "@/redux/features/auth/authApi";
 import { useAppDispatch } from "@/redux/hooks";
 import { logout } from "@/redux/features/auth/authSlice";
+import { baseApi } from "@/redux/api/baseApi";
 
 // ==================== Types ====================
 interface NotificationItem {
@@ -290,7 +291,14 @@ export function Navbar() {
   const router = useRouter();
   const dispatch = useAppDispatch();
 
-  const { data: user } = useGetMeQuery(null);
+  // Check if user has token before making the query
+  const hasToken =
+    typeof window !== "undefined"
+      ? !!localStorage.getItem("accessToken")
+      : false;
+  const { data: user } = useGetMeQuery(null, {
+    skip: !hasToken,
+  });
 
   const isLoggedIn = !!user?.data?.profileId;
   const navLinks = useMemo(
@@ -315,8 +323,13 @@ export function Navbar() {
   }, []);
 
   const confirmLogout = useCallback(() => {
+    // Clear Redux state
     dispatch(logout());
+    // Reset RTK Query cache to clear all cached data
+    dispatch(baseApi.util.resetApiState());
+    // Clear any remaining tokens from localStorage
     localStorage.removeItem("token");
+    localStorage.removeItem("accessToken");
     setIsLogoutModalOpen(false);
     router.push("/signin");
   }, [dispatch, router]);
