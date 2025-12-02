@@ -4,7 +4,6 @@ import React, { useState } from "react";
 import { MoreVertical, Download, MessageCircle, Plus } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import CreateJobPostModal from "@/components/modals/CreateJobPostModal";
-import { set } from "zod";
 
 // Types
 interface Applicant {
@@ -405,11 +404,15 @@ const JobsPage: React.FC = () => {
           </div>
         </div>
       </div>
-      {/* Add Job Post Modal (Placeholder) */}
+      {/* Create Job Post Modal */}
       {isCreateJobPostModalOpen && (
         <CreateJobPostModal
           isOpen={isCreateJobPostModalOpen}
           onClose={() => setIsCreateJobPostModalOpen(false)}
+          onSuccess={() => {
+            // The RTK Query cache invalidation will automatically refetch the jobs
+            // You can add additional logic here if needed
+          }}
         />
       )}
     </div>

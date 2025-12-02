@@ -2,8 +2,6 @@
 
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import * as z from "zod";
-import { useState } from "react";
 import {
   Dialog,
   DialogContent,
@@ -28,151 +26,129 @@ import {
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
-
-const formSchema = z
-  .object({
-    jobTitle: z.string().min(1, "Job title is required"),
-    companyLocation: z.string().min(1, "Company location is required"),
-    jobCategory: z.string().min(1, "Job category is required"),
-    jobSubcategory: z.string().optional(),
-    jobType: z.enum(["full-time", "part-time"]),
-    experienceRequired: z.string().min(1, "Experience level is required"),
-    position: z.string().min(1, "Position is required"),
-    contractType: z.string().min(1, "Contract type is required"),
-    minSalary: z.string().min(1, "Minimum salary is required"),
-    maxSalary: z.string().min(1, "Maximum salary is required"),
-    weblink: z
-      .string()
-      .url("Please enter a valid URL")
-      .optional()
-      .or(z.literal("")),
-    jobOverview: z.string().min(1, "Job overview is required"),
-    responsibilities: z.string().min(1, "Responsibilities are required"),
-    skillsQualifications: z
-      .string()
-      .min(1, "Skills & qualifications are required"),
-    applicationRequirements: z
-      .string()
-      .min(1, "Application requirements are required"),
-    requirements: z.string().optional(),
-  })
-  .refine(
-    (data) => {
-      const minSal = parseFloat(data.minSalary);
-      const maxSal = parseFloat(data.maxSalary);
-      return maxSal > minSal;
-    },
-    {
-      message: "Maximum salary must be greater than minimum salary",
-      path: ["maxSalary"],
-    }
-  );
-
-export type TJobPost = z.infer<typeof formSchema>;
+import {
+  createJobSchema,
+  CreateJobFormData,
+  CreateJobPayload,
+} from "@/shchemas/jobValidation";
+import { useCreateJobMutation } from "@/redux/features/job/jobApi";
+import { toast } from "sonner";
+import { countryList, playerPositionOptions } from "@/constants/selectOptions";
 
 interface CreateJobPostModalProps {
   isOpen: boolean;
   onClose: () => void;
+  onSuccess?: () => void;
 }
 
 const jobCategories = [
-  { value: "professional-player", label: "Professional Player" },
-  { value: "amateur-player", label: "Amateur Player" },
-  { value: "high-school-player", label: "High School Player" },
-  { value: "college-player", label: "College Player" },
-  { value: "staff-on-field", label: "Staff on The Field" },
-  { value: "office-staff", label: "Office Staff" },
+  { value: "Professional Player", label: "Professional Player" },
+  { value: "Amateur Player", label: "Amateur Player" },
+  { value: "High School Player", label: "High School Player" },
+  { value: "College Player", label: "College Player" },
+  { value: "Staff on The Field", label: "Staff on The Field" },
+  { value: "Office Staff", label: "Office Staff" },
 ];
 
-const staffOnFieldSubcategories = [
-  { value: "gk", label: "GK" },
-  { value: "central-back", label: "Central back" },
-  { value: "left-back", label: "Left back" },
-  { value: "right-back", label: "Right back" },
-  { value: "defensive-midfielder", label: "Defensive midfielder" },
-  { value: "offensive-midfielder", label: "Offensive midfielder" },
-  { value: "right-winger", label: "Right winger" },
-  { value: "left-winger", label: "Left winger" },
-  { value: "forward", label: "Forward" },
-  { value: "striker", label: "Striker" },
+const contractTypes = [
+  { value: "FullTime", label: "Full Time" },
+  { value: "PartTime", label: "Part Time" },
+  { value: "Contract", label: "Contract" },
 ];
 
-const officeStaffSubcategories = [
-  { value: "administrative-director", label: "Administrative Director" },
-  { value: "community-manager", label: "Community Manager" },
-  { value: "data-analyst", label: "Data Analyst" },
-  { value: "developer", label: "Developer" },
-  { value: "digital-manager", label: "Digital Manager" },
-  { value: "executive-secretary", label: "Executive Secretary" },
-  { value: "it", label: "IT" },
+const experienceLevels = [
+  { value: "Entry Level", label: "Entry Level" },
+  { value: "Intermediate", label: "Intermediate" },
+  { value: "Mid-Level", label: "Mid-Level" },
+  { value: "Mid-Senior", label: "Mid-Senior" },
+  { value: "Senior", label: "Senior" },
 ];
 
 export default function CreateJobPostModal({
   isOpen,
   onClose,
+  onSuccess,
 }: CreateJobPostModalProps) {
-  const [showSubcategory, setShowSubcategory] = useState(false);
+  const [createJob, { isLoading }] = useCreateJobMutation();
 
-  const form = useForm<z.infer<typeof formSchema>>({
-    resolver: zodResolver(formSchema),
+  const form = useForm<CreateJobFormData>({
+    resolver: zodResolver(createJobSchema),
     defaultValues: {
       jobTitle: "",
-      companyLocation: "",
+      location: "",
+      country: "",
+      deadline: "",
       jobCategory: "",
-      jobSubcategory: "",
-      jobType: undefined,
-      experienceRequired: "",
       position: "",
       contractType: "",
       minSalary: "",
       maxSalary: "",
-      weblink: "",
+      experience: undefined,
       jobOverview: "",
       responsibilities: "",
-      skillsQualifications: "",
-      applicationRequirements: "",
       requirements: "",
+      requiredSkills: "",
+      requiredAiScore: "",
+      additionalRequirements: "",
     },
   });
 
-  const selectedJobCategory = form.watch("jobCategory");
+  const onSubmit = async (data: CreateJobFormData) => {
+    try {
+      // Transform form data to API payload
+      const payload: CreateJobPayload = {
+        jobTitle: data.jobTitle,
+        location: data.location,
+        country: data.country,
+        deadline: data.deadline,
+        jobOverview: data.jobOverview,
+        jobCategory: data.jobCategory,
+        position: data.position,
+        contractType: data.contractType,
+        salary: {
+          min: parseFloat(data.minSalary),
+          max: parseFloat(data.maxSalary),
+        },
+        experience: data.experience,
+        requirements: data.requirements,
+        responsibilities: data.responsibilities,
+        requiredAiScore: parseInt(data.requiredAiScore),
+        requiredSkills: data.requiredSkills,
+        additionalRequirements: data.additionalRequirements,
+        status: "active",
+      };
 
-  // Handle job category change
-  const handleJobCategoryChange = (value: string) => {
-    form.setValue("jobCategory", value);
-    if (value === "staff-on-field" || value === "office-staff") {
-      setShowSubcategory(true);
-      form.setValue("jobSubcategory", "");
-    } else {
-      setShowSubcategory(false);
-      form.setValue("jobSubcategory", "");
-    }
-  };
+      const result = await createJob(payload).unwrap();
 
-  const getSubcategoryOptions = () => {
-    if (selectedJobCategory === "staff-on-field") {
-      return staffOnFieldSubcategories;
+      toast.success("Job posted successfully!");
+      form.reset();
+      onClose();
+
+      // Call success callback if provided
+      if (onSuccess) {
+        onSuccess();
+      }
+    } catch (error) {
+      const apiError = error as { data?: { message?: string } };
+      toast.error(apiError?.data?.message || "Failed to create job post");
+      console.error("Failed to create job:", error);
     }
-    if (selectedJobCategory === "office-staff") {
-      return officeStaffSubcategories;
-    }
-    return [];
-  };
-  const onSubmit = (data: TJobPost) => {
-    console.log("Job post data:", data);
-    form.reset();
-    setShowSubcategory(false);
-    onClose();
   };
 
   const handleClose = () => {
-    form.reset();
-    setShowSubcategory(false);
-    onClose();
+    if (!isLoading) {
+      form.reset();
+      onClose();
+    }
   };
 
   return (
-    <Dialog open={isOpen} onOpenChange={handleClose}>
+    <Dialog
+      open={isOpen}
+      onOpenChange={(open) => {
+        if (!open && !isLoading) handleClose();
+      }}
+    >
       <DialogContent className="sm:max-w-[700px] md:max-w-[800px] max-h-[90vh] overflow-y-auto">
         <DialogHeader>
           <div className="flex items-center justify-between">
@@ -212,21 +188,69 @@ export default function CreateJobPostModal({
                   )}
                 />
 
-                {/* Company Location */}
+                {/* Location */}
                 <FormField
                   control={form.control}
-                  name="companyLocation"
+                  name="location"
                   render={({ field }) => (
                     <FormItem>
                       <FormLabel className="text-sm font-medium text-gray-700">
-                        Company location
+                        Location
                       </FormLabel>
                       <FormControl>
                         <Input
-                          placeholder="Company location"
+                          placeholder="Ex: London, UK"
                           {...field}
                           className="mt-1"
                         />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+
+                {/* Country */}
+                <FormField
+                  control={form.control}
+                  name="country"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel className="text-sm font-medium text-gray-700">
+                        Country
+                      </FormLabel>
+                      <Select
+                        onValueChange={field.onChange}
+                        value={field.value}
+                      >
+                        <FormControl className="w-full">
+                          <SelectTrigger className="mt-1">
+                            <SelectValue placeholder="Select Country" />
+                          </SelectTrigger>
+                        </FormControl>
+                        <SelectContent className="max-h-[300px]">
+                          {countryList.map((country) => (
+                            <SelectItem key={country} value={country}>
+                              {country}
+                            </SelectItem>
+                          ))}
+                        </SelectContent>
+                      </Select>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+
+                {/* Deadline */}
+                <FormField
+                  control={form.control}
+                  name="deadline"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel className="text-sm font-medium text-gray-700">
+                        Deadline
+                      </FormLabel>
+                      <FormControl>
+                        <Input type="date" {...field} className="mt-1" />
                       </FormControl>
                       <FormMessage />
                     </FormItem>
@@ -243,8 +267,8 @@ export default function CreateJobPostModal({
                         Job Category
                       </FormLabel>
                       <Select
-                        onValueChange={handleJobCategoryChange}
-                        defaultValue={field.value}
+                        onValueChange={field.onChange}
+                        value={field.value}
                       >
                         <FormControl className="w-full">
                           <SelectTrigger className="mt-1">
@@ -267,69 +291,37 @@ export default function CreateJobPostModal({
                   )}
                 />
 
-                {/* Job Subcategory */}
-                {showSubcategory && (
-                  <FormField
-                    control={form.control}
-                    name="jobSubcategory"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel className="text-sm font-medium text-gray-700">
-                          Subcategory
-                        </FormLabel>
-                        <Select
-                          onValueChange={field.onChange}
-                          defaultValue={field.value}
-                        >
-                          <FormControl className="w-full">
-                            <SelectTrigger className="mt-1">
-                              <SelectValue placeholder="Select Subcategory" />
-                            </SelectTrigger>
-                          </FormControl>
-                          <SelectContent>
-                            {getSubcategoryOptions().map((subcategory) => (
-                              <SelectItem
-                                key={subcategory.value}
-                                value={subcategory.value}
-                              >
-                                {subcategory.label}
-                              </SelectItem>
-                            ))}
-                          </SelectContent>
-                        </Select>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
-                )}
-
-                {/* Job Type */}
+                {/* Position */}
                 <FormField
                   control={form.control}
-                  name="jobType"
+                  name="position"
                   render={({ field }) => (
                     <FormItem>
                       <FormLabel className="text-sm font-medium text-gray-700">
-                        Job Type
+                        Position
                       </FormLabel>
                       <Select
                         onValueChange={field.onChange}
-                        defaultValue={field.value}
+                        value={field.value}
                       >
                         <FormControl className="w-full">
                           <SelectTrigger className="mt-1">
-                            <SelectValue placeholder="Select one" />
+                            <SelectValue placeholder="Select Position" />
                           </SelectTrigger>
                         </FormControl>
                         <SelectContent>
-                          <SelectItem value="full-time">Full Time</SelectItem>
-                          <SelectItem value="part-time">Part Time</SelectItem>
+                          {playerPositionOptions.map((position) => (
+                            <SelectItem key={position} value={position}>
+                              {position}
+                            </SelectItem>
+                          ))}
                         </SelectContent>
                       </Select>
                       <FormMessage />
                     </FormItem>
                   )}
                 />
+
                 {/* Contract Type */}
                 <FormField
                   control={form.control}
@@ -339,56 +331,58 @@ export default function CreateJobPostModal({
                       <FormLabel className="text-sm font-medium text-gray-700">
                         Contract Type
                       </FormLabel>
-                      <Input
-                        placeholder="Contract type"
-                        {...field}
-                        className="mt-1"
-                      />
+                      <Select
+                        onValueChange={field.onChange}
+                        value={field.value}
+                      >
+                        <FormControl className="w-full">
+                          <SelectTrigger className="mt-1">
+                            <SelectValue placeholder="Select Contract Type" />
+                          </SelectTrigger>
+                        </FormControl>
+                        <SelectContent>
+                          {contractTypes.map((type) => (
+                            <SelectItem key={type.value} value={type.value}>
+                              {type.label}
+                            </SelectItem>
+                          ))}
+                        </SelectContent>
+                      </Select>
                       <FormMessage />
                     </FormItem>
                   )}
                 />
 
-                {/* Experience Required & Position */}
-                <div className="grid grid-cols-2 gap-4">
-                  <FormField
-                    control={form.control}
-                    name="experienceRequired"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel className="text-sm font-medium text-gray-700">
-                          Experience required
-                        </FormLabel>
-                        <Input
-                          placeholder="Experience required"
-                          {...field}
-                          className="mt-1"
-                        />
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
-
-                  <FormField
-                    control={form.control}
-                    name="position"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel className="text-sm font-medium text-gray-700">
-                          Position
-                        </FormLabel>
-                        <FormControl>
-                          <Input
-                            placeholder="Position"
-                            {...field}
-                            className="mt-1"
-                          />
+                {/* Experience */}
+                <FormField
+                  control={form.control}
+                  name="experience"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel className="text-sm font-medium text-gray-700">
+                        Experience Level
+                      </FormLabel>
+                      <Select
+                        onValueChange={field.onChange}
+                        value={field.value}
+                      >
+                        <FormControl className="w-full">
+                          <SelectTrigger className="mt-1">
+                            <SelectValue placeholder="Select Experience Level" />
+                          </SelectTrigger>
                         </FormControl>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
-                </div>
+                        <SelectContent>
+                          {experienceLevels.map((level) => (
+                            <SelectItem key={level.value} value={level.value}>
+                              {level.label}
+                            </SelectItem>
+                          ))}
+                        </SelectContent>
+                      </Select>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
 
                 {/* Salary Range */}
                 <div>
@@ -433,20 +427,23 @@ export default function CreateJobPostModal({
                   </div>
                 </div>
 
-                {/* Weblink */}
+                {/* Required AI Score */}
                 <FormField
                   control={form.control}
-                  name="weblink"
+                  name="requiredAiScore"
                   render={({ field }) => (
                     <FormItem>
                       <FormLabel className="text-sm font-medium text-gray-700">
-                        Weblink
+                        Required AI Score (0-100)
                       </FormLabel>
                       <FormControl>
                         <Input
-                          placeholder="Post your web link"
+                          type="number"
+                          placeholder="Ex: 70"
                           {...field}
                           className="mt-1"
+                          min="0"
+                          max="100"
                         />
                       </FormControl>
                       <FormMessage />
@@ -473,7 +470,7 @@ export default function CreateJobPostModal({
                       <FormControl>
                         <Textarea
                           placeholder="Write something about your job..."
-                          className="mt-1 min-h-[80px] resize-none"
+                          className="mt-1 min-h-20 resize-none"
                           {...field}
                         />
                       </FormControl>
@@ -494,7 +491,7 @@ export default function CreateJobPostModal({
                       <FormControl>
                         <Textarea
                           placeholder="Write something about your job..."
-                          className="mt-1 min-h-[80px] resize-none"
+                          className="mt-1 min-h-20 resize-none"
                           {...field}
                         />
                       </FormControl>
@@ -503,49 +500,7 @@ export default function CreateJobPostModal({
                   )}
                 />
 
-                {/* Required Skills & Qualifications */}
-                <FormField
-                  control={form.control}
-                  name="skillsQualifications"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel className="text-sm font-medium text-gray-700">
-                        Required Skills & Qualifications
-                      </FormLabel>
-                      <FormControl>
-                        <Textarea
-                          placeholder="Write something about your job..."
-                          className="mt-1 min-h-[80px] resize-none"
-                          {...field}
-                        />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-
-                {/* Application Requirements */}
-                <FormField
-                  control={form.control}
-                  name="applicationRequirements"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel className="text-sm font-medium text-gray-700">
-                        Application Requirements
-                      </FormLabel>
-                      <FormControl>
-                        <Textarea
-                          placeholder="Write something about your job..."
-                          className="mt-1 min-h-[80px] resize-none"
-                          {...field}
-                        />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-
-                {/* Requirements (Optional) */}
+                {/* Requirements */}
                 <FormField
                   control={form.control}
                   name="requirements"
@@ -556,8 +511,51 @@ export default function CreateJobPostModal({
                       </FormLabel>
                       <FormControl>
                         <Textarea
-                          placeholder="Write requirements..."
-                          className="mt-1 min-h-[80px] resize-none"
+                          placeholder="Ex: Strong physical fitness, tactical understanding..."
+                          className="mt-1 min-h-20 resize-none"
+                          {...field}
+                        />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+
+                {/* Required Skills */}
+                <FormField
+                  control={form.control}
+                  name="requiredSkills"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel className="text-sm font-medium text-gray-700">
+                        Required Skills
+                      </FormLabel>
+                      <FormControl>
+                        <Textarea
+                          placeholder="Ex: Dribbling, Passing, Shooting, Tactical Awareness..."
+                          className="mt-1 min-h-20 resize-none"
+                          {...field}
+                        />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+
+                {/* Additional Requirements (Optional) */}
+                <FormField
+                  control={form.control}
+                  name="additionalRequirements"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel className="text-sm font-medium text-gray-700">
+                        Additional Requirements{" "}
+                        <span className="text-gray-400">(Optional)</span>
+                      </FormLabel>
+                      <FormControl>
+                        <Textarea
+                          placeholder="Ex: Willingness to travel for matches..."
+                          className="mt-1 min-h-20 resize-none"
                           {...field}
                         />
                       </FormControl>
@@ -570,14 +568,20 @@ export default function CreateJobPostModal({
 
             {/* Action Buttons */}
             <div className="flex justify-end space-x-3 pt-4 border-t">
-              <Button type="button" variant="outline" onClick={handleClose}>
+              <Button
+                type="button"
+                variant="outline"
+                onClick={handleClose}
+                disabled={isLoading}
+              >
                 Cancel
               </Button>
               <Button
                 type="submit"
                 className="bg-black hover:bg-gray-800 text-white"
+                disabled={isLoading}
               >
-                Create Job Post
+                {isLoading ? "Creating..." : "Create Job Post"}
               </Button>
             </div>
           </form>

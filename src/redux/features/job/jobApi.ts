@@ -1,7 +1,22 @@
 import { baseApi } from "@/redux/api/baseApi";
+import { CreateJobPayload } from "@/shchemas/jobValidation";
+import { TJob } from "@/types/job";
 
 const jobApi = baseApi.injectEndpoints({
   endpoints: (builder) => ({
+    createJob: builder.mutation<{ data: TJob }, CreateJobPayload>({
+      query: (jobData) => ({
+        url: "/job",
+        method: "POST",
+        body: jobData,
+      }),
+      invalidatesTags: [
+        { type: "Job", id: "LIST" },
+        { type: "Job", id: "RECENT" },
+        { type: "Job", id: "COUNTS" },
+      ],
+    }),
+
     getJobsWithFilters: builder.query({
       query: (filters = {}) => ({
         url: "/job",
@@ -60,6 +75,7 @@ const jobApi = baseApi.injectEndpoints({
 });
 
 export const {
+  useCreateJobMutation,
   useGetJobsWithFiltersQuery,
   useLazyGetJobsWithFiltersQuery,
   useGetNewFourJobsQuery,
