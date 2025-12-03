@@ -1,130 +1,46 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { MoreVertical, Download, MessageCircle, Plus } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import CreateJobPostModal from "@/components/modals/CreateJobPostModal";
-
-// Types
-interface Applicant {
-  id: string;
-  name: string;
-  aiScore: number;
-  resumeUrl: string;
-  profileImage?: string;
-}
-
-interface Job {
-  id: string;
-  title: string;
-  datePosted: string;
-  salary: string;
-  location: string;
-  status: "active" | "closed";
-  applicants: Applicant[];
-}
-
-// Mock data
-const mockJobs: Job[] = [
-  {
-    id: "1",
-    title: "Defence Player",
-    datePosted: "22/08/2024",
-    salary: "$30/mo",
-    location: "1801 Thornridge Cir. Shiloh, Hawaii 81063",
-    status: "active",
-    applicants: [
-      {
-        id: "1",
-        name: "Zayden",
-        aiScore: 50,
-        resumeUrl: "#",
-      },
-      {
-        id: "2",
-        name: "Kairo",
-        aiScore: 70,
-        resumeUrl: "#",
-      },
-      {
-        id: "3",
-        name: "Lian",
-        aiScore: 93,
-        resumeUrl: "#",
-      },
-      {
-        id: "4",
-        name: "Tavion",
-        aiScore: 28,
-        resumeUrl: "#",
-      },
-    ],
-  },
-  {
-    id: "2",
-    title: "Defence Player",
-    datePosted: "22/08/2024",
-    salary: "$30/mo",
-    location: "1801 Thornridge Cir. Shiloh, Hawaii 81063",
-    status: "active",
-    applicants: [
-      {
-        id: "5",
-        name: "Alex",
-        aiScore: 85,
-        resumeUrl: "#",
-      },
-    ],
-  },
-  {
-    id: "3",
-    title: "Midfielder Player",
-    datePosted: "20/08/2024",
-    salary: "$35/mo",
-    location: "2972 Westheimer Rd. Santa Ana, Illinois 85486",
-    status: "closed",
-    applicants: [
-      {
-        id: "6",
-        name: "Sarah",
-        aiScore: 76,
-        resumeUrl: "#",
-      },
-      {
-        id: "7",
-        name: "Mike",
-        aiScore: 42,
-        resumeUrl: "#",
-      },
-    ],
-  },
-  {
-    id: "4",
-    title: "Forward Player",
-    datePosted: "18/08/2024",
-    salary: "$40/mo",
-    location: "8502 Preston Rd. Inglewood, Maine 98380",
-    status: "active",
-    applicants: [
-      {
-        id: "8",
-        name: "David",
-        aiScore: 88,
-        resumeUrl: "#",
-      },
-    ],
-  },
-];
+import { useAppSelector } from "@/redux/hooks";
+import { useGetEmployerJobsQuery } from "@/redux/features/job/jobApi";
+import { useGetJobApplicationsQuery } from "@/redux/features/jobApplication/jobApplicationApi";
+import { TJob } from "@/types/job";
 
 const JobsPage: React.FC = () => {
   const [activeTab, setActiveTab] = useState<"active" | "closed">("active");
-  const [jobs, setJobs] = useState<Job[]>(mockJobs);
-  const [selectedJob, setSelectedJob] = useState<Job | null>(
-    jobs.find((job) => job.status === "active") || null
-  );
+  const [selectedJob, setSelectedJob] = useState<TJob | null>(null);
   const [openDropdownId, setOpenDropdownId] = useState<string | null>(null);
   const [isCreateJobPostModalOpen, setIsCreateJobPostModalOpen] =
     useState(false);
+
+  // Get current user from Redux store
+  const user = useAppSelector((state) => state.auth.user);
+
+  // Fetch employer jobs
+  const { data: employerJobsData, isLoading: isLoadingJobs } =
+    useGetEmployerJobsQuery(user?._id || "", {
+      skip: !user?._id,
+    });
+
+  // Fetch applications for selected job
+  const { data: applicationsData, isLoading: isLoadingApplications } =
+    useGetJobApplicationsQuery(selectedJob?._id || "", {
+      skip: !selectedJob?._id,
+    });
+
+  const jobs = employerJobsData?.data || [];
+  const applications = applicationsData?.data || [];
+
+  // Set initial selected job when jobs are loaded
+  useEffect(() => {
+    if (jobs.length > 0 && !selectedJob) {
+      const firstActiveJob = jobs.find((job) => job.status === activeTab);
+      setSelectedJob(firstActiveJob || jobs[0]);
+    }
+  }, [jobs, activeTab, selectedJob]);
 
   // Filter jobs based on active tab
   const filteredJobs = jobs.filter((job) => job.status === activeTab);
@@ -138,43 +54,25 @@ const JobsPage: React.FC = () => {
   };
 
   // Handle job selection
-  const handleJobSelect = (job: Job) => {
+  const handleJobSelect = (job: TJob) => {
     setSelectedJob(job);
   };
 
-  // Handle job status change
+  // Handle job status change (placeholder - needs API integration)
   const handleJobStatusChange = (
     jobId: string,
     newStatus: "active" | "closed"
   ) => {
-    setJobs((prevJobs) =>
-      prevJobs.map((job) =>
-        job.id === jobId ? { ...job, status: newStatus } : job
-      )
-    );
+    // TODO: Implement API call to update job status
+    console.log(`Update job ${jobId} to ${newStatus}`);
     setOpenDropdownId(null);
-
-    // If the current selected job was closed/activated, update selection
-    if (selectedJob?.id === jobId && newStatus !== activeTab) {
-      const remainingJobs = jobs.filter(
-        (job) => job.id !== jobId && job.status === activeTab
-      );
-      setSelectedJob(remainingJobs[0] || null);
-    }
   };
 
-  // Handle job deletion
+  // Handle job deletion (placeholder - needs API integration)
   const handleJobDelete = (jobId: string) => {
-    setJobs((prevJobs) => prevJobs.filter((job) => job.id !== jobId));
+    // TODO: Implement API call to delete job
+    console.log(`Delete job ${jobId}`);
     setOpenDropdownId(null);
-
-    // If the current selected job was deleted, select another
-    if (selectedJob?.id === jobId) {
-      const remainingJobs = jobs.filter(
-        (job) => job.id !== jobId && job.status === activeTab
-      );
-      setSelectedJob(remainingJobs[0] || null);
-    }
   };
 
   // Toggle dropdown
@@ -189,6 +87,29 @@ const JobsPage: React.FC = () => {
     if (score >= 40) return "text-yellow-500";
     return "text-red-500";
   };
+
+  // Format date
+  const formatDate = (dateString: string) => {
+    const date = new Date(dateString);
+    return date.toLocaleDateString("en-US", {
+      day: "2-digit",
+      month: "2-digit",
+      year: "numeric",
+    });
+  };
+
+  // Format salary
+  const formatSalary = (min: number, max: number) => {
+    return `$${min.toLocaleString()} - $${max.toLocaleString()}`;
+  };
+
+  if (isLoadingJobs) {
+    return (
+      <div className="min-h-screen w-full p-4 md:p-6 border rounded-2xl flex items-center justify-center">
+        <p className="text-gray-500">Loading jobs...</p>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen w-full p-4 md:p-6 border rounded-2xl">
@@ -237,10 +158,10 @@ const JobsPage: React.FC = () => {
               {filteredJobs.length > 0 ? (
                 filteredJobs.map((job) => (
                   <div
-                    key={job.id}
+                    key={job._id}
                     onClick={() => handleJobSelect(job)}
                     className={`relative bg-white rounded-lg border p-4 cursor-pointer transition-all ${
-                      selectedJob?.id === job.id
+                      selectedJob?._id === job._id
                         ? "border-blue-500 shadow-md"
                         : "border-gray-200 hover:border-gray-300 hover:shadow-sm"
                     }`}
@@ -250,7 +171,7 @@ const JobsPage: React.FC = () => {
                       <button
                         onClick={(e) => {
                           e.stopPropagation();
-                          toggleDropdown(job.id);
+                          toggleDropdown(job._id);
                         }}
                         className="p-1 hover:bg-gray-100 rounded transition-colors"
                       >
@@ -258,13 +179,13 @@ const JobsPage: React.FC = () => {
                       </button>
 
                       {/* Dropdown menu */}
-                      {openDropdownId === job.id && (
+                      {openDropdownId === job._id && (
                         <div className="absolute right-0 top-8 bg-white border border-gray-200 rounded-lg shadow-lg py-1 z-10 min-w-[120px]">
                           {job.status === "active" ? (
                             <button
                               onClick={(e) => {
                                 e.stopPropagation();
-                                handleJobStatusChange(job.id, "closed");
+                                handleJobStatusChange(job._id, "closed");
                               }}
                               className="w-full px-4 py-2 text-left text-sm text-gray-700 hover:bg-gray-100 transition-colors"
                             >
@@ -274,7 +195,7 @@ const JobsPage: React.FC = () => {
                             <button
                               onClick={(e) => {
                                 e.stopPropagation();
-                                handleJobStatusChange(job.id, "active");
+                                handleJobStatusChange(job._id, "active");
                               }}
                               className="w-full px-4 py-2 text-left text-sm text-gray-700 hover:bg-gray-100 transition-colors"
                             >
@@ -284,7 +205,7 @@ const JobsPage: React.FC = () => {
                           <button
                             onClick={(e) => {
                               e.stopPropagation();
-                              handleJobDelete(job.id);
+                              handleJobDelete(job._id);
                             }}
                             className="w-full px-4 py-2 text-left text-sm text-red-600 hover:bg-red-50 transition-colors"
                           >
@@ -296,16 +217,20 @@ const JobsPage: React.FC = () => {
 
                     <div className="pr-8">
                       <h3 className="font-semibold text-gray-900 mb-1">
-                        {job.title}
+                        {job.jobTitle}
                       </h3>
                       <p className="text-sm text-gray-500 mb-2">
-                        {job.datePosted}
+                        {formatDate(job.createdAt)}
                       </p>
                       <p className="text-sm text-gray-600 mb-2">
-                        Salary: {job.salary}
+                        Salary: {formatSalary(job.salary.min, job.salary.max)}
                       </p>
                       <p className="text-sm text-gray-600 leading-relaxed">
-                        {job.location}
+                        {job.location}, {job.country}
+                      </p>
+                      <p className="text-sm text-blue-600 font-medium mt-2">
+                        {job.applicationCount} Applicant
+                        {job.applicationCount !== 1 ? "s" : ""}
                       </p>
                     </div>
                   </div>
@@ -339,45 +264,73 @@ const JobsPage: React.FC = () => {
 
                 {/* Applicants List */}
                 <div className="divide-y divide-gray-200">
-                  {selectedJob.applicants.length > 0 ? (
-                    selectedJob.applicants.map((applicant) => (
+                  {isLoadingApplications ? (
+                    <div className="px-6 py-12 text-center">
+                      <p className="text-gray-500">Loading applicants...</p>
+                    </div>
+                  ) : applications.length > 0 ? (
+                    applications.map((applicant) => (
                       <div
-                        key={applicant.id}
+                        key={applicant._id}
                         className="grid grid-cols-12 gap-4 px-6 py-4 hover:bg-gray-50 transition-colors"
                       >
                         {/* Name */}
                         <div className="col-span-4 flex items-center gap-3">
-                          <div className="w-8 h-8 bg-gray-200 rounded-full flex items-center justify-center">
-                            <span className="text-sm font-medium text-gray-600">
-                              {applicant.name.charAt(0)}
+                          {applicant.applicantProfileImage ? (
+                            <img
+                              src={`${process.env.NEXT_PUBLIC_IMAGE_URL}${applicant.applicantProfileImage}`}
+                              alt={applicant.applicantName}
+                              className="w-8 h-8 rounded-full object-cover"
+                            />
+                          ) : (
+                            <div className="w-8 h-8 bg-gray-200 rounded-full flex items-center justify-center">
+                              <span className="text-sm font-medium text-gray-600">
+                                {applicant.applicantName.charAt(0)}
+                              </span>
+                            </div>
+                          )}
+                          <div className="flex flex-col">
+                            <span className="text-sm text-gray-900">
+                              {applicant.applicantName}
+                            </span>
+                            <span className="text-xs text-gray-500">
+                              {applicant.candidateRole}
                             </span>
                           </div>
-                          <span className="text-sm text-gray-900">
-                            {applicant.name}
-                          </span>
                         </div>
 
                         {/* AI Score */}
-                        <div className="col-span-2 flex justify-center">
+                        <div className="col-span-2 flex justify-center items-center">
                           <span
                             className={`text-sm font-medium ${getAIScoreColor(
-                              applicant.aiScore
+                              applicant.aiMatchPercentage
                             )}`}
                           >
-                            {applicant.aiScore}%
+                            {applicant.aiMatchPercentage}%
                           </span>
                         </div>
 
                         {/* Resume Download */}
-                        <div className="col-span-3 flex justify-center">
-                          <button className="flex items-center gap-2 text-blue-600 hover:text-blue-700 text-sm transition-colors">
-                            <Download size={16} />
-                            Download
-                          </button>
+                        <div className="col-span-3 flex justify-center items-center">
+                          {applicant.resumeUrl ? (
+                            <a
+                              href={`${process.env.NEXT_PUBLIC_IMAGE_URL}${applicant.resumeUrl}`}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              className="flex items-center gap-2 text-blue-600 hover:text-blue-700 text-sm transition-colors"
+                            >
+                              <Download size={16} />
+                              Download
+                            </a>
+                          ) : (
+                            <span className="text-sm text-gray-400">
+                              No resume
+                            </span>
+                          )}
                         </div>
 
                         {/* Message Button */}
-                        <div className="col-span-3 flex justify-center">
+                        <div className="col-span-3 flex justify-center items-center">
                           <button className="flex items-center gap-2 bg-blue-100 text-blue-600 hover:bg-blue-200 px-3 py-1 rounded-full text-sm transition-colors">
                             <MessageCircle size={16} />
                             Message

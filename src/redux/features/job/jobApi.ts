@@ -71,6 +71,24 @@ const jobApi = baseApi.injectEndpoints({
       providesTags: [{ type: "Job", id: "COUNTS" }],
       keepUnusedDataFor: 600, // Cache for 10 minutes (counts don't change frequently)
     }),
+
+    getEmployerJobs: builder.query<{ data: TJob[] }, string>({
+      query: (employerId: string) => ({
+        url: `/job/employer/${employerId}`,
+        method: "GET",
+      }),
+      providesTags: (result) =>
+        result?.data
+          ? [
+              ...result.data.map(({ _id }: { _id: string }) => ({
+                type: "Job" as const,
+                id: _id,
+              })),
+              { type: "Job", id: "EMPLOYER_JOBS" },
+            ]
+          : [{ type: "Job", id: "EMPLOYER_JOBS" }],
+      keepUnusedDataFor: 300, // Cache for 5 minutes
+    }),
   }),
 });
 
@@ -83,4 +101,6 @@ export const {
   useLazyGetSingleJobQuery,
   useGetPopularSearchQuery,
   useGetJobCountsByRoleQuery,
+  useGetEmployerJobsQuery,
+  useLazyGetEmployerJobsQuery,
 } = jobApi;

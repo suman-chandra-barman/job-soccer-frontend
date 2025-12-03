@@ -1,5 +1,5 @@
 import { baseApi } from "@/redux/api/baseApi";
-import { TAppliedJob } from "@/types/job";
+import { TAppliedJob, TJobApplicationsResponse } from "@/types/job";
 
 const jobApplicationApi = baseApi.injectEndpoints({
   endpoints: (builder) => ({
@@ -46,6 +46,21 @@ const jobApplicationApi = baseApi.injectEndpoints({
       }),
       invalidatesTags: [{ type: "Job", id: "APPLICATIONS" }, "JobApplications"],
     }),
+
+    getJobApplications: builder.query<TJobApplicationsResponse, string>({
+      query: (jobId: string) => `/job-applications/job/${jobId}`,
+      providesTags: (result) =>
+        result?.data
+          ? [
+              ...result.data.map(({ _id }: { _id: string }) => ({
+                type: "JobApplication" as const,
+                id: _id,
+              })),
+              { type: "JobApplication", id: "LIST" },
+            ]
+          : [{ type: "JobApplication", id: "LIST" }],
+      keepUnusedDataFor: 300,
+    }),
   }),
 });
 
@@ -55,4 +70,6 @@ export const {
   useLazyGetMyApplicationsQuery,
   useWithdrawApplicationMutation,
   useDeleteJobApplicationMutation,
+  useGetJobApplicationsQuery,
+  useLazyGetJobApplicationsQuery,
 } = jobApplicationApi;

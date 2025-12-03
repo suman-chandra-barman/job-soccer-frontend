@@ -70,3 +70,28 @@ export interface TAppliedJob {
   createdAt: string;
   updatedAt: string;
 }
+
+export interface TJobApplication {
+  _id: string;
+  applicantName: string;
+  applicantEmail: string;
+  applicantProfileImage: string | null;
+  candidateId: string;
+  candidateRole: string;
+  aiMatchPercentage: number;
+  resumeUrl: string | null;
+  appliedAt: string;
+  createdAt: string;
+}
+
+export interface TJobApplicationsResponse {
+  success: boolean;
+  message: string;
+  meta: {
+    page: number;
+    limit: number;
+    total: number;
+    totalPage: number;
+  };
+  data: TJobApplication[];
+}

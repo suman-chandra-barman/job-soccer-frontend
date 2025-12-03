@@ -77,7 +77,7 @@ export function JobCard({ job }: JobCardProps) {
       <div className="bg-linear-to-br from-white to-[#FDF9E3] rounded-xl p-4 shadow-sm border border-gray-100">
         <div className="flex items-center gap-3 mb-4 border-b border-gray-200 pb-4">
           <Link
-            href={`jobs/${jobData.id}`}
+            href={`/jobs/${jobData.id}`}
             className="w-12 h-12 rounded-xl flex items-center justify-center border border-gray-200 bg-white"
           >
             <Image
@@ -106,7 +106,7 @@ export function JobCard({ job }: JobCardProps) {
         </div>
 
         {/* Applicant avatars */}
-        <Link href={`jobs/${jobData.id}`} className="cursor-pointer">
+        <Link href={`/jobs/${jobData.id}`} className="cursor-pointer">
           <div className="flex items-center gap-2 mb-4">
             <div className="flex -space-x-4">
               {jobData.applicantImages.map((image, index: number) => (
