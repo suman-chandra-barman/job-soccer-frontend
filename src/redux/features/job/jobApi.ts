@@ -89,6 +89,18 @@ const jobApi = baseApi.injectEndpoints({
           : [{ type: "Job", id: "EMPLOYER_JOBS" }],
       keepUnusedDataFor: 300, // Cache for 5 minutes
     }),
+
+    closeJob: builder.mutation<{ data: TJob }, string>({
+      query: (jobId: string) => ({
+        url: `/job/${jobId}`,
+        method: "DELETE",
+      }),
+      invalidatesTags: (result, error, jobId) => [
+        { type: "Job", id: jobId },
+        { type: "Job", id: "LIST" },
+        { type: "Job", id: "EMPLOYER_JOBS" },
+      ],
+    }),
   }),
 });
 
@@ -103,4 +115,5 @@ export const {
   useGetJobCountsByRoleQuery,
   useGetEmployerJobsQuery,
   useLazyGetEmployerJobsQuery,
+  useCloseJobMutation,
 } = jobApi;

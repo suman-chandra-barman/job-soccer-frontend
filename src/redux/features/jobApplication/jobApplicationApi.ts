@@ -53,12 +53,12 @@ const jobApplicationApi = baseApi.injectEndpoints({
         result?.data
           ? [
               ...result.data.map(({ _id }: { _id: string }) => ({
-                type: "JobApplication" as const,
+                type: "JobApplications" as const,
                 id: _id,
               })),
-              { type: "JobApplication", id: "LIST" },
+              { type: "JobApplications", id: "LIST" },
             ]
-          : [{ type: "JobApplication", id: "LIST" }],
+          : [{ type: "JobApplications", id: "LIST" }],
       keepUnusedDataFor: 300,
     }),
   }),

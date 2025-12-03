@@ -5,9 +5,13 @@ import { MoreVertical, Download, MessageCircle, Plus } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import CreateJobPostModal from "@/components/modals/CreateJobPostModal";
 import { useAppSelector } from "@/redux/hooks";
-import { useGetEmployerJobsQuery } from "@/redux/features/job/jobApi";
+import {
+  useGetEmployerJobsQuery,
+  useCloseJobMutation,
+} from "@/redux/features/job/jobApi";
 import { useGetJobApplicationsQuery } from "@/redux/features/jobApplication/jobApplicationApi";
 import { TJob } from "@/types/job";
+import Image from "next/image";
 
 const JobsPage: React.FC = () => {
   const [activeTab, setActiveTab] = useState<"active" | "closed">("active");
@@ -30,6 +34,9 @@ const JobsPage: React.FC = () => {
     useGetJobApplicationsQuery(selectedJob?._id || "", {
       skip: !selectedJob?._id,
     });
+
+  // Close job mutation
+  const [closeJob] = useCloseJobMutation();
 
   const jobs = employerJobsData?.data || [];
   const applications = applicationsData?.data || [];
@@ -58,20 +65,25 @@ const JobsPage: React.FC = () => {
     setSelectedJob(job);
   };
 
-  // Handle job status change (placeholder - needs API integration)
-  const handleJobStatusChange = (
+  // Handle job status change
+  const handleJobStatusChange = async (
     jobId: string,
     newStatus: "active" | "closed"
   ) => {
-    // TODO: Implement API call to update job status
-    console.log(`Update job ${jobId} to ${newStatus}`);
-    setOpenDropdownId(null);
-  };
-
-  // Handle job deletion (placeholder - needs API integration)
-  const handleJobDelete = (jobId: string) => {
-    // TODO: Implement API call to delete job
-    console.log(`Delete job ${jobId}`);
+    if (newStatus === "closed") {
+      try {
+        await closeJob(jobId).unwrap();
+        // If the closed job was selected, update selection
+        if (selectedJob?._id === jobId) {
+          const remainingActiveJobs = jobs.filter(
+            (job) => job._id !== jobId && job.status === "active"
+          );
+          setSelectedJob(remainingActiveJobs[0] || null);
+        }
+      } catch (error) {
+        console.error("Failed to close job:", error);
+      }
+    }
     setOpenDropdownId(null);
   };
 
@@ -153,7 +165,7 @@ const JobsPage: React.FC = () => {
 
         <div className="flex flex-col lg:flex-row gap-6">
           {/* Job Cards Section */}
-          <div className="flex-1 lg:max-w-sm">
+          <div className="flex-1 lg:max-w-[220px] xl:max-w-sm">
             <div className="space-y-4">
               {filteredJobs.length > 0 ? (
                 filteredJobs.map((job) => (
@@ -167,21 +179,21 @@ const JobsPage: React.FC = () => {
                     }`}
                   >
                     {/* Three dots menu */}
-                    <div className="absolute top-4 right-4">
-                      <button
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          toggleDropdown(job._id);
-                        }}
-                        className="p-1 hover:bg-gray-100 rounded transition-colors"
-                      >
-                        <MoreVertical size={16} className="text-gray-500" />
-                      </button>
+                    {job.status === "active" && (
+                      <div className="absolute top-4 right-4">
+                        <button
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            toggleDropdown(job._id);
+                          }}
+                          className="p-1 hover:bg-gray-100 rounded transition-colors"
+                        >
+                          <MoreVertical size={16} className="text-gray-500" />
+                        </button>
 
-                      {/* Dropdown menu */}
-                      {openDropdownId === job._id && (
-                        <div className="absolute right-0 top-8 bg-white border border-gray-200 rounded-lg shadow-lg py-1 z-10 min-w-[120px]">
-                          {job.status === "active" ? (
+                        {/* Dropdown menu */}
+                        {openDropdownId === job._id && (
+                          <div className="absolute right-0 top-8 bg-white border border-gray-200 rounded-lg shadow-lg py-1 z-10 min-w-[120px]">
                             <button
                               onClick={(e) => {
                                 e.stopPropagation();
@@ -191,29 +203,10 @@ const JobsPage: React.FC = () => {
                             >
                               Close
                             </button>
-                          ) : (
-                            <button
-                              onClick={(e) => {
-                                e.stopPropagation();
-                                handleJobStatusChange(job._id, "active");
-                              }}
-                              className="w-full px-4 py-2 text-left text-sm text-gray-700 hover:bg-gray-100 transition-colors"
-                            >
-                              Activate
-                            </button>
-                          )}
-                          <button
-                            onClick={(e) => {
-                              e.stopPropagation();
-                              handleJobDelete(job._id);
-                            }}
-                            className="w-full px-4 py-2 text-left text-sm text-red-600 hover:bg-red-50 transition-colors"
-                          >
-                            Delete
-                          </button>
-                        </div>
-                      )}
-                    </div>
+                          </div>
+                        )}
+                      </div>
+                    )}
 
                     <div className="pr-8">
                       <h3 className="font-semibold text-gray-900 mb-1">
@@ -263,7 +256,7 @@ const JobsPage: React.FC = () => {
                 </div>
 
                 {/* Applicants List */}
-                <div className="divide-y divide-gray-200">
+                <div className="divide-y divide-gray-200 overflow-x-auto">
                   {isLoadingApplications ? (
                     <div className="px-6 py-12 text-center">
                       <p className="text-gray-500">Loading applicants...</p>
@@ -276,11 +269,14 @@ const JobsPage: React.FC = () => {
                       >
                         {/* Name */}
                         <div className="col-span-4 flex items-center gap-3">
-                          {applicant.applicantProfileImage ? (
-                            <img
+                          {applicant.applicantProfileImage &&
+                          process.env.NEXT_PUBLIC_IMAGE_URL ? (
+                            <Image
                               src={`${process.env.NEXT_PUBLIC_IMAGE_URL}${applicant.applicantProfileImage}`}
                               alt={applicant.applicantName}
-                              className="w-8 h-8 rounded-full object-cover"
+                              className="rounded-full object-cover"
+                              width={32}
+                              height={32}
                             />
                           ) : (
                             <div className="w-8 h-8 bg-gray-200 rounded-full flex items-center justify-center">
