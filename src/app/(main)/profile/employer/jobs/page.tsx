@@ -123,6 +123,8 @@ const JobsPage: React.FC = () => {
     );
   }
 
+
+  
   return (
     <div className="min-h-screen w-full p-4 md:p-6 border rounded-2xl">
       <div>
@@ -310,7 +312,7 @@ const JobsPage: React.FC = () => {
                         <div className="col-span-3 flex justify-center items-center">
                           {applicant.resumeUrl ? (
                             <a
-                              href={`${process.env.NEXT_PUBLIC_IMAGE_URL}${applicant.resumeUrl}`}
+                              href={`${process.env.NEXT_PUBLIC_BASE_URL}${applicant.resumeUrl}`}
                               target="_blank"
                               rel="noopener noreferrer"
                               className="flex items-center gap-2 text-blue-600 hover:text-blue-700 text-sm transition-colors"
