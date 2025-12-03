@@ -4,20 +4,15 @@ import React from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "../ui/card";
 import { LayoutGrid, UserPlus } from "lucide-react";
 import { useGetMyProfileViewsQuery } from "@/redux/features/profileViews/profileViewsApi";
-import { useRouter } from "next/navigation";
+import Link from "next/link";
 
 function AnalyticsSection() {
-  const router = useRouter();
   const { data: profileViewsData, isLoading } = useGetMyProfileViewsQuery({
     page: 1,
     limit: 10,
   });
 
   const totalViews = profileViewsData?.data?.stats?.totalViews || 0;
-
-  const handleProfileViewClick = () => {
-    router.push("/profile/views");
-  };
 
   return (
     <section className="my-6">
@@ -29,9 +24,9 @@ function AnalyticsSection() {
         </CardHeader>
         <CardContent className="p-6">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
+            <Link href="/profile/views" >
             <div
               className="flex items-center space-x-4 cursor-pointer hover:bg-gray-50 p-3 rounded-lg transition-colors"
-              onClick={handleProfileViewClick}
             >
               <div className="p-3 bg-blue-100 rounded-lg">
                 <LayoutGrid className="h-6 w-6" />
@@ -47,17 +42,25 @@ function AnalyticsSection() {
                 </p>
               </div>
             </div>
-            <div className="flex items-center space-x-4">
-              <div className="p-3 bg-green-100 rounded-lg">
-                <UserPlus className="h-6 w-6" />
+            </Link>
+
+            <Link
+              href="/profile/candidate/requests"
+            >
+              <div className="flex items-center space-x-4  cursor-pointer hover:bg-gray-50 p-3 rounded-lg transition-colors">
+                <div className="p-3 bg-green-100 rounded-lg">
+                  <UserPlus className="h-6 w-6" />
+                </div>
+                <div>
+                  <h3 className="font-semibold text-gray-900">
+                    Access Request
+                  </h3>
+                  <p className="text-sm text-gray-600">
+                    Discover who&apos;s viewed your profile
+                  </p>
+                </div>
               </div>
-              <div>
-                <h3 className="font-semibold text-gray-900">Access Request</h3>
-                <p className="text-sm text-gray-600">
-                  Discover who&apos;s viewed your profile
-                </p>
-              </div>
-            </div>
+            </Link>
           </div>
         </CardContent>
       </Card>
