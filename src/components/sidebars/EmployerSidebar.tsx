@@ -11,7 +11,7 @@ const navigationItems = [
   { id: "/", label: "My Profile" },
   { id: "billing", label: "Billing" },
   { id: "jobs", label: "Jobs" },
-  { id: "requests", label: "Accept Request" },
+  { id: "shortlist", label: "Shortlist" },
 ];
 
 export default function EmployerSidebar() {
