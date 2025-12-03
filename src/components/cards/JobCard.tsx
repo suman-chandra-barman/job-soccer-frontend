@@ -84,6 +84,8 @@ export function JobCard({ job }: JobCardProps) {
               src={jobData.image || employerLogo}
               alt="Logo"
               className="object-contain rounded-xl"
+              width={48}
+              height={48}
             />
           </Link>
           <div className="flex-1 min-w-0">
@@ -104,41 +106,44 @@ export function JobCard({ job }: JobCardProps) {
         </div>
 
         {/* Applicant avatars */}
-        <div className="flex items-center gap-2 mb-4">
-          <div className="flex -space-x-4">
-            {jobData.applicantImages.map((image, index: number) => (
-              <div key={index} className="relative">
-                <Image
-                  src={image || "/placeholder.svg"}
-                  alt={`Applicant ${index + 1}`}
-                  className="w-8 h-8 rounded-full border-2 border-white object-cover"
-                />
+        <Link href={`jobs/${jobData.id}`} className="cursor-pointer">
+          <div className="flex items-center gap-2 mb-4">
+            <div className="flex -space-x-4">
+              {jobData.applicantImages.map((image, index: number) => (
+                <div key={index} className="relative">
+                  <Image
+                    src={image || "/placeholder.svg"}
+                    alt={`Applicant ${index + 1}`}
+                    className="w-8 h-8 rounded-full border-2 border-white object-cover"
+                  />
+                </div>
+              ))}
+              <div className="relative w-8 h-8 rounded-full bg-yellow-300 flex items-center justify-center text-white text-sm font-semibold">
+                +
               </div>
-            ))}
-            <div className="relative w-8 h-8 rounded-full bg-yellow-300 flex items-center justify-center text-white text-sm font-semibold">
-              +
             </div>
           </div>
-        </div>
 
-        {/* Bottom section with applicant count, salary, and time */}
-        <div className="flex items-center justify-between mb-4">
-          <div className="flex flex-col gap-1">
-            <span className="text-gray-600 text-sm">
-              {jobData.applicantCount} Applicant
-            </span>
-            <div className="flex items-center gap-1 text-gray-400 text-xs">
-              <Clock className="w-3 h-3" />
-              <span>{jobData.postedTime}</span>
+          {/* Bottom section with applicant count, salary, and time */}
+          <div className="flex items-center justify-between mb-4">
+            <div className="flex flex-col gap-1">
+              <span className="text-gray-600 text-sm">
+                {jobData.applicantCount} Applicant
+              </span>
+              <div className="flex items-center gap-1 text-gray-400 text-xs">
+                <Clock className="w-3 h-3" />
+                <span>{jobData.postedTime}</span>
+              </div>
+            </div>
+            <div className="text-right">
+              <div className="text-xl xl:text-2xl font-bold text-gray-900">
+                {jobData.salary}
+              </div>
+              <div className="text-gray-500 text-sm">/mo</div>
             </div>
           </div>
-          <div className="text-right">
-            <div className="text-xl xl:text-2xl font-bold text-gray-900">
-              {jobData.salary}
-            </div>
-            <div className="text-gray-500 text-sm">/mo</div>
-          </div>
-        </div>
+        </Link>
+        
         <div className="border-t border-gray-200 pt-4 flex gap-4 items-center">
           <Button
             variant="outline"
@@ -150,9 +155,7 @@ export function JobCard({ job }: JobCardProps) {
             {isShortlistLoading ? "Saving..." : "Shortlist"}
           </Button>
           <Link href={`/jobs/${jobData.id}`} className="flex-1 ">
-            <Button
-              className="w-full hover:scale-105 transition-transform duration-200"
-            >
+            <Button className="w-full hover:scale-105 transition-transform duration-200">
               <MessageCircle className="w-6 h-6" />
               Apply
             </Button>
