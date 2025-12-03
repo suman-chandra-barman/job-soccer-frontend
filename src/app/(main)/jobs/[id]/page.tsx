@@ -83,9 +83,9 @@ const JobDetailsPage = ({ params }: PageProps) => {
     }
   };
 
-  const handleResumeSubmitSuccess = async () => {
+  const handleResumeSubmitSuccess = async (resumeUrl: string) => {
     try {
-      const result = await applyJob(id).unwrap();
+      const result = await applyJob({ jobId: id, resumeUrl }).unwrap();
       dispatch(addAppliedJob(result.data));
       toast.success("Application submitted successfully!");
     } catch (error) {
@@ -128,7 +128,7 @@ const JobDetailsPage = ({ params }: PageProps) => {
               ))
             ) : relatedJobs.length > 0 ? (
               relatedJobs.map((job: TJob) => (
-                <JobCard key={job._id} job={job}/>
+                <JobCard key={job._id} job={job} />
               ))
             ) : (
               <p className="text-gray-500 text-center">

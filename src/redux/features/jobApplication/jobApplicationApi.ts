@@ -4,10 +4,10 @@ import { TAppliedJob, TJobApplicationsResponse } from "@/types/job";
 const jobApplicationApi = baseApi.injectEndpoints({
   endpoints: (builder) => ({
     applyJob: builder.mutation({
-      query: (jobId: string) => ({
+      query: ({ jobId, resumeUrl }: { jobId: string; resumeUrl: string }) => ({
         url: "/job-applications/apply",
         method: "POST",
-        body: { jobId },
+        body: { jobId, resumeUrl },
       }),
       invalidatesTags: [{ type: "Job", id: "APPLICATIONS" }, "JobApplications"],
     }),

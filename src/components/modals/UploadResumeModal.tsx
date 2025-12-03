@@ -29,7 +29,7 @@ interface UploadResumeModalProps {
   isOpen: boolean;
   onClose: () => void;
   jobId?: string;
-  onSubmitSuccess?: () => void;
+  onSubmitSuccess?: (resumeUrl: string) => void;
   mode?: "profile" | "jobApplication"; // Add mode prop
 }
 
@@ -46,10 +46,9 @@ export default function UploadResumeModal({
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   const [createResume, { isLoading: isCreating }] = useCreateResumeMutation();
-  const { data: existingResumes, } =
-    useGetUserResumeQuery(userId || "", {
-      skip: !userId,
-    });
+  const { data: existingResumes } = useGetUserResumeQuery(userId || "", {
+    skip: !userId,
+  });
 
   const handleDragOver = (e: React.DragEvent) => {
     e.preventDefault();
@@ -110,26 +109,38 @@ export default function UploadResumeModal({
     }
 
     try {
+      let resumeUrl = "";
+
       // If user uploaded a new file
       if (uploadedFiles.length > 0) {
         const formData = new FormData();
         formData.append("data", JSON.stringify({ userId }));
         formData.append("doc", uploadedFiles[0].file);
 
-        await createResume(formData).unwrap();
+        const result = await createResume(formData).unwrap();
+        resumeUrl = result.data?.resumeUrl || "";
         toast.success("Resume uploaded successfully!");
 
         // Reset form
         setUploadedFiles([]);
         setSelectedResumeId(null);
       } else if (selectedResumeId) {
-        // User selected an existing resume
+        // User selected an existing resume - find it and get the URL
+        const selectedResume = existingResumes?.data?.find(
+          (resume: any) => resume._id === selectedResumeId
+        );
+        resumeUrl = selectedResume?.resumeUrl || "";
+
         if (mode === "profile") {
           toast.success("Resume already in your profile!");
         }
-        // For job application mode, don't show toast here - let parent handle it
       } else {
         toast.error("Please upload or select a resume");
+        return;
+      }
+
+      if (!resumeUrl) {
+        toast.error("Failed to get resume URL");
         return;
       }
 
@@ -139,12 +150,13 @@ export default function UploadResumeModal({
       );
       onClose();
 
-      // Call parent callback (don't await to avoid showing errors in modal context)
+      // Call parent callback with resume URL
       if (onSubmitSuccess) {
         console.log(
-          "=== UploadResumeModal: Calling onSubmitSuccess callback ==="
+          "=== UploadResumeModal: Calling onSubmitSuccess with resumeUrl:",
+          resumeUrl
         );
-        onSubmitSuccess();
+        onSubmitSuccess(resumeUrl);
       }
     } catch (error: any) {
       console.log("=== UploadResumeModal: Error in handleSubmit ===", error);
