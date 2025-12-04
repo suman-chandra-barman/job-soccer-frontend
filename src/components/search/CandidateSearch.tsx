@@ -56,7 +56,7 @@ export function CandidateSearch() {
       <div className="container mx-auto pb-4 flex items-center justify-center">
         <div className="w-full md:w-auto flex flex-col p-2 md:flex-row gap-2 items-center justify-center rounded-2xl border border-gray-100 bg-white">
           {/* Search Input */}
-          <div className="relative w-full lg:w-64">
+          <div className="relative w-full lg:w-64 border md:border-none rounded-lg">
             <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
             <Input
               placeholder="Search candidates"
@@ -69,7 +69,7 @@ export function CandidateSearch() {
 
           {/* Category Select */}
           <Select value={selectedCategory} onValueChange={setSelectedCategory}>
-            <SelectTrigger className="w-full lg:w-64 border-none shadow-none">
+            <SelectTrigger className="w-full lg:w-64 border md:border-none shadow-none">
               <SelectValue placeholder="Select category" />
             </SelectTrigger>
             <SelectContent>
@@ -84,7 +84,7 @@ export function CandidateSearch() {
           </Select>
 
           {/* Location */}
-          <div className="relative w-full lg:w-64">
+          <div className="relative w-full lg:w-64 border md:border-0 rounded-lg">
             <MapPin className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
             <Input
               placeholder="Location"
@@ -98,7 +98,7 @@ export function CandidateSearch() {
           {/* Search Button */}
           <Button
             onClick={handleSearch}
-            className="h-12 !px-10 bg-black hover:bg-gray-800 text-white rounded-xl font-medium"
+            className="h-12 w-full md:w-52 bg-black hover:bg-gray-800 text-white rounded-xl font-medium"
           >
             <Search className="w-4 h-4 mr-1" />
             Search
