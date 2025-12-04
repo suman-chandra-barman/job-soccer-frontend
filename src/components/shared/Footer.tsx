@@ -98,7 +98,7 @@ export function Footer() {
               <Input
                 type="email"
                 placeholder="Enter your email"
-                className="flex-1 text-sm bg-white p-5"
+                className="sm:flex-1 text-sm bg-white p-5"
               />
               <Button size="lg" className="bg-yellow-300 hover:bg-yellow-400 text-black px-4 py-3 rounded-lg">
                 Subscribe
