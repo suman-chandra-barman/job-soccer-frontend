@@ -69,7 +69,7 @@ export function CandidateSearch() {
 
           {/* Category Select */}
           <Select value={selectedCategory} onValueChange={setSelectedCategory}>
-            <SelectTrigger className="w-full lg:w-64 border md:border-none shadow-none">
+            <SelectTrigger className="w-full lg:w-64 border py-6 md:py-0  md:border-none shadow-none">
               <SelectValue placeholder="Select category" />
             </SelectTrigger>
             <SelectContent>

@@ -60,7 +60,7 @@ export function EmployerSearch() {
           </div>
 
           {/* Category Select */}
-          <div className="w-full lg:w-64 border  md:border-none shadow-none">
+          <div className="w-full lg:w-64 border py-6 md:py-0  md:border-none shadow-none">
             <SelectEmployerCategory
               value={selectedCategory}
               onValueChange={setSelectedCategory}
