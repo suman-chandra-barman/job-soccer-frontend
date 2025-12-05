@@ -160,7 +160,7 @@ const AcceptRequestInterface: React.FC = () => {
   // Handle viewing profile
   const handleViewProfile = (userId: string) => {
     // Navigate to user profile
-    window.location.href = `/profile/${userId}`;
+    window.location.href = `/candidates/${userId}`;
   };
 
   const getTabCount = (tab: "Request" | "Accepted"): number => {

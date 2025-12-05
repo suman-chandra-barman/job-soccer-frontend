@@ -41,7 +41,7 @@ export default function AccessRequestModal({
           </DialogDescription>
         </DialogHeader>
 
-        <DialogFooter className="gap-2 sm:gap-0 flex-col sm:flex-row mt-4">
+        <DialogFooter className="gap-2 flex-col sm:flex-row mt-4">
           <Button
             type="button"
             variant="outline"
