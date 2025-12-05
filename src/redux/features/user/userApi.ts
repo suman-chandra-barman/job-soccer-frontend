@@ -92,6 +92,34 @@ const userApi = baseApi.injectEndpoints({
       },
       invalidatesTags: [{ type: "User" }],
     }),
+
+    // GET USER BY ID
+    getUserById: builder.query({
+      query: (userId: string) => ({
+        url: `/user/${userId}`,
+        method: "GET",
+      }),
+      providesTags: [{ type: "User" }],
+    }),
+
+    // CHECK FRIENDSHIP STATUS
+    checkFriendshipStatus: builder.query({
+      query: (userId: string) => ({
+        url: `/friendlist/check/${userId}`,
+        method: "GET",
+      }),
+      providesTags: ["Friend"],
+    }),
+
+    // SEND FRIEND REQUEST
+    sendFriendRequest: builder.mutation({
+      query: (receiverId: string) => ({
+        url: "/friendlist",
+        method: "POST",
+        body: { receiverId },
+      }),
+      invalidatesTags: ["Friend"],
+    }),
   }),
 });
 
@@ -100,4 +128,7 @@ export const {
   useUpdateProfileImageMutation,
   useUpdateBannerImageMutation,
   useUpdateProfileMutation,
+  useGetUserByIdQuery,
+  useCheckFriendshipStatusQuery,
+  useSendFriendRequestMutation,
 } = userApi;

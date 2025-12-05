@@ -26,10 +26,12 @@ import EditLicenseOrCertificationsModal from "@/components/modals/EditLicensesOr
 
 interface CertificateSectionProps {
   userId: string;
+  readOnly?: boolean;
 }
 
 export default function CertificateSection({
   userId,
+  readOnly = false,
 }: CertificateSectionProps) {
   const [deleteCertificate] = useDeleteCertificateMutation();
   const [isAddModalOpen, setIsAddModalOpen] = useState(false);
@@ -88,14 +90,16 @@ export default function CertificateSection({
             <CardTitle className="text-lg lg:text-xl">
               Licenses and Certifications
             </CardTitle>
-            <Button
-              variant="ghost"
-              size="sm"
-              onClick={() => setIsAddModalOpen(true)}
-            >
-              <Plus className="h-4 w-4" />
-              <span className="hidden sm:inline ml-1">Add</span>
-            </Button>
+            {!readOnly && (
+              <Button
+                variant="ghost"
+                size="sm"
+                onClick={() => setIsAddModalOpen(true)}
+              >
+                <Plus className="h-4 w-4" />
+                <span className="hidden sm:inline ml-1">Add</span>
+              </Button>
+            )}
           </div>
         </CardHeader>
         <CardContent className="px-0">
@@ -115,12 +119,16 @@ export default function CertificateSection({
               </Button>
             </div>
           ) : !certificatesData?.data || certificatesData.data.length === 0 ? (
-            <EmptyCertificateState onAddClick={() => setIsAddModalOpen(true)} />
+            <EmptyCertificateState
+              onAddClick={() => setIsAddModalOpen(true)}
+              readOnly={readOnly}
+            />
           ) : (
             <CertificateList
               certificates={certificatesData.data}
               onEditClick={handleEditClick}
               onDeleteClick={handleDeleteClick}
+              readOnly={readOnly}
             />
           )}
         </CardContent>
@@ -171,9 +179,13 @@ export default function CertificateSection({
 
 interface EmptyCertificateStateProps {
   onAddClick: () => void;
+  readOnly?: boolean;
 }
 
-function EmptyCertificateState({ onAddClick }: EmptyCertificateStateProps) {
+function EmptyCertificateState({
+  onAddClick,
+  readOnly = false,
+}: EmptyCertificateStateProps) {
   return (
     <div className="text-center py-12 px-4">
       <div className="w-16 h-16 mx-auto mb-4 bg-gray-100 rounded-full flex items-center justify-center">
@@ -183,16 +195,19 @@ function EmptyCertificateState({ onAddClick }: EmptyCertificateStateProps) {
         No Certificates Added Yet
       </h3>
       <p className="text-gray-600 mb-4 max-w-md mx-auto">
-        Showcase your professional certifications and licenses. This helps
-        employers understand your qualifications and expertise.
+        {readOnly
+          ? "This user hasn't added any certificates yet."
+          : "Showcase your professional certifications and licenses. This helps employers understand your qualifications and expertise."}
       </p>
-      <Button
-        onClick={onAddClick}
-        className="bg-black hover:bg-gray-800 text-white"
-      >
-        <Plus className="h-4 w-4 mr-2" />
-        Add Your First Certificate
-      </Button>
+      {!readOnly && (
+        <Button
+          onClick={onAddClick}
+          className="bg-black hover:bg-gray-800 text-white"
+        >
+          <Plus className="h-4 w-4 mr-2" />
+          Add Your First Certificate
+        </Button>
+      )}
     </div>
   );
 }
@@ -201,12 +216,14 @@ interface CertificateListProps {
   certificates: any[];
   onEditClick: (certificate: CertificateData) => void;
   onDeleteClick: (certificateId: string, name: string) => void;
+  readOnly?: boolean;
 }
 
 function CertificateList({
   certificates,
   onEditClick,
   onDeleteClick,
+  readOnly = false,
 }: CertificateListProps) {
   return (
     <div className="space-y-4 lg:space-y-6">
@@ -216,6 +233,7 @@ function CertificateList({
           certificate={cert}
           onEditClick={onEditClick}
           onDeleteClick={onDeleteClick}
+          readOnly={readOnly}
         />
       ))}
     </div>
@@ -226,12 +244,14 @@ interface CertificateItemProps {
   certificate: any;
   onEditClick: (certificate: CertificateData) => void;
   onDeleteClick: (certificateId: string, name: string) => void;
+  readOnly?: boolean;
 }
 
 function CertificateItem({
   certificate,
   onEditClick,
   onDeleteClick,
+  readOnly = false,
 }: CertificateItemProps) {
   const [isDeleting, setIsDeleting] = useState(false);
 
@@ -323,29 +343,31 @@ function CertificateItem({
             )}
           </div>
 
-          <div className="flex gap-1 ml-2">
-            <Button
-              variant="ghost"
-              size="sm"
-              onClick={() => onEditClick(certificate)}
-              disabled={isDeleting}
-            >
-              <Edit className="h-3 w-3 lg:h-4 lg:w-4" />
-            </Button>
-            <Button
-              variant="ghost"
-              size="sm"
-              onClick={handleDelete}
-              disabled={isDeleting}
-              className="text-red-600 hover:text-red-700 hover:bg-red-50"
-            >
-              {isDeleting ? (
-                <Loader2 className="h-4 w-4 animate-spin" />
-              ) : (
-                <Trash2 className="h-3 w-3 lg:h-4 lg:w-4" />
-              )}
-            </Button>
-          </div>
+          {!readOnly && (
+            <div className="flex gap-1 ml-2">
+              <Button
+                variant="ghost"
+                size="sm"
+                onClick={() => onEditClick(certificate)}
+                disabled={isDeleting}
+              >
+                <Edit className="h-3 w-3 lg:h-4 lg:w-4" />
+              </Button>
+              <Button
+                variant="ghost"
+                size="sm"
+                onClick={handleDelete}
+                disabled={isDeleting}
+                className="text-red-600 hover:text-red-700 hover:bg-red-50"
+              >
+                {isDeleting ? (
+                  <Loader2 className="h-4 w-4 animate-spin" />
+                ) : (
+                  <Trash2 className="h-3 w-3 lg:h-4 lg:w-4" />
+                )}
+              </Button>
+            </div>
+          )}
         </div>
 
         {certificate.description && (

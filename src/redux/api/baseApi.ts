@@ -29,6 +29,7 @@ export const baseApi = createApi({
     "JobApplications",
     "FriendList",
     "ProfileViews",
+    "Friend",
   ],
   endpoints: () => ({}),
 });

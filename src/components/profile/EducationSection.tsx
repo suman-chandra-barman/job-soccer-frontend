@@ -26,9 +26,13 @@ import EditEducationModal from "@/components/modals/EditEducationModal";
 
 interface EducationSectionProps {
   userId: string;
+  readOnly?: boolean;
 }
 
-export default function EducationSection({ userId }: EducationSectionProps) {
+export default function EducationSection({
+  userId,
+  readOnly = false,
+}: EducationSectionProps) {
   const [deleteEducation] = useDeleteEducationMutation();
   const [isAddModalOpen, setIsAddModalOpen] = useState(false);
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
@@ -83,14 +87,16 @@ export default function EducationSection({ userId }: EducationSectionProps) {
         <CardHeader>
           <div className="flex items-center justify-between">
             <CardTitle>Education</CardTitle>
-            <Button
-              variant="ghost"
-              size="sm"
-              onClick={() => setIsAddModalOpen(true)}
-            >
-              <Plus className="h-4 w-4" />
-              Add
-            </Button>
+            {!readOnly && (
+              <Button
+                variant="ghost"
+                size="sm"
+                onClick={() => setIsAddModalOpen(true)}
+              >
+                <Plus className="h-4 w-4" />
+                Add
+              </Button>
+            )}
           </div>
         </CardHeader>
         <CardContent className="px-0">
@@ -110,12 +116,16 @@ export default function EducationSection({ userId }: EducationSectionProps) {
               </Button>
             </div>
           ) : !educationsData?.data || educationsData.data.length === 0 ? (
-            <EmptyEducationState onAddClick={() => setIsAddModalOpen(true)} />
+            <EmptyEducationState
+              onAddClick={() => setIsAddModalOpen(true)}
+              readOnly={readOnly}
+            />
           ) : (
             <EducationList
               educations={educationsData.data}
               onEditClick={handleEditClick}
               onDeleteClick={handleDeleteClick}
+              readOnly={readOnly}
             />
           )}
         </CardContent>
@@ -166,9 +176,13 @@ export default function EducationSection({ userId }: EducationSectionProps) {
 
 interface EmptyEducationStateProps {
   onAddClick: () => void;
+  readOnly?: boolean;
 }
 
-function EmptyEducationState({ onAddClick }: EmptyEducationStateProps) {
+function EmptyEducationState({
+  onAddClick,
+  readOnly = false,
+}: EmptyEducationStateProps) {
   return (
     <div className="text-center py-12 px-4">
       <div className="w-16 h-16 mx-auto mb-4 bg-gray-100 rounded-full flex items-center justify-center">
@@ -178,16 +192,19 @@ function EmptyEducationState({ onAddClick }: EmptyEducationStateProps) {
         No Education Added Yet
       </h3>
       <p className="text-gray-600 mb-4 max-w-md mx-auto">
-        Showcase your academic background by adding your education. This helps
-        employers understand your qualifications and expertise.
+        {readOnly
+          ? "This user hasn't added any education yet."
+          : "Showcase your academic background by adding your education. This helps employers understand your qualifications and expertise."}
       </p>
-      <Button
-        onClick={onAddClick}
-        className="bg-black hover:bg-gray-800 text-white"
-      >
-        <Plus className="h-4 w-4 mr-2" />
-        Add Your First Education
-      </Button>
+      {!readOnly && (
+        <Button
+          onClick={onAddClick}
+          className="bg-black hover:bg-gray-800 text-white"
+        >
+          <Plus className="h-4 w-4 mr-2" />
+          Add Your First Education
+        </Button>
+      )}
     </div>
   );
 }
@@ -196,12 +213,14 @@ interface EducationListProps {
   educations: any[];
   onEditClick: (education: EducationData) => void;
   onDeleteClick: (educationId: string, instituteName: string) => void;
+  readOnly?: boolean;
 }
 
 function EducationList({
   educations,
   onEditClick,
   onDeleteClick,
+  readOnly = false,
 }: EducationListProps) {
   return (
     <div className="space-y-6">
@@ -211,6 +230,7 @@ function EducationList({
           education={edu}
           onEditClick={onEditClick}
           onDeleteClick={onDeleteClick}
+          readOnly={readOnly}
         />
       ))}
     </div>
@@ -221,12 +241,14 @@ interface EducationItemProps {
   education: any;
   onEditClick: (education: EducationData) => void;
   onDeleteClick: (educationId: string, instituteName: string) => void;
+  readOnly?: boolean;
 }
 
 function EducationItem({
   education,
   onEditClick,
   onDeleteClick,
+  readOnly = false,
 }: EducationItemProps) {
   const [isDeleting, setIsDeleting] = useState(false);
 
@@ -266,29 +288,31 @@ function EducationItem({
                 : `${education.endMonth} ${education.endYear}`}
             </p>
           </div>
-          <div className="flex gap-1">
-            <Button
-              variant="ghost"
-              size="sm"
-              onClick={() => onEditClick(education)}
-              disabled={isDeleting}
-            >
-              <Edit className="h-4 w-4" />
-            </Button>
-            <Button
-              variant="ghost"
-              size="sm"
-              onClick={handleDelete}
-              disabled={isDeleting}
-              className="text-red-600 hover:text-red-700 hover:bg-red-50"
-            >
-              {isDeleting ? (
-                <Loader2 className="h-4 w-4 animate-spin" />
-              ) : (
-                <Trash2 className="h-4 w-4" />
-              )}
-            </Button>
-          </div>
+          {!readOnly && (
+            <div className="flex gap-1">
+              <Button
+                variant="ghost"
+                size="sm"
+                onClick={() => onEditClick(education)}
+                disabled={isDeleting}
+              >
+                <Edit className="h-4 w-4" />
+              </Button>
+              <Button
+                variant="ghost"
+                size="sm"
+                onClick={handleDelete}
+                disabled={isDeleting}
+                className="text-red-600 hover:text-red-700 hover:bg-red-50"
+              >
+                {isDeleting ? (
+                  <Loader2 className="h-4 w-4 animate-spin" />
+                ) : (
+                  <Trash2 className="h-4 w-4" />
+                )}
+              </Button>
+            </div>
+          )}
         </div>
 
         {education.description && (

@@ -16,9 +16,13 @@ interface Video {
 interface VideoSectionProps {
   videos?: Video[];
   userId?: string;
+  readOnly?: boolean;
 }
 
-export default function VideoSection({ videos = [] }: VideoSectionProps) {
+export default function VideoSection({
+  videos = [],
+  readOnly = false,
+}: VideoSectionProps) {
   const getVideoUrl = useCallback((video: Video): string => {
     if (!video?.url) return "";
 
@@ -33,6 +37,11 @@ export default function VideoSection({ videos = [] }: VideoSectionProps) {
       <CardHeader>
         <div className="flex items-center justify-between">
           <CardTitle className="text-lg lg:text-xl">Videos</CardTitle>
+          {!readOnly && (
+            <button className="text-sm text-blue-600 hover:text-blue-700 font-medium">
+              Add
+            </button>
+          )}
         </div>
       </CardHeader>
       <CardContent>
@@ -45,7 +54,9 @@ export default function VideoSection({ videos = [] }: VideoSectionProps) {
               No videos yet
             </h3>
             <p className="text-gray-600">
-              Videos will appear here once uploaded
+              {readOnly
+                ? "This user hasn't uploaded any videos yet."
+                : "Videos will appear here once uploaded"}
             </p>
           </div>
         ) : (

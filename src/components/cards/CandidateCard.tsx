@@ -6,6 +6,7 @@ import { Button } from "../ui/button";
 import { ICandidate } from "@/types/user";
 import { Avatar, AvatarFallback } from "../ui/avatar";
 import Image from "next/image";
+import Link from "next/link";
 import {
   useShortlistCandidateMutation,
   useRemoveFromShortlistMutation,
@@ -100,10 +101,13 @@ function CandidateCard({ candidate }: { candidate: ICandidate }) {
             </span>
           </div>
 
-          <button className="flex mb-3 items-center gap-1 text-sm text-gray-600 hover:text-gray-900 transition-colors">
+          <Link
+            href={`/candidates/${candidate._id}`}
+            className="flex mb-3 items-center gap-1 text-sm text-gray-600 hover:text-gray-900 transition-colors"
+          >
             <SquarePen className="w-4 h-4" />
             View Profile
-          </button>
+          </Link>
           <button
             onClick={() => setIsVideoModalOpen(true)}
             disabled={!candidate?.profile?.videos?.length}

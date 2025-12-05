@@ -48,7 +48,7 @@ const friendApi = baseApi.injectEndpoints({
      */
     sendFriendRequest: builder.mutation({
       query: (friendId) => ({
-        url: "/friendlist/send-request",
+        url: "/friendlist",
         method: "POST",
         body: { friendId },
       }),
