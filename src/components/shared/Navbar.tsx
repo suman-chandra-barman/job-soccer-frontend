@@ -37,16 +37,10 @@ import { useGetMeQuery } from "@/redux/features/auth/authApi";
 import { useAppDispatch } from "@/redux/hooks";
 import { logout } from "@/redux/features/auth/authSlice";
 import { baseApi } from "@/redux/api/baseApi";
+import { useGetUnreadCountQuery } from "@/redux/features/notification/notificationApi";
+import { useNotificationContext } from "@/components/providers/NotificationProvider";
 
 // ==================== Types ====================
-interface NotificationItem {
-  id: string;
-  title: string;
-  description: string;
-  timestamp: string;
-  count: number;
-}
-
 interface NavLink {
   name: string;
   href: string;
@@ -61,66 +55,6 @@ interface UserProfileMenuProps {
   onLogout: () => void;
   size?: "sm" | "md";
 }
-
-// ==================== Constants ====================
-const MOCK_NOTIFICATIONS: NotificationItem[] = [
-  {
-    id: "1",
-    title: "You have new 4 opportunity this week",
-    description:
-      "This week, your AI Job-finder has discovered four exciting new Cocktail opportunities...",
-    timestamp: "5h ago",
-    count: 4,
-  },
-  {
-    id: "2",
-    title: "You have new 4 opportunity this week",
-    description:
-      "This week, your AI Job-finder has discovered four exciting new Cocktail opportunities...",
-    timestamp: "5h ago",
-    count: 4,
-  },
-  {
-    id: "3",
-    title: "You have new 4 opportunity this week",
-    description:
-      "This week, your AI Job-finder has discovered four exciting new Cocktail opportunities...",
-    timestamp: "5h ago",
-    count: 4,
-  },
-  {
-    id: "4",
-    title: "You have new 4 opportunity this week",
-    description:
-      "This week, your AI Job-finder has discovered four exciting new Cocktail opportunities...",
-    timestamp: "14h ago",
-    count: 4,
-  },
-  {
-    id: "5",
-    title: "You have new 4 opportunity this week",
-    description:
-      "This week, your AI Job-finder has discovered four exciting new Cocktail opportunities...",
-    timestamp: "22h ago",
-    count: 4,
-  },
-  {
-    id: "6",
-    title: "You have new 4 opportunity this week",
-    description:
-      "This week, your AI Job-finder has discovered four exciting new Cocktail opportunities...",
-    timestamp: "1d ago",
-    count: 4,
-  },
-  {
-    id: "7",
-    title: "You have new 4 opportunity this week",
-    description:
-      "This week, your AI Job-finder has discovered four exciting new Cocktail opportunities...",
-    timestamp: "1d ago",
-    count: 4,
-  },
-];
 
 // ==================== Subcomponents ====================
 const UserProfileMenu: React.FC<UserProfileMenuProps> = ({
@@ -194,6 +128,7 @@ interface NavLinkItemProps {
   isActive: boolean;
   onMobileClick?: () => void;
   isMobile?: boolean;
+  badge?: number; // For notification count
 }
 
 const NavLinkItem: React.FC<NavLinkItemProps> = ({
@@ -201,6 +136,7 @@ const NavLinkItem: React.FC<NavLinkItemProps> = ({
   isActive,
   onMobileClick,
   isMobile = false,
+  badge,
 }) => {
   const handleClick = (e: React.MouseEvent) => {
     if (link.onClick) {
@@ -217,6 +153,8 @@ const NavLinkItem: React.FC<NavLinkItemProps> = ({
     ? "text-green-500"
     : "text-gray-700 hover:text-green-500";
 
+  const showBadge = badge && badge > 0;
+
   if (isMobile) {
     return (
       <Link
@@ -224,7 +162,14 @@ const NavLinkItem: React.FC<NavLinkItemProps> = ({
         onClick={handleClick}
         className={`flex items-center gap-3 py-2 ${baseClasses} ${activeClasses}`}
       >
-        <link.icon className="h-5 w-5" />
+        <div className="relative">
+          <link.icon className="h-5 w-5" />
+          {showBadge && (
+            <span className="absolute -top-1 -right-1 flex h-4 w-4 items-center justify-center rounded-full bg-red-500 text-[10px] font-bold text-white">
+              {badge > 9 ? "9+" : badge}
+            </span>
+          )}
+        </div>
         <span className="font-medium">{link.name}</span>
       </Link>
     );
@@ -234,9 +179,16 @@ const NavLinkItem: React.FC<NavLinkItemProps> = ({
     <Link
       href={link.href}
       onClick={link.onClick}
-      className={`flex flex-col items-center gap-1 ${baseClasses} ${activeClasses}`}
+      className={`flex flex-col items-center gap-1 relative ${baseClasses} ${activeClasses}`}
     >
-      <link.icon className="h-5 w-5" />
+      <div className="relative">
+        <link.icon className="h-5 w-5" />
+        {showBadge && (
+          <span className="absolute -top-1 -right-1 flex h-4 w-4 items-center justify-center rounded-full bg-red-500 text-[10px] font-bold text-white">
+            {badge > 9 ? "9+" : badge}
+          </span>
+        )}
+      </div>
       <span className="text-sm font-medium">{link.name}</span>
     </Link>
   );
@@ -299,6 +251,18 @@ export function Navbar() {
   const { data: user } = useGetMeQuery(null, {
     skip: !hasToken,
   });
+
+  // Get real-time unread notification count from context
+  const { unreadCount: realtimeUnreadCount } = useNotificationContext();
+
+  // Get unread notification count from API as backup
+  const { data: unreadCountData } = useGetUnreadCountQuery(undefined, {
+    skip: !hasToken,
+    pollingInterval: 60000, // Poll every 60 seconds
+  });
+
+  // Use real-time count if available, otherwise fall back to API count
+  const unreadCount = realtimeUnreadCount || unreadCountData?.data || 0;
 
   const isLoggedIn = !!user?.data?.profileId;
   const navLinks = useMemo(
@@ -379,6 +343,7 @@ export function Navbar() {
                 key={link.name}
                 link={link}
                 isActive={isActiveLink(link.href)}
+                badge={link.name === "Notification" ? unreadCount : undefined}
               />
             ))}
           </nav>
@@ -434,6 +399,7 @@ export function Navbar() {
                 isActive={isActiveLink(link.href)}
                 onMobileClick={closeMobileMenu}
                 isMobile
+                badge={link.name === "Notification" ? unreadCount : undefined}
               />
             ))}
 
@@ -455,7 +421,6 @@ export function Navbar() {
       <NotificationModal
         isOpen={isNotificationOpen}
         onClose={() => setIsNotificationOpen(false)}
-        notifications={MOCK_NOTIFICATIONS}
       />
 
       {/* Logout Confirmation Modal */}

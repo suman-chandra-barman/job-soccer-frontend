@@ -30,6 +30,8 @@ export const baseApi = createApi({
     "FriendList",
     "ProfileViews",
     "Friend",
+    "Notification",
+    "NotificationCount",
   ],
   endpoints: () => ({}),
 });

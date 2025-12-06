@@ -1,141 +1,109 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+import { useSelector } from "react-redux";
+import { X, Clock, Briefcase, CheckCircle, Loader2 } from "lucide-react";
+import { RootState } from "@/redux/store";
+import { useNotificationContext } from "@/components/providers/NotificationProvider";
 import {
-  X,
-  MoreHorizontal,
-  Clock,
-  Briefcase,
-  Users,
-  Star,
-  CheckCircle,
-} from "lucide-react";
-
-// Types for notification data
-export interface NotificationItem {
-  id: string;
-  type: "opportunity" | "message" | "application" | "system";
-  title: string;
-  description: string;
-  timestamp: string;
-  isRead: boolean;
-  avatar?: string;
-  count?: number;
-}
-
-// Mock notification data
-const mockNotifications: NotificationItem[] = [
-  {
-    id: "1",
-    type: "opportunity",
-    title: "You have new 4 opportunity this week",
-    description:
-      "This week, your AI Job-finder has discovered four exciting new Cocktail opportunities...",
-    timestamp: "5h ago",
-    isRead: false,
-    count: 4,
-  },
-  {
-    id: "2",
-    type: "opportunity",
-    title: "You have new 4 opportunity this week",
-    description:
-      "This week, your AI Job-finder has discovered four exciting new Cocktail opportunities...",
-    timestamp: "5h ago",
-    isRead: false,
-    count: 4,
-  },
-  {
-    id: "3",
-    type: "opportunity",
-    title: "You have new 4 opportunity this week",
-    description:
-      "This week, your AI Job-finder has discovered four exciting new Cocktail opportunities...",
-    timestamp: "5h ago",
-    isRead: false,
-    count: 4,
-  },
-  {
-    id: "4",
-    type: "opportunity",
-    title: "You have new 4 opportunity this week",
-    description:
-      "This week, your AI Job-finder has discovered four exciting new Cocktail opportunities...",
-    timestamp: "14h ago",
-    isRead: true,
-    count: 4,
-  },
-  {
-    id: "5",
-    type: "opportunity",
-    title: "You have new 4 opportunity this week",
-    description:
-      "This week, your AI Job-finder has discovered four exciting new Cocktail opportunities...",
-    timestamp: "22h ago",
-    isRead: true,
-    count: 4,
-  },
-  {
-    id: "6",
-    type: "opportunity",
-    title: "You have new 4 opportunity this week",
-    description:
-      "This week, your AI Job-finder has discovered four exciting new Cocktail opportunities...",
-    timestamp: "1d ago",
-    isRead: true,
-    count: 4,
-  },
-  {
-    id: "7",
-    type: "opportunity",
-    title: "You have new 4 opportunity this week",
-    description:
-      "This week, your AI Job-finder has discovered four exciting new Cocktail opportunities...",
-    timestamp: "1d ago",
-    isRead: true,
-    count: 4,
-  },
-];
+  useGetNotificationsQuery,
+  useGetUnreadCountQuery,
+  useMarkAsReadMutation,
+  useMarkAllAsReadMutation,
+  useDeleteNotificationMutation,
+} from "@/redux/features/notification/notificationApi";
+import { INotification } from "@/types/notification";
 
 const NotificationModal = () => {
   const [isOpen, setIsOpen] = useState(true);
-  const [notifications, setNotifications] = useState(mockNotifications);
   const [activeTab, setActiveTab] = useState<"all" | "unread">("all");
+  const [page, setPage] = useState(1);
+  const limit = 10;
 
-  const unreadCount = notifications.filter((n) => !n.isRead).length;
+  // Get token from Redux store
+  const token = useSelector((state: RootState) => state.auth.token);
 
-  const filteredNotifications =
-    activeTab === "unread"
-      ? notifications.filter((n) => !n.isRead)
-      : notifications;
+  // Use global notification context instead of creating new socket connection
+  const {
+    notifications: realtimeNotifications,
+    unreadCount: realtimeUnreadCount,
+  } = useNotificationContext();
 
-  const handleMarkAsRead = (id: string) => {
-    setNotifications((prev) =>
-      prev.map((notification) =>
-        notification.id === id
-          ? { ...notification, isRead: true }
-          : notification
-      )
-    );
-  };
+  // Fetch notifications from API
+  const {
+    data: notificationsData,
+    isLoading,
+    refetch,
+  } = useGetNotificationsQuery(
+    {
+      page,
+      limit,
+      isRead: activeTab === "unread" ? false : undefined,
+    },
+    { skip: !token }
+  );
 
-  const handleMarkAllAsRead = () => {
-    setNotifications((prev) =>
-      prev.map((notification) => ({ ...notification, isRead: true }))
-    );
-  };
+  // Fetch unread count
+  const { data: unreadCountData } = useGetUnreadCountQuery(undefined, {
+    skip: !token,
+  });
 
-  const getNotificationIcon = (type: string) => {
-    switch (type) {
-      case "opportunity":
-        return <Briefcase className="w-5 h-5" />;
-      case "message":
-        return <Users className="w-5 h-5" />;
-      case "application":
-        return <Star className="w-5 h-5" />;
-      default:
-        return <CheckCircle className="w-5 h-5" />;
+  // Mutations
+  const [markAsRead] = useMarkAsReadMutation();
+  const [markAllAsRead] = useMarkAllAsReadMutation();
+  const [deleteNotification] = useDeleteNotificationMutation();
+
+  const notifications = notificationsData?.data || [];
+  const unreadCount = unreadCountData?.data || realtimeUnreadCount || 0;
+  const totalPages = notificationsData?.meta?.totalPage || 1;
+
+  // Refetch when realtime notifications arrive
+  useEffect(() => {
+    if (realtimeNotifications.length > 0) {
+      refetch();
     }
+  }, [realtimeNotifications, refetch]);
+
+  const handleMarkAsRead = async (id: string) => {
+    try {
+      await markAsRead(id).unwrap();
+    } catch (error) {
+      // Error handled silently
+    }
+  };
+
+  const handleMarkAllAsRead = async () => {
+    try {
+      await markAllAsRead().unwrap();
+    } catch (error) {
+      // Error handled silently
+    }
+  };
+
+  const handleDelete = async (id: string) => {
+    try {
+      await deleteNotification(id).unwrap();
+    } catch (error) {
+      // Error handled silently
+    }
+  };
+
+  const getNotificationIcon = () => {
+    return <Briefcase className="w-5 h-5" />;
+  };
+
+  const formatTimestamp = (dateString: string) => {
+    const date = new Date(dateString);
+    const now = new Date();
+    const diffInSeconds = Math.floor((now.getTime() - date.getTime()) / 1000);
+
+    if (diffInSeconds < 60) return "Just now";
+    if (diffInSeconds < 3600) return `${Math.floor(diffInSeconds / 60)}m ago`;
+    if (diffInSeconds < 86400)
+      return `${Math.floor(diffInSeconds / 3600)}h ago`;
+    if (diffInSeconds < 604800)
+      return `${Math.floor(diffInSeconds / 86400)}d ago`;
+    return date.toLocaleDateString();
   };
 
   if (!isOpen) return null;
@@ -144,7 +112,7 @@ const NotificationModal = () => {
     <div className="fixed inset-0 bg-black bg-opacity-50 flex items-start justify-center pt-16 px-4 z-50">
       <div className="bg-white rounded-2xl shadow-2xl w-full max-w-md max-h-[80vh] overflow-hidden">
         {/* Header */}
-        <div className="bg-gradient-to-r from-blue-600 to-purple-600 px-6 py-4 text-white">
+        <div className="bg-linear-to-r from-blue-600 to-purple-600 px-6 py-4 text-white">
           <div className="flex items-center justify-between">
             <div>
               <h2 className="text-xl font-bold">Notifications</h2>
@@ -199,7 +167,11 @@ const NotificationModal = () => {
 
         {/* Notifications List */}
         <div className="overflow-y-auto max-h-96">
-          {filteredNotifications.length === 0 ? (
+          {isLoading ? (
+            <div className="flex justify-center items-center py-12">
+              <Loader2 className="w-8 h-8 text-blue-600 animate-spin" />
+            </div>
+          ) : notifications.length === 0 ? (
             <div className="text-center py-12 px-6">
               <div className="w-16 h-16 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-4">
                 <CheckCircle className="w-8 h-8 text-gray-400" />
@@ -214,13 +186,13 @@ const NotificationModal = () => {
               </p>
             </div>
           ) : (
-            filteredNotifications.map((notification) => (
+            notifications.map((notification: INotification) => (
               <div
-                key={notification.id}
+                key={notification._id}
                 className={`relative px-6 py-4 border-b border-gray-100 hover:bg-gray-50 transition-colors cursor-pointer ${
                   !notification.isRead ? "bg-blue-50" : ""
                 }`}
-                onClick={() => handleMarkAsRead(notification.id)}
+                onClick={() => handleMarkAsRead(notification._id)}
               >
                 {/* Unread Indicator */}
                 {!notification.isRead && (
@@ -229,9 +201,9 @@ const NotificationModal = () => {
 
                 <div className="flex items-start space-x-3">
                   {/* Avatar/Icon */}
-                  <div className="flex-shrink-0">
-                    <div className="w-10 h-10 bg-gradient-to-br from-purple-500 to-pink-500 rounded-full flex items-center justify-center text-white">
-                      {getNotificationIcon(notification.type)}
+                  <div className="shrink-0">
+                    <div className="w-10 h-10 bg-linear-to-br from-purple-500 to-pink-500 rounded-full flex items-center justify-center text-white">
+                      {getNotificationIcon()}
                     </div>
                   </div>
 
@@ -240,34 +212,28 @@ const NotificationModal = () => {
                     <div className="flex items-start justify-between">
                       <div className="flex-1">
                         <h4 className="text-sm font-medium text-gray-900 mb-1 leading-tight">
-                          {notification.title.replace(
-                            "4",
-                            notification.count?.toString() || "4"
-                          )}
+                          {notification.title}
                         </h4>
                         <p className="text-sm text-gray-600 mb-2 leading-relaxed">
                           {notification.description}
                         </p>
                         <div className="flex items-center text-xs text-gray-500">
                           <Clock className="w-3 h-3 mr-1" />
-                          {notification.timestamp}
+                          {formatTimestamp(notification.createdAt)}
                         </div>
                       </div>
 
                       {/* More Options */}
-                      <button className="p-1 hover:bg-gray-200 rounded-full transition-colors flex-shrink-0 ml-2">
-                        <MoreHorizontal className="w-4 h-4 text-gray-400" />
+                      <button
+                        className="p-1 hover:bg-gray-200 rounded-full transition-colors shrink-0 ml-2"
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          handleDelete(notification._id);
+                        }}
+                      >
+                        <X className="w-4 h-4 text-gray-400" />
                       </button>
                     </div>
-
-                    {/* Count Badge */}
-                    {notification.count && (
-                      <div className="inline-flex items-center mt-2">
-                        <span className="bg-orange-100 text-orange-800 text-xs font-medium px-2 py-1 rounded-full">
-                          {notification.count} new opportunities
-                        </span>
-                      </div>
-                    )}
                   </div>
                 </div>
               </div>
@@ -275,12 +241,30 @@ const NotificationModal = () => {
           )}
         </div>
 
-        {/* Footer */}
-        <div className="px-6 py-4 bg-gray-50 border-t border-gray-100">
-          <button className="w-full text-center text-blue-600 hover:text-blue-700 font-medium text-sm transition-colors py-2">
-            View all notifications
-          </button>
-        </div>
+        {/* Footer - Pagination */}
+        {totalPages > 1 && (
+          <div className="px-6 py-4 bg-gray-50 border-t border-gray-100">
+            <div className="flex items-center justify-between">
+              <button
+                disabled={page === 1}
+                onClick={() => setPage(page - 1)}
+                className="px-4 py-2 text-sm font-medium text-blue-600 hover:text-blue-700 disabled:text-gray-400 disabled:cursor-not-allowed transition-colors"
+              >
+                Previous
+              </button>
+              <span className="text-sm text-gray-600">
+                Page {page} of {totalPages}
+              </span>
+              <button
+                disabled={page === totalPages}
+                onClick={() => setPage(page + 1)}
+                className="px-4 py-2 text-sm font-medium text-blue-600 hover:text-blue-700 disabled:text-gray-400 disabled:cursor-not-allowed transition-colors"
+              >
+                Next
+              </button>
+            </div>
+          </div>
+        )}
       </div>
     </div>
   );
