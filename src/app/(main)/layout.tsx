@@ -1,5 +1,5 @@
 import { Navbar } from "@/components/shared/Navbar";
-import { Footer } from "@/components/shared/Footer";
+import { ConditionalFooter } from "@/components/shared/ConditionalFooter";
 
 export default function MainLayout({
   children,
@@ -10,7 +10,7 @@ export default function MainLayout({
     <>
       <Navbar />
       <main>{children}</main>
-      <Footer />
+      <ConditionalFooter />
     </>
   );
 }
