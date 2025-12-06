@@ -57,22 +57,9 @@ export function StartChatButton({
       ) : (
         <>
           <MessageCircle className="h-4 w-4 mr-2" />
-          Message {userName}
+          Message 
         </>
       )}
     </Button>
   );
 }
-
-/**
- * Usage Example:
- *
- * import { StartChatButton } from '@/components/messaging/StartChatButton';
- *
- * // In your profile page or card component:
- * <StartChatButton
- *   userId={candidate._id}
- *   userName={candidate.firstName}
- *   className="w-full"
- * />
- */
