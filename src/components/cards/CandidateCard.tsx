@@ -1,8 +1,9 @@
 import React, { useState } from "react";
 import { Card, CardContent } from "../ui/card";
-import { Bookmark, Lock, MapPin, MessageCircle, SquarePen } from "lucide-react";
+import { Bookmark, Lock, MapPin, SquarePen } from "lucide-react";
 import { FaPlayCircle } from "react-icons/fa";
 import { Button } from "../ui/button";
+import { StartChatButton } from "../messaging/StartChatButton";
 import { ICandidate } from "@/types/user";
 import { Avatar, AvatarFallback } from "../ui/avatar";
 import Image from "next/image";
@@ -163,13 +164,11 @@ function CandidateCard({ candidate }: { candidate: ICandidate }) {
               Request Access
             </Button>
 
-            <Button
-              size="sm"
-              className="w-full text-xs bg-yellow-300 hover:scale-105 transition-transform duration-200"
-            >
-              <MessageCircle className="w-3 h-3 mr-1" />
-              Message
-            </Button>
+            <StartChatButton
+              userId={candidate._id}
+              userName={`${candidate.firstName} ${candidate.lastName}`}
+              className="w-full text-xs bg-yellow-300 hover:bg-yellow-400 hover:scale-105 transition-transform duration-200"
+            />
           </div>
         </CardContent>
       </Card>

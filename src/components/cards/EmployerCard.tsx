@@ -1,13 +1,7 @@
-import {
-  MapPin,
-  MessageCircle,
-  ShieldCheck,
-  Star,
-  UserRoundPlus,
-  Users,
-} from "lucide-react";
+import { MapPin, ShieldCheck, Star, UserRoundPlus, Users } from "lucide-react";
 import Image from "next/image";
 import { Button } from "../ui/button";
+import { StartChatButton } from "../messaging/StartChatButton";
 import { IEmployer } from "@/types/user";
 import { Avatar, AvatarFallback } from "../ui/avatar";
 import { useFollowEmployerMutation } from "@/redux/features/follow/followApi";
@@ -117,9 +111,7 @@ export function EmployerCard({ employer }: { employer: IEmployer }) {
           className="w-1/2 hover:scale-105 transition-transform duration-200 font-semibold px-6 py-3"
         >
           {isFollowLoading ? (
-            <>
-              Following...
-            </>
+            <>Following...</>
           ) : (
             <>
               <UserRoundPlus className="w-6 h-6" />
@@ -127,10 +119,11 @@ export function EmployerCard({ employer }: { employer: IEmployer }) {
             </>
           )}
         </Button>
-        <Button className="w-1/2 hover:scale-105 transition-transform duration-200 font-semibold px-6 py-3">
-          <MessageCircle className="w-6 h-6" />
-          Message
-        </Button>
+        <StartChatButton
+          userId={employer._id}
+          userName={employerName}
+          className="w-1/2 hover:scale-105 transition-transform duration-200 font-semibold px-6 py-3"
+        />
       </div>
     </div>
   );

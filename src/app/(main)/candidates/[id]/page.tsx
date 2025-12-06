@@ -22,6 +22,7 @@ import EducationSection from "@/components/profile/EducationSection";
 import VideoSection from "@/components/profile/VideoSection";
 import AnalyticsSection from "@/components/profile/AnalyticsSection";
 import { useAppSelector } from "@/redux/hooks";
+import { StartChatButton } from "@/components/messaging/StartChatButton";
 
 export default function UserProfilePage() {
   const params = useParams();
@@ -181,6 +182,13 @@ export default function UserProfilePage() {
                 <BadgeCheck className="h-4 w-4" />
                 Verified
               </Badge>
+            )}
+            {!isOwnProfile && (
+              <StartChatButton
+                userId={userId}
+                userName={displayName}
+                className="rounded-full"
+              />
             )}
             <Button
               variant="outline"
