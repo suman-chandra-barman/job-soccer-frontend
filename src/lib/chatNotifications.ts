@@ -4,7 +4,7 @@
 
 // Request notification permission
 export async function requestNotificationPermission(): Promise<boolean> {
-  if (!("Notification" in window)) {
+  if (typeof window === "undefined" || typeof Notification === "undefined") {
     console.log("This browser does not support notifications");
     return false;
   }
@@ -23,7 +23,10 @@ export async function requestNotificationPermission(): Promise<boolean> {
 
 // Show browser notification
 export function showNotification(title: string, options?: NotificationOptions) {
-  if (Notification.permission === "granted") {
+  if (
+    typeof Notification !== "undefined" &&
+    Notification.permission === "granted"
+  ) {
     new Notification(title, {
       icon: "/icon-192x192.png", // Update with your app icon
       badge: "/badge-72x72.png", // Update with your app badge

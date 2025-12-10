@@ -91,6 +91,7 @@ export function useNotifications(token: string | null): UseNotificationsReturn {
         // Show browser notification if permission granted
         if (
           typeof window !== "undefined" &&
+          typeof Notification !== "undefined" &&
           Notification.permission === "granted"
         ) {
           new Notification(data.notification.title, {
@@ -140,6 +141,7 @@ export function useNotifications(token: string | null): UseNotificationsReturn {
   useEffect(() => {
     if (
       typeof window !== "undefined" &&
+      typeof Notification !== "undefined" &&
       Notification.permission === "default"
     ) {
       Notification.requestPermission();
