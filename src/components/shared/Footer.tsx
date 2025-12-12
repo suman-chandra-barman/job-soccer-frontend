@@ -2,10 +2,8 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import Link from "next/link";
 import Image from "next/image";
-import logo from "@/assets/logo_with_domain.png";
-import facebook from "@/assets/socials/facebook.svg";
-import youtube from "@/assets/socials/youtube.svg";
-import X from "@/assets/socials/x.svg";
+import logo from "@/assets/logo_with_domain.svg";
+import { FaFacebook, FaInstagram, FaLinkedin, } from "react-icons/fa";
 
 export function Footer() {
   return (
@@ -14,13 +12,16 @@ export function Footer() {
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 justify-between gap-8">
           <div className="w-full md:w-auto text-center md:text-left">
             {/* Logo */}
-            <Link href="/" className="flex items-center justify-center md:justify-start mb-4">
-                <Image
-                  src={logo}
-                  alt="Logo"
-                  width={200}
-                  className="object-cover"
-                />
+            <Link
+              href="/"
+              className="flex items-center justify-center md:justify-start mb-4"
+            >
+              <Image
+                src={logo}
+                alt="Logo"
+                width={200}
+                className="object-cover"
+              />
             </Link>
           </div>
           {/* Quick Action */}
@@ -100,7 +101,10 @@ export function Footer() {
                 placeholder="Enter your email"
                 className="sm:flex-1 text-sm bg-white p-5"
               />
-              <Button size="lg" className="bg-yellow-300 hover:bg-yellow-400 text-black px-4 py-3 rounded-lg">
+              <Button
+                size="lg"
+                className="bg-yellow-300 hover:bg-yellow-400 text-black px-4 py-3 rounded-lg"
+              >
                 Subscribe
               </Button>
             </div>
@@ -111,13 +115,17 @@ export function Footer() {
         {/* Social Media Icons */}
         <div className="flex space-x-4 items-center justify-center gap-4">
           <Link href="" className="text-blue-600 hover:text-blue-700">
-            <Image src={facebook} alt="Facebook" className="h-6 w-6" />
+            <FaFacebook className="h-6 w-6" />
           </Link>
-          <Link href="" className="text-gray-900 hover:text-gray-700">
-            <Image src={X} alt="Twitter" className="h-6 w-6" />
+          <Link
+            href=""
+            className="flex items-center justify-center h-6 w-6 rounded-full bg-linear-to-tr from-yellow-400 via-pink-500 to-purple-600"
+          >
+            <FaInstagram className="h-4 w-4 text-white" />
           </Link>
-          <Link href="" className="text-red-600 hover:text-red-700">
-            <Image src={youtube} alt="Youtube" className="h-6 w-6" />
+
+          <Link href="" className="text-blue-500 hover:text-blue-600">
+            <FaLinkedin className="h-6 w-6" />
           </Link>
         </div>
       </div>
