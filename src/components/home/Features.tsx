@@ -1,48 +1,60 @@
+import Image from "next/image";
+import brainIcon from "@/assets/home/ai_brain.svg";
+import videoIcon from "@/assets/home/video.svg";
+import global from "@/assets/home/global.svg";
+import security from "@/assets/home/security.svg";
+import chart from "@/assets/home/chart.svg"
+import profile from "@/assets/home/profile.svg"
+
 export function Features() {
   const features = [
     {
-      title: "Specialized in Football Staffing",
-      lists: [
-        "JOBSOCCER is 100% focused on the football ecosystem",
-        "For coaches, analysts, scouts, players, medical staff.",
-      ],
+      icon: brainIcon,
+      title: "Specialized in Soccer Staffing",
+      lists: ["JOBSOCCER is 100% focused on the soccer ecosystem."],
     },
     {
-      title: "Pre-Employment Assessment",
-      lists: [
-        "Uses psychological & behavioral profiling.",
-        "Helps employers understand how candidates think, communicate, and reacts under pressure.",
-        "Pre-employment assessment helps employers make candidate selection easier and faster.",
-        "Adds professionalism and objectivity to the hiring process.",
-      ],
-    },
-    {
+      icon: brainIcon,
       title: "AI-Powered Talent Matching",
       lists: [
-        "Uses AI to match clubs with the best-fit candidates according to their requirements.",
-        "Clubs save time and candidates are fairly assessed.",
+        "Seamlessly connects employers with candidates and candidates with employers.",
       ],
     },
     {
+      icon: videoIcon,
+      title: "AI video Evaluation",
+      lists: ["Video interview analysis."],
+    },
+    {
+      icon: security,
+      title: "AI Profile Quality Score",
+      lists: ["AI evaluates completeness and strength of each profile."],
+    },
+    {
+      icon: brainIcon,
+      title: "AI Powered job suggestions",
+      lists: ["Personalized job recommendations for players and staff."],
+    },
+    {
+      icon: chart,
+      title: "AI Data-Driven Market Insights",
+      lists: [
+        "AI identifies rising talent trends, role demands, or regional needs.",
+      ],
+    },
+    {
+      icon: global,
       title: "Global Access & Visibility",
       lists: [
         "Gives equal visibility to candidates worldwide not just those with the right contacts.",
-        "Enables clubs at all levels to access a large pool of qualified candidates more quickly.",
       ],
     },
     {
-      title: "Videos Evaluation",
-      lists: [
-        "Staff and players can upload pre-video interviews, video sessions, presentations, or highlights.",
-        "The combination of AI and certified coach evaluations gives employers deeper insight than a traditional CV.",
-      ],
-    },
-
-    {
+      icon: profile,
       title: "Fair, Transparent, and Structured Process",
       lists: [
-        "Clear application system.",
-        "Reduces bias, improves diversity, and promotes merit-based recruitment.",
+        "Clear application system",
+        "Reduces bias, improves diversity, and promotes merit- based recruitment",
       ],
     },
   ];
@@ -60,16 +72,21 @@ export function Features() {
             return (
               <div key={index} className="flex items-start space-x-4">
                 <div className="flex-1">
-                  <h3 className="text-xl font-bold mb-2">
-                    {feature.title}
-                  </h3>
-                  <p className="text-gray-600 text-sm leading-relaxed">
-                    {feature.lists.map((item, idx) => (
-                      <span key={idx} className="block mb-1">
-                        • {item}
-                      </span>
-                    ))}
-                  </p>
+                  <div className="flex items-start gap-4">
+                    <Image src={feature.icon} alt={feature.title + " icon"} width={40} height={40} />
+                    <div>
+                      <h3 className="text-xl font-bold mb-2">
+                        {feature.title}
+                      </h3>
+                      <p className="text-gray-600 text-sm leading-relaxed">
+                        {feature.lists.map((item, idx) => (
+                          <span key={idx} className="block mb-1">
+                            • {item}
+                          </span>
+                        ))}
+                      </p>
+                    </div>
+                  </div>
                 </div>
               </div>
             );
