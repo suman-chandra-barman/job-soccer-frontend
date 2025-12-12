@@ -29,8 +29,8 @@ export function GlobalProfile() {
   const { user, token } = useAppSelector((state) => state.auth);
   const isAuthenticated = !!user && !!token;
   return (
-    <section className="py-16 bg-gray-50">
-      <div className="container mx-auto px-4">
+    <section className="container mx-auto px-4 pb-16">
+      <div className=" bg-[#F7F6F2] rounded-2xl py-8 px-4">
         {/* Header */}
         <div className="text-center mb-12 md:mb-16">
           <h2 className="text-2xl md:text-4xl font-bold text-gray-900 mb-2">
@@ -77,16 +77,16 @@ export function GlobalProfile() {
               ))}
             </div>
             {!isAuthenticated && (
-              <div className="flex flex-row justify-center items-center gap-2 md:gap-4 ">
+              <div className="flex flex-row md:justify-start lg:justify-center items-center gap-2 md:gap-4 ">
                 <Button
                   asChild
-                  className=" md:w-[200px] bg-yellow-300 hover:scale-105 transition-transform duration-200"
+                  className="lg:w-[200px] bg-yellow-300 hover:scale-105 transition-transform duration-200"
                 >
                   <Link href="/signin">Sign In</Link>
                 </Button>
                 <Button
                   asChild
-                  className=" md:w-[200px] bg-yellow-300 hover:scale-105 transition-transform duration-200"
+                  className=" lg:w-[200px] bg-yellow-300 hover:scale-105 transition-transform duration-200"
                 >
                   <Link href="/signup">Sign Up</Link>
                 </Button>

@@ -33,7 +33,7 @@ export function Candidates() {
         </div>
 
         {/* Candidates Container */}
-        <div className="bg-gray-50 rounded-2xl p-4 md:p-8">
+        <div className="bg-[#F7F6F2] rounded-2xl p-4 md:p-8">
           <div className="flex justify-between items-center mb-8">
             <h3 className="text-2xl font-bold text-gray-900">Candidates</h3>
             <Button
