@@ -1,11 +1,11 @@
 "use client";
 
-import bg from "@/assets/hero-bg.png";
 import Image from "next/image";
 import line from "@/assets/line.png";
 import { Button } from "../ui/button";
 import Link from "next/link";
 import { useAppSelector } from "@/redux/hooks";
+import bg from "@/assets/hero-banner.png";
 
 export function HeroSection() {
   const { user, token } = useAppSelector((state) => state.auth);
