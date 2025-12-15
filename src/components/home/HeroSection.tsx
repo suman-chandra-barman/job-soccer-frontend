@@ -5,7 +5,7 @@ import line from "@/assets/line.png";
 import { Button } from "../ui/button";
 import Link from "next/link";
 import { useAppSelector } from "@/redux/hooks";
-import bg from "@/assets/hero-banner.png";
+import bg from "@/assets/hero-banner.svg";
 
 export function HeroSection() {
   const { user, token } = useAppSelector((state) => state.auth);
