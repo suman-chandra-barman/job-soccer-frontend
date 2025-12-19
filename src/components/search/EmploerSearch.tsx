@@ -5,9 +5,10 @@ import { useState } from "react";
 import { Search, MapPin } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import SelectEmployerCategory from "../input/SelectEmployerCategory";
 import { useGetPopularSearchQuery } from "@/redux/features/job/jobApi";
 import { useRouter } from "next/navigation";
+import { Select, SelectContent, SelectGroup, SelectItem, SelectTrigger, SelectValue } from "../ui/select";
+import { employerRoles } from "@/shchemas/signupValidation";
 
 export function EmployerSearch() {
   const [searchTerm, setSearchTerm] = useState("");
@@ -60,12 +61,20 @@ export function EmployerSearch() {
           </div>
 
           {/* Category Select */}
-          <div className="w-full lg:w-64 border py-6 md:py-0  md:border-none shadow-none">
-            <SelectEmployerCategory
-              value={selectedCategory}
-              onValueChange={setSelectedCategory}
-            />
-          </div>
+          <Select value={selectedCategory} onValueChange={setSelectedCategory}>
+            <SelectTrigger className="w-full lg:w-64 border py-6 md:py-0  md:border-none shadow-none">
+              <SelectValue placeholder="Select employer category" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectGroup>
+                {employerRoles.map((role) => (
+                  <SelectItem key={role} value={role}>
+                    {role}
+                  </SelectItem>
+                ))}
+              </SelectGroup>
+            </SelectContent>
+          </Select>
 
           {/* Location */}
           <div className="relative w-full lg:w-64 border md:border-0 rounded-lg">
