@@ -103,7 +103,7 @@ export function Footer() {
               />
               <Button
                 size="lg"
-                className="bg-yellow-300 hover:bg-yellow-400 text-black px-4 py-3 rounded-lg"
+                className="bg-yellow-300 hover:scale-105 text-black px-4 py-3 rounded-lg"
               >
                 Subscribe
               </Button>

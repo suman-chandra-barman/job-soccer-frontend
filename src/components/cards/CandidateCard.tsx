@@ -19,6 +19,8 @@ import {
 } from "@/redux/features/candidateShortlist/candidateShortlistSlice";
 import { toast } from "sonner";
 import VideoPlayerModal from "../modals/VideoPlayerModal";
+import { useSendFriendRequestMutation } from "@/redux/features/user/userApi";
+import { ca } from "zod/v4/locales";
 
 function CandidateCard({ candidate }: { candidate: ICandidate }) {
   const [isVideoModalOpen, setIsVideoModalOpen] = useState(false);
@@ -32,6 +34,22 @@ function CandidateCard({ candidate }: { candidate: ICandidate }) {
     useShortlistCandidateMutation();
   const [removeFromShortlistApi, { isLoading: isRemoving }] =
     useRemoveFromShortlistMutation();
+
+  // Send friend request mutation
+  const [sendFriendRequest, { isLoading: isSendingRequest }] =
+    useSendFriendRequestMutation();
+
+
+  // Handle friend request
+  const handleRequestAccess = async () => {
+    try {
+      await sendFriendRequest(candidate._id).unwrap();
+      toast.success("Friend request sent successfully");
+    } catch (error) {
+      const err = error as { data?: { message?: string } };
+      toast.error(err?.data?.message || "Failed to send friend request");
+    }
+  };
 
   const handleShortlist = async () => {
     try {
@@ -157,17 +175,18 @@ function CandidateCard({ candidate }: { candidate: ICandidate }) {
             <Button
               variant="outline"
               size="sm"
-              className="w-full text-xs bg-gray-100 text-gray-500"
-              disabled
+              className="w-full text-xs bg-transparent hover:scale-105"
+              onClick={handleRequestAccess}
+              disabled={isSendingRequest}
             >
               <Lock className="w-3 h-3 mr-1" />
-              Request Access
+              {isSendingRequest ? "Sending..." : "Request Access"}
             </Button>
 
             <StartChatButton
               userId={candidate._id}
               userName={`${candidate.firstName} ${candidate.lastName}`}
-              className="w-full text-xs bg-yellow-300 hover:bg-yellow-400 hover:scale-105 transition-transform duration-200"
+              className="w-full text-xs bg-yellow-300 hover:scale-105 transition-transform duration-200"
             />
           </div>
         </CardContent>
