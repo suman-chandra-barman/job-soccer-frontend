@@ -68,7 +68,7 @@ function JobPageContent() {
   };
 
   return (
-    <div>
+    <main>
       <div className="bg-[#F7F6F2]">
         <h2 className="text-3xl md:text-4xl text-[#362F05] text-center pt-10 mb-24">
           Find Your <span className="text-green-400">Ultimate Job</span>
@@ -76,7 +76,6 @@ function JobPageContent() {
           Search Companion
         </h2>
         <JobSearch />
-        {/* <div className="absolute buttom-0 "> */}
         <JobFilters
           onFiltersChange={handleFiltersChange}
           onReset={handleReset}
@@ -84,11 +83,10 @@ function JobPageContent() {
           aiScoreLevel={filters.aiScoreLevel}
           experience={filters.experience}
         />
-        {/* </div> */}
       </div>
 
       {/* Jobs */}
-      <div className="container mx-auto px-4 md:px-0">
+      <div className="container mx-auto px-4">
         {/* New Jobs */}
         <div>
           <h2 className="text-2xl md:text-4xl text-green-400 font-semibold my-10">
@@ -135,7 +133,7 @@ function JobPageContent() {
           </div>
         </div>
       </div>
-    </div>
+    </main>
   );
 }
 
