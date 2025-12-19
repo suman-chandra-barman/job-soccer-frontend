@@ -1,5 +1,6 @@
 import { baseApi } from "@/redux/api/baseApi";
 import { setCredentials } from "./authSlice";
+import { RootState } from "@/redux/store";
 
 const authApi = baseApi.injectEndpoints({
   endpoints: (builder) => ({
@@ -102,11 +103,11 @@ const authApi = baseApi.injectEndpoints({
         url: "/user/me",
         method: "GET",
       }),
-
-      async onQueryStarted(arg, { dispatch, queryFulfilled }) {
+      
+      async onQueryStarted(arg, { dispatch, queryFulfilled, getState }) {
         try {
           const { data } = await queryFulfilled;
-          const token = localStorage.getItem("accessToken");
+          const token = (getState() as RootState).auth.token;
 
           if (token) {
             dispatch(setCredentials({ user: data.data, token }));

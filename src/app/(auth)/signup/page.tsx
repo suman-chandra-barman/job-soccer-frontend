@@ -56,11 +56,10 @@ export default function SignUpPage() {
       const userData = await signup(payload).unwrap();
 
       if (userData.success) {
-        console.log("User data:", userData);
-
         toast.success("Account created successfully!", {
           description: "Welcome to our platform",
         });
+
         form.reset();
         router.push(
           `/email-verification?email=${encodeURIComponent(

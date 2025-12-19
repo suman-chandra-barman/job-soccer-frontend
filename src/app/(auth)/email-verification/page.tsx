@@ -17,12 +17,18 @@ import { useAppSelector } from "@/redux/hooks";
 import { Spinner } from "@/components/ui/spinner";
 
 function EmailVerificationPageContent() {
+  // local state
   const [otp, setOtp] = useState<string[]>(["", "", "", "", "", ""]);
-  const [resendTimer, setResendTimer] = useState(10);
+  const [resendTimer, setResendTimer] = useState(30);
 
+  // api 
   const [emailVerify, { isLoading }] = useEmailVerifyMutation();
   const [resendOtp, { isLoading: isResending }] = useResendOtpMutation();
+
+  // global state
   const token = useAppSelector((state) => state.auth.token);
+
+  // api read actions
   const { data: user } = useGetMeQuery(undefined, { skip: !token });
 
   const searchParams = useSearchParams();
@@ -115,6 +121,12 @@ function EmailVerificationPageContent() {
       if (res.success) {
         toast.success("Email verified successfully!");
 
+        // if (user?.data.userType) {
+        //   if (user.data.userType === "candidate")
+        //     router.push(`/signup/candidate`);
+        //   else router.push(`/signup/employer`);
+        // }
+
         // Redirect based on reason
         if (reason === "password_reset") {
           // Redirect to create new password page with reset token
@@ -134,7 +146,6 @@ function EmailVerificationPageContent() {
     }
   };
 
-  console.log("User", token, user?.data);
   return (
     <div className="min-h-screen flex">
       {/* Left Panel */}
