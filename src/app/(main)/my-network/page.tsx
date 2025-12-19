@@ -65,7 +65,7 @@ function MyNetworkPage() {
   // Handle error state
   if (error) {
     return (
-      <div className="container mx-auto px-4 md:px-0 py-16">
+      <div className="container mx-auto px-4 py-16">
         <div className="text-center py-12">
           <p className="text-red-500 text-lg">
             Failed to load friends. Please try again.
@@ -76,7 +76,7 @@ function MyNetworkPage() {
   }
 
   return (
-    <div className="container mx-auto px-4 md:px-0 py-16">
+    <div className="container mx-auto px-4 py-16">
       {/* Header with Search and Filter */}
       <div className="flex items-center justify-between mb-8">
         <h2 className="text-2xl md:text-3xl font-bold text-gray-900">
