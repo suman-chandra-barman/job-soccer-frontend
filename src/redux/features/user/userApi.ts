@@ -1,5 +1,5 @@
 import { baseApi } from "@/redux/api/baseApi";
-import { setCredentials } from "../auth/authSlice";
+import { setUser } from "../auth/authSlice";
 
 const userApi = baseApi.injectEndpoints({
   endpoints: (builder) => ({
@@ -15,11 +15,7 @@ const userApi = baseApi.injectEndpoints({
       async onQueryStarted(arg, { dispatch, queryFulfilled }) {
         try {
           const { data } = await queryFulfilled;
-          const token = localStorage.getItem("accessToken");
-
-          if (token) {
-            dispatch(setCredentials({ user: data.data, token }));
-          }
+          dispatch(setUser(data.data));
         } catch (err) {
           console.error("Get user info failed:", err);
         }
@@ -37,11 +33,7 @@ const userApi = baseApi.injectEndpoints({
       async onQueryStarted(arg, { dispatch, queryFulfilled }) {
         try {
           const { data } = await queryFulfilled;
-          const token = localStorage.getItem("accessToken");
-
-          if (token) {
-            dispatch(setCredentials({ user: data.data, token }));
-          }
+          dispatch(setUser(data.data));
         } catch (err) {
           console.error("Update profile image failed:", err);
         }
@@ -59,11 +51,7 @@ const userApi = baseApi.injectEndpoints({
       async onQueryStarted(arg, { dispatch, queryFulfilled }) {
         try {
           const { data } = await queryFulfilled;
-          const token = localStorage.getItem("accessToken");
-
-          if (token) {
-            dispatch(setCredentials({ user: data.data, token }));
-          }
+          dispatch(setUser(data.data));
         } catch (err) {
           console.error("Update banner image failed:", err);
         }
@@ -81,11 +69,7 @@ const userApi = baseApi.injectEndpoints({
       async onQueryStarted(arg, { dispatch, queryFulfilled }) {
         try {
           const { data } = await queryFulfilled;
-          const token = localStorage.getItem("accessToken");
-
-          if (token) {
-            dispatch(setCredentials({ user: data.data, token }));
-          }
+          dispatch(setUser(data.data));
         } catch (err) {
           console.error("Update profile failed:", err);
         }

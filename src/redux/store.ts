@@ -1,4 +1,6 @@
 import { configureStore } from "@reduxjs/toolkit";
+import { persistStore, persistReducer } from "redux-persist";
+import storage from "redux-persist/lib/storage";
 import authReducer from "@/redux/features/auth/authSlice";
 import savedJobsReducer from "@/redux/features/savedJobs/savedJobsSlice";
 import jobApplicationReducer from "@/redux/features/jobApplication/jobApplicationSlice";
@@ -7,11 +9,21 @@ import candidateShortlistReducer from "@/redux/features/candidateShortlist/candi
 import followReducer from "@/redux/features/follow/followSlice";
 import { baseApi } from "./api/baseApi";
 
+// Persist configuration for auth slice
+const authPersistConfig = {
+  key: "auth",
+  storage,
+  whitelist: ["token", "user"], // Only persist token and user
+};
+
+// Create persisted reducer
+const persistedAuthReducer = persistReducer(authPersistConfig, authReducer);
+
 // Create a single store instance for the app
 export const store = configureStore({
   reducer: {
     [baseApi.reducerPath]: baseApi.reducer,
-    auth: authReducer,
+    auth: persistedAuthReducer,
     savedJobs: savedJobsReducer,
     jobApplication: jobApplicationReducer,
     resume: resumeReducer,
@@ -19,11 +31,14 @@ export const store = configureStore({
     follow: followReducer,
   },
   middleware: (getDefaultMiddleware) =>
-    getDefaultMiddleware().concat(baseApi.middleware),
+    getDefaultMiddleware({
+      serializableCheck: {
+        ignoredActions: ["persist/PERSIST", "persist/REHYDRATE"],
+      },
+    }).concat(baseApi.middleware),
 });
 
-// Helper for SSR or tests that need to create a store instance
-export const makeStore = () => store;
+export const persistor = persistStore(store);
 
 // Infer the `RootState` and `AppDispatch` types from the store itself
 export type AppStore = typeof store;

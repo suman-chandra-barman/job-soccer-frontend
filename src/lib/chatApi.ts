@@ -1,3 +1,5 @@
+import { store } from "@/redux/store";
+
 const API_BASE_URL = process.env.NEXT_PUBLIC_BASE_URL + "/api/v1";
 
 interface ApiResponse<T = unknown> {
@@ -15,8 +17,8 @@ interface ApiResponse<T = unknown> {
 // Helper function to get auth token
 function getAuthToken(): string {
   if (typeof window !== "undefined") {
-    // Try to get from localStorage or your auth state
-    const token = localStorage.getItem("accessToken") || "";
+    // Get token from Redux store
+    const token = store.getState().auth.token || "";
     return token.startsWith("Bearer ") ? token : `Bearer ${token}`;
   }
   return "";

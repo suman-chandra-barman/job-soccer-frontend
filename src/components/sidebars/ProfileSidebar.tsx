@@ -34,7 +34,6 @@ export default function ProfileSidebar() {
 
   const confirmLogout = () => {
     dispatch(logout());
-    localStorage.removeItem("token");
     setShowLogoutModal(false);
     router.push("/signin");
   };

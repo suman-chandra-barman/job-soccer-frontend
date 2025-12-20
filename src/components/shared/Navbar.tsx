@@ -34,7 +34,7 @@ import {
 import { Button } from "../ui/button";
 import { Avatar, AvatarFallback } from "../ui/avatar";
 import { useGetMeQuery } from "@/redux/features/auth/authApi";
-import { useAppDispatch } from "@/redux/hooks";
+import { useAppDispatch, useAppSelector } from "@/redux/hooks";
 import { logout } from "@/redux/features/auth/authSlice";
 import { baseApi } from "@/redux/api/baseApi";
 import { useGetUnreadCountQuery } from "@/redux/features/notification/notificationApi";
@@ -243,11 +243,9 @@ export function Navbar() {
   const router = useRouter();
   const dispatch = useAppDispatch();
 
-  // Check if user has token before making the query
-  const hasToken =
-    typeof window !== "undefined"
-      ? !!localStorage.getItem("accessToken")
-      : false;
+  // Check if user has token from Redux store
+  const token = useAppSelector((state) => state.auth.token);
+  const hasToken = !!token;
   const { data: user } = useGetMeQuery(null, {
     skip: !hasToken,
   });
@@ -291,9 +289,6 @@ export function Navbar() {
     dispatch(logout());
     // Reset RTK Query cache to clear all cached data
     dispatch(baseApi.util.resetApiState());
-    // Clear any remaining tokens from localStorage
-    localStorage.removeItem("token");
-    localStorage.removeItem("accessToken");
     setIsLogoutModalOpen(false);
     router.push("/signin");
   }, [dispatch, router]);

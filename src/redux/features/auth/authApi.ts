@@ -1,6 +1,5 @@
 import { baseApi } from "@/redux/api/baseApi";
-import { setCredentials } from "./authSlice";
-import { RootState } from "@/redux/store";
+import { setToken, setUser } from "./authSlice";
 
 const authApi = baseApi.injectEndpoints({
   endpoints: (builder) => ({
@@ -16,8 +15,8 @@ const authApi = baseApi.injectEndpoints({
           const { data } = await queryFulfilled;
           if (data?.data.accessToken) {
             const token = data.data.accessToken;
-            localStorage.setItem("accessToken", token);
-            dispatch(setCredentials({ user: data.data.user, token }));
+            dispatch(setToken(token));
+            dispatch(setUser(data.data.user));
           } else {
             console.warn("No token found in verification response:", data);
           }
@@ -48,8 +47,7 @@ const authApi = baseApi.injectEndpoints({
           const { data } = await queryFulfilled;
           if (data?.data.accessToken) {
             const token = data.data.accessToken;
-            localStorage.setItem("accessToken", token);
-            dispatch(setCredentials({ user: null, token }));
+            dispatch(setToken(token));
           } else {
             console.warn("No token found in verification response:", data);
           }
@@ -103,15 +101,11 @@ const authApi = baseApi.injectEndpoints({
         url: "/user/me",
         method: "GET",
       }),
-      
-      async onQueryStarted(arg, { dispatch, queryFulfilled, getState }) {
+
+      async onQueryStarted(arg, { dispatch, queryFulfilled }) {
         try {
           const { data } = await queryFulfilled;
-          const token = (getState() as RootState).auth.token;
-
-          if (token) {
-            dispatch(setCredentials({ user: data.data, token }));
-          }
+          dispatch(setUser(data.data));
         } catch (err) {
           console.error("Get user info failed:", err);
         }

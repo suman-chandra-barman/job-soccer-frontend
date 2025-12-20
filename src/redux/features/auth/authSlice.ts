@@ -8,29 +8,26 @@ type TAuthState = {
 
 const initialState: TAuthState = {
   user: null,
-  token:
-    typeof window !== "undefined" ? localStorage.getItem("accessToken") : null,
+  token:null
+   
 };
 
 const authSlice = createSlice({
   name: "auth",
   initialState,
   reducers: {
-    setCredentials: (
-      state,
-      action: PayloadAction<{ user: TUser | null; token: string }>
-    ) => {
-      state.user = action.payload.user;
-      state.token = action.payload.token;
-      localStorage.setItem("accessToken", action.payload.token);
+    setToken: (state, action: PayloadAction<string>) => {
+      state.token = action.payload;
+    },
+    setUser: (state, action: PayloadAction<TUser | null>) => {
+      state.user = action.payload;
     },
     logout: (state) => {
       state.user = null;
       state.token = null;
-      localStorage.removeItem("accessToken");
     },
   },
 });
 
-export const { setCredentials, logout } = authSlice.actions;
+export const { setToken, setUser, logout } = authSlice.actions;
 export default authSlice.reducer;
