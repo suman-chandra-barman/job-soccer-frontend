@@ -15,11 +15,16 @@ export function EmployerCard({ employer }: { employer: IEmployer }) {
   const [followEmployer, { isLoading: isFollowLoading }] =
     useFollowEmployerMutation();
 
+  // Use isFollowing from API if available
+  const isFollowing = employer.isFollowing ?? false;
+
   const handleFollow = async () => {
     try {
       await followEmployer(employer._id).unwrap();
       dispatch(addToFollowing(employer._id));
-      toast.success("Followed successfully");
+      toast.success(
+        isFollowing ? "Unfollowed successfully" : "Followed successfully"
+      );
     } catch (error) {
       const err = error as { data?: { message?: string } };
       toast.error(err?.data?.message || "Failed to follow employer");
@@ -108,14 +113,16 @@ export function EmployerCard({ employer }: { employer: IEmployer }) {
           onClick={handleFollow}
           disabled={isFollowLoading}
           variant="outline"
-          className="w-1/2 hover:scale-105 transition-transform duration-200 font-semibold px-6 py-3"
+          className={`w-1/2 hover:scale-105 transition-transform duration-200 font-semibold px-6 py-3 ${
+            isFollowing ? "bg-green-50 border-green-500 text-green-700" : ""
+          }`}
         >
           {isFollowLoading ? (
-            <>Following...</>
+            <>{isFollowing ? "Unfollowing..." : "Following..."}</>
           ) : (
             <>
               <UserRoundPlus className="w-6 h-6" />
-              Follow
+              {isFollowing ? "Following" : "Follow"}
             </>
           )}
         </Button>

@@ -40,22 +40,21 @@ function MyNetworkPage() {
   const { candidates, employers } = useMemo(() => {
     if (!friendsData?.data) return { candidates: [], employers: [] };
 
-    const filteredFriends = friendsData.data.filter((item: IFriend) => {
+    const filteredFriends = friendsData.data.filter((friend: IFriend) => {
       if (selectedFilter === "all") return true;
-      if (selectedFilter === "player")
-        return item.friend.userType === "candidate";
-      if (selectedFilter === "club") return item.friend.userType === "employer";
+      if (selectedFilter === "player") return friend.userType === "candidate";
+      if (selectedFilter === "club") return friend.userType === "employer";
       return true;
     });
 
     const candidatesList: ICandidate[] = [];
     const employersList: IEmployer[] = [];
 
-    filteredFriends.forEach((item: IFriend) => {
-      if (item.friend.userType === "candidate") {
-        candidatesList.push(item.friend as unknown as ICandidate);
-      } else if (item.friend.userType === "employer") {
-        employersList.push(item.friend as unknown as IEmployer);
+    filteredFriends.forEach((friend: IFriend) => {
+      if (friend.userType === "candidate") {
+        candidatesList.push(friend as ICandidate);
+      } else if (friend.userType === "employer") {
+        employersList.push(friend as IEmployer);
       }
     });
 

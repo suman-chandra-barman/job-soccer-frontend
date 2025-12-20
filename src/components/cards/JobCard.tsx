@@ -22,6 +22,10 @@ export function JobCard({ job }: JobCardProps) {
   const [saveJob] = useSaveJobMutation();
   const [isShortlistLoading, setIsShortlistLoading] = useState(false);
 
+  // Use status indicators from API
+  const isApplied = job.isApplied ?? false;
+  const isSaved = job.isSaved ?? false;
+
   const jobData = {
     id: job._id,
     company: `${job.creator.creatorId.firstName} ${job.creator.creatorId.lastName}`,
@@ -101,7 +105,13 @@ export function JobCard({ job }: JobCardProps) {
             onClick={handleBookmarkClick}
             className="cursor-pointer hover:scale-110 transition-transform duration-200"
           >
-            <Bookmark className="w-7 h-7 hover:fill-yellow-400 hover:stroke-yellow-400 transition-colors" />
+            <Bookmark
+              className={`w-7 h-7 hover:stroke-yellow-400 transition-colors ${
+                isSaved
+                  ? "fill-yellow-400 stroke-yellow-400"
+                  : "hover:fill-yellow-400"
+              }`}
+            />
           </div>
         </div>
 
@@ -143,21 +153,28 @@ export function JobCard({ job }: JobCardProps) {
             </div>
           </div>
         </Link>
-        
+
         <div className="border-t border-gray-200 pt-4 flex gap-4 items-center">
           <Button
             variant="outline"
-            className="flex-1 hover:scale-105 transition-transform duration-200"
+            className={`flex-1 hover:scale-105 transition-transform duration-200 ${
+              isSaved ? "bg-yellow-50 border-yellow-500 text-yellow-700" : ""
+            }`}
             onClick={handleShortlistClick}
             disabled={isShortlistLoading}
           >
-            <Bookmark className="w-6 h-6" />
-            {isShortlistLoading ? "Saving..." : "Shortlist"}
+            <Bookmark className={`w-6 h-6 ${isSaved ? "fill-current" : ""}`} />
+            {isShortlistLoading ? "Saving..." : isSaved ? "Saved" : "Shortlist"}
           </Button>
           <Link href={`/jobs/${jobData.id}`} className="flex-1 ">
-            <Button className="w-full hover:scale-105 transition-transform duration-200">
+            <Button
+              className={`w-full hover:scale-105 transition-transform duration-200 ${
+                isApplied ? "bg-green-600 hover:bg-green-700" : ""
+              }`}
+              disabled={isApplied}
+            >
               <MessageCircle className="w-6 h-6" />
-              Apply
+              {isApplied ? "Applied" : "Apply"}
             </Button>
           </Link>
         </div>

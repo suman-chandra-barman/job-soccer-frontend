@@ -53,6 +53,11 @@ export interface ICandidate {
   profileImage: string | null;
   userType: string;
   profile: Profile;
+  isShortlisted?: boolean;
+  friendRequestStatus?: {
+    status: "pending" | "accepted" | "rejected";
+    type: "sent" | "received";
+  } | null;
 }
 
 export interface IEmployer {
@@ -80,23 +85,13 @@ export interface IEmployer {
   };
   activeJobCount: number;
   followerCount: number;
+  isFollowing?: boolean;
 }
 
-export interface IFriend {
-  _id: string;
-  friend: {
-    _id: string;
-    email: string;
-    role: string;
-    userType: "candidate" | "employer";
-    createdAt: string;
-    firstName?: string;
-    lastName?: string;
-    profileImage?: string | null;
-    profile?: Profile | IEmployer["profile"];
-  };
-  friendshipDate: string;
-}
+// Friend can be either a Candidate or Employer with their status indicators
+export type IFriend = (ICandidate | IEmployer) & {
+  friendshipDate?: string;
+};
 
 export interface IFriendsResponse {
   success: boolean;

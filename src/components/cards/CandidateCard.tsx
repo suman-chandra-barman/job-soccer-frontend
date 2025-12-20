@@ -28,7 +28,10 @@ function CandidateCard({ candidate }: { candidate: ICandidate }) {
   const shortlistedIds = useAppSelector(
     (state) => state.candidateShortlist.shortlistedIds
   );
-  const isShortlisted = shortlistedIds.includes(candidate._id);
+
+  // Use isShortlisted from API if available, otherwise fallback to Redux state
+  const isShortlisted =
+    candidate.isShortlisted ?? shortlistedIds.includes(candidate._id);
 
   const [shortlistCandidate, { isLoading: isShortlisting }] =
     useShortlistCandidateMutation();
@@ -39,6 +42,32 @@ function CandidateCard({ candidate }: { candidate: ICandidate }) {
   const [sendFriendRequest, { isLoading: isSendingRequest }] =
     useSendFriendRequestMutation();
 
+  // Determine button text and action based on friendRequestStatus
+  const getFriendRequestButtonProps = () => {
+    const status = candidate.friendRequestStatus;
+
+    if (!status) {
+      return { text: "Request Access", disabled: false, icon: Lock };
+    }
+
+    if (status.status === "pending" && status.type === "sent") {
+      return { text: "Request Sent", disabled: true, icon: Lock };
+    }
+
+    if (status.status === "pending" && status.type === "received") {
+      return { text: "Accept Request", disabled: false, icon: Lock };
+    }
+
+    if (status.status === "accepted") {
+      return { text: "Friends", disabled: true, icon: Lock };
+    }
+
+    if (status.status === "rejected") {
+      return { text: "Request Again", disabled: false, icon: Lock };
+    }
+
+    return { text: "Request Access", disabled: false, icon: Lock };
+  };
 
   // Handle friend request
   const handleRequestAccess = async () => {
@@ -177,10 +206,16 @@ function CandidateCard({ candidate }: { candidate: ICandidate }) {
               size="sm"
               className="w-full text-xs bg-transparent hover:scale-105"
               onClick={handleRequestAccess}
-              disabled={isSendingRequest}
+              disabled={
+                isSendingRequest || getFriendRequestButtonProps().disabled
+              }
             >
-              <Lock className="w-3 h-3 mr-1" />
-              {isSendingRequest ? "Sending..." : "Request Access"}
+              {React.createElement(getFriendRequestButtonProps().icon, {
+                className: "w-3 h-3 mr-1",
+              })}
+              {isSendingRequest
+                ? "Sending..."
+                : getFriendRequestButtonProps().text}
             </Button>
 
             <StartChatButton

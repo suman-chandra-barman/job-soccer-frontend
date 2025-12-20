@@ -36,6 +36,8 @@ export interface TJob {
   createdAt: string;
   updatedAt: string;
   __v?: number;
+  isApplied?: boolean;
+  isSaved?: boolean;
 }
 
 export interface TJobCountByRole {
