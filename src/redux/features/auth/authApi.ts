@@ -1,5 +1,5 @@
 import { baseApi } from "@/redux/api/baseApi";
-import { setToken, setUser } from "./authSlice";
+import { logout, setToken, setUser } from "./authSlice";
 
 const authApi = baseApi.injectEndpoints({
   endpoints: (builder) => ({
@@ -24,6 +24,7 @@ const authApi = baseApi.injectEndpoints({
           console.error("Email verification failed:", error);
         }
       },
+      invalidatesTags: ["User"],
     }),
 
     // SIGNUP
@@ -33,6 +34,19 @@ const authApi = baseApi.injectEndpoints({
         method: "POST",
         body: userInfo,
       }),
+      async onQueryStarted(arg, { queryFulfilled, dispatch }) {
+        try {
+          const { data } = await queryFulfilled;
+          if (data?.success) {
+            dispatch(logout());
+          } else {
+            console.warn("No token found in verification response:", data);
+          }
+        } catch (error) {
+          console.error("Email verification failed:", error);
+        }
+      },
+      invalidatesTags: ["User"],
     }),
 
     // EMAIL VERIFICATION
@@ -55,6 +69,7 @@ const authApi = baseApi.injectEndpoints({
           console.error("Email verification failed:", error);
         }
       },
+      invalidatesTags: ["User"],
     }),
 
     // RESEND OTP
