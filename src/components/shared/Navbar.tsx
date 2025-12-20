@@ -246,7 +246,7 @@ export function Navbar() {
   // Check if user has token from Redux store
   const token = useAppSelector((state) => state.auth.token);
   const hasToken = !!token;
-  const { data: user } = useGetMeQuery(null, {
+  const { data: user, isLoading: isLoadingUser } = useGetMeQuery(null, {
     skip: !hasToken,
   });
 
@@ -344,8 +344,10 @@ export function Navbar() {
           </nav>
 
           {/* Desktop User Menu */}
-          <div className="hidden lg:flex justify-end">
-            {isLoggedIn ? (
+          <div className="hidden lg:flex justify-end min-w-[100px]">
+            {hasToken && isLoadingUser ? (
+              <div className="w-11 h-11 rounded-full bg-gray-200 animate-pulse" />
+            ) : isLoggedIn ? (
               <UserProfileMenu
                 profileImageUrl={profileImageUrl}
                 userName={user?.data?.firstName}
@@ -369,7 +371,9 @@ export function Navbar() {
         <SheetContent side="left" className="w-[300px] sm:w-[400px]">
           <SheetHeader className="border-b">
             <SheetTitle className="text-left">
-              {isLoggedIn ? (
+              {hasToken && isLoadingUser ? (
+                <div className="w-13 h-13 rounded-full bg-gray-200 animate-pulse" />
+              ) : isLoggedIn ? (
                 <UserProfileMenu
                   profileImageUrl={profileImageUrl}
                   userName={user?.data?.firstName}

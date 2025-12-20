@@ -8,7 +8,10 @@ import { Toaster } from "sonner";
 const Providers = ({ children }: { children: React.ReactNode }) => {
   return (
     <Provider store={store}>
-      <PersistGate loading={null} persistor={persistor}>
+      <PersistGate
+        loading={<div className="min-h-screen" />}
+        persistor={persistor}
+      >
         <Toaster position="top-center" />
         {children}
       </PersistGate>
