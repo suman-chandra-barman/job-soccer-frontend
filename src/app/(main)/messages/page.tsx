@@ -67,6 +67,7 @@ export default function MessagesPage() {
   const fileInputRef = useRef<HTMLInputElement>(null);
   const typingTimeoutRef = useRef<NodeJS.Timeout | null>(null);
   const selectedConversationRef = useRef<string | null>(null);
+  const isInitialLoadRef = useRef<boolean>(true);
 
   // Keep ref in sync with state
   useEffect(() => {
@@ -267,6 +268,9 @@ export default function MessagesPage() {
   // Fetch messages for selected conversation
   useEffect(() => {
     if (selectedConversation && token) {
+      // Reset initial load flag when conversation changes
+      isInitialLoadRef.current = true;
+
       const fetchMessages = async () => {
         setLoadingMessages(true);
         try {
@@ -298,9 +302,16 @@ export default function MessagesPage() {
   }, [selectedConversation, token]);
 
   useEffect(() => {
-    // Scroll to bottom when new messages arrive
-    if (messages.length > 0) {
-      messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+    // Scroll to bottom when messages change
+    if (messages.length > 0 && messagesEndRef.current) {
+      // Use instant scroll for initial load, smooth for new messages
+      const behavior = isInitialLoadRef.current ? "auto" : "smooth";
+      messagesEndRef.current.scrollIntoView({ behavior });
+
+      // After first scroll, set to false so subsequent messages scroll smoothly
+      if (isInitialLoadRef.current) {
+        isInitialLoadRef.current = false;
+      }
     }
   }, [messages.length]); // Only scroll when message count changes
 
@@ -631,7 +642,7 @@ export default function MessagesPage() {
             {/* Messages */}
             <ScrollArea className="flex-1 p-2 md:p-4 overflow-y-auto">
               {loadingMessages ? (
-                <div className="flex items-center justify-center h-full">
+                <div className="flex items-center justify-center h-[500px]">
                   <Loader2 className="h-8 w-8 animate-spin text-gray-500" />
                 </div>
               ) : isBlocked ? (
