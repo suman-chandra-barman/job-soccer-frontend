@@ -176,7 +176,7 @@ export function JobCard({ job }: JobCardProps) {
       </div>
 
       {/* Applicant avatars */}
-      <Link href={`/jobs/${jobData.id}`} className="cursor-pointer">
+      <Link href={`/jobs/${jobData.id}`} className="cursor-pointer" title="View Job Details">
         <div className="flex items-center gap-2 mb-4">
           <div className="flex -space-x-4">
             {jobData.applicantImages.map((image, index: number) => (
