@@ -222,7 +222,7 @@ function CandidateCard({ candidate }: { candidate: ICandidate }) {
               {isShortlisting || isRemoving ? (
                 <>
                   <span className="w-3 h-3 mr-1 border-2 border-gray-400 border-t-transparent rounded-full animate-spin" />
-                  {isShortlisted ? "Removing..." : "Adding..."}
+                  {isShortlisted ? "Adding..." : "Removing..."}
                 </>
               ) : (
                 <>

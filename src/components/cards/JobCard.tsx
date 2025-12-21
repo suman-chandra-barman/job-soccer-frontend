@@ -20,22 +20,22 @@ import { useAppDispatch } from "@/redux/hooks";
 import UploadResumeModal from "@/components/modals/UploadResumeModal";
 import { toast } from "sonner";
 import { useState } from "react";
+import { Spinner } from "../ui/spinner";
 
 type JobCardProps = {
   job: TJob;
 };
 
 export function JobCard({ job }: JobCardProps) {
-  const dispatch = useAppDispatch();
-  const [saveJob] = useSaveJobMutation();
-  const [unsaveJob] = useUnsaveJobMutation();
-  const [applyJob, { isLoading: isApplying }] = useApplyJobMutation();
-  const [isShortlistLoading, setIsShortlistLoading] = useState(false);
   const [showResumeModal, setShowResumeModal] = useState(false);
-
-  // Local state for optimistic updates
   const [localIsSaved, setLocalIsSaved] = useState<boolean | null>(null);
   const [localIsApplied, setLocalIsApplied] = useState<boolean | null>(null);
+
+  const [saveJob, { isLoading: isSavingLoading }] = useSaveJobMutation();
+  const [unsaveJob, { isLoading: isUnsavingLoading }] = useUnsaveJobMutation();
+  const [applyJob, { isLoading: isApplyingLoading }] = useApplyJobMutation();
+
+  const dispatch = useAppDispatch();
 
   // Use local state if available, otherwise use API data
   const isApplied = localIsApplied ?? job.isApplied ?? false;
@@ -86,7 +86,6 @@ export function JobCard({ job }: JobCardProps) {
   const handleShortlistClick = async (e: React.MouseEvent) => {
     e.preventDefault();
     e.stopPropagation();
-    setIsShortlistLoading(true);
 
     const previousState = isSaved;
     const willBeSaved = !isSaved;
@@ -112,8 +111,6 @@ export function JobCard({ job }: JobCardProps) {
         error.data?.message || "Failed to update job. Please try again."
       );
       console.error("Failed to update job:", error);
-    } finally {
-      setIsShortlistLoading(false);
     }
   };
 
@@ -176,7 +173,11 @@ export function JobCard({ job }: JobCardProps) {
       </div>
 
       {/* Applicant avatars */}
-      <Link href={`/jobs/${jobData.id}`} className="cursor-pointer" title="View Job Details">
+      <Link
+        href={`/jobs/${jobData.id}`}
+        className="cursor-pointer"
+        title="View Job Details"
+      >
         <div className="flex items-center gap-2 mb-4">
           <div className="flex -space-x-4">
             {jobData.applicantImages.map((image, index: number) => (
@@ -222,24 +223,37 @@ export function JobCard({ job }: JobCardProps) {
             isSaved ? "bg-green-50 border-green-500 text-green-700" : ""
           }`}
           onClick={handleShortlistClick}
-          disabled={isShortlistLoading}
+          disabled={isSavingLoading || isUnsavingLoading}
         >
-          <Bookmark className={`w-6 h-6 ${isSaved ? "fill-current" : ""}`} />
-          {isShortlistLoading
-            ? "Loading..."
-            : isSaved
-            ? "Shortlisted"
-            : "Shortlist"}
+          {isSavingLoading || isUnsavingLoading ? (
+            <>
+              <Spinner />
+              {isSavingLoading ? "Adding..." : "Removing..."}
+            </>
+          ) : (
+            <>
+              <Bookmark
+                className={`w-6 h-6 ${isSaved ? "fill-current" : ""}`}
+              />
+              {isSaved ? "Shortlisted" : "Shortlist"}
+            </>
+          )}
         </Button>
         <Button
           className={`flex-1 hover:scale-105 transition-transform duration-200 ${
             isApplied ? "bg-green-600 hover:bg-green-700" : ""
           }`}
-          disabled={isApplied || isApplying}
+          disabled={isApplied || isApplyingLoading}
           onClick={handleApplyClick}
         >
-          <MessageCircle className="w-6 h-6" />
-          {isApplying ? "Loading..." : isApplied ? "Applied" : "Apply"}
+          {isApplyingLoading ? (
+            <>
+              <Spinner />
+              Applying...
+            </>
+          ) : (
+            <>{isApplied ? "Applied" : "Apply"}</>
+          )}
         </Button>
       </div>
 
