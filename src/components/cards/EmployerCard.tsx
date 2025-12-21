@@ -1,12 +1,19 @@
+import React from "react";
 import { MapPin, ShieldCheck, Star, UserRoundPlus, Users } from "lucide-react";
 import Image from "next/image";
 import { Button } from "../ui/button";
 import { StartChatButton } from "../messaging/StartChatButton";
 import { IEmployer } from "@/types/user";
 import { Avatar, AvatarFallback } from "../ui/avatar";
-import { useFollowEmployerMutation } from "@/redux/features/follow/followApi";
+import {
+  useFollowEmployerMutation,
+  useUnfollowEmployerMutation,
+} from "@/redux/features/follow/followApi";
 import { useAppDispatch } from "@/redux/hooks";
-import { addToFollowing } from "@/redux/features/follow/followSlice";
+import {
+  addToFollowing,
+  removeFromFollowing,
+} from "@/redux/features/follow/followSlice";
 import { toast } from "sonner";
 
 export function EmployerCard({ employer }: { employer: IEmployer }) {
@@ -14,20 +21,44 @@ export function EmployerCard({ employer }: { employer: IEmployer }) {
 
   const [followEmployer, { isLoading: isFollowLoading }] =
     useFollowEmployerMutation();
+  const [unfollowEmployer, { isLoading: isUnfollowLoading }] =
+    useUnfollowEmployerMutation();
 
-  // Use isFollowing from API if available
-  const isFollowing = employer.isFollowing ?? false;
+  // Local state for optimistic updates
+  const [localIsFollowing, setLocalIsFollowing] = React.useState<
+    boolean | null
+  >(null);
+
+  // Use local state if available, otherwise use API data
+  const isFollowing = localIsFollowing ?? employer.isFollowing ?? false;
+  const isLoading = isFollowLoading || isUnfollowLoading;
 
   const handleFollow = async () => {
+    const previousState = isFollowing;
+
     try {
-      await followEmployer(employer._id).unwrap();
-      dispatch(addToFollowing(employer._id));
-      toast.success(
-        isFollowing ? "Unfollowed successfully" : "Followed successfully"
-      );
+      // Optimistic update
+      setLocalIsFollowing(!isFollowing);
+
+      if (isFollowing) {
+        // Unfollow
+        await unfollowEmployer(employer._id).unwrap();
+        dispatch(removeFromFollowing(employer._id));
+        toast.success("Unfollowed successfully");
+      } else {
+        // Follow
+        await followEmployer(employer._id).unwrap();
+        dispatch(addToFollowing(employer._id));
+        toast.success("Followed successfully");
+      }
     } catch (error) {
+      // Revert on error
+      setLocalIsFollowing(previousState);
       const err = error as { data?: { message?: string } };
-      toast.error(err?.data?.message || "Failed to follow employer");
+      toast.error(
+        err?.data?.message ||
+          `Failed to ${isFollowing ? "unfollow" : "follow"} employer`
+      );
     }
   };
   // Get profile image URL
@@ -111,18 +142,18 @@ export function EmployerCard({ employer }: { employer: IEmployer }) {
       <div className="border-t border-gray-200 pt-4 flex gap-2 items-center mt-auto">
         <Button
           onClick={handleFollow}
-          disabled={isFollowLoading}
+          disabled={isLoading}
           variant="outline"
           className={`w-1/2 hover:scale-105 transition-transform duration-200 font-semibold px-6 py-3 ${
             isFollowing ? "bg-green-50 border-green-500 text-green-700" : ""
           }`}
         >
-          {isFollowLoading ? (
+          {isLoading ? (
             <>{isFollowing ? "Unfollowing..." : "Following..."}</>
           ) : (
             <>
               <UserRoundPlus className="w-6 h-6" />
-              {isFollowing ? "Following" : "Follow"}
+              {isFollowing ? "Unfollow" : "Follow"}
             </>
           )}
         </Button>

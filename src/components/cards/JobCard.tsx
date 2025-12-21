@@ -10,7 +10,14 @@ import user2 from "@/assets/candidates/user2.png";
 import user3 from "@/assets/candidates/user3.png";
 import user4 from "@/assets/candidates/user4.png";
 import { formatTimeAgo } from "@/lib/utils";
-import { useSaveJobMutation } from "@/redux/features/savedJobs/savedJobsApi";
+import {
+  useSaveJobMutation,
+  useUnsaveJobMutation,
+} from "@/redux/features/savedJobs/savedJobsApi";
+import { useApplyJobMutation } from "@/redux/features/jobApplication/jobApplicationApi";
+import { addAppliedJob } from "@/redux/features/jobApplication/jobApplicationSlice";
+import { useAppDispatch } from "@/redux/hooks";
+import UploadResumeModal from "@/components/modals/UploadResumeModal";
 import { toast } from "sonner";
 import { useState } from "react";
 
@@ -19,12 +26,20 @@ type JobCardProps = {
 };
 
 export function JobCard({ job }: JobCardProps) {
+  const dispatch = useAppDispatch();
   const [saveJob] = useSaveJobMutation();
+  const [unsaveJob] = useUnsaveJobMutation();
+  const [applyJob, { isLoading: isApplying }] = useApplyJobMutation();
   const [isShortlistLoading, setIsShortlistLoading] = useState(false);
+  const [showResumeModal, setShowResumeModal] = useState(false);
 
-  // Use status indicators from API
-  const isApplied = job.isApplied ?? false;
-  const isSaved = job.isSaved ?? false;
+  // Local state for optimistic updates
+  const [localIsSaved, setLocalIsSaved] = useState<boolean | null>(null);
+  const [localIsApplied, setLocalIsApplied] = useState<boolean | null>(null);
+
+  // Use local state if available, otherwise use API data
+  const isApplied = localIsApplied ?? job.isApplied ?? false;
+  const isSaved = localIsSaved ?? job.isSaved ?? false;
 
   const jobData = {
     id: job._id,
@@ -43,12 +58,24 @@ export function JobCard({ job }: JobCardProps) {
     e.preventDefault();
     e.stopPropagation();
 
+    const previousState = isSaved;
+    const willBeSaved = !isSaved;
+
     try {
-      const result = await saveJob(jobData.id).unwrap();
+      // Optimistic update
+      setLocalIsSaved(willBeSaved);
+
+      const result = isSaved
+        ? await unsaveJob(jobData.id).unwrap()
+        : await saveJob(jobData.id).unwrap();
       if (result.success) {
-        toast.success("Job saved successfully!");
+        toast.success(
+          willBeSaved ? "Job saved successfully!" : "Job unsaved successfully!"
+        );
       }
     } catch (error: any) {
+      // Revert on error
+      setLocalIsSaved(previousState);
       toast.error(
         error.data?.message || "Failed to save job. Please try again."
       );
@@ -61,124 +88,167 @@ export function JobCard({ job }: JobCardProps) {
     e.stopPropagation();
     setIsShortlistLoading(true);
 
+    const previousState = isSaved;
+    const willBeSaved = !isSaved;
+
     try {
-      const result = await saveJob(jobData.id).unwrap();
+      // Optimistic update
+      setLocalIsSaved(willBeSaved);
+
+      const result = isSaved
+        ? await unsaveJob(jobData.id).unwrap()
+        : await saveJob(jobData.id).unwrap();
       if (result.success) {
-        toast.success("Job saved successfully!");
+        toast.success(
+          willBeSaved
+            ? "Job shortlisted successfully!"
+            : "Job removed from shortlist!"
+        );
       }
     } catch (error: any) {
+      // Revert on error
+      setLocalIsSaved(previousState);
       toast.error(
-        error.data?.message || "Failed to save job. Please try again."
+        error.data?.message || "Failed to update job. Please try again."
       );
-      console.error("Failed to save job:", error);
+      console.error("Failed to update job:", error);
     } finally {
       setIsShortlistLoading(false);
     }
   };
 
+  const handleApplyClick = (e: React.MouseEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    setShowResumeModal(true);
+  };
+
+  const handleResumeSubmitSuccess = async (resumeUrl: string) => {
+    try {
+      const result = await applyJob({ jobId: jobData.id, resumeUrl }).unwrap();
+      dispatch(addAppliedJob(result.data));
+      setLocalIsApplied(true);
+      toast.success("Application submitted successfully!");
+    } catch (error: any) {
+      const errorMessage =
+        error.data?.message || "Failed to apply. Please try again.";
+      toast.error(errorMessage);
+      console.error("Failed to apply:", error);
+    }
+  };
+
   return (
-    <>
-      <div className="bg-linear-to-br from-white to-[#FDF9E3] rounded-xl p-4 shadow-sm border border-gray-100">
-        <div className="flex items-center gap-3 mb-4 border-b border-gray-200 pb-4">
-          <Link
-            href={`/jobs/${jobData.id}`}
-            className="w-12 h-12 rounded-xl flex items-center justify-center border border-gray-200 bg-white"
-          >
-            <Image
-              src={jobData.image || employerLogo}
-              alt="Logo"
-              className="object-contain rounded-xl"
-              width={48}
-              height={48}
-            />
-          </Link>
-          <div className="flex-1 min-w-0">
-            <h3 className="font-semibold text-gray-900 xl:text-lg">
-              {jobData.company}
-            </h3>
-            <div className="flex items-center gap-1 text-gray-500 text-sm mt-1">
-              <MapPin className="w-4 h-4" />
-              <span>{jobData.location}</span>
-            </div>
-          </div>
-          <div
-            onClick={handleBookmarkClick}
-            className="cursor-pointer hover:scale-110 transition-transform duration-200"
-          >
-            <Bookmark
-              className={`w-7 h-7 hover:stroke-yellow-400 transition-colors ${
-                isSaved
-                  ? "fill-yellow-400 stroke-yellow-400"
-                  : "hover:fill-yellow-400"
-              }`}
-            />
+    <div className="bg-linear-to-br from-white to-[#FDF9E3] rounded-xl p-4 shadow-sm border border-gray-100">
+      <div className="flex items-center gap-3 mb-4 border-b border-gray-200 pb-4">
+        <Link
+          href={`/jobs/${jobData.id}`}
+          className="w-12 h-12 rounded-xl flex items-center justify-center border border-gray-200 bg-white"
+        >
+          <Image
+            src={jobData.image || employerLogo}
+            alt="Logo"
+            className="object-contain rounded-xl"
+            width={48}
+            height={48}
+          />
+        </Link>
+        <div className="flex-1 min-w-0">
+          <h3 className="font-semibold text-gray-900 xl:text-lg">
+            {jobData.company}
+          </h3>
+          <div className="flex items-center gap-1 text-gray-500 text-sm mt-1">
+            <MapPin className="w-4 h-4" />
+            <span>{jobData.location}</span>
           </div>
         </div>
-
-        {/* Applicant avatars */}
-        <Link href={`/jobs/${jobData.id}`} className="cursor-pointer">
-          <div className="flex items-center gap-2 mb-4">
-            <div className="flex -space-x-4">
-              {jobData.applicantImages.map((image, index: number) => (
-                <div key={index} className="relative">
-                  <Image
-                    src={image || "/placeholder.svg"}
-                    alt={`Applicant ${index + 1}`}
-                    className="w-8 h-8 rounded-full border-2 border-white object-cover"
-                  />
-                </div>
-              ))}
-              <div className="relative w-8 h-8 rounded-full bg-yellow-300 flex items-center justify-center text-white text-sm font-semibold">
-                +
-              </div>
-            </div>
-          </div>
-
-          {/* Bottom section with applicant count, salary, and time */}
-          <div className="flex items-center justify-between mb-4">
-            <div className="flex flex-col gap-1">
-              <span className="text-gray-600 text-sm">
-                {jobData.applicantCount} Applicant
-              </span>
-              <div className="flex items-center gap-1 text-gray-400 text-xs">
-                <Clock className="w-3 h-3" />
-                <span>{jobData.postedTime}</span>
-              </div>
-            </div>
-            <div className="text-right">
-              <div className="text-xl xl:text-2xl font-bold text-gray-900">
-                {jobData.salary}
-              </div>
-              <div className="text-gray-500 text-sm">/mo</div>
-            </div>
-          </div>
-        </Link>
-
-        <div className="border-t border-gray-200 pt-4 flex gap-4 items-center">
-          <Button
-            variant="outline"
-            className={`flex-1 hover:scale-105 transition-transform duration-200 ${
-              isSaved ? "bg-yellow-50 border-yellow-500 text-yellow-700" : ""
+        <div
+          onClick={handleBookmarkClick}
+          className="cursor-pointer hover:scale-110 transition-transform duration-200"
+        >
+          <Bookmark
+            className={`w-7 h-7 hover:stroke-yellow-400 transition-colors ${
+              isSaved
+                ? "fill-yellow-400 stroke-yellow-400"
+                : "hover:fill-yellow-400"
             }`}
-            onClick={handleShortlistClick}
-            disabled={isShortlistLoading}
-          >
-            <Bookmark className={`w-6 h-6 ${isSaved ? "fill-current" : ""}`} />
-            {isShortlistLoading ? "Saving..." : isSaved ? "Saved" : "Shortlist"}
-          </Button>
-          <Link href={`/jobs/${jobData.id}`} className="flex-1 ">
-            <Button
-              className={`w-full hover:scale-105 transition-transform duration-200 ${
-                isApplied ? "bg-green-600 hover:bg-green-700" : ""
-              }`}
-              disabled={isApplied}
-            >
-              <MessageCircle className="w-6 h-6" />
-              {isApplied ? "Applied" : "Apply"}
-            </Button>
-          </Link>
+          />
         </div>
       </div>
-    </>
+
+      {/* Applicant avatars */}
+      <Link href={`/jobs/${jobData.id}`} className="cursor-pointer">
+        <div className="flex items-center gap-2 mb-4">
+          <div className="flex -space-x-4">
+            {jobData.applicantImages.map((image, index: number) => (
+              <div key={index} className="relative">
+                <Image
+                  src={image || "/placeholder.svg"}
+                  alt={`Applicant ${index + 1}`}
+                  className="w-8 h-8 rounded-full border-2 border-white object-cover"
+                />
+              </div>
+            ))}
+            <div className="relative w-8 h-8 rounded-full bg-yellow-300 flex items-center justify-center text-white text-sm font-semibold">
+              +
+            </div>
+          </div>
+        </div>
+
+        {/* Bottom section with applicant count, salary, and time */}
+        <div className="flex items-center justify-between mb-4">
+          <div className="flex flex-col gap-1">
+            <span className="text-gray-600 text-sm">
+              {jobData.applicantCount} Applicant
+            </span>
+            <div className="flex items-center gap-1 text-gray-400 text-xs">
+              <Clock className="w-3 h-3" />
+              <span>{jobData.postedTime}</span>
+            </div>
+          </div>
+          <div className="text-right">
+            <div className="text-xl xl:text-2xl font-bold text-gray-900">
+              {jobData.salary}
+            </div>
+            <div className="text-gray-500 text-sm">/mo</div>
+          </div>
+        </div>
+      </Link>
+
+      {/* action buttons */}
+      <div className="border-t border-gray-200 pt-4 flex gap-4 items-center">
+        <Button
+          variant="outline"
+          className={`flex-1 hover:scale-105 transition-transform duration-200 ${
+            isSaved ? "bg-green-50 border-green-500 text-green-700" : ""
+          }`}
+          onClick={handleShortlistClick}
+          disabled={isShortlistLoading}
+        >
+          <Bookmark className={`w-6 h-6 ${isSaved ? "fill-current" : ""}`} />
+          {isShortlistLoading
+            ? "Loading..."
+            : isSaved
+            ? "Shortlisted"
+            : "Shortlist"}
+        </Button>
+        <Button
+          className={`flex-1 hover:scale-105 transition-transform duration-200 ${
+            isApplied ? "bg-green-600 hover:bg-green-700" : ""
+          }`}
+          disabled={isApplied || isApplying}
+          onClick={handleApplyClick}
+        >
+          <MessageCircle className="w-6 h-6" />
+          {isApplying ? "Loading..." : isApplied ? "Applied" : "Apply"}
+        </Button>
+      </div>
+
+      <UploadResumeModal
+        isOpen={showResumeModal}
+        onClose={() => setShowResumeModal(false)}
+        jobId={jobData.id}
+        onSubmitSuccess={handleResumeSubmitSuccess}
+      />
+    </div>
   );
 }

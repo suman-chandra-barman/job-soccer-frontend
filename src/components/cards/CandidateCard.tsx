@@ -29,9 +29,21 @@ function CandidateCard({ candidate }: { candidate: ICandidate }) {
     (state) => state.candidateShortlist.shortlistedIds
   );
 
-  // Use isShortlisted from API if available, otherwise fallback to Redux state
+  // Local state for optimistic updates
+  const [localIsShortlisted, setLocalIsShortlisted] = useState<boolean | null>(
+    null
+  );
+  const [localFriendRequestStatus, setLocalFriendRequestStatus] = useState<
+    typeof candidate.friendRequestStatus | null
+  >(null);
+
+  // Use local state if available, otherwise use API data or Redux state
   const isShortlisted =
-    candidate.isShortlisted ?? shortlistedIds.includes(candidate._id);
+    localIsShortlisted ??
+    candidate.isShortlisted ??
+    shortlistedIds.includes(candidate._id);
+  const friendRequestStatus =
+    localFriendRequestStatus ?? candidate.friendRequestStatus;
 
   const [shortlistCandidate, { isLoading: isShortlisting }] =
     useShortlistCandidateMutation();
@@ -44,7 +56,7 @@ function CandidateCard({ candidate }: { candidate: ICandidate }) {
 
   // Determine button text and action based on friendRequestStatus
   const getFriendRequestButtonProps = () => {
-    const status = candidate.friendRequestStatus;
+    const status = friendRequestStatus;
 
     if (!status) {
       return { text: "Request Access", disabled: false, icon: Lock };
@@ -71,17 +83,38 @@ function CandidateCard({ candidate }: { candidate: ICandidate }) {
 
   // Handle friend request
   const handleRequestAccess = async () => {
+    const currentStatus = friendRequestStatus;
+
     try {
+      // Optimistic update based on current status
+      if (!currentStatus || currentStatus.status === "rejected") {
+        // Sending new request
+        setLocalFriendRequestStatus({ status: "pending", type: "sent" });
+      } else if (
+        currentStatus.status === "pending" &&
+        currentStatus.type === "received"
+      ) {
+        // Accepting received request
+        setLocalFriendRequestStatus({ status: "accepted", type: "received" });
+      }
+
       await sendFriendRequest(candidate._id).unwrap();
       toast.success("Friend request sent successfully");
     } catch (error) {
+      // Revert on error
+      setLocalFriendRequestStatus(currentStatus);
       const err = error as { data?: { message?: string } };
       toast.error(err?.data?.message || "Failed to send friend request");
     }
   };
 
   const handleShortlist = async () => {
+    const previousState = isShortlisted;
+
     try {
+      // Optimistic update
+      setLocalIsShortlisted(!isShortlisted);
+
       if (isShortlisted) {
         await removeFromShortlistApi(candidate._id).unwrap();
         dispatch(removeFromShortlist(candidate._id));
@@ -92,6 +125,8 @@ function CandidateCard({ candidate }: { candidate: ICandidate }) {
         toast.success("Added to shortlist");
       }
     } catch (error) {
+      // Revert on error
+      setLocalIsShortlisted(previousState);
       const err = error as { data?: { message?: string } };
       toast.error(err?.data?.message || "Failed to update shortlist");
     }
