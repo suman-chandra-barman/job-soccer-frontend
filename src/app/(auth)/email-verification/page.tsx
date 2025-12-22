@@ -19,9 +19,8 @@ import { Spinner } from "@/components/ui/spinner";
 function EmailVerificationPageContent() {
   // local state
   const [otp, setOtp] = useState<string[]>(["", "", "", "", "", ""]);
-  const [resendTimer, setResendTimer] = useState(30);
 
-  // api 
+  // api
   const [emailVerify, { isLoading }] = useEmailVerifyMutation();
   const [resendOtp, { isLoading: isResending }] = useResendOtpMutation();
 
@@ -59,13 +58,6 @@ function EmailVerificationPageContent() {
     }
   }, [user, router, reason]);
 
-  useEffect(() => {
-    if (resendTimer > 0) {
-      const timer = setTimeout(() => setResendTimer(resendTimer - 1), 1000);
-      return () => clearTimeout(timer);
-    }
-  }, [resendTimer]);
-
   const handleOtpChange = (index: number, value: string) => {
     if (value.length <= 1 && /^\d*$/.test(value)) {
       const newOtp = [...otp];
@@ -90,7 +82,6 @@ function EmailVerificationPageContent() {
 
     try {
       await resendOtp({ email, reason }).unwrap();
-      setResendTimer(10);
       toast.success("Verification code resent successfully!");
     } catch (error: any) {
       toast.error("Failed to resend verification code. Please try again.");
@@ -121,21 +112,19 @@ function EmailVerificationPageContent() {
       if (res.success) {
         toast.success("Email verified successfully!");
 
-        // if (user?.data.userType) {
-        //   if (user.data.userType === "candidate")
-        //     router.push(`/signup/candidate`);
-        //   else router.push(`/signup/employer`);
-        // }
+        if (user?.data.userType) {
+          if (user.data.userType === "candidate")
+            router.push(`/signup/candidate`);
+          else router.push(`/signup/employer`);
+        }
 
         // Redirect based on reason
         if (reason === "password_reset") {
-          // Redirect to create new password page with reset token
           const resetToken = res.data;
           router.push(
             `/create-new-password?token=${encodeURIComponent(resetToken)}`
           );
         }
-        // For account_verification, the useEffect will handle redirection
       }
     } catch (error) {
       toast.error("Failed to verify email. Please try again.");
@@ -197,12 +186,10 @@ function EmailVerificationPageContent() {
               </p>
               <button
                 onClick={handleResendCode}
-                disabled={resendTimer > 0 || isResending || !email}
-                className="text-sm text-gray-400 hover:text-gray-600 cursor-pointer disabled:cursor-not-allowed"
+                disabled={isResending || !email}
+                className="text-sm text-gray-600 hover:text-gray-800 cursor-pointer"
               >
-                {isResending
-                  ? "Resending..."
-                  : `Resend Code ${resendTimer > 0 ? `(${resendTimer}s)` : ""}`}
+                {isResending ? "Resending..." : "Resend Code"}
               </button>
             </div>
 
