@@ -40,7 +40,7 @@ export function LoginRequiredModal({
             Cancel
           </Button>
           <Button type="button" onClick={onLogin}>
-            Login Now
+            Login
           </Button>
         </DialogFooter>
       </DialogContent>
