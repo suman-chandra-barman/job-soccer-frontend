@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { Bookmark, Clock, MapPin, MessageCircle } from "lucide-react";
+import { Bookmark, Clock, MapPin } from "lucide-react";
 import { TJob } from "@/types/job";
 import Image from "next/image";
 import employerLogo from "@/assets/employers/compony logo.png";
@@ -10,6 +10,8 @@ import user2 from "@/assets/candidates/user2.png";
 import user3 from "@/assets/candidates/user3.png";
 import user4 from "@/assets/candidates/user4.png";
 import { formatTimeAgo } from "@/lib/utils";
+import { useAuthCheck } from "@/hooks/useAuthCheck";
+import { LoginRequiredModal } from "../modals/LoginRequiredModal";
 import {
   useSaveJobMutation,
   useUnsaveJobMutation,
@@ -30,6 +32,8 @@ export function JobCard({ job }: JobCardProps) {
   const [showResumeModal, setShowResumeModal] = useState(false);
   const [localIsSaved, setLocalIsSaved] = useState<boolean | null>(null);
   const [localIsApplied, setLocalIsApplied] = useState<boolean | null>(null);
+  const { checkAuth, showLoginModal, handleLogin, handleCloseModal } =
+    useAuthCheck();
 
   const [saveJob, { isLoading: isSavingLoading }] = useSaveJobMutation();
   const [unsaveJob, { isLoading: isUnsavingLoading }] = useUnsaveJobMutation();
@@ -58,6 +62,16 @@ export function JobCard({ job }: JobCardProps) {
     e.preventDefault();
     e.stopPropagation();
 
+    if (
+      !checkAuth(async () => {
+        await handleBookmarkLogic();
+      })
+    ) {
+      return;
+    }
+  };
+
+  const handleBookmarkLogic = async () => {
     const previousState = isSaved;
     const willBeSaved = !isSaved;
 
@@ -87,6 +101,16 @@ export function JobCard({ job }: JobCardProps) {
     e.preventDefault();
     e.stopPropagation();
 
+    if (
+      !checkAuth(async () => {
+        await handleShortlistLogic();
+      })
+    ) {
+      return;
+    }
+  };
+
+  const handleShortlistLogic = async () => {
     const previousState = isSaved;
     const willBeSaved = !isSaved;
 
@@ -117,7 +141,14 @@ export function JobCard({ job }: JobCardProps) {
   const handleApplyClick = (e: React.MouseEvent) => {
     e.preventDefault();
     e.stopPropagation();
-    setShowResumeModal(true);
+
+    if (
+      !checkAuth(() => {
+        setShowResumeModal(true);
+      })
+    ) {
+      return;
+    }
   };
 
   const handleResumeSubmitSuccess = async (resumeUrl: string) => {
@@ -262,6 +293,14 @@ export function JobCard({ job }: JobCardProps) {
         onClose={() => setShowResumeModal(false)}
         jobId={jobData.id}
         onSubmitSuccess={handleResumeSubmitSuccess}
+      />
+
+      {/* Login Required Modal */}
+      <LoginRequiredModal
+        isOpen={showLoginModal}
+        onClose={handleCloseModal}
+        onLogin={handleLogin}
+        message="Please log in to apply for jobs or save them to your shortlist."
       />
     </div>
   );

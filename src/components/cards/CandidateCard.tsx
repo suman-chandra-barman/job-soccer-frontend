@@ -5,6 +5,8 @@ import { FaPlayCircle } from "react-icons/fa";
 import { Button } from "../ui/button";
 import { StartChatButton } from "../messaging/StartChatButton";
 import { ICandidate } from "@/types/user";
+import { useAuthCheck } from "@/hooks/useAuthCheck";
+import { LoginRequiredModal } from "../modals/LoginRequiredModal";
 import { Avatar, AvatarFallback } from "../ui/avatar";
 import Image from "next/image";
 import Link from "next/link";
@@ -20,7 +22,6 @@ import {
 import { toast } from "sonner";
 import VideoPlayerModal from "../modals/VideoPlayerModal";
 import { useSendFriendRequestMutation } from "@/redux/features/user/userApi";
-import { ca } from "zod/v4/locales";
 
 function CandidateCard({ candidate }: { candidate: ICandidate }) {
   const [isVideoModalOpen, setIsVideoModalOpen] = useState(false);
@@ -28,6 +29,8 @@ function CandidateCard({ candidate }: { candidate: ICandidate }) {
   const shortlistedIds = useAppSelector(
     (state) => state.candidateShortlist.shortlistedIds
   );
+  const { checkAuth, showLoginModal, handleLogin, handleCloseModal } =
+    useAuthCheck();
 
   // Local state for optimistic updates
   const [localIsShortlisted, setLocalIsShortlisted] = useState<boolean | null>(
@@ -83,6 +86,16 @@ function CandidateCard({ candidate }: { candidate: ICandidate }) {
 
   // Handle friend request
   const handleRequestAccess = async () => {
+    if (
+      !checkAuth(async () => {
+        await handleRequestAccessLogic();
+      })
+    ) {
+      return;
+    }
+  };
+
+  const handleRequestAccessLogic = async () => {
     const currentStatus = friendRequestStatus;
 
     try {
@@ -109,6 +122,16 @@ function CandidateCard({ candidate }: { candidate: ICandidate }) {
   };
 
   const handleShortlist = async () => {
+    if (
+      !checkAuth(async () => {
+        await handleShortlistLogic();
+      })
+    ) {
+      return;
+    }
+  };
+
+  const handleShortlistLogic = async () => {
     const previousState = isShortlisted;
 
     try {
@@ -271,6 +294,14 @@ function CandidateCard({ candidate }: { candidate: ICandidate }) {
           candidateName={`${candidate.firstName} ${candidate.lastName}`}
         />
       )}
+
+      {/* Login Required Modal */}
+      <LoginRequiredModal
+        isOpen={showLoginModal}
+        onClose={handleCloseModal}
+        onLogin={handleLogin}
+        message="Please log in to interact with candidates."
+      />
     </div>
   );
 }

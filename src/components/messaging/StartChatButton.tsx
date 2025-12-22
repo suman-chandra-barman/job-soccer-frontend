@@ -10,6 +10,8 @@ import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { MessageCircle, Loader2 } from "lucide-react";
 import { chatApi } from "@/lib/chatApi";
+import { useAuthCheck } from "@/hooks/useAuthCheck";
+import { LoginRequiredModal } from "../modals/LoginRequiredModal";
 
 interface StartChatButtonProps {
   userId: string;
@@ -24,8 +26,18 @@ export function StartChatButton({
 }: StartChatButtonProps) {
   const [loading, setLoading] = useState(false);
   const router = useRouter();
+  const { checkAuth, showLoginModal, handleLogin, handleCloseModal } =
+    useAuthCheck();
 
   const handleStartChat = async () => {
+    if (!checkAuth(async () => {
+      await handleStartChatLogic();
+    })) {
+      return;
+    }
+  };
+
+  const handleStartChatLogic = async () => {
     setLoading(true);
     try {
       // Create or get existing chat with this user
@@ -41,25 +53,34 @@ export function StartChatButton({
       }
     } catch (error) {
       console.error("Failed to start chat:", error);
-      alert("Failed to start chat. Please try again.");
     } finally {
       setLoading(false);
     }
   };
 
   return (
-    <Button onClick={handleStartChat} disabled={loading} className={className}>
-      {loading ? (
-        <>
-          <Loader2 className="h-4 w-4 mr-2 animate-spin" />
-          Loading...
-        </>
-      ) : (
-        <>
-          <MessageCircle className="h-4 w-4 mr-2" />
-          Message 
-        </>
-      )}
-    </Button>
+    <>
+      <Button onClick={handleStartChat} disabled={loading} className={className}>
+        {loading ? (
+          <>
+            <Loader2 className="h-4 w-4 mr-2 animate-spin" />
+            Loading...
+          </>
+        ) : (
+          <>
+            <MessageCircle className="h-4 w-4 mr-2" />
+            Message 
+          </>
+        )}
+      </Button>
+
+      {/* Login Required Modal */}
+      <LoginRequiredModal
+        isOpen={showLoginModal}
+        onClose={handleCloseModal}
+        onLogin={handleLogin}
+        message="Please log in to send messages."
+      />
+    </>
   );
 }

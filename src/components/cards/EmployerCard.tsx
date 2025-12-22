@@ -5,6 +5,8 @@ import { Button } from "../ui/button";
 import { StartChatButton } from "../messaging/StartChatButton";
 import { IEmployer } from "@/types/user";
 import { Avatar, AvatarFallback } from "../ui/avatar";
+import { useAuthCheck } from "@/hooks/useAuthCheck";
+import { LoginRequiredModal } from "../modals/LoginRequiredModal";
 import {
   useFollowEmployerMutation,
   useUnfollowEmployerMutation,
@@ -18,6 +20,8 @@ import { toast } from "sonner";
 
 export function EmployerCard({ employer }: { employer: IEmployer }) {
   const dispatch = useAppDispatch();
+  const { checkAuth, showLoginModal, handleLogin, handleCloseModal } =
+    useAuthCheck();
 
   const [followEmployer, { isLoading: isFollowLoading }] =
     useFollowEmployerMutation();
@@ -34,6 +38,16 @@ export function EmployerCard({ employer }: { employer: IEmployer }) {
   const isLoading = isFollowLoading || isUnfollowLoading;
 
   const handleFollow = async () => {
+    if (
+      !checkAuth(async () => {
+        await handleFollowLogic();
+      })
+    ) {
+      return;
+    }
+  };
+
+  const handleFollowLogic = async () => {
     const previousState = isFollowing;
 
     try {
@@ -163,6 +177,14 @@ export function EmployerCard({ employer }: { employer: IEmployer }) {
           className="w-1/2 hover:scale-105 transition-transform duration-200 font-semibold px-6 py-3"
         />
       </div>
+
+      {/* Login Required Modal */}
+      <LoginRequiredModal
+        isOpen={showLoginModal}
+        onClose={handleCloseModal}
+        onLogin={handleLogin}
+        message="Please log in to interact with employers."
+      />
     </div>
   );
 }
