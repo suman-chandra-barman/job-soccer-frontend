@@ -35,11 +35,11 @@ export function LoginRequiredModal({
             type="button"
             variant="outline"
             onClick={onClose}
-            className="gap-2"
+            className="hover:scale-105"
           >
             Cancel
           </Button>
-          <Button type="button" onClick={onLogin}>
+          <Button type="button" onClick={onLogin} className="hover:scale-105">
             Login
           </Button>
         </DialogFooter>
