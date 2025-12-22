@@ -7,7 +7,12 @@ import {
   useGetJobsWithFiltersQuery,
 } from "@/redux/features/job/jobApi";
 import { useApplyJobMutation } from "@/redux/features/jobApplication/jobApplicationApi";
-import { useSaveJobMutation } from "@/redux/features/savedJobs/savedJobsApi";
+import {
+  useSaveJobMutation,
+  useUnsaveJobMutation,
+} from "@/redux/features/savedJobs/savedJobsApi";
+import { useAuthCheck } from "@/hooks/useAuthCheck";
+import { LoginRequiredModal } from "@/components/modals/LoginRequiredModal";
 import { addAppliedJob } from "@/redux/features/jobApplication/jobApplicationSlice";
 import { useAppDispatch } from "@/redux/hooks";
 import { TJob } from "@/types/job";
@@ -25,11 +30,21 @@ const JobDetailsPage = ({ params }: PageProps) => {
   const { id } = use(params);
   const dispatch = useAppDispatch();
   const [showResumeModal, setShowResumeModal] = useState(false);
+  const [localIsSaved, setLocalIsSaved] = useState<boolean | null>(null);
+  const [localIsApplied, setLocalIsApplied] = useState<boolean | null>(null);
+  const { checkAuth, showLoginModal, handleLogin, handleCloseModal } =
+    useAuthCheck();
+
   const [applyJob, { isLoading: isApplying }] = useApplyJobMutation();
   const [saveJob, { isLoading: isSaving }] = useSaveJobMutation();
+  const [unsaveJob, { isLoading: isUnsaving }] = useUnsaveJobMutation();
 
   const { data: jobResponse, isLoading } = useGetSingleJobQuery(id);
   const jobData: TJob | undefined = jobResponse?.data;
+
+  // Use local state if available, otherwise use API data
+  const isApplied = localIsApplied ?? jobData?.isApplied ?? false;
+  const isSaved = localIsSaved ?? jobData?.isSaved ?? false;
 
   const { data: relatedJobsResponse, isLoading: relatedJobsLoading } =
     useGetJobsWithFiltersQuery(
@@ -67,16 +82,44 @@ const JobDetailsPage = ({ params }: PageProps) => {
   }
 
   const handleApplyClick = () => {
-    setShowResumeModal(true);
+    if (
+      !checkAuth(() => {
+        setShowResumeModal(true);
+      })
+    ) {
+      return;
+    }
   };
 
   const handleSaveJob = async () => {
+    if (
+      !checkAuth(async () => {
+        await handleSaveJobLogic();
+      })
+    ) {
+      return;
+    }
+  };
+
+  const handleSaveJobLogic = async () => {
+    const previousState = isSaved;
+    const willBeSaved = !isSaved;
+
     try {
-      const result = await saveJob(id).unwrap();
+      // Optimistic update
+      setLocalIsSaved(willBeSaved);
+
+      const result = isSaved
+        ? await unsaveJob(id).unwrap()
+        : await saveJob(id).unwrap();
       if (result.success) {
-        toast.success("Job saved successfully!");
+        toast.success(
+          willBeSaved ? "Job saved successfully!" : "Job unsaved successfully!"
+        );
       }
     } catch (error) {
+      // Revert on error
+      setLocalIsSaved(previousState);
       const err = error as { data?: { message?: string } };
       toast.error(err.data?.message || "Failed to save job. Please try again.");
       console.error("Failed to save job:", error);
@@ -87,6 +130,7 @@ const JobDetailsPage = ({ params }: PageProps) => {
     try {
       const result = await applyJob({ jobId: id, resumeUrl }).unwrap();
       dispatch(addAppliedJob(result.data));
+      setLocalIsApplied(true);
       toast.success("Application submitted successfully!");
     } catch (error) {
       const err = error as { data?: { message?: string } };
@@ -293,17 +337,35 @@ const JobDetailsPage = ({ params }: PageProps) => {
                     <div className="lg:hidden flex flex-col sm:flex-row gap-3 pt-6">
                       <button
                         onClick={handleSaveJob}
-                        disabled={isSaving}
-                        className="flex-1 px-6 py-2 border border-gray-300 text-gray-700 rounded-md hover:bg-gray-50 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                        disabled={isSaving || isUnsaving}
+                        className={`flex-1 px-6 py-2 border rounded-md transition-colors disabled:opacity-50 disabled:cursor-not-allowed ${
+                          isSaved
+                            ? "bg-green-50 border-green-500 text-green-700"
+                            : "border-gray-300 text-gray-700 hover:bg-gray-50"
+                        }`}
                       >
-                        {isSaving ? "Saving..." : "Save Job"}
+                        {isSaving || isUnsaving
+                          ? isSaved
+                            ? "Unsaving..."
+                            : "Saving..."
+                          : isSaved
+                          ? "Unsave Job"
+                          : "Save Job"}
                       </button>
                       <button
                         onClick={handleApplyClick}
-                        disabled={isApplying}
-                        className="flex-1 px-8 py-2 bg-green-500 text-white rounded-md hover:bg-green-600 transition-colors disabled:opacity-50"
+                        disabled={isApplied || isApplying}
+                        className={`flex-1 px-8 py-2 rounded-md transition-colors disabled:opacity-50 ${
+                          isApplied
+                            ? "bg-green-500 text-white cursor-not-allowed"
+                            : "bg-green-500 text-white hover:bg-green-600"
+                        }`}
                       >
-                        {isApplying ? "Applying..." : "Apply Now"}
+                        {isApplying
+                          ? "Applying..."
+                          : isApplied
+                          ? "Applied"
+                          : "Apply Now"}
                       </button>
                     </div>
                   </div>
@@ -378,17 +440,35 @@ const JobDetailsPage = ({ params }: PageProps) => {
                       <div className="mt-6 flex flex-col gap-3">
                         <button
                           onClick={handleSaveJob}
-                          disabled={isSaving}
-                          className="w-full px-4 py-2 border border-gray-300 text-gray-700 rounded-md hover:bg-gray-50 transition-colors text-sm disabled:opacity-50 disabled:cursor-not-allowed"
+                          disabled={isSaving || isUnsaving}
+                          className={`w-full px-4 py-2 border rounded-md transition-colors text-sm disabled:opacity-50 disabled:cursor-not-allowed ${
+                            isSaved
+                              ? "bg-green-50 border-green-500 text-green-700"
+                              : "border-gray-300 text-gray-700 hover:bg-gray-50"
+                          }`}
                         >
-                          {isSaving ? "Saving..." : "Save Job"}
+                          {isSaving || isUnsaving
+                            ? isSaved
+                              ? "Unsaving..."
+                              : "Saving..."
+                            : isSaved
+                            ? "Unsave Job"
+                            : "Save Job"}
                         </button>
                         <button
                           onClick={handleApplyClick}
-                          disabled={isApplying}
-                          className="w-full px-4 py-2 bg-green-500 text-white rounded-md hover:bg-green-600 transition-colors text-sm disabled:opacity-50"
+                          disabled={isApplied || isApplying}
+                          className={`w-full px-4 py-2 rounded-md transition-colors text-sm disabled:opacity-50 ${
+                            isApplied
+                              ? "bg-green-500 text-white cursor-not-allowed"
+                              : "bg-green-500 text-white hover:bg-green-600"
+                          }`}
                         >
-                          {isApplying ? "Applying..." : "Apply Now"}
+                          {isApplying
+                            ? "Applying..."
+                            : isApplied
+                            ? "Applied"
+                            : "Apply Now"}
                         </button>
                       </div>
                     </div>
@@ -404,6 +484,14 @@ const JobDetailsPage = ({ params }: PageProps) => {
         onClose={() => setShowResumeModal(false)}
         jobId={id}
         onSubmitSuccess={handleResumeSubmitSuccess}
+      />
+
+      {/* Login Required Modal */}
+      <LoginRequiredModal
+        isOpen={showLoginModal}
+        onClose={handleCloseModal}
+        onLogin={handleLogin}
+        message="Please log in to apply for jobs or save them to your list."
       />
     </div>
   );
