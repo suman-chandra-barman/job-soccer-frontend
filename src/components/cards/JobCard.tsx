@@ -241,7 +241,7 @@ export function JobCard({ job }: JobCardProps) {
         </Button>
         <Button
           className={`flex-1 hover:scale-105 transition-transform duration-200 ${
-            isApplied ? "bg-green-600 hover:bg-green-700" : ""
+            isApplied ? "bg-green-500 text-white" : ""
           }`}
           disabled={isApplied || isApplyingLoading}
           onClick={handleApplyClick}
