@@ -2,12 +2,18 @@
 
 import { LogOut, Menu, X } from "lucide-react";
 import { cn } from "@/lib/utils";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo } from "react";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { useAppSelector } from "@/redux/hooks";
 
-const navigationItems = [
+type NavigationItem = {
+  id: string;
+  label: string;
+};
+
+const navigationItems: NavigationItem[] = [
   { id: "/", label: "My Profile" },
   { id: "billing", label: "Billing" },
   { id: "jobs", label: "Jobs" },
@@ -17,6 +23,15 @@ const navigationItems = [
 export default function EmployerSidebar() {
   const pathname = usePathname();
   const [sidebarOpen, setSidebarOpen] = useState(false);
+  const user = useAppSelector((state) => state.auth.user);
+
+  // Filter navigation items based on user role
+  const filteredNavigationItems = useMemo(() => {
+    if (user?.role === "Agent") {
+      return navigationItems.filter((item) => item.id !== "jobs");
+    }
+    return navigationItems;
+  }, [user?.role]);
 
   useEffect(() => {
     setSidebarOpen(false);
@@ -25,7 +40,7 @@ export default function EmployerSidebar() {
   // Extract active section from pathname
   let activeSection = pathname.replace(/^\/profile\/employer\/?/, "");
   if (activeSection === "") {
-    activeSection = "/"; 
+    activeSection = "/";
   } else if (activeSection.includes("/")) {
     activeSection = activeSection.split("/")[0];
   }
@@ -62,20 +77,32 @@ export default function EmployerSidebar() {
             >
               <X className="h-6 w-6" />
             </button>
-            <SidebarContent activeSection={activeSection} />
+            <SidebarContent
+              activeSection={activeSection}
+              navigationItems={filteredNavigationItems}
+            />
           </aside>
         </div>
       )}
 
       {/* Desktop Sidebar */}
       <div className="hidden md:block w-60 lg:flex-shrink-0 bg-white border rounded-2xl border-gray-200 h-full">
-        <SidebarContent activeSection={activeSection} />
+        <SidebarContent
+          activeSection={activeSection}
+          navigationItems={filteredNavigationItems}
+        />
       </div>
     </>
   );
 }
 
-function SidebarContent({ activeSection }: { activeSection: string }) {
+function SidebarContent({
+  activeSection,
+  navigationItems,
+}: {
+  activeSection: string;
+  navigationItems: NavigationItem[];
+}) {
   return (
     <div className="flex flex-col h-full">
       {/* Navigation */}

@@ -479,6 +479,8 @@ export default function MessagesPage() {
     if (fileInputRef.current) fileInputRef.current.value = "";
   };
 
+  console.log("Rendered MessagesPage", messages);
+
   return (
     <div className="container mx-auto flex h-[calc(100vh-4rem-80px)] max-h-[calc(100vh-4rem-80px)] bg-white border border-gray-200 rounded-lg overflow-hidden my-4">
       {/* Left Sidebar: Conversations List */}
@@ -522,16 +524,16 @@ export default function MessagesPage() {
             filteredConversations.map((conv) => (
               <div
                 key={conv.id}
-                className={`flex items-center p-4 cursor-pointer hover:bg-gray-200 rounded-2xl relative ${
+                className={`flex items-center p-4 cursor-pointer hover:bg-gray-200 relative ${
                   selectedConversation === conv.id
-                    ? "bg-gray-100 rounded-2xl"
+                    ? "bg-gray-100"
                     : ""
                 }`}
                 onClick={() => setSelectedConversation(conv.id)}
               >
                 <div className="relative">
                   <Avatar className="h-10 w-10">
-                    <AvatarImage src={conv.user.avatar} alt={conv.user.name} />
+                    <AvatarImage src={`${conv.user.avatar}`} alt={conv.user.name} />
                     <AvatarFallback>{conv.user.name.charAt(0)}</AvatarFallback>
                   </Avatar>
                   {conv.user.online && (
@@ -772,7 +774,7 @@ export default function MessagesPage() {
                     placeholder="Write your messages..."
                     value={newMessage}
                     onChange={handleInputChange}
-                    className="flex-1 bg-transparent border-none focus:ring-0 h-12"
+                    className="flex-1 bg-transparent border focus:ring-0 h-12"
                     disabled={uploadingFile || !connected}
                     onKeyDown={(e) => {
                       if (e.key === "Enter" && !e.shiftKey) {
