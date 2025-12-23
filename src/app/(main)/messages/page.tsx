@@ -521,48 +521,54 @@ export default function MessagesPage() {
               No conversations yet
             </div>
           ) : (
-            filteredConversations.map((conv) => (
-              <div
-                key={conv.id}
-                className={`flex items-center p-4 cursor-pointer hover:bg-gray-200 relative ${
-                  selectedConversation === conv.id
-                    ? "bg-gray-100"
-                    : ""
-                }`}
-                onClick={() => setSelectedConversation(conv.id)}
-              >
-                <div className="relative">
-                  <Avatar className="h-10 w-10">
-                    <AvatarImage src={`${conv.user.avatar}`} alt={conv.user.name} />
-                    <AvatarFallback>{conv.user.name.charAt(0)}</AvatarFallback>
-                  </Avatar>
-                  {conv.user.online && (
-                    <span className="absolute bottom-0 right-0 w-3 h-3 bg-green-500 border-2 border-white rounded-full"></span>
-                  )}
-                </div>
-                <div className="ml-3 flex-1">
-                  <div className="flex justify-between">
-                    <h3 className="font-semibold text-sm flex items-center gap-2">
-                      {conv.user.name}
-                      {conv.isBlocked && (
-                        <span className="text-xs text-red-600 font-normal">
-                          (Blocked)
-                        </span>
-                      )}
-                    </h3>
-                    <span className="text-xs text-gray-500">
-                      {conv.lastTimestamp.toLocaleTimeString([], {
-                        hour: "2-digit",
-                        minute: "2-digit",
-                      })}
-                    </span>
+            filteredConversations.map((conv) => {
+              console.log("conv-->", conv);
+              return (
+                <div
+                  key={conv.id}
+                  className={`flex items-center p-4 cursor-pointer hover:bg-gray-200 relative ${
+                    selectedConversation === conv.id ? "bg-gray-100" : ""
+                  }`}
+                  onClick={() => setSelectedConversation(conv.id)}
+                >
+                  <div className="relative">
+                    <div className="h-10 w-10 rounded-full overflow-hidden">
+                      <Image
+                        src={conv.user.avatar}
+                        alt={conv.user.name}
+                        width={40}
+                        height={40}
+                        className="object-cover"
+                      />
+                    </div>
+                    {conv.user.online && (
+                      <span className="absolute bottom-0 right-0 w-3 h-3 bg-green-500 border-2 border-white rounded-full"></span>
+                    )}
                   </div>
-                  <p className="text-xs text-gray-600 truncate">
-                    {conv.lastMessage}
-                  </p>
+                  <div className="ml-3 flex-1">
+                    <div className="flex justify-between">
+                      <h3 className="font-semibold text-sm flex items-center gap-2">
+                        {conv.user.name}
+                        {conv.isBlocked && (
+                          <span className="text-xs text-red-600 font-normal">
+                            (Blocked)
+                          </span>
+                        )}
+                      </h3>
+                      <span className="text-xs text-gray-500">
+                        {conv.lastTimestamp.toLocaleTimeString([], {
+                          hour: "2-digit",
+                          minute: "2-digit",
+                        })}
+                      </span>
+                    </div>
+                    <p className="text-xs text-gray-600 truncate">
+                      {conv.lastMessage}
+                    </p>
+                  </div>
                 </div>
-              </div>
-            ))
+              );
+            })
           )}
         </ScrollArea>
       </div>
@@ -586,13 +592,15 @@ export default function MessagesPage() {
                 >
                   <X className="h-4 w-4" />
                 </Button>
-                <Avatar className="h-8 w-8">
-                  <AvatarImage
+                <div className="h-10 w-10 rounded-full overflow-hidden">
+                  <Image
                     src={selectedUser.avatar}
                     alt={selectedUser.name}
+                    width={40}
+                    height={40}
+                    className="object-cover"
                   />
-                  <AvatarFallback>{selectedUser.name.charAt(0)}</AvatarFallback>
-                </Avatar>
+                </div>
                 <h2 className="ml-3 font-semibold">{selectedUser.name}</h2>
               </div>
 
