@@ -363,32 +363,46 @@ export default function MessagesPage() {
 
     try {
       if (selectedFile) {
-        // Handle file upload
+        // Handle file upload - upload to backend via REST API
         setUploadingFile(true);
-        // TODO: Implement file upload to your server/storage
-        // For now, using a placeholder URL
-        const fileUrl = URL.createObjectURL(selectedFile);
-        const fileType = selectedFile.type.startsWith("image/")
-          ? "image"
-          : selectedFile.type.startsWith("video/")
-          ? "video"
-          : "file";
-
-        await socketSendMessage(
-          newMessage || selectedFile.name,
-          fileType as "text" | "image" | "video" | "file",
-          fileUrl,
-          currentUserId
+        
+        // Upload file to backend API
+        const uploadResponse = await messageApi.sendMessageWithFile(
+          selectedConversation,
+          receiverId,
+          selectedFile,
+          newMessage || undefined
         );
+
+        if (uploadResponse.success && uploadResponse.data) {
+          const messageData = uploadResponse.data as ChatMessage;
+          
+          // Add the message to local state immediately
+          setChatMessages((prev) => {
+            // Check if message already exists
+            if (prev.find((m) => m._id === messageData._id)) {
+              return prev;
+            }
+            const newList = [...prev, messageData].sort(
+              (a, b) =>
+                new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime()
+            );
+            return newList;
+          });
+          
+          // Note: Backend automatically emits socket event to receiver
+        }
+        
         setSelectedFile(null);
         if (fileInputRef.current) fileInputRef.current.value = "";
       } else {
-        // Send text message
+        // Send text message via socket
         await socketSendMessage(newMessage, "text", undefined, currentUserId);
       }
 
       setNewMessage("");
     } catch (error) {
+      console.error("Failed to send message:", error);
       alert(
         `Failed to send message: ${
           error instanceof Error ? error.message : "Unknown error"
@@ -708,11 +722,18 @@ export default function MessagesPage() {
                         ) : msg.type === "image" ? (
                           <div>
                             <div className="relative w-48 h-48 mb-2">
-                              <Image
-                                src={msg.fileUrl || ""}
+                              <img
+                                src={`${process.env.NEXT_PUBLIC_BASE_URL}${msg.fileUrl}`}
                                 alt="Image"
-                                fill
-                                className="object-cover rounded"
+                                className="w-48 h-48 object-cover rounded"
+                                crossOrigin="anonymous"
+                                onError={(e) => {
+                                  console.error("Image failed to load:", `${process.env.NEXT_PUBLIC_BASE_URL}${msg.fileUrl}`);
+                                  e.currentTarget.style.display = 'none';
+                                }}
+                                onLoad={() => {
+                                  console.log("Image loaded successfully:", `${process.env.NEXT_PUBLIC_BASE_URL}${msg.fileUrl}`);
+                                }}
                               />
                             </div>
                             {msg.content && (

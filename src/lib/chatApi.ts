@@ -286,4 +286,38 @@ export const messageApi = {
 
     return response.json();
   },
+
+  // Upload image via REST API
+  async sendMessageWithFile(
+    chatId: string,
+    receiverId: string,
+    file: File,
+    content?: string
+  ): Promise<ApiResponse> {
+    const formData = new FormData();
+    formData.append("chatId", chatId);
+    formData.append("receiverId", receiverId);
+    formData.append("image", file); // Backend expects 'image' field
+
+    if (content) {
+      formData.append("content", content);
+    }
+
+    const response = await fetch(`${API_BASE_URL}/message/send`, {
+      method: "POST",
+      headers: {
+        Authorization: getAuthToken(),
+        // Don't set Content-Type - browser will set it with boundary
+      },
+      body: formData,
+      credentials: "include",
+    });
+
+    if (!response.ok) {
+      const errorData = await response.json().catch(() => ({}));
+      throw new Error(errorData.message || "Failed to send message with file");
+    }
+
+    return response.json();
+  },
 };
