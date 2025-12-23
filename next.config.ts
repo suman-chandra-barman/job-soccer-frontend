@@ -11,22 +11,6 @@ const nextConfig: NextConfig = {
         protocol: "http",
         hostname: "images.pexels.com",
       },
-      {
-        protocol: "https",
-        hostname: "*.devtunnels.ms",
-      },
-      {
-        protocol: "http",
-        hostname: "*.devtunnels.ms",
-      },
-      {
-        protocol: "http",
-        hostname: "31.97.33.65",
-      },
-      {
-        protocol: "https",
-        hostname: "31.97.33.65",
-      },
     ],
   },
 };
