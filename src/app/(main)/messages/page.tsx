@@ -485,7 +485,7 @@ export default function MessagesPage() {
       <div
         className={`${
           selectedConversation ? "hidden md:block" : "block"
-        } w-full md:w-1/3 lg:w-1/4 border-r shrink-0 flex flex-col h-full`}
+        } w-full md:w-1/3 lg:w-1/4 border-r shrink-0 flex flex-col h-full overflow-y-auto`}
       >
         <div className="p-4">
           <Input
