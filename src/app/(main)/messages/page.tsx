@@ -32,6 +32,7 @@ interface User {
   name: string;
   avatar: string;
   online?: boolean;
+  userType?: string;
 }
 
 interface Message {
@@ -99,7 +100,7 @@ export default function MessagesPage() {
 
   // Convert chat messages to UI format
   const messages: Message[] = chatMessages.map((msg) => {
-    console.log("messages--->", msg)
+    console.log("messages--->", msg);
     return {
       id: msg._id,
       senderId:
@@ -129,6 +130,8 @@ export default function MessagesPage() {
                 chat.users[0];
               const latestMsg = chat.latestMessage;
 
+              console.log("chat--->", chat);
+
               return {
                 id: chat._id,
                 user: {
@@ -138,6 +141,7 @@ export default function MessagesPage() {
                     ? `${process.env.NEXT_PUBLIC_BASE_URL}${otherUser.profileImage}`
                     : "/placeholder.svg?height=40&width=40",
                   online: onlineUsers.includes(otherUser._id),
+                  userType: otherUser.userType,
                 },
                 lastMessage:
                   latestMsg?.content ||
@@ -208,6 +212,7 @@ export default function MessagesPage() {
                     ? `${process.env.NEXT_PUBLIC_BASE_URL}${otherUser.profileImage}`
                     : "/placeholder.svg?height=40&width=40",
                   online: onlineUsers.includes(otherUser._id),
+                  userType: otherUser.userType,
                 },
                 lastMessage:
                   latestMsg?.content ||
@@ -609,7 +614,7 @@ export default function MessagesPage() {
               <div className="flex items-center space-x-2">
                 <Button variant="ghost">
                   <Link
-                    href={`/profile/${selectedUser.id}`}
+                    href={`/${selectedUser.userType}s/${selectedUser.id}`}
                     className="flex items-center"
                   >
                     View Profile
