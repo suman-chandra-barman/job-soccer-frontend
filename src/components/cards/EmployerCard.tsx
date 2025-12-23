@@ -1,6 +1,7 @@
 import React from "react";
 import { MapPin, ShieldCheck, Star, UserRoundPlus, Users } from "lucide-react";
 import Image from "next/image";
+import Link from "next/link";
 import { Button } from "../ui/button";
 import { StartChatButton } from "../messaging/StartChatButton";
 import { IEmployer } from "@/types/user";
@@ -94,28 +95,32 @@ export function EmployerCard({ employer }: { employer: IEmployer }) {
     <div className="bg-gradient-to-br from-white to-[#FDF9E3] rounded-xl p-4 shadow-sm border border-gray-100 flex flex-col h-full">
       <div className="border-b border-gray-200 pb-4">
         <div className="flex items-center gap-3 mb-4 ">
-          {logoUrl ? (
-            <div className="w-12 h-12 rounded-xl overflow-hidden border border-gray-200 bg-white">
-              <Image
-                src={logoUrl}
-                alt={`${employerName} Logo`}
-                width={48}
-                height={48}
-                className="w-full h-full object-cover"
-              />
-            </div>
-          ) : (
-            <Avatar className="w-12 h-12 rounded-xl">
-              <AvatarFallback className="text-base font-semibold bg-black text-white rounded-xl">
-                {firstNameInitial}
-                {lastNameInitial}
-              </AvatarFallback>
-            </Avatar>
-          )}
+          <Link href={`/employers/${employer._id}`}>
+            {logoUrl ? (
+              <div className="w-12 h-12 rounded-xl overflow-hidden border border-gray-200 bg-white cursor-pointer hover:opacity-80 transition-opacity">
+                <Image
+                  src={logoUrl}
+                  alt={`${employerName} Logo`}
+                  width={48}
+                  height={48}
+                  className="w-full h-full object-cover"
+                />
+              </div>
+            ) : (
+              <Avatar className="w-12 h-12 rounded-xl cursor-pointer hover:opacity-80 transition-opacity">
+                <AvatarFallback className="text-base font-semibold bg-black text-white rounded-xl">
+                  {firstNameInitial}
+                  {lastNameInitial}
+                </AvatarFallback>
+              </Avatar>
+            )}
+          </Link>
           <div className="flex-1 min-w-0">
-            <h3 className="font-semibold text-gray-900 text-lg truncate">
-              {employerName || "Unknown Employer"}
-            </h3>
+            <Link href={`/employers/${employer._id}`}>
+              <h3 className="font-semibold text-gray-900 text-lg truncate cursor-pointer hover:text-green-600 transition-colors">
+                {employerName || "Unknown Employer"}
+              </h3>
+            </Link>
             <div className="flex items-center gap-1 text-gray-500 text-sm mt-1">
               <MapPin className="w-4 h-4 flex-shrink-0" />
               <span className="truncate">
