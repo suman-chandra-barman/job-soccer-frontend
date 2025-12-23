@@ -8,8 +8,7 @@ type TAuthState = {
 
 const initialState: TAuthState = {
   user: null,
-  token:null
-   
+  token: null,
 };
 
 const authSlice = createSlice({
@@ -18,6 +17,12 @@ const authSlice = createSlice({
   reducers: {
     setToken: (state, action: PayloadAction<string>) => {
       state.token = action.payload;
+      // Store token in cookie for middleware access
+      if (typeof document !== "undefined") {
+        document.cookie = `token=${action.payload}; path=/; max-age=${
+          60 * 60 * 24 * 7
+        }`; // 7 days
+      }
     },
     setUser: (state, action: PayloadAction<TUser | null>) => {
       state.user = action.payload;
@@ -25,6 +30,11 @@ const authSlice = createSlice({
     logout: (state) => {
       state.user = null;
       state.token = null;
+      // Remove token cookie
+      if (typeof document !== "undefined") {
+        document.cookie =
+          "token=; path=/; expires=Thu, 01 Jan 1970 00:00:01 GMT;";
+      }
     },
   },
 });
