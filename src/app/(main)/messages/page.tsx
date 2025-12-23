@@ -98,15 +98,18 @@ export default function MessagesPage() {
   } = useChat(token, selectedConversation, receiverId, currentUserId);
 
   // Convert chat messages to UI format
-  const messages: Message[] = chatMessages.map((msg) => ({
-    id: msg._id,
-    senderId:
-      typeof msg.senderId === "string" ? msg.senderId : msg.senderId._id,
-    content: msg.content || "",
-    timestamp: new Date(msg.createdAt),
-    type: msg.messageType,
-    fileUrl: msg.mediaUrl,
-  }));
+  const messages: Message[] = chatMessages.map((msg) => {
+    console.log("messages--->", msg)
+    return {
+      id: msg._id,
+      senderId:
+        typeof msg.senderId === "string" ? msg.senderId : msg.senderId._id,
+      content: msg.content || "",
+      timestamp: new Date(msg.createdAt),
+      type: msg.messageType,
+      fileUrl: msg.mediaUrl,
+    };
+  });
 
   // Fetch conversations from API
   useEffect(() => {
@@ -522,7 +525,6 @@ export default function MessagesPage() {
             </div>
           ) : (
             filteredConversations.map((conv) => {
-              console.log("conv-->", conv);
               return (
                 <div
                   key={conv.id}
@@ -538,7 +540,7 @@ export default function MessagesPage() {
                         alt={conv.user.name}
                         width={40}
                         height={40}
-                        className="object-cover"
+                        className="w-full h-full object-cover"
                       />
                     </div>
                     {conv.user.online && (
@@ -598,7 +600,7 @@ export default function MessagesPage() {
                     alt={selectedUser.name}
                     width={40}
                     height={40}
-                    className="object-cover"
+                    className="w-full h-full object-cover"
                   />
                 </div>
                 <h2 className="ml-3 font-semibold">{selectedUser.name}</h2>
