@@ -3,6 +3,7 @@
 import React, { useCallback, useState } from "react";
 import { Upload, Video } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { toast } from "sonner";
 
 interface FileDropzoneProps {
   onFilesChange: (files: File[]) => void;
@@ -64,7 +65,7 @@ export function FileDropzone({
         if (isValid) {
           validFiles.push(file);
         } else {
-          alert(`❌ ${file.name} is longer than 180 seconds.`);
+          toast.error(`${file.name} is longer than 180 seconds.`);
         }
       }
 
@@ -91,7 +92,7 @@ export function FileDropzone({
         if (isValid) {
           validFiles.push(file);
         } else {
-          alert(`❌ ${file.name} is longer than 180 seconds.`);
+          toast.error(`${file.name} is longer than 180 seconds.`);
         }
       }
 
