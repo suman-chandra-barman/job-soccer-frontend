@@ -54,7 +54,7 @@ export function Candidates() {
                 />
               ))
             ) : isError ? (
-              <div className="col-span-full text-center py-8 text-red-500">
+              <div className="col-span-full text-center py-8 text-gray-500">
                 Failed to load candidates. Please try again later.
               </div>
             ) : professionalPlayers.length === 0 ? (
