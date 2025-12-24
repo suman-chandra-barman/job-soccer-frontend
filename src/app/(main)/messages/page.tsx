@@ -1,8 +1,8 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
 
 import React, { useState, useEffect, useRef } from "react";
 import Image from "next/image";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { ScrollArea } from "@/components/ui/scroll-area";
@@ -25,6 +25,11 @@ import { useChat } from "@/hooks/useChat";
 import { chatApi, messageApi } from "@/lib/chatApi";
 import { Chat, ChatMessage } from "@/types/chat";
 import { useAppSelector } from "@/redux/hooks";
+import {
+  useCreateAgentHiringMutation,
+  useLazyCheckActiveHiringQuery,
+} from "@/redux/features/agentHiring/agentHiringApi";
+import { toast } from "sonner";
 
 // Interfaces
 interface User {
@@ -33,6 +38,7 @@ interface User {
   avatar: string;
   online?: boolean;
   userType?: string;
+  role?: string;
 }
 
 interface Message {
@@ -63,6 +69,7 @@ export default function MessagesPage() {
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const [uploadingFile, setUploadingFile] = useState(false);
   const [loadingChats, setLoadingChats] = useState(true);
+  const [hiringAgent, setHiringAgent] = useState(false);
   const [loadingMessages, setLoadingMessages] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
@@ -78,6 +85,12 @@ export default function MessagesPage() {
   // Get auth token and user info from Redux store
   const { token, user } = useAppSelector((state) => state.auth);
   const currentUserId = user?._id || "";
+  const currentUserType = user?.userType || "";
+
+  // Agent hiring hooks
+  const [createAgentHiring] = useCreateAgentHiringMutation();
+  const [checkActiveHiring, { data: activeHiringData }] =
+    useLazyCheckActiveHiringQuery();
 
   // Get selected conversation details
   const selectedChat = conversations.find(
@@ -142,6 +155,7 @@ export default function MessagesPage() {
                     : "/placeholder.svg?height=40&width=40",
                   online: onlineUsers.includes(otherUser._id),
                   userType: otherUser.userType,
+                  role: otherUser.role,
                 },
                 lastMessage:
                   latestMsg?.content ||
@@ -213,6 +227,7 @@ export default function MessagesPage() {
                     : "/placeholder.svg?height=40&width=40",
                   online: onlineUsers.includes(otherUser._id),
                   userType: otherUser.userType,
+                  role: otherUser.role,
                 },
                 lastMessage:
                   latestMsg?.content ||
@@ -338,7 +353,7 @@ export default function MessagesPage() {
   // Handle sending message
   const handleSendMessage = async () => {
     if (isBlocked) {
-      alert("Cannot send message. This conversation is blocked.");
+      toast.error("Cannot send message. This conversation is blocked.");
       return;
     }
 
@@ -351,7 +366,7 @@ export default function MessagesPage() {
     }
 
     if (!connected) {
-      alert("Not connected. Please wait for connection...");
+      toast.warning("Not connected. Please wait for connection...");
       return;
     }
 
@@ -365,7 +380,7 @@ export default function MessagesPage() {
       if (selectedFile) {
         // Handle file upload - upload to backend via REST API
         setUploadingFile(true);
-        
+
         // Upload file to backend API
         const uploadResponse = await messageApi.sendMessageWithFile(
           selectedConversation,
@@ -376,7 +391,7 @@ export default function MessagesPage() {
 
         if (uploadResponse.success && uploadResponse.data) {
           const messageData = uploadResponse.data as ChatMessage;
-          
+
           // Add the message to local state immediately
           setChatMessages((prev) => {
             // Check if message already exists
@@ -385,14 +400,15 @@ export default function MessagesPage() {
             }
             const newList = [...prev, messageData].sort(
               (a, b) =>
-                new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime()
+                new Date(a.createdAt).getTime() -
+                new Date(b.createdAt).getTime()
             );
             return newList;
           });
-          
+
           // Note: Backend automatically emits socket event to receiver
         }
-        
+
         setSelectedFile(null);
         if (fileInputRef.current) fileInputRef.current.value = "";
       } else {
@@ -403,7 +419,7 @@ export default function MessagesPage() {
       setNewMessage("");
     } catch (error) {
       console.error("Failed to send message:", error);
-      alert(
+      toast.error(
         `Failed to send message: ${
           error instanceof Error ? error.message : "Unknown error"
         }`
@@ -451,7 +467,7 @@ export default function MessagesPage() {
         setSelectedConversation(null);
       } catch (error) {
         console.error("Failed to delete conversation:", error);
-        alert("Failed to delete conversation. Please try again.");
+        toast.error("Failed to delete conversation. Please try again.");
       }
     }
   };
@@ -469,10 +485,10 @@ export default function MessagesPage() {
             : conv
         )
       );
-      alert("User blocked successfully");
+      toast.success("User blocked successfully");
     } catch (error) {
       console.error("Failed to block user:", error);
-      alert("Failed to block user. Please try again.");
+      toast.error("Failed to block user. Please try again.");
     }
   };
 
@@ -489,16 +505,65 @@ export default function MessagesPage() {
             : conv
         )
       );
-      alert("User unblocked successfully");
+      toast.success("User unblocked successfully");
     } catch (error) {
       console.error("Failed to unblock user:", error);
-      alert("Failed to unblock user. Please try again.");
+      toast.error("Failed to unblock user. Please try again.");
     }
   };
 
   const removeFile = () => {
     setSelectedFile(null);
     if (fileInputRef.current) fileInputRef.current.value = "";
+  };
+
+  // Check active hiring when conversation is selected and receiver is an agent
+  useEffect(() => {
+    if (
+      selectedUser &&
+      selectedUser.role === "Agent" &&
+      currentUserType === "candidate"
+    ) {
+      checkActiveHiring(selectedUser.id);
+    }
+  }, [selectedUser, currentUserType, checkActiveHiring]);
+
+  // Handle Hire Agent
+  const handleHireAgent = async () => {
+    if (!selectedUser || selectedUser.role !== "Agent") {
+      toast.error("Selected user is not an agent");
+      return;
+    }
+
+    // Check if already has active hiring
+    if (activeHiringData?.data?.hasActiveHiring) {
+      toast.warning("You already have an active hiring with this agent");
+      return;
+    }
+
+    setHiringAgent(true);
+    try {
+      const response = await createAgentHiring({
+        agentUserId: selectedUser.id,
+      }).unwrap();
+
+      if (response.success) {
+        toast.success("Hiring request sent successfully!");
+        // Refresh active hiring status
+        checkActiveHiring(selectedUser.id);
+      }
+    } catch (error) {
+      console.error("Failed to hire agent:", error);
+      const errorMessage =
+        error && typeof error === "object" && "data" in error
+          ? (error as any).data?.message
+          : "Unknown error";
+      toast.error(
+        errorMessage || "Failed to send hiring request. Please try again."
+      );
+    } finally {
+      setHiringAgent(false);
+    }
   };
 
   console.log("Rendered MessagesPage", messages);
@@ -634,6 +699,32 @@ export default function MessagesPage() {
                     View Profile
                   </Link>
                 </Button>
+                {selectedUser.role === "Agent" &&
+                  currentUserType === "candidate" && (
+                    <Button
+                      variant="default"
+                      onClick={handleHireAgent}
+                      disabled={
+                        hiringAgent || activeHiringData?.data?.hasActiveHiring
+                      }
+                      className="bg-green-600 hover:bg-green-700 text-white"
+                    >
+                      {hiringAgent ? (
+                        <>
+                          <Loader2 className="h-4 w-4 mr-2 animate-spin" />
+                          Hiring...
+                        </>
+                      ) : activeHiringData?.data?.hasActiveHiring ? (
+                        activeHiringData.data.hiring?.status === "pending" ? (
+                          "Request Pending"
+                        ) : (
+                          "Hired"
+                        )
+                      ) : (
+                        "Hire"
+                      )}
+                    </Button>
+                  )}
                 <Popover>
                   <PopoverTrigger asChild>
                     <Button variant="ghost" size="icon">
@@ -728,11 +819,17 @@ export default function MessagesPage() {
                                 className="w-48 h-48 object-cover rounded"
                                 crossOrigin="anonymous"
                                 onError={(e) => {
-                                  console.error("Image failed to load:", `${process.env.NEXT_PUBLIC_BASE_URL}${msg.fileUrl}`);
-                                  e.currentTarget.style.display = 'none';
+                                  console.error(
+                                    "Image failed to load:",
+                                    `${process.env.NEXT_PUBLIC_BASE_URL}${msg.fileUrl}`
+                                  );
+                                  e.currentTarget.style.display = "none";
                                 }}
                                 onLoad={() => {
-                                  console.log("Image loaded successfully:", `${process.env.NEXT_PUBLIC_BASE_URL}${msg.fileUrl}`);
+                                  console.log(
+                                    "Image loaded successfully:",
+                                    `${process.env.NEXT_PUBLIC_BASE_URL}${msg.fileUrl}`
+                                  );
                                 }}
                               />
                             </div>

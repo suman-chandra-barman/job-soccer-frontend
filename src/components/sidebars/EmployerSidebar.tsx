@@ -18,6 +18,7 @@ const navigationItems: NavigationItem[] = [
   { id: "billing", label: "Billing" },
   { id: "jobs", label: "Jobs" },
   { id: "shortlist", label: "Shortlist" },
+  { id: "hiring", label: "Hiring" },
 ];
 
 export default function EmployerSidebar() {
@@ -28,9 +29,11 @@ export default function EmployerSidebar() {
   // Filter navigation items based on user role
   const filteredNavigationItems = useMemo(() => {
     if (user?.role === "Agent") {
+      // Agent sees: My Profile, Billing, Shortlist, Hiring (no Jobs)
       return navigationItems.filter((item) => item.id !== "jobs");
     }
-    return navigationItems;
+    // Non-agents see all except Hiring
+    return navigationItems.filter((item) => item.id !== "hiring");
   }, [user?.role]);
 
   useEffect(() => {
@@ -86,7 +89,7 @@ export default function EmployerSidebar() {
       )}
 
       {/* Desktop Sidebar */}
-      <div className="hidden md:block w-60 lg:flex-shrink-0 bg-white border rounded-2xl border-gray-200 h-full">
+      <div className="hidden md:block w-60 lg:shrink-0 bg-white border rounded-2xl border-gray-200 h-full">
         <SidebarContent
           activeSection={activeSection}
           navigationItems={filteredNavigationItems}
