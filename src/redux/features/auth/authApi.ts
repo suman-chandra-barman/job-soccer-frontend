@@ -13,7 +13,7 @@ const authApi = baseApi.injectEndpoints({
       async onQueryStarted(arg, { dispatch, queryFulfilled }) {
         try {
           const { data } = await queryFulfilled;
-          if (data?.data.accessToken) {
+          if (data?.data.accessToken && data?.data.user?.isVerified) {
             const token = data.data.accessToken;
             dispatch(setToken(token));
             dispatch(setUser(data.data.user));

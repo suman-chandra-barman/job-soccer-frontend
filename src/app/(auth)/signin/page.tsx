@@ -47,16 +47,16 @@ export default function SignInPage() {
 
     try {
       const res = await login(payload).unwrap();
+
+      if (res?.data?.user?.isVerified === false) {
+        router.push("/signup");
+        return;
+      }
       if (res?.data?.accessToken) {
         toast.success("Welcome back!", {
           description: "You have successfully signed in to your account.",
         });
 
-        if (res?.data?.isVerified === false) {
-          router.push("/verify-email");
-          return;
-        }
-        
         form.reset();
         if (res.data.user?.profileId) {
           router.push("/");
