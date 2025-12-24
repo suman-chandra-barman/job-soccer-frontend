@@ -32,6 +32,12 @@ interface FriendInfo {
 
 export interface Friend {
   _id: string;
+  firstName: string;
+  lastName: string;
+  email: string;
+  role: string;
+  profileImage: string | null;
+  userType: string;
   friend: FriendInfo;
   friendshipDate: string;
 }
