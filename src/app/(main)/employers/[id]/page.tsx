@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React from "react";
 import { useParams } from "next/navigation";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -9,7 +9,6 @@ import {
   BadgeCheck,
   Mail,
   XCircle,
-  MessageCircle,
   UserPlus,
   UserMinus,
   Globe,
@@ -28,6 +27,7 @@ import {
   useFollowEmployerMutation,
   useUnfollowEmployerMutation,
 } from "@/redux/features/follow/followApi";
+import { AgentRatingComponent } from "@/components/shared/AgentRatingComponent";
 
 export default function EmployerDetailsPage() {
   const params = useParams();
@@ -151,9 +151,9 @@ export default function EmployerDetailsPage() {
   }
 
   return (
-    <div className="px-4 max-w-7xl mx-auto relative">
+    <div className="px-4 md:px-6 lg:px-8 container mx-auto relative pb-16">
       {/* Banner Section */}
-      <div className="relative mb-8 h-64 rounded-2xl overflow-hidden bg-gradient-to-r from-green-400 to-blue-500">
+      <div className="relative mb-6 sm:mb-8 h-40 sm:h-48 md:h-64 rounded-lg sm:rounded-2xl overflow-hidden bg-gradient-to-r from-green-400 to-blue-500">
         {displayBanner && (
           <Image
             src={displayBanner}
@@ -165,11 +165,11 @@ export default function EmployerDetailsPage() {
       </div>
 
       {/* Profile Avatar */}
-      <div className="relative -mt-32 mb-8 px-4">
-        <div className="flex items-end gap-4 flex-wrap">
+      <div className="relative -mt-20 sm:-mt-24 md:-mt-32 mb-6 sm:mb-8 px-2 sm:px-4">
+        <div className="flex flex-col sm:flex-row sm:items-end gap-4 sm:gap-6">
           <div className="relative">
             {displayAvatar ? (
-              <div className="w-40 h-40 rounded-full overflow-hidden border-4 border-white shadow-lg bg-white">
+              <div className="w-32 h-32 sm:w-36 sm:h-36 md:w-40 md:h-40 rounded-full overflow-hidden border-4 border-white shadow-lg bg-white mx-auto sm:mx-0">
                 <Image
                   src={displayAvatar}
                   alt={displayName}
@@ -179,130 +179,141 @@ export default function EmployerDetailsPage() {
                 />
               </div>
             ) : (
-              <Avatar className="w-40 h-40 border-4 border-white shadow-lg">
-                <AvatarFallback className="text-4xl font-medium bg-gradient-to-br from-green-400 to-blue-500 text-white">
+              <Avatar className="w-32 h-32 sm:w-36 sm:h-36 md:w-40 md:h-40 border-4 border-white shadow-lg mx-auto sm:mx-0">
+                <AvatarFallback className="text-2xl sm:text-3xl md:text-4xl font-medium bg-gradient-to-br from-green-400 to-blue-500 text-white">
                   {employer?.firstName?.charAt(0)}
                   {employer?.lastName?.charAt(0)}
                 </AvatarFallback>
               </Avatar>
             )}
           </div>
-
-          {/* Profile Info */}
-          <div className="flex-1 min-w-0 bg-white rounded-xl p-6 shadow-lg">
-            <div className="flex items-start justify-between gap-4 flex-wrap">
-              <div className="flex-1 min-w-0">
-                <h2 className="text-3xl font-bold text-gray-900 flex items-center gap-2">
-                  {displayName}
-                  {verificationStatus?.status === "approved" && (
-                    <BadgeCheck className="h-6 w-6 text-blue-500" />
-                  )}
-                </h2>
-
-                {/* Contact Information */}
-                <div className="flex flex-wrap gap-4 mt-2 mb-4 text-gray-600">
-                  {employer?.email && (
-                    <div className="flex items-center gap-2">
-                      <Mail className="h-4 w-4" />
-                      <span className="text-sm">{employer.email}</span>
-                    </div>
-                  )}
-                  {employer?.profile?.location && (
-                    <div className="flex items-center gap-2">
-                      <MapPin className="h-4 w-4" />
-                      <span className="text-sm">
-                        {employer.profile.location}
-                      </span>
-                    </div>
-                  )}
-                </div>
-
-                <div className="flex gap-2 flex-wrap">
-                  {displayRole && (
-                    <Badge className="bg-yellow-100 text-yellow-800 border-yellow-200 px-4 rounded-full">
-                      {displayRole}
-                    </Badge>
-                  )}
-                  {employer?.profile?.clubName && (
-                    <Badge className="bg-green-100 text-green-800 border-green-200 px-4 rounded-full">
-                      {employer.profile.clubName}
-                    </Badge>
-                  )}
-                </div>
-              </div>
-
-              {/* Action Buttons - Hide on own profile */}
-              {!isOwnProfile && (
-                <div className="flex gap-2 flex-wrap">
-                  <StartChatButton
-                    userId={employerId}
-                    userName={displayName}
-                    className="flex items-center gap-2"
-                  />
-                  <Button
-                    variant="outline"
-                    onClick={handleFollowToggle}
-                    disabled={isLoading}
-                    className={`flex items-center gap-2 ${
-                      isFollowing
-                        ? "bg-green-50 border-green-500 text-green-700"
-                        : ""
-                    }`}
-                  >
-                    {isLoading ? (
-                      <>{isFollowing ? "Unfollowing..." : "Following..."}</>
-                    ) : (
-                      <>
-                        {isFollowing ? (
-                          <>
-                            <UserMinus className="h-4 w-4" />
-                            Unfollow
-                          </>
-                        ) : (
-                          <>
-                            <UserPlus className="h-4 w-4" />
-                            Follow
-                          </>
-                        )}
-                      </>
-                    )}
-                  </Button>
-                </div>
-              )}
-            </div>
-          </div>
         </div>
       </div>
 
-      <div className="p-4 md:p-6 border rounded-2xl shadow bg-white">
+      {/* Profile Info */}
+      <div className="flex-1 min-w-0 bg-white px-6 sm:px-6 pb-8">
+        <div className="flex flex-col sm:flex-row sm:items-start justify-between gap-4">
+          <div className="flex-1 min-w-0">
+            <h2 className="text-2xl sm:text-2xl md:text-3xl font-bold text-gray-900 flex items-center gap-2">
+              {displayName}
+              {verificationStatus?.status === "approved" && (
+                <BadgeCheck className="h-5 w-5 sm:h-6 sm:w-6 text-blue-500 flex-shrink-0" />
+              )}
+            </h2>
+
+            {/* Contact Information */}
+            <div className="flex flex-col sm:flex-row sm:flex-wrap gap-3 sm:gap-4 mt-2 mb-4 text-gray-600 text-sm">
+              {employer?.email && (
+                <div className="flex items-center gap-2">
+                  <Mail className="h-4 w-4 flex-shrink-0" />
+                  <span className="truncate">{employer.email}</span>
+                </div>
+              )}
+              {employer?.profile?.location && (
+                <div className="flex items-center gap-2">
+                  <MapPin className="h-4 w-4 flex-shrink-0" />
+                  <span className="truncate">{employer.profile.location}</span>
+                </div>
+              )}
+            </div>
+
+            <div className="flex flex-wrap gap-2">
+              {displayRole && (
+                <Badge className="bg-yellow-100 text-yellow-800 border-yellow-200 px-3 sm:px-4 py-1 rounded-full text-xs sm:text-sm">
+                  {displayRole}
+                </Badge>
+              )}
+              {employer?.profile?.clubName && (
+                <Badge className="bg-green-100 text-green-800 border-green-200 px-3 sm:px-4 py-1 rounded-full text-xs sm:text-sm">
+                  {employer.profile.clubName}
+                </Badge>
+              )}
+            </div>
+          </div>
+
+          {/* Action Buttons - Hide on own profile */}
+          {!isOwnProfile && (
+            <div className="flex flex-col sm:flex-row gap-2 w-full sm:w-auto">
+              <StartChatButton
+                userId={employerId}
+                userName={displayName}
+                className="flex items-center justify-center gap-2 flex-1 sm:flex-none text-sm"
+              />
+              <Button
+                variant="outline"
+                onClick={handleFollowToggle}
+                disabled={isLoading}
+                className={`flex items-center justify-center gap-2 flex-1 sm:flex-none text-sm ${
+                  isFollowing
+                    ? "bg-green-50 border-green-500 text-green-700"
+                    : ""
+                }`}
+              >
+                {isLoading ? (
+                  <>{isFollowing ? "Unfollowing..." : "Following..."}</>
+                ) : (
+                  <>
+                    {isFollowing ? (
+                      <>
+                        <UserMinus className="h-4 w-4" />
+                        Unfollow
+                      </>
+                    ) : (
+                      <>
+                        <UserPlus className="h-4 w-4" />
+                        Follow
+                      </>
+                    )}
+                  </>
+                )}
+              </Button>
+            </div>
+          )}
+        </div>
+      </div>
+      <div className="p-4 sm:p-6 border rounded-lg sm:rounded-2xl shadow bg-white">
         {/* Overview Section */}
         {employer?.profile?.clubDescription && (
-          <div className="mb-6">
-            <h2 className="text-xl md:text-2xl font-semibold text-gray-900 mb-4">
+          <div className="mb-6 sm:mb-8">
+            <h2 className="text-lg sm:text-xl md:text-2xl font-semibold text-gray-900 mb-3 sm:mb-4">
               Overview
             </h2>
-            <p className="text-gray-700 leading-relaxed">
+            <p className="text-gray-700 leading-relaxed text-sm sm:text-base">
               {employer.profile.clubDescription}
             </p>
           </div>
         )}
 
+        {/* Agent Rating Section - Only show for agents */}
+        {employer?.role === "Agent" && employer?.userType === "employer" && (
+          <div className="mb-6 sm:mb-8 p-4 sm:p-6 bg-gradient-to-br from-blue-50 to-indigo-50 rounded-lg border border-blue-200">
+            <h2 className="text-lg sm:text-xl font-semibold text-gray-900 mb-4">
+              Agent Rating
+            </h2>
+            <AgentRatingComponent
+              agentUserId={employerId}
+              agentRole={employer.role}
+              agentUserType={employer.userType}
+            />
+          </div>
+        )}
+
         {/* Professional Information Section */}
-        <div className="bg-white rounded-lg border shadow border-gray-200 p-6">
-          <div className="flex items-center justify-between mb-6">
-            <h2 className="text-xl font-semibold text-gray-900">
+        <div className="bg-white rounded-lg border shadow border-gray-200 p-4 sm:p-6">
+          <div className="flex items-center justify-between mb-4 sm:mb-6">
+            <h2 className="text-lg sm:text-xl font-semibold text-gray-900">
               Professional Information
             </h2>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-6">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-x-8 sm:gap-y-6">
             {/* Club Name */}
             {employer?.profile?.clubName && (
               <div>
-                <label className="text-sm text-gray-500 mb-1 block">
+                <label className="text-xs sm:text-sm text-gray-500 mb-1 block">
                   Club Name
                 </label>
-                <p className="text-gray-900 font-medium">
+                <p className="text-gray-900 font-medium text-sm sm:text-base">
                   {employer.profile.clubName}
                 </p>
               </div>
@@ -311,10 +322,10 @@ export default function EmployerDetailsPage() {
             {/* Country */}
             {employer?.profile?.country && (
               <div>
-                <label className="text-sm text-gray-500 mb-1 block">
+                <label className="text-xs sm:text-sm text-gray-500 mb-1 block">
                   Country
                 </label>
-                <p className="text-gray-900 font-medium">
+                <p className="text-gray-900 font-medium text-sm sm:text-base">
                   {employer.profile.country}
                 </p>
               </div>
@@ -323,12 +334,14 @@ export default function EmployerDetailsPage() {
             {/* Phone Number */}
             {employer?.profile?.phoneNumber && (
               <div>
-                <label className="text-sm text-gray-500 mb-1 block">
+                <label className="text-xs sm:text-sm text-gray-500 mb-1 block">
                   Phone Number
                 </label>
-                <p className="text-gray-900 font-medium flex items-center gap-2">
-                  <Phone className="h-4 w-4 text-gray-500" />
-                  {employer.profile.phoneNumber}
+                <p className="text-gray-900 font-medium flex items-center gap-2 text-sm sm:text-base">
+                  <Phone className="h-4 w-4 text-gray-500 flex-shrink-0" />
+                  <span className="truncate">
+                    {employer.profile.phoneNumber}
+                  </span>
                 </p>
               </div>
             )}
@@ -336,15 +349,16 @@ export default function EmployerDetailsPage() {
             {/* Website */}
             {employer?.profile?.website && (
               <div>
-                <label className="text-sm text-gray-500 mb-1 block">
+                <label className="text-xs sm:text-sm text-gray-500 mb-1 block">
                   Website
                 </label>
-                <p className="text-blue-600 font-medium cursor-pointer hover:underline flex items-center gap-2">
-                  <Globe className="h-4 w-4" />
+                <p className="text-blue-600 font-medium cursor-pointer hover:underline flex items-center gap-2 text-sm sm:text-base">
+                  <Globe className="h-4 w-4 flex-shrink-0" />
                   <a
                     href={employer.profile.website}
                     target="_blank"
                     rel="noopener noreferrer"
+                    className="truncate"
                   >
                     {employer.profile.website}
                   </a>
@@ -355,12 +369,12 @@ export default function EmployerDetailsPage() {
             {/* Address */}
             {employer?.profile?.address && (
               <div>
-                <label className="text-sm text-gray-500 mb-1 block">
+                <label className="text-xs sm:text-sm text-gray-500 mb-1 block">
                   Address
                 </label>
-                <p className="text-gray-900 font-medium flex items-center gap-2">
-                  <MapPin className="h-4 w-4 text-gray-500" />
-                  {employer.profile.address}
+                <p className="text-gray-900 font-medium flex items-start gap-2 text-sm sm:text-base">
+                  <MapPin className="h-4 w-4 text-gray-500 flex-shrink-0 mt-0.5" />
+                  <span>{employer.profile.address}</span>
                 </p>
               </div>
             )}
@@ -368,10 +382,10 @@ export default function EmployerDetailsPage() {
             {/* Location */}
             {employer?.profile?.location && (
               <div>
-                <label className="text-sm text-gray-500 mb-1 block">
+                <label className="text-xs sm:text-sm text-gray-500 mb-1 block">
                   Location
                 </label>
-                <p className="text-gray-900 font-medium">
+                <p className="text-gray-900 font-medium text-sm sm:text-base">
                   {employer.profile.location}
                 </p>
               </div>
@@ -380,11 +394,11 @@ export default function EmployerDetailsPage() {
             {/* Founded */}
             {employer?.profile?.founded && (
               <div>
-                <label className="text-sm text-gray-500 mb-1 block">
+                <label className="text-xs sm:text-sm text-gray-500 mb-1 block">
                   Founded
                 </label>
-                <p className="text-gray-900 font-medium flex items-center gap-2">
-                  <Calendar className="h-4 w-4 text-gray-500" />
+                <p className="text-gray-900 font-medium flex items-center gap-2 text-sm sm:text-base">
+                  <Calendar className="h-4 w-4 text-gray-500 flex-shrink-0" />
                   {formatFoundedDate(employer.profile.founded)}
                 </p>
               </div>
@@ -393,10 +407,10 @@ export default function EmployerDetailsPage() {
             {/* Level */}
             {employer?.profile?.level && (
               <div>
-                <label className="text-sm text-gray-500 mb-1 block">
+                <label className="text-xs sm:text-sm text-gray-500 mb-1 block">
                   Level
                 </label>
-                <p className="text-gray-900 font-medium">
+                <p className="text-gray-900 font-medium text-sm sm:text-base">
                   {employer.profile.level}
                 </p>
               </div>
@@ -405,10 +419,10 @@ export default function EmployerDetailsPage() {
             {/* Nationality */}
             {employer?.profile?.nationality && (
               <div>
-                <label className="text-sm text-gray-500 mb-1 block">
+                <label className="text-xs sm:text-sm text-gray-500 mb-1 block">
                   Nationality
                 </label>
-                <p className="text-gray-900 font-medium">
+                <p className="text-gray-900 font-medium text-sm sm:text-base">
                   {employer.profile.nationality}
                 </p>
               </div>
@@ -417,31 +431,21 @@ export default function EmployerDetailsPage() {
             {/* Club Contact */}
             {employer?.profile?.clubContact && (
               <div>
-                <label className="text-sm text-gray-500 mb-1 block">
+                <label className="text-xs sm:text-sm text-gray-500 mb-1 block">
                   Club Contact
                 </label>
-                <p className="text-gray-900 font-medium">
+                <p className="text-gray-900 font-medium text-sm sm:text-base">
                   {employer.profile.clubContact}
                 </p>
               </div>
             )}
 
-            {/* Active Job Count */}
-            <div>
-              <label className="text-sm text-gray-500 mb-1 block">
-                Active Job Posts
-              </label>
-              <p className="text-gray-900 font-medium">
-                {employer?.activeJobCount || 0}
-              </p>
-            </div>
-
             {/* Follower Count */}
             <div>
-              <label className="text-sm text-gray-500 mb-1 block">
+              <label className="text-xs sm:text-sm text-gray-500 mb-1 block">
                 Followers
               </label>
-              <p className="text-gray-900 font-medium">
+              <p className="text-gray-900 font-medium text-sm sm:text-base">
                 {employer?.followerCount || 0}
               </p>
             </div>

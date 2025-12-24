@@ -7,6 +7,7 @@ import jobApplicationReducer from "@/redux/features/jobApplication/jobApplicatio
 import resumeReducer from "@/redux/features/resume/resumeSlice";
 import candidateShortlistReducer from "@/redux/features/candidateShortlist/candidateShortlistSlice";
 import followReducer from "@/redux/features/follow/followSlice";
+import agentRatingReducer from "@/redux/features/agentRating/agentRatingSlice";
 import { baseApi } from "./api/baseApi";
 
 // Persist configuration for auth slice
@@ -29,6 +30,7 @@ export const store = configureStore({
     resume: resumeReducer,
     candidateShortlist: candidateShortlistReducer,
     follow: followReducer,
+    agentRating: agentRatingReducer,
   },
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware({

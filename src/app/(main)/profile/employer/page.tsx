@@ -245,7 +245,7 @@ export default function EmployerProfilePage() {
           </div>
 
           {/* Action Buttons */}
-          <div className="flex gap-2 flex-wrap mt-4">
+          {/* <div className="flex gap-2 flex-wrap mt-4">
             <Button
               variant="outline"
               onClick={handleMessage}
@@ -271,7 +271,7 @@ export default function EmployerProfilePage() {
                 </>
               )}
             </Button>
-          </div>
+          </div> */}
         </div>
       </div>
 
