@@ -51,6 +51,12 @@ export default function SignInPage() {
         toast.success("Welcome back!", {
           description: "You have successfully signed in to your account.",
         });
+
+        if (res?.data?.isVerified === false) {
+          router.push("/verify-email");
+          return;
+        }
+        
         form.reset();
         if (res.data.user?.profileId) {
           router.push("/");
