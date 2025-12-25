@@ -8,10 +8,12 @@ import { getLinkedInProfile, verifyOAuthState } from "@/lib/linkedinAuth";
 import { useLoginMutation } from "@/redux/features/auth/authApi";
 
 export default function LinkedInCallbackPage() {
+  const [error, setError] = useState<string>("");
+
+  const [login] = useLoginMutation();
+
   const router = useRouter();
   const searchParams = useSearchParams();
-  const [error, setError] = useState<string>("");
-  const [login] = useLoginMutation();
   const hasProcessed = useRef(false);
 
   useEffect(() => {
@@ -45,12 +47,10 @@ export default function LinkedInCallbackPage() {
           // Don't throw error for now, as state might be lost in some browsers
         }
 
-        console.log("Exchanging code for profile...");
-
         // Exchange code for access token and get profile (server-side)
         const linkedInProfile = await getLinkedInProfile(code);
 
-        console.log("Profile received:", linkedInProfile);
+        // console.log("Profile received:", linkedInProfile);
 
         // Get role and userType from sessionStorage (set from signin/signup page)
         const role = sessionStorage.getItem("linkedin_role");
@@ -74,8 +74,6 @@ export default function LinkedInCallbackPage() {
           email: linkedInProfile.email,
           loginProvider: "linkedin",
         };
-
-        console.log("LinkedIN profile ---------->", linkedInProfile)
 
         // Add additional fields for new users
         if (isSignup && role && userType) {
@@ -118,10 +116,9 @@ export default function LinkedInCallbackPage() {
           errorMessage === "Account does not exist. Please sign up first." &&
           !isSignup
         ) {
-          // setTimeout(() => {
           router.push("/signup");
-          // }, 1000);
-          toast.error("First create account with LinkedIn in signup page.", {
+
+          toast.error("First create account with LinkedIn", {
             description: "Redirecting to signup...",
           });
           return;

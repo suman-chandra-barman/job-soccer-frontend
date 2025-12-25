@@ -17,8 +17,8 @@ export function middleware(request: NextRequest) {
 
   // Define auth routes (should not be accessible when authenticated)
   const isAuthRoute =
-    pathname.startsWith("/signin") ||
-    pathname.startsWith("/signup") ||
+    // pathname.startsWith("/signin") ||
+    // pathname.startsWith("/signup") ||
     pathname.startsWith("/forgot-password") ||
     pathname.startsWith("/create-new-password");
 
