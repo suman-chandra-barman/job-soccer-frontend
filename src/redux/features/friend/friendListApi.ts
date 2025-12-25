@@ -4,7 +4,10 @@ import { baseApi } from "../../api/baseApi";
 // Types
 interface FriendRequestSender {
   _id: string;
+  firstName: string;
+  lastName: string;
   email: string;
+  profileImage: string | null;
   role: string;
   userType: string;
   createdAt: string;

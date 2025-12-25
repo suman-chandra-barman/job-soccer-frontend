@@ -25,7 +25,10 @@ export interface RequestCardProps {
     _id: string;
     senderId: {
       _id: string;
+      firstName: string;
+      lastName: string;
       email: string;
+      profileImage: string | null;
       role: string;
       userType: string;
       createdAt: string;
