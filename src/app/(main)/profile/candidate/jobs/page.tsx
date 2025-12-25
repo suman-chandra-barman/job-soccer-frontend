@@ -129,7 +129,7 @@ const JobsList: React.FC = () => {
   const isLoading = activeTab === "saved" ? savedLoading : appliedLoading;
 
   return (
-    <div className="w-full p-4 border rounded-2xl">
+    <div className="w-full p-2 md:p-4 border rounded-2xl">
       {/* Header */}
       <div className="flex justify-between items-center mb-6">
         <h1 className="text-2xl font-bold text-gray-900">My Jobs</h1>
@@ -163,7 +163,7 @@ const JobsList: React.FC = () => {
       </div>
 
       {/* Jobs List */}
-      <div className="space-y-4 px-6 py-4">
+      <div className="space-y-4 px-2 md:px-6 py-2 md:py-4">
         {isLoading ? (
           <JobsListSkeletonGrid count={3} />
         ) : filteredJobs.length === 0 ? (

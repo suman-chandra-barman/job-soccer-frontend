@@ -20,6 +20,8 @@ export default function LinkedInCallbackPage() {
     hasProcessed.current = true;
 
     const handleLinkedInCallback = async () => {
+      let isSignup = false;
+
       try {
         const code = searchParams.get("code");
         const state = searchParams.get("state");
@@ -53,7 +55,7 @@ export default function LinkedInCallbackPage() {
         // Get role and userType from sessionStorage (set from signin/signup page)
         const role = sessionStorage.getItem("linkedin_role");
         const userType = sessionStorage.getItem("linkedin_userType");
-        const isSignup = sessionStorage.getItem("linkedin_isSignup") === "true";
+        isSignup = sessionStorage.getItem("linkedin_isSignup") === "true";
 
         // Clean up session storage
         sessionStorage.removeItem("linkedin_role");
@@ -72,6 +74,8 @@ export default function LinkedInCallbackPage() {
           email: linkedInProfile.email,
           loginProvider: "linkedin",
         };
+
+        console.log("LinkedIN profile ---------->", linkedInProfile)
 
         // Add additional fields for new users
         if (isSignup && role && userType) {
@@ -108,6 +112,21 @@ export default function LinkedInCallbackPage() {
           err?.data?.message ||
           err?.message ||
           "LinkedIn authentication failed. Please try again.";
+
+        // Check if account doesn't exist and this is a login attempt
+        if (
+          errorMessage === "Account does not exist. Please sign up first." &&
+          !isSignup
+        ) {
+          // setTimeout(() => {
+          router.push("/signup");
+          // }, 1000);
+          toast.error("First create account with LinkedIn in signup page.", {
+            description: "Redirecting to signup...",
+          });
+          return;
+        }
+
         setError(errorMessage);
         toast.error("Authentication failed", {
           description: errorMessage,
