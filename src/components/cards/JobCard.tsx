@@ -300,7 +300,7 @@ export function JobCard({ job }: JobCardProps) {
         isOpen={showLoginModal}
         onClose={handleCloseModal}
         onLogin={handleLogin}
-        message="Please log in to apply for jobs or save them to your shortlist."
+        message="Please log in to continue."
       />
     </div>
   );
