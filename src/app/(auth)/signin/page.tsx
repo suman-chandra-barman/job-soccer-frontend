@@ -21,6 +21,8 @@ import { signInSchema, type SignInFormData } from "@/shchemas/signinValidation";
 import { useRouter } from "next/navigation";
 import { Spinner } from "@/components/ui/spinner";
 import { useLoginMutation } from "@/redux/features/auth/authApi";
+import { LinkedInButton } from "@/components/auth/LinkedInButton";
+import { getLinkedInAuthUrl } from "@/lib/linkedinAuth";
 
 export default function SignInPage() {
   const [showPassword, setShowPassword] = useState(false);
@@ -81,6 +83,15 @@ export default function SignInPage() {
 
   const handleForgotPassword = () => {
     router.push("/forgot-password");
+  };
+
+  const handleLinkedInLogin = () => {
+    // Store that this is a login flow (not signup)
+    sessionStorage.setItem("linkedin_isSignup", "false");
+
+    // Redirect to LinkedIn OAuth
+    const authUrl = getLinkedInAuthUrl();
+    window.location.href = authUrl;
   };
 
   return (
@@ -204,6 +215,22 @@ export default function SignInPage() {
               </Button>
             </form>
           </Form>
+
+          {/* Divider */}
+          <div className="relative my-6">
+            <div className="absolute inset-0 flex items-center">
+              <div className="w-full border-t border-gray-200"></div>
+            </div>
+            <div className="relative flex justify-center text-sm">
+              <span className="px-2 bg-white text-gray-500">Or</span>
+            </div>
+          </div>
+
+          {/* LinkedIn Login Button */}
+          <LinkedInButton
+            onClick={handleLinkedInLogin}
+            label="Sign in with LinkedIn"
+          />
 
           {/* Sign up link */}
           <div className="text-center text-sm text-gray-600 mt-6">

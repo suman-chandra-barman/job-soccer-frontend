@@ -23,6 +23,8 @@ import { useRouter } from "next/navigation";
 import RoleSelect from "@/components/input/SelectRole";
 import { useSignupMutation } from "@/redux/features/auth/authApi";
 import { Spinner } from "@/components/ui/spinner";
+import { LinkedInButton } from "@/components/auth/LinkedInButton";
+import { getLinkedInAuthUrl } from "@/lib/linkedinAuth";
 
 export default function SignUpPage() {
   const [userRype, setUserRype] = useState<string>("");
@@ -80,6 +82,27 @@ export default function SignUpPage() {
         }
       );
     }
+  };
+
+  const handleLinkedInSignup = () => {
+    // Check if role is selected
+    const role = form.getValues("role");
+    if (!role || !userRype) {
+      toast.error("Please select a role", {
+        description:
+          "You need to select a role before signing up with LinkedIn.",
+      });
+      return;
+    }
+
+    // Store role and userType for LinkedIn callback
+    sessionStorage.setItem("linkedin_role", role);
+    sessionStorage.setItem("linkedin_userType", userRype);
+    sessionStorage.setItem("linkedin_isSignup", "true");
+
+    // Redirect to LinkedIn OAuth
+    const authUrl = getLinkedInAuthUrl();
+    window.location.href = authUrl;
   };
 
   return (
@@ -259,6 +282,22 @@ export default function SignUpPage() {
               </Button>
             </form>
           </Form>
+
+          {/* Divider */}
+          <div className="relative my-6">
+            <div className="absolute inset-0 flex items-center">
+              <div className="w-full border-t border-gray-200"></div>
+            </div>
+            <div className="relative flex justify-center text-sm">
+              <span className="px-2 bg-white text-gray-500">Or</span>
+            </div>
+          </div>
+
+          {/* LinkedIn Signup Button */}
+          <LinkedInButton
+            onClick={handleLinkedInSignup}
+            label="Sign up with LinkedIn"
+          />
 
           {/* Sign in link */}
           <div className="text-center text-sm text-gray-600 mt-4">
