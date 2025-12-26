@@ -180,7 +180,7 @@ export default function EmployerDetailsPage() {
               </div>
             ) : (
               <Avatar className="w-32 h-32 sm:w-36 sm:h-36 md:w-40 md:h-40 border-4 border-white shadow-lg mx-auto sm:mx-0">
-                <AvatarFallback className="text-2xl sm:text-3xl md:text-4xl font-medium bg-linear-to-br from-green-400 to-blue-500 text-white">
+                <AvatarFallback className="text-2xl sm:text-3xl md:text-4xl font-medium bg-linear-to-br from-yellow-500 to-blue-500 text-white">
                   {employer?.firstName?.charAt(0)}
                   {employer?.lastName?.charAt(0)}
                 </AvatarFallback>

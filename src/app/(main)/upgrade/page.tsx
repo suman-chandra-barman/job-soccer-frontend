@@ -227,7 +227,7 @@ export default function UpgradePage() {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-slate-50 to-gray-100 py-12 px-4">
+      <div className="min-h-screen bg-linear-to-br from-slate-50 to-gray-100 py-12 px-4">
         <div className="container mx-auto">
           <div className="text-center mb-16 animate-pulse">
             <div className="h-8 bg-gray-200 rounded w-64 mx-auto mb-4"></div>
@@ -261,7 +261,7 @@ export default function UpgradePage() {
 
   if (!pricingData) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-slate-50 to-gray-100 flex items-center justify-center">
+      <div className="min-h-screen bg-linear-to-br from-slate-50 to-gray-100 flex items-center justify-center">
         <div className="text-center">
           <h2 className="text-2xl font-bold text-gray-900 mb-4">
             Failed to load pricing data
@@ -273,7 +273,7 @@ export default function UpgradePage() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 to-gray-100 py-12 px-4">
+    <div className="min-h-screen bg-linear-to-br from-slate-50 to-gray-100 py-12 px-4">
       <div className="container mx-auto">
         {/* Header Section */}
         <div className="text-center mb-16">
@@ -299,7 +299,7 @@ export default function UpgradePage() {
                 key={plan.id}
                 className={`relative transform transition-all duration-300 hover:scale-105 hover:shadow-2xl ${
                   isRecommended
-                    ? "bg-gradient-to-br from-green-50 to-emerald-50 border-2 border-green-500 shadow-xl scale-105"
+                    ? "bg-linear-to-br from-green-50 to-emerald-50 border-2 border-green-500 shadow-xl scale-105"
                     : "bg-white border border-gray-200 shadow-lg hover:border-green-300"
                 } ${selectedPlan === plan.id ? "ring-4 ring-green-200" : ""}`}
               >

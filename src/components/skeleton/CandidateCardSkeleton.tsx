@@ -9,7 +9,7 @@ import { Card, CardContent } from "@/components/ui/card";
  */
 export function CandidateCardSkeleton() {
   return (
-    <Card className="bg-gradient-to-br from-white to-[#FDF9E3] border-0 shadow-sm">
+    <Card className="bg-linear-to-br from-white to-[#FDF9E3] border-0 shadow-sm">
       <CardContent className="p-6">
         {/* Profile Header Skeleton */}
         <div className="flex items-center gap-3 mb-4">

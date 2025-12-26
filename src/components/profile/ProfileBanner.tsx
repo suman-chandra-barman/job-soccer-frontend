@@ -63,7 +63,7 @@ export default function ProfileBanner({
   };
 
   return (
-    <div className="relative h-48 lg:h-64 bg-gradient-to-br from-gray-100 via-gray-50 to-gray-50 rounded-lg overflow-hidden group">
+    <div className="relative h-48 lg:h-64 bg-linear-to-br from-gray-100 via-gray-50 to-gray-50 rounded-lg overflow-hidden group">
       {/* Banner Image */}
       {bannerUrl ? (
         <Image

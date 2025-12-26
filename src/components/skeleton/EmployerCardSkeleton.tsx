@@ -8,7 +8,7 @@ import { Skeleton } from "@/components/ui/skeleton";
  */
 export function EmployerCardSkeleton() {
   return (
-    <div className="bg-gradient-to-br from-white to-[#FDF9E3] rounded-xl p-4 shadow-sm border border-gray-100">
+    <div className="bg-linear-to-br from-white to-[#FDF9E3] rounded-xl p-4 shadow-sm border border-gray-100">
       {/* Header Section */}
       <div className="border-b border-gray-200 pb-4">
         <div className="flex items-center gap-3 mb-4">
