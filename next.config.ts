@@ -7,10 +7,10 @@ const nextConfig: NextConfig = {
         protocol: "https",
         hostname: process.env.NEXT_PUBLIC_HOSTNAME as string,
       },
-      // {
-      //   protocol: "http",
-      //   hostname: process.env.NEXT_PUBLIC_HOSTNAME as string,
-      // },
+      {
+        protocol: "http",
+        hostname: process.env.NEXT_PUBLIC_HOSTNAME as string,
+      },
       {
         protocol: "http",
         hostname: "images.pexels.com",

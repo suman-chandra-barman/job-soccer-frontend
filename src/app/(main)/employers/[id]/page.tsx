@@ -153,7 +153,7 @@ export default function EmployerDetailsPage() {
   return (
     <div className="px-4 md:px-6 lg:px-8 container mx-auto relative pb-16">
       {/* Banner Section */}
-      <div className="relative mb-6 sm:mb-8 h-40 sm:h-48 md:h-64 rounded-lg sm:rounded-2xl overflow-hidden bg-gradient-to-r from-green-400 to-blue-500">
+      <div className="relative mb-6 sm:mb-8 h-40 sm:h-48 md:h-64 rounded-lg sm:rounded-2xl overflow-hidden bg-linear-to-r from-yellow-50 to-yellow-500">
         {displayBanner && (
           <Image
             src={displayBanner}
@@ -180,7 +180,7 @@ export default function EmployerDetailsPage() {
               </div>
             ) : (
               <Avatar className="w-32 h-32 sm:w-36 sm:h-36 md:w-40 md:h-40 border-4 border-white shadow-lg mx-auto sm:mx-0">
-                <AvatarFallback className="text-2xl sm:text-3xl md:text-4xl font-medium bg-gradient-to-br from-green-400 to-blue-500 text-white">
+                <AvatarFallback className="text-2xl sm:text-3xl md:text-4xl font-medium bg-linear-to-br from-green-400 to-blue-500 text-white">
                   {employer?.firstName?.charAt(0)}
                   {employer?.lastName?.charAt(0)}
                 </AvatarFallback>
@@ -286,7 +286,7 @@ export default function EmployerDetailsPage() {
 
         {/* Agent Rating Section - Only show for agents */}
         {employer?.role === "Agent" && employer?.userType === "employer" && (
-          <div className="mb-6 sm:mb-8 p-4 sm:p-6 bg-gradient-to-br from-blue-50 to-indigo-50 rounded-lg border border-blue-200">
+          <div className="mb-6 sm:mb-8 p-4 sm:p-6 bg-linear-to-br from-blue-50 to-indigo-50 rounded-lg border border-blue-200">
             <h2 className="text-lg sm:text-xl font-semibold text-gray-900 mb-4">
               Agent Rating
             </h2>

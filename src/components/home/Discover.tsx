@@ -7,18 +7,17 @@ import { diagramAnimations } from "../../lib/animations";
 
 export function Discover() {
   return (
-    <section className="pt-16 bg-white">
+    <section className=" bg-white py-12">
       {/* Animation Styles */}
       <style jsx>{diagramAnimations}</style>
 
+      {/* Header */}
+      <header className="py-8 text-center bg-primary">
+        <h2 className="text-2xl md:text-4xl font-bold text-center text-gray-900">
+          What You Will Discover Here
+        </h2>
+      </header>
       <div className="container mx-auto px-4">
-        {/* Header */}
-        <header className="text-center mb-16">
-          <h2 className="text-2xl md:text-4xl font-bold text-[#362F05] mb-4">
-            What You Will Discover Here
-          </h2>
-        </header>
-
         {/* Content Grid */}
         <div className="grid lg:grid-cols-2 gap-12 items-center">
           {/* Left Image with Gradient Background */}

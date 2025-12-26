@@ -111,10 +111,6 @@ export default function SignInPage() {
           <h2 className="text-4xl font-bold text-[#010A18] leading-tight">
             Welcome Back to Your Football Career Hub
           </h2>
-          <p className="text-[#837E5B] mt-1">
-            Log in to manage your smart assistant and stay in control of your AI
-            tools.
-          </p>
         </div>
       </div>
 
