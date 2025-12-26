@@ -114,7 +114,7 @@ export default function UserProfilePage() {
   return (
     <div className="px-4 max-w-7xl mx-auto relative">
       {/* Banner Section - Always Visible */}
-      <div className="relative mb-8 h-64 rounded-2xl overflow-hidden bg-linear-to-r from-green-400 to-blue-500">
+      <div className="relative mb-8 h-64 rounded-2xl overflow-hidden bg-linear-to-r from-yellow-50 to-yellow-500">
         {displayBanner && (
           <Image
             src={displayBanner}
@@ -141,7 +141,7 @@ export default function UserProfilePage() {
               </div>
             ) : (
               <Avatar className="w-40 h-40 border-4 border-white shadow-lg">
-                <AvatarFallback className="text-4xl font-medium bg-linear-to-br from-green-400 to-blue-500 text-white">
+                <AvatarFallback className="text-4xl font-medium bg-linear-to-br from-yellow-50 to-yellow-500">
                   {user?.firstName?.charAt(0)}
                   {user?.lastName?.charAt(0)}
                 </AvatarFallback>
