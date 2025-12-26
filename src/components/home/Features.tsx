@@ -5,11 +5,13 @@ import global from "@/assets/home/global.svg";
 import security from "@/assets/home/security.svg";
 import chart from "@/assets/home/chart.svg"
 import profile from "@/assets/home/profile.svg"
+import footbal from "@/assets/home/footbal.svg"
+import job from "@/assets/home/job.svg"
 
 export function Features() {
   const features = [
     {
-      icon: brainIcon,
+      icon: footbal,
       title: "Specialized in Soccer Staffing",
       lists: ["JOBSOCCER is 100% focused on the soccer ecosystem."],
     },
@@ -31,7 +33,7 @@ export function Features() {
       lists: ["AI evaluates completeness and strength of each profile."],
     },
     {
-      icon: brainIcon,
+      icon: job,
       title: "AI Powered job suggestions",
       lists: ["Personalized job recommendations for players and staff."],
     },
