@@ -230,8 +230,8 @@ export default function EditProfileModal({
   // Determine which fields to show based on role
   const isProfessionalPlayer = userRole === "Professional Player";
   const isAmateurPlayer = userRole === "Amateur Player";
-  const isHighSchool = userRole === "High School";
-  const isCollegeUniversity = userRole === "College/University";
+  const isHighSchool = userRole === " High School Player";
+  const isCollegeUniversity = userRole === "College/University Player";
   const isOnFieldStaff = userRole === "On field staff";
   const isOfficeStaff = userRole === "Office Staff";
 

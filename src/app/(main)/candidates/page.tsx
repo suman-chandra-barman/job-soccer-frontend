@@ -20,8 +20,8 @@ interface CandidateSection {
 }
 
 interface FeaturedCandidatesData {
-  HighSchool?: ICandidate[];
-  "College/University"?: ICandidate[];
+  HighSchoolPlayer?: ICandidate[];
+  "College/UniversityPlayer"?: ICandidate[];
   ProfessionalPlayer?: ICandidate[];
   AmateurPlayer?: ICandidate[];
   Onfieldstaff?: ICandidate[];
@@ -83,12 +83,12 @@ function CandidatesPage() {
     () => [
       {
         title: "High School Players",
-        dataKey: "HighSchool",
+        dataKey: "HighSchoolPlayer",
         searchRole: CandidateRole.HIGH_SCHOOL,
       },
       {
         title: "College/University Players",
-        dataKey: "College/University",
+        dataKey: "College/UniversityPlayer",
         searchRole: CandidateRole.COLLEGE_UNIVERSITY,
       },
       {
