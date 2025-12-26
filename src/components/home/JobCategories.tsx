@@ -68,7 +68,7 @@ export function JobCategories() {
                     </p>
                   </div>
                   <ChevronRight
-                    className="w-5 h-5 text-gray-400 group-hover:text-white flex-shrink-0"
+                    className="w-5 h-5 text-gray-400 group-hover:text-white shrink-0"
                     aria-hidden="true"
                   />
                 </div>

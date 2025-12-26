@@ -31,7 +31,7 @@ const FindYourDreamTeam = () => {
             <div className="space-y-8 text-[#504A20]">
               {opportunities.map((opportunity, index) => (
                 <div key={index} className="flex items-start gap-3">
-                  <div className="flex-shrink-0 mt-1 bg-amber-50">
+                  <div className="shrink-0 mt-1 bg-amber-50">
                     <Check className="w-5 h-5 text-[#504A20]" />
                   </div>
                   <p className="text-gray-700 leading-relaxed">{opportunity}</p>
@@ -48,7 +48,11 @@ const FindYourDreamTeam = () => {
               </h2>
             </div>
 
-            <Suspense fallback={<CardSkeletonGrid className="grid grid-cols-1 md:grid-cols-2 gap-3 md:gap-4 " />}>
+            <Suspense
+              fallback={
+                <CardSkeletonGrid className="grid grid-cols-1 md:grid-cols-2 gap-3 md:gap-4 " />
+              }
+            >
               <EmployersPreview />
             </Suspense>
 

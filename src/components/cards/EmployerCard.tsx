@@ -122,7 +122,7 @@ export function EmployerCard({ employer }: { employer: IEmployer }) {
               </h3>
             </Link>
             <div className="flex items-center gap-1 text-gray-500 text-sm mt-1">
-              <MapPin className="w-4 h-4 flex-shrink-0" />
+              <MapPin className="w-4 h-4 shrink-0" />
               <span className="truncate">
                 {employer?.profile?.location || "Location not specified"}
               </span>

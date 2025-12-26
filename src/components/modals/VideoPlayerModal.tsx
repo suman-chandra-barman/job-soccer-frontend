@@ -260,7 +260,7 @@ export default function VideoPlayerModal({
               onClick={onClose}
               variant="ghost"
               size="icon"
-              className="text-white hover:bg-white/10 hover:text-white flex-shrink-0 h-8 w-8 sm:h-10 sm:w-10"
+              className="text-white hover:bg-white/10 hover:text-white shrink-0 h-8 w-8 sm:h-10 sm:w-10"
             >
               <X className="h-4 w-4 sm:h-5 sm:w-5" />
             </Button>
@@ -406,7 +406,7 @@ export default function VideoPlayerModal({
                     key={video._id}
                     onClick={() => setCurrentIndex(index)}
                     className={cn(
-                      "flex-shrink-0 relative rounded-lg overflow-hidden transition-all border-2",
+                      "shrink-0 relative rounded-lg overflow-hidden transition-all border-2",
                       currentIndex === index
                         ? "border-yellow-400"
                         : "border-gray-700 hover:border-gray-500"

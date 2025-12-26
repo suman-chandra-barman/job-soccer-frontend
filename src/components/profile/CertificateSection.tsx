@@ -305,7 +305,7 @@ function CertificateItem({
 
   return (
     <div className="flex space-x-3 lg:space-x-4 p-3 lg:p-4 hover:bg-gray-50 transition-colors">
-      <div className="flex-shrink-0">
+      <div className="shrink-0">
         <div className="w-10 h-10 lg:w-12 lg:h-12 bg-green-600 rounded-lg flex items-center justify-center text-white font-bold text-xs lg:text-sm">
           {certificate.issuingOrganization.substring(0, 2).toUpperCase()}
         </div>

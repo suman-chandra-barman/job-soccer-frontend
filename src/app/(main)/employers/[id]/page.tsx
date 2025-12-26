@@ -197,7 +197,7 @@ export default function EmployerDetailsPage() {
             <h2 className="text-2xl sm:text-2xl md:text-3xl font-bold text-gray-900 flex items-center gap-2">
               {displayName}
               {verificationStatus?.status === "approved" && (
-                <BadgeCheck className="h-5 w-5 sm:h-6 sm:w-6 text-blue-500 flex-shrink-0" />
+                <BadgeCheck className="h-5 w-5 sm:h-6 sm:w-6 text-blue-500 shrink-0" />
               )}
             </h2>
 
@@ -205,13 +205,13 @@ export default function EmployerDetailsPage() {
             <div className="flex flex-col sm:flex-row sm:flex-wrap gap-3 sm:gap-4 mt-2 mb-4 text-gray-600 text-sm">
               {employer?.email && (
                 <div className="flex items-center gap-2">
-                  <Mail className="h-4 w-4 flex-shrink-0" />
+                  <Mail className="h-4 w-4 shrink-0" />
                   <span className="truncate">{employer.email}</span>
                 </div>
               )}
               {employer?.profile?.location && (
                 <div className="flex items-center gap-2">
-                  <MapPin className="h-4 w-4 flex-shrink-0" />
+                  <MapPin className="h-4 w-4 shrink-0" />
                   <span className="truncate">{employer.profile.location}</span>
                 </div>
               )}
@@ -338,7 +338,7 @@ export default function EmployerDetailsPage() {
                   Phone Number
                 </label>
                 <p className="text-gray-900 font-medium flex items-center gap-2 text-sm sm:text-base">
-                  <Phone className="h-4 w-4 text-gray-500 flex-shrink-0" />
+                  <Phone className="h-4 w-4 text-gray-500 shrink-0" />
                   <span className="truncate">
                     {employer.profile.phoneNumber}
                   </span>
@@ -353,7 +353,7 @@ export default function EmployerDetailsPage() {
                   Website
                 </label>
                 <p className="text-blue-600 font-medium cursor-pointer hover:underline flex items-center gap-2 text-sm sm:text-base">
-                  <Globe className="h-4 w-4 flex-shrink-0" />
+                  <Globe className="h-4 w-4 shrink-0" />
                   <a
                     href={employer.profile.website}
                     target="_blank"
@@ -373,7 +373,7 @@ export default function EmployerDetailsPage() {
                   Address
                 </label>
                 <p className="text-gray-900 font-medium flex items-start gap-2 text-sm sm:text-base">
-                  <MapPin className="h-4 w-4 text-gray-500 flex-shrink-0 mt-0.5" />
+                  <MapPin className="h-4 w-4 text-gray-500 shrink-0 mt-0.5" />
                   <span>{employer.profile.address}</span>
                 </p>
               </div>
@@ -398,7 +398,7 @@ export default function EmployerDetailsPage() {
                   Founded
                 </label>
                 <p className="text-gray-900 font-medium flex items-center gap-2 text-sm sm:text-base">
-                  <Calendar className="h-4 w-4 text-gray-500 flex-shrink-0" />
+                  <Calendar className="h-4 w-4 text-gray-500 shrink-0" />
                   {formatFoundedDate(employer.profile.founded)}
                 </p>
               </div>
