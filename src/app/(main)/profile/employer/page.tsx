@@ -429,6 +429,18 @@ export default function EmployerProfilePage() {
                 </p>
               </div>
             )}
+
+            {/* Profile AI Score */}
+            {currentUser?.aiProfileScore && (
+              <div>
+                <label className="text-sm text-gray-500 mb-1 block">
+                  Profile AI Score
+                </label>
+                <p className="text-gray-900 font-medium">
+                  {currentUser.aiProfileScore}
+                </p>
+              </div>
+            )}
           </div>
         </div>
       </div>

@@ -96,17 +96,16 @@ export default function SignInPage() {
 
   return (
     <div className="min-h-screen flex relative">
-      {/* Home navigation link */}
-      <Link
-        href="/"
-        className="absolute top-6 left-6 flex items-center gap-2 px-4 py-2 rounded-md bg-black hover:bg-gray-800 text-white hover:text-white shadow-md hover:shadow-lg transition-all duration-300 z-10 group font-medium"
-      >
-        <IoMdArrowBack className="h-5 w-5 group-hover:-translate-x-1 transition-transform duration-300" />
-        <span className="text-sm">Home</span>
-      </Link>
-
       {/* Left side - Dark background with text */}
       <div className="hidden flex-1 md:flex items-center justify-center p-2 md:px-5 lg:px-8 bg-primary">
+        {/* Home navigation link */}
+        <Link
+          href="/"
+          className="absolute top-6 left-6 flex items-center gap-2 px-4 py-2 rounded-md bg-black hover:bg-gray-800 text-white hover:text-white shadow-md hover:shadow-lg transition-all duration-300 z-10 group font-medium"
+        >
+          <IoMdArrowBack className="h-5 w-5 group-hover:-translate-x-1 transition-transform duration-300" />
+          <span className="text-sm">Home</span>
+        </Link>
         <div className="max-w-2xl">
           <h2 className="text-4xl font-bold text-[#010A18] leading-tight">
             Welcome Back to Your Football Career Hub

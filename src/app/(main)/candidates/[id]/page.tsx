@@ -3,9 +3,8 @@
 import React, { useState } from "react";
 import { useParams } from "next/navigation";
 import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
-import { BadgeCheck, Mail, Upload, XCircle, Lock } from "lucide-react";
+import { BadgeCheck, Mail, XCircle, Lock } from "lucide-react";
 import Image from "next/image";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { toast } from "sonner";
@@ -112,9 +111,9 @@ export default function UserProfilePage() {
   }
 
   return (
-    <div className="px-4 max-w-7xl mx-auto relative">
+    <div className="px-4 sm:px-6 lg:px-8 container mx-auto relative">
       {/* Banner Section - Always Visible */}
-      <div className="relative mb-8 h-64 rounded-2xl overflow-hidden bg-linear-to-r from-yellow-50 to-yellow-500">
+      <div className="relative mb-6 sm:mb-8 h-40 sm:h-48 md:h-64 rounded-lg sm:rounded-2xl overflow-hidden bg-linear-to-r from-yellow-50 to-yellow-500">
         {displayBanner && (
           <Image
             src={displayBanner}
@@ -126,11 +125,11 @@ export default function UserProfilePage() {
       </div>
 
       {/* Profile Avatar - Always Visible */}
-      <div className="relative -mt-32 mb-8 px-4">
+      <div className="relative -mt-20 sm:-mt-24 md:-mt-32 mb-6 sm:mb-8 px-2 sm:px-4">
         <div className="flex items-end gap-4">
           <div className="relative">
             {displayAvatar ? (
-              <div className="w-40 h-40 rounded-full overflow-hidden border-4 border-white shadow-lg bg-white">
+              <div className="w-32 h-32 sm:w-36 sm:h-36 md:w-40 md:h-40 rounded-full overflow-hidden border-4 border-white shadow-lg bg-white mx-auto sm:mx-0">
                 <Image
                   src={displayAvatar}
                   alt={displayName}
@@ -140,8 +139,8 @@ export default function UserProfilePage() {
                 />
               </div>
             ) : (
-              <Avatar className="w-40 h-40 border-4 border-white shadow-lg">
-                <AvatarFallback className="text-4xl font-medium bg-linear-to-br from-yellow-50 to-yellow-500">
+              <Avatar className="w-32 h-32 sm:w-36 sm:h-36 md:w-40 md:h-40 border-4 border-white shadow-lg mx-auto sm:mx-0">
+                <AvatarFallback className="text-2xl sm:text-3xl md:text-4xl font-medium bg-linear-to-br from-yellow-50 to-yellow-500">
                   {user?.firstName?.charAt(0)}
                   {user?.lastName?.charAt(0)}
                 </AvatarFallback>
@@ -152,34 +151,34 @@ export default function UserProfilePage() {
       </div>
 
       {/* Profile Info - Always Visible */}
-      <div className="mb-8 px-4">
-        <div className="mb-6">
-          <h2 className="text-3xl font-bold text-gray-900 flex items-center gap-2">
+      <div className="mb-6 sm:mb-8 px-2 sm:px-4">
+        <div className="mb-4 sm:mb-6">
+          <h2 className="text-2xl sm:text-2xl md:text-3xl font-bold text-gray-900 flex flex-wrap items-center gap-2">
             {displayName}
             {verificationStatus?.status === "approved" && (
-              <BadgeCheck className="h-6 w-6 text-blue-500" />
+              <BadgeCheck className="h-5 w-5 sm:h-6 sm:w-6 text-blue-500 shrink-0" />
             )}
           </h2>
 
           {/* Show email only to friends */}
           {areFriends && user?.email && (
-            <div className="flex flex-wrap gap-4 mt-2 mb-4 text-gray-600">
+            <div className="flex flex-wrap gap-3 sm:gap-4 mt-2 mb-3 sm:mb-4 text-gray-600 text-sm">
               <div className="flex items-center gap-2">
-                <Mail className="h-4 w-4" />
-                <span className="text-sm">{user.email}</span>
+                <Mail className="h-4 w-4 shrink-0" />
+                <span className="text-sm truncate">{user.email}</span>
               </div>
             </div>
           )}
 
-          <div className="flex gap-2 flex-wrap mt-4">
+          <div className="flex gap-2 flex-wrap mt-3 sm:mt-4">
             {displayRole && (
-              <Badge className="bg-yellow-100 text-yellow-800 border-yellow-200 px-4 rounded-full">
+              <Badge className="bg-yellow-100 text-yellow-800 border-yellow-200 px-3 sm:px-4 py-1 rounded-full text-xs sm:text-sm">
                 {displayRole}
               </Badge>
             )}
             {!areFriends && verificationStatus?.status === "approved" && (
-              <Badge className="bg-blue-50 text-blue-700 border-blue-200 px-3 rounded-full flex items-center gap-1">
-                <BadgeCheck className="h-4 w-4" />
+              <Badge className="bg-blue-50 text-blue-700 border-blue-200 px-2 sm:px-3 py-1 rounded-full flex items-center gap-1 text-xs sm:text-sm">
+                <BadgeCheck className="h-3 w-3 sm:h-4 sm:w-4 shrink-0" />
                 Verified
               </Badge>
             )}
@@ -198,23 +197,23 @@ export default function UserProfilePage() {
       <div className={!areFriends ? "filter blur-sm pointer-events-none" : ""}>
         {areFriends ? (
           // Full profile view for friends
-          <div className="p-4 md:p-6 border rounded-2xl shadow">
+          <div className="p-4 sm:p-6 border rounded-lg sm:rounded-2xl shadow">
             {/* Profile Information Section */}
-            <div className="bg-white rounded-lg border shadow border-gray-200 p-6 mb-6">
-              <div className="flex items-center justify-between mb-6">
-                <h2 className="text-xl font-semibold text-gray-900">
+            <div className="bg-white rounded-lg border shadow border-gray-200 p-4 sm:p-6 mb-4 sm:mb-6">
+              <div className="flex items-center justify-between mb-4 sm:mb-6">
+                <h2 className="text-lg sm:text-xl font-semibold text-gray-900">
                   Profile Information
                 </h2>
               </div>
 
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-6">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-4 sm:gap-x-8 gap-y-4 sm:gap-y-6">
                 {/* Personal Information Fields */}
                 {user?.profile?.dateOfBirth && (
                   <div>
-                    <label className="text-sm text-gray-500 mb-1 block">
+                    <label className="text-xs sm:text-sm text-gray-500 mb-1 block">
                       Date of birth
                     </label>
-                    <p className="text-gray-900 font-medium">
+                    <p className="text-gray-900 font-medium text-sm sm:text-base">
                       {new Date(user.profile.dateOfBirth).toLocaleDateString(
                         "en-US",
                         {
@@ -229,10 +228,10 @@ export default function UserProfilePage() {
 
                 {user?.profile?.placeOfBirth && (
                   <div>
-                    <label className="text-sm text-gray-500 mb-1 block">
+                    <label className="text-xs sm:text-sm text-gray-500 mb-1 block">
                       Place of birth
                     </label>
-                    <p className="text-gray-900 font-medium">
+                    <p className="text-gray-900 font-medium text-sm sm:text-base">
                       {user.profile.placeOfBirth}
                     </p>
                   </div>
@@ -240,10 +239,10 @@ export default function UserProfilePage() {
 
                 {user?.profile?.nationality && (
                   <div>
-                    <label className="text-sm text-gray-500 mb-1 block">
+                    <label className="text-xs sm:text-sm text-gray-500 mb-1 block">
                       Nationality
                     </label>
-                    <p className="text-gray-900 font-medium">
+                    <p className="text-gray-900 font-medium text-sm sm:text-base">
                       {user.profile.nationality}
                     </p>
                   </div>
@@ -251,10 +250,10 @@ export default function UserProfilePage() {
 
                 {user?.profile?.phoneNumber && (
                   <div>
-                    <label className="text-sm text-gray-500 mb-1 block">
+                    <label className="text-xs sm:text-sm text-gray-500 mb-1 block">
                       Phone number
                     </label>
-                    <p className="text-gray-900 font-medium">
+                    <p className="text-gray-900 font-medium text-sm sm:text-base">
                       {user.profile.phoneNumber}
                     </p>
                   </div>
@@ -262,10 +261,10 @@ export default function UserProfilePage() {
 
                 {user?.profile?.gender && (
                   <div>
-                    <label className="text-sm text-gray-500 mb-1 block">
+                    <label className="text-xs sm:text-sm text-gray-500 mb-1 block">
                       Gender
                     </label>
-                    <p className="text-gray-900 font-medium">
+                    <p className="text-gray-900 font-medium text-sm sm:text-base">
                       {user.profile.gender}
                     </p>
                   </div>
@@ -273,10 +272,10 @@ export default function UserProfilePage() {
 
                 {user?.profile?.position && (
                   <div>
-                    <label className="text-sm text-gray-500 mb-1 block">
+                    <label className="text-xs sm:text-sm text-gray-500 mb-1 block">
                       Position
                     </label>
-                    <p className="text-gray-900 font-medium">
+                    <p className="text-gray-900 font-medium text-sm sm:text-base">
                       {user.profile.position}
                     </p>
                   </div>
@@ -284,10 +283,10 @@ export default function UserProfilePage() {
 
                 {user?.profile?.height && (
                   <div>
-                    <label className="text-sm text-gray-500 mb-1 block">
+                    <label className="text-xs sm:text-sm text-gray-500 mb-1 block">
                       Height
                     </label>
-                    <p className="text-gray-900 font-medium">
+                    <p className="text-gray-900 font-medium text-sm sm:text-base">
                       {user.profile.height.size} {user.profile.height.unit}
                     </p>
                   </div>
@@ -295,10 +294,10 @@ export default function UserProfilePage() {
 
                 {user?.profile?.weight && (
                   <div>
-                    <label className="text-sm text-gray-500 mb-1 block">
+                    <label className="text-xs sm:text-sm text-gray-500 mb-1 block">
                       Weight
                     </label>
-                    <p className="text-gray-900 font-medium">
+                    <p className="text-gray-900 font-medium text-sm sm:text-base">
                       {user.profile.weight.size} {user.profile.weight.unit}
                     </p>
                   </div>
@@ -306,10 +305,10 @@ export default function UserProfilePage() {
 
                 {user?.profile?.currentClub && (
                   <div>
-                    <label className="text-sm text-gray-500 mb-1 block">
+                    <label className="text-xs sm:text-sm text-gray-500 mb-1 block">
                       Current Club
                     </label>
-                    <p className="text-gray-900 font-medium">
+                    <p className="text-gray-900 font-medium text-sm sm:text-base">
                       {user.profile.currentClub}
                     </p>
                   </div>
@@ -317,10 +316,10 @@ export default function UserProfilePage() {
 
                 {user?.profile?.availability && (
                   <div>
-                    <label className="text-sm text-gray-500 mb-1 block">
+                    <label className="text-xs sm:text-sm text-gray-500 mb-1 block">
                       Availability
                     </label>
-                    <p className="text-gray-900 font-medium">
+                    <p className="text-gray-900 font-medium text-sm sm:text-base">
                       {user.profile.availability}
                     </p>
                   </div>
@@ -328,10 +327,10 @@ export default function UserProfilePage() {
 
                 {user?.profile?.foot && (
                   <div>
-                    <label className="text-sm text-gray-500 mb-1 block">
+                    <label className="text-xs sm:text-sm text-gray-500 mb-1 block">
                       Foot
                     </label>
-                    <p className="text-gray-900 font-medium">
+                    <p className="text-gray-900 font-medium text-sm sm:text-base">
                       {user.profile.foot}
                     </p>
                   </div>
@@ -339,10 +338,10 @@ export default function UserProfilePage() {
 
                 {user?.profile?.league && (
                   <div>
-                    <label className="text-sm text-gray-500 mb-1 block">
+                    <label className="text-xs sm:text-sm text-gray-500 mb-1 block">
                       League
                     </label>
-                    <p className="text-gray-900 font-medium">
+                    <p className="text-gray-900 font-medium text-sm sm:text-base">
                       {user.profile.league}
                     </p>
                   </div>
@@ -350,10 +349,10 @@ export default function UserProfilePage() {
 
                 {user?.profile?.country && (
                   <div>
-                    <label className="text-sm text-gray-500 mb-1 block">
+                    <label className="text-xs sm:text-sm text-gray-500 mb-1 block">
                       Country
                     </label>
-                    <p className="text-gray-900 font-medium">
+                    <p className="text-gray-900 font-medium text-sm sm:text-base">
                       {user.profile.country}
                     </p>
                   </div>
@@ -361,10 +360,10 @@ export default function UserProfilePage() {
 
                 {user?.profile?.agent && (
                   <div>
-                    <label className="text-sm text-gray-500 mb-1 block">
+                    <label className="text-xs sm:text-sm text-gray-500 mb-1 block">
                       Agent
                     </label>
-                    <p className="text-gray-900 font-medium">
+                    <p className="text-gray-900 font-medium text-sm sm:text-base">
                       {user.profile.agent}
                     </p>
                   </div>
@@ -372,10 +371,10 @@ export default function UserProfilePage() {
 
                 {user?.profile?.socialMedia && (
                   <div>
-                    <label className="text-sm text-gray-500 mb-1 block">
+                    <label className="text-xs sm:text-sm text-gray-500 mb-1 block">
                       Social Media
                     </label>
-                    <p className="text-gray-900 font-medium">
+                    <p className="text-gray-900 font-medium text-sm sm:text-base">
                       {user.profile.socialMedia}
                     </p>
                   </div>
@@ -383,10 +382,10 @@ export default function UserProfilePage() {
 
                 {user?.profile?.schoolName && (
                   <div>
-                    <label className="text-sm text-gray-500 mb-1 block">
+                    <label className="text-xs sm:text-sm text-gray-500 mb-1 block">
                       School Name
                     </label>
-                    <p className="text-gray-900 font-medium">
+                    <p className="text-gray-900 font-medium text-sm sm:text-base">
                       {user.profile.schoolName}
                     </p>
                   </div>
@@ -394,10 +393,10 @@ export default function UserProfilePage() {
 
                 {user?.profile?.collegeOrUniversity && (
                   <div>
-                    <label className="text-sm text-gray-500 mb-1 block">
+                    <label className="text-xs sm:text-sm text-gray-500 mb-1 block">
                       College/University
                     </label>
-                    <p className="text-gray-900 font-medium">
+                    <p className="text-gray-900 font-medium text-sm sm:text-base">
                       {user.profile.collegeOrUniversity}
                     </p>
                   </div>
@@ -405,11 +404,22 @@ export default function UserProfilePage() {
 
                 {user?.profile?.diploma && (
                   <div>
-                    <label className="text-sm text-gray-500 mb-1 block">
+                    <label className="text-xs sm:text-sm text-gray-500 mb-1 block">
                       Diploma
                     </label>
-                    <p className="text-gray-900 font-medium">
+                    <p className="text-gray-900 font-medium text-sm sm:text-base">
                       {user.profile.diploma}
+                    </p>
+                  </div>
+                )}
+
+                {user?.aiProfileScore && (
+                  <div>
+                    <label className="text-xs sm:text-sm text-gray-500 mb-1 block">
+                      Profile AI Score
+                    </label>
+                    <p className="text-gray-900 font-medium text-sm sm:text-base">
+                      {user.aiProfileScore}
                     </p>
                   </div>
                 )}
@@ -438,12 +448,12 @@ export default function UserProfilePage() {
           </div>
         ) : (
           // Restricted view placeholder for non-friends
-          <div className="p-4 md:p-6 border rounded-2xl shadow">
+          <div className="p-4 sm:p-6 border rounded-lg sm:rounded-2xl shadow">
             <Card className="bg-white border-gray-200">
-              <CardContent className="p-12 text-center">
+              <CardContent className="p-6 sm:p-12 text-center">
                 <div className="max-w-md mx-auto">
-                  <Lock className="w-16 h-16 text-gray-400 mx-auto mb-6" />
-                  <h3 className="text-2xl font-semibold text-gray-900 mb-3">
+                  <Lock className="w-12 h-12 sm:w-16 sm:h-16 text-gray-400 mx-auto mb-4 sm:mb-6" />
+                  <h3 className="text-xl sm:text-2xl font-semibold text-gray-900 mb-2 sm:mb-3">
                     Profile Information
                   </h3>
                   <div className="space-y-4">

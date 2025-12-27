@@ -41,12 +41,12 @@ function CandidateSearchPageContent() {
       </div>
 
       {/* Results Section */}
-      <div className="container mx-auto px-4 py-8">
+      <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8">
         {/* Results Header */}
-        <div className="mb-6 flex items-center justify-between">
-          <div className="flex items-center gap-3">
-            <Users className="w-6 h-6 text-green-500" />
-            <h2 className="text-2xl md:text-3xl font-semibold text-gray-900">
+        <div className="mb-4 sm:mb-6 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+          <div className="flex items-center gap-2 sm:gap-3">
+            <Users className="w-5 h-5 sm:w-6 sm:h-6 text-green-500 shrink-0" />
+            <h2 className="text-xl sm:text-2xl md:text-3xl font-semibold text-gray-900">
               Search Results
             </h2>
           </div>
@@ -62,7 +62,7 @@ function CandidateSearchPageContent() {
 
         {/* Active Filters Display */}
         {(filters.searchTerm || filters.role || filters.country) && (
-          <div className="mb-6 p-4 bg-green-50 border border-green-200 rounded-lg">
+          <div className="mb-4 sm:mb-6 p-3 sm:p-4 bg-green-50 border border-green-200 rounded-lg">
             <p className="text-sm text-gray-700 mb-2 font-medium">
               Active Search:
             </p>
@@ -87,7 +87,7 @@ function CandidateSearchPageContent() {
         )}
 
         {/* Candidates Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-3 md:gap-4 mb-8">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3 sm:gap-4 mb-6 sm:mb-8">
           {isLoading ? (
             <>
               {Array.from({ length: 8 }).map((_, index) => (
@@ -99,10 +99,10 @@ function CandidateSearchPageContent() {
               <CandidateCard key={candidate._id} candidate={candidate} />
             ))
           ) : (
-            <div className="col-span-full py-16">
+            <div className="col-span-full py-12 sm:py-16">
               <div className="text-center">
-                <Users className="w-16 h-16 text-gray-300 mx-auto mb-4" />
-                <h3 className="text-xl font-semibold text-gray-700 mb-2">
+                <Users className="w-12 h-12 sm:w-16 sm:h-16 text-gray-300 mx-auto mb-3 sm:mb-4" />
+                <h3 className="text-lg sm:text-xl font-semibold text-gray-700 mb-2">
                   No candidates found
                 </h3>
                 <p className="text-gray-500">

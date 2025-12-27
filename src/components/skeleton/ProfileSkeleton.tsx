@@ -3,13 +3,9 @@
 import { Skeleton } from "@/components/ui/skeleton";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 
-/**
- * Skeleton loader for Profile page
- * Matches the structure of the candidate profile page
- */
 export function ProfileSkeleton() {
   return (
-    <div className="w-full px-4">
+    <div className="px-4 md:px-6 lg:px-8 container mx-auto">
       {/* Banner and Profile Picture Skeleton */}
       <div className="relative mb-8 w-full">
         <Skeleton className="h-48 lg:h-64 w-full rounded-lg" />

@@ -458,6 +458,18 @@ export default function EmployerDetailsPage() {
                 {followerCount}
               </p>
             </div>
+
+            {/* Profile AI Score */}
+            {employer?.aiProfileScore && (
+              <div>
+                <label className="text-xs sm:text-sm text-gray-500 mb-1 block">
+                  Profile AI Score
+                </label>
+                <p className="text-gray-900 font-medium text-sm sm:text-base">
+                  {employer.aiProfileScore}
+                </p>
+              </div>
+            )}
           </div>
         </div>
       </div>

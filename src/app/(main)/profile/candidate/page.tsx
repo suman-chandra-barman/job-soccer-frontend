@@ -567,6 +567,29 @@ export default function MyProfilePage() {
                 </p>
               </div>
             )}
+
+            {/* Office Staff specific fields */}
+            {currentUser?.aiProfileScore && (
+              <div>
+                <label className="text-sm text-gray-500 mb-1 block">
+                 Profile AI Score
+                </label>
+                <p className="text-gray-900 font-medium">
+                  {currentUser.aiProfileScore}
+                </p>
+              </div>
+            )}
+            {/* Office Staff specific fields */}
+            {currentUser?.profile?.AiVideoVideoScore && (
+              <div>
+                <label className="text-sm text-gray-500 mb-1 block">
+                  Video AI Score
+                </label>
+                <p className="text-gray-900 font-medium">
+                  {currentUser.profile.AiVideoVideoScore}
+                </p>
+              </div>
+            )}
           </div>
         </div>
 
