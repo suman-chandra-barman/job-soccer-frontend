@@ -25,11 +25,13 @@ import { useSignupMutation } from "@/redux/features/auth/authApi";
 import { Spinner } from "@/components/ui/spinner";
 import { LinkedInButton } from "@/components/auth/LinkedInButton";
 import { getLinkedInAuthUrl } from "@/lib/linkedinAuth";
+import { LinkedInRoleModal } from "@/components/modals/LinkedInRoleModal";
 
 export default function SignUpPage() {
   const [userRype, setUserRype] = useState<string>("");
   const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState<string>("");
+  const [isLinkedInModalOpen, setIsLinkedInModalOpen] = useState(false);
   const [signup, { isLoading }] = useSignupMutation();
 
   const router = useRouter();
@@ -85,19 +87,14 @@ export default function SignUpPage() {
   };
 
   const handleLinkedInSignup = () => {
-    // Check if role is selected
-    const role = form.getValues("role");
-    if (!role || !userRype) {
-      toast.error("Please select a role", {
-        description:
-          "You need to select a role before signing up with LinkedIn.",
-      });
-      return;
-    }
+    // Open the modal to select role
+    setIsLinkedInModalOpen(true);
+  };
 
+  const handleLinkedInContinue = (role: string, userType: string) => {
     // Store role and userType for LinkedIn callback
     sessionStorage.setItem("linkedin_role", role);
-    sessionStorage.setItem("linkedin_userType", userRype);
+    sessionStorage.setItem("linkedin_userType", userType);
     sessionStorage.setItem("linkedin_isSignup", "true");
 
     // Redirect to LinkedIn OAuth
@@ -297,6 +294,13 @@ export default function SignUpPage() {
           <LinkedInButton
             onClick={handleLinkedInSignup}
             label="Sign up with LinkedIn"
+          />
+
+          {/* LinkedIn Role Selection Modal */}
+          <LinkedInRoleModal
+            open={isLinkedInModalOpen}
+            onOpenChange={setIsLinkedInModalOpen}
+            onContinue={handleLinkedInContinue}
           />
 
           {/* Sign in link */}
