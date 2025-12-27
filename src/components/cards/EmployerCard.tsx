@@ -33,9 +33,13 @@ export function EmployerCard({ employer }: { employer: IEmployer }) {
   const [localIsFollowing, setLocalIsFollowing] = React.useState<
     boolean | null
   >(null);
+  const [localFollowerCount, setLocalFollowerCount] = React.useState<
+    number | null
+  >(null);
 
   // Use local state if available, otherwise use API data
   const isFollowing = localIsFollowing ?? employer.isFollowing ?? false;
+  const followerCount = localFollowerCount ?? employer?.followerCount ?? 0;
   const isLoading = isFollowLoading || isUnfollowLoading;
 
   const handleFollow = async () => {
@@ -50,6 +54,7 @@ export function EmployerCard({ employer }: { employer: IEmployer }) {
 
   const handleFollowLogic = async () => {
     const previousState = isFollowing;
+    const previousCount = followerCount;
 
     try {
       // Optimistic update
@@ -60,15 +65,22 @@ export function EmployerCard({ employer }: { employer: IEmployer }) {
         await unfollowEmployer(employer._id).unwrap();
         dispatch(removeFromFollowing(employer._id));
         toast.success("Unfollowed successfully");
+        setLocalFollowerCount(
+          isFollowing ? followerCount - 1 : followerCount + 1
+        );
       } else {
         // Follow
         await followEmployer(employer._id).unwrap();
         dispatch(addToFollowing(employer._id));
         toast.success("Followed successfully");
+        setLocalFollowerCount(
+          isFollowing ? followerCount - 1 : followerCount + 1
+        );
       }
     } catch (error) {
       // Revert on error
       setLocalIsFollowing(previousState);
+      setLocalFollowerCount(previousCount);
       const err = error as { data?: { message?: string } };
       toast.error(
         err?.data?.message ||
@@ -151,8 +163,7 @@ export function EmployerCard({ employer }: { employer: IEmployer }) {
           </div>
           <div className="text-gray-600 text-sm">
             <Users className="w-4 h-4 inline-block text-gray-500 mr-2" />
-            <span className="font-bold">Followers:</span>{" "}
-            {employer?.followerCount || 0}
+            <span className="font-bold">Followers:</span> {followerCount}
           </div>
         </div>
       </div>
