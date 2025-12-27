@@ -19,7 +19,6 @@ import {
 import Image from "next/image";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { toast } from "sonner";
-import { useGetUserByIdQuery } from "@/redux/features/user/userApi";
 import { ProfileSkeleton } from "@/components/skeleton/ProfileSkeleton";
 import { useAppSelector } from "@/redux/hooks";
 import { StartChatButton } from "@/components/messaging/StartChatButton";
@@ -28,6 +27,7 @@ import {
   useUnfollowEmployerMutation,
 } from "@/redux/features/follow/followApi";
 import { AgentRatingComponent } from "@/components/shared/AgentRatingComponent";
+import { useGetEmployerByIdQuery } from "@/redux/features/employer/employerApi";
 
 export default function EmployerDetailsPage() {
   const params = useParams();
@@ -42,7 +42,7 @@ export default function EmployerDetailsPage() {
     data: employerData,
     isLoading: isLoadingEmployer,
     error: employerError,
-  } = useGetUserByIdQuery(employerId, {
+  } = useGetEmployerByIdQuery(employerId, {
     skip: !employerId,
   });
 
@@ -56,11 +56,15 @@ export default function EmployerDetailsPage() {
   const [localIsFollowing, setLocalIsFollowing] = React.useState<
     boolean | null
   >(null);
+  const [localFollowerCount, setLocalFollowerCount] = React.useState<
+    number | null
+  >(null);
 
   const employer = employerData?.data;
 
   // Use local state if available, otherwise use API data
   const isFollowing = localIsFollowing ?? employer?.isFollowing ?? false;
+  const followerCount = localFollowerCount ?? employer?.followerCount ?? 0;
   const isLoading = isFollowLoading || isUnfollowLoading;
 
   // Handle follow/unfollow
@@ -71,10 +75,14 @@ export default function EmployerDetailsPage() {
     }
 
     const previousState = isFollowing;
+    const previousCount = followerCount;
 
     try {
       // Optimistic update
       setLocalIsFollowing(!isFollowing);
+      setLocalFollowerCount(
+        isFollowing ? followerCount - 1 : followerCount + 1
+      );
 
       if (isFollowing) {
         // Unfollow
@@ -88,6 +96,7 @@ export default function EmployerDetailsPage() {
     } catch (error) {
       // Revert on error
       setLocalIsFollowing(previousState);
+      setLocalFollowerCount(previousCount);
       const err = error as { data?: { message?: string } };
       toast.error(
         err?.data?.message ||
@@ -446,7 +455,7 @@ export default function EmployerDetailsPage() {
                 Followers
               </label>
               <p className="text-gray-900 font-medium text-sm sm:text-base">
-                {employer?.followerCount || 0}
+                {followerCount}
               </p>
             </div>
           </div>

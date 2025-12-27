@@ -10,7 +10,6 @@ import Image from "next/image";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { toast } from "sonner";
 import {
-  useGetUserByIdQuery,
   useCheckFriendshipStatusQuery,
   useSendFriendRequestMutation,
 } from "@/redux/features/user/userApi";
@@ -23,6 +22,7 @@ import VideoSection from "@/components/profile/VideoSection";
 import AnalyticsSection from "@/components/profile/AnalyticsSection";
 import { useAppSelector } from "@/redux/hooks";
 import { StartChatButton } from "@/components/messaging/StartChatButton";
+import { useGetCandidateByIdQuery } from "@/redux/features/candidate/candidateApi";
 
 export default function UserProfilePage() {
   const params = useParams();
@@ -39,7 +39,7 @@ export default function UserProfilePage() {
     data: userData,
     isLoading: isLoadingUser,
     error: userError,
-  } = useGetUserByIdQuery(userId, {
+  } = useGetCandidateByIdQuery(userId, {
     skip: !userId,
   });
 
@@ -190,14 +190,6 @@ export default function UserProfilePage() {
                 className="rounded-full"
               />
             )}
-            <Button
-              variant="outline"
-              className="flex items-center rounded-full gap-2"
-              disabled
-            >
-              <Upload size={18} height={18} />
-              Upload Resume
-            </Button>
           </div>
         </div>
       </div>
