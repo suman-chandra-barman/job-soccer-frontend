@@ -13,14 +13,15 @@ export function middleware(request: NextRequest) {
     pathname.startsWith("/messages") ||
     pathname.startsWith("/notification") ||
     pathname.startsWith("/my-network") ||
-    pathname.startsWith("/profile");
+    pathname.startsWith("/profile") ;
 
   // Define auth routes (should not be accessible when authenticated)
   const isAuthRoute =
-    // pathname.startsWith("/signin") ||
-    // pathname.startsWith("/signup") ||
+    pathname.startsWith("/signin") ||
+    pathname.startsWith("/signup") ||
     pathname.startsWith("/forgot-password") ||
-    pathname.startsWith("/create-new-password");
+    pathname.startsWith("/create-new-password") ||
+    pathname.startsWith("/create-profile");
 
   // Redirect unauthenticated users away from protected routes
   if (!isAuthenticated && isProtectedRoute) {

@@ -14,6 +14,7 @@ export function SpecificCoachVideoForm({
   onPrev,
   initialData,
   steps,
+  isLoading,
 }: IVideoFormProps) {
   const [hasSubmitted, setHasSubmitted] = useState(false);
 
@@ -106,6 +107,7 @@ export function SpecificCoachVideoForm({
       showPrev={true}
       nextLabel="Complete"
       isNextDisabled={!hasAllRequiredVideos}
+      isLoading={isLoading}
     >
       <form className="space-y-8">
         <div className="space-y-6">
@@ -139,7 +141,9 @@ export function SpecificCoachVideoForm({
               handleVideoChangeByType(VideoType.TRAINING_METHODOLOGY, file)
             }
             error={
-              hasSubmitted && errors.videos && !videoMap[VideoType.TRAINING_METHODOLOGY]
+              hasSubmitted &&
+              errors.videos &&
+              !videoMap[VideoType.TRAINING_METHODOLOGY]
                 ? "This video is required"
                 : undefined
             }

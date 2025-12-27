@@ -14,6 +14,7 @@ export function OfficeStaffVideoForm({
   onPrev,
   initialData,
   steps,
+  isLoading,
 }: IVideoFormProps) {
   const [hasSubmitted, setHasSubmitted] = useState(false);
 
@@ -105,6 +106,7 @@ export function OfficeStaffVideoForm({
       showPrev={true}
       nextLabel="Complete"
       isNextDisabled={!hasAllRequiredVideos}
+      isLoading={isLoading}
     >
       <form className="space-y-8">
         <div className="space-y-6">

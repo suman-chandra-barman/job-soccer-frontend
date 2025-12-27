@@ -9,12 +9,12 @@ import { VideoType } from "@/constants/video.constant";
 import { videoSchema } from "@/shchemas/profileValidation";
 import { IVideoFormProps, IVideoMap, TVideo } from "@/types/profile";
 
-
 export function HeadCoachVideoForm({
   onNext,
   onPrev,
   initialData,
   steps,
+  isLoading,
 }: IVideoFormProps) {
   const [hasSubmitted, setHasSubmitted] = useState(false);
 
@@ -115,6 +115,7 @@ export function HeadCoachVideoForm({
       showPrev={true}
       nextLabel="Complete"
       isNextDisabled={!hasAllRequiredVideos}
+      isLoading={isLoading}
     >
       <form className="space-y-8">
         <div className="space-y-6">

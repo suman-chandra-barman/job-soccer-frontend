@@ -30,12 +30,14 @@ interface IConsultingCompanyEmployerProfileFormProps {
   onNext: (data: TConsultingCompanyEmployerProfile) => void;
   onPrev?: () => void;
   initialData?: Partial<ConsultingCompanyEmployerProfileFormData>;
+  isLoading?: boolean;
 }
 
 export function ConsultingCompanyEmployerProfileForm({
   onNext,
   onPrev,
   initialData,
+  isLoading,
 }: IConsultingCompanyEmployerProfileFormProps) {
   const [logoPreview, setLogoPreview] = useState<string | null>(null);
 
@@ -71,6 +73,7 @@ export function ConsultingCompanyEmployerProfileForm({
       onPrev={onPrev}
       showPrev={false}
       nextLabel="Complete"
+      isLoading={isLoading}
     >
       <form className="space-y-8">
         <FormSection title="Company Information">

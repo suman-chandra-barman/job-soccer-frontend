@@ -63,9 +63,9 @@ export default function SignInPage() {
         if (res.data.user?.profileId) {
           router.push("/");
         } else if (res.data.user?.userType === "employer") {
-          router.push("/signup/employer");
+          router.push("/create-profile/employer");
         } else {
-          router.push("/signup/candidate");
+          router.push("/create-profile/candidate");
         }
       }
     } catch (error: unknown) {

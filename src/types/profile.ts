@@ -75,6 +75,7 @@ export interface IVideoFormProps {
     completed?: boolean;
     active?: boolean;
   }>;
+  isLoading?: boolean;
 }
 // Internal video map structure
 export interface IVideoMap {

@@ -15,6 +15,7 @@ export function PlayerVideoForm({
   onPrev,
   initialData,
   steps,
+  isLoading,
 }: IVideoFormProps) {
   const [hasSubmitted, setHasSubmitted] = useState(false);
 
@@ -96,6 +97,7 @@ export function PlayerVideoForm({
       showPrev={true}
       nextLabel="Complete"
       isNextDisabled={!hasAllRequiredVideos}
+      isLoading={isLoading}
     >
       <Form {...form}>
         <form className="space-y-8">

@@ -1,9 +1,10 @@
 "use client";
 
-import React from 'react';
-import { Button } from '@/components/ui/button';
-import { Card, CardContent } from '@/components/ui/card';
-import { StepIndicator } from '@/components/form/FormIndicator';
+import React from "react";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent } from "@/components/ui/card";
+import { StepIndicator } from "@/components/form/FormIndicator";
+import { Spinner } from "@/components/ui/spinner";
 
 interface IFormLayoutProps {
   title?: string;
@@ -17,6 +18,7 @@ interface IFormLayoutProps {
   showPrev?: boolean;
   isNextDisabled?: boolean;
   isPrevDisabled?: boolean;
+  isLoading?: boolean;
   steps?: Array<{
     id: number;
     label: string;
@@ -38,11 +40,12 @@ export function FormLayout({
   showPrev = false,
   isNextDisabled = false,
   isPrevDisabled = false,
+  isLoading = false,
   steps,
   className = "",
 }: IFormLayoutProps) {
   return (
-    <div className={`min-h-screen bg-gray-50 p-4 ${className}`}>
+    <div className={`min-h-screen bg-gray-50 pt-16 p-4 ${className}`}>
       <div className="max-w-3xl mx-auto">
         {/* Header */}
         <div className="text-center mb-8">
@@ -59,9 +62,7 @@ export function FormLayout({
 
         {/* Form Content */}
         <Card className="bg-white shadow-sm border-0 rounded-lg">
-          <CardContent className="p-8">
-            {children}
-          </CardContent>
+          <CardContent className="p-8">{children}</CardContent>
         </Card>
 
         {/* Navigation Buttons */}
@@ -84,10 +85,10 @@ export function FormLayout({
               <Button
                 type="button"
                 onClick={onNext}
-                disabled={isNextDisabled}
-                className="bg-yellow-400 hover:bg-yellow-500 text-black px-8 py-2 rounded-md font-medium"
+                disabled={isNextDisabled || isLoading}
+                className="w-[100px] bg-yellow-400 hover:bg-yellow-500 text-black px-8 py-2 rounded-md font-medium"
               >
-                {nextLabel}
+                {isLoading ? <Spinner className="h-4 w-4" /> : nextLabel}
               </Button>
             )}
           </div>

@@ -30,12 +30,14 @@ interface IAcademyEmployerProfileFormProps {
   onNext: (data: TAcademyEmployerProfile) => void;
   onPrev?: () => void;
   initialData?: Partial<AcademyEmployerProfileFormData>;
+  isLoading?: boolean;
 }
 
 export function AcademyEmployerProfileForm({
   onNext,
   onPrev,
   initialData,
+  isLoading,
 }: IAcademyEmployerProfileFormProps) {
   const [logoPreview, setLogoPreview] = useState<string | null>(null);
 
@@ -72,6 +74,7 @@ export function AcademyEmployerProfileForm({
       onPrev={onPrev}
       showPrev={false}
       nextLabel="Complete"
+      isLoading={isLoading}
     >
       <form className="space-y-8">
         <FormSection title="Club Information">

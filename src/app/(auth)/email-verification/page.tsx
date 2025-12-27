@@ -53,8 +53,8 @@ function EmailVerificationPageContent() {
     }
 
     if (user?.data.userType) {
-      if (user.data.userType === "candidate") router.push(`/signup/candidate`);
-      else router.push(`/signup/employer`);
+      if (user.data.userType === "candidate") router.push(`/create-profile/candidate`);
+      else router.push(`/create-profile/employer`);
     }
   }, [user, router, reason]);
 
@@ -114,8 +114,8 @@ function EmailVerificationPageContent() {
 
         if (user?.data.userType) {
           if (user.data.userType === "candidate")
-            router.push(`/signup/candidate`);
-          else router.push(`/signup/employer`);
+            router.push(`/create-profile/candidate`);
+          else router.push(`/create-profile/employer`);
         }
 
         // Redirect based on reason

@@ -40,7 +40,7 @@ export default function EmployerProfilePage() {
   }>({});
 
   const user = useAppSelector((state) => state.auth.user);
-  const [createUserProfile] = useCreateUserProfileMutation();
+  const [createUserProfile, { isLoading }] = useCreateUserProfileMutation();
 
   const router = useRouter();
 
@@ -131,6 +131,7 @@ export default function EmployerProfilePage() {
           <ProfessionalClubEmployerProfileForm
             onNext={handleProfileNext}
             initialData={formData.profileInfo as any}
+            isLoading={isLoading}
           />
         );
 
@@ -139,6 +140,7 @@ export default function EmployerProfilePage() {
           <AcademyEmployerProfileForm
             onNext={handleProfileNext}
             initialData={formData.profileInfo as any}
+            isLoading={isLoading}
           />
         );
 
@@ -147,6 +149,7 @@ export default function EmployerProfilePage() {
           <AgentEmployerProfileForm
             onNext={handleProfileNext}
             initialData={formData.profileInfo as any}
+            isLoading={isLoading}
           />
         );
 
@@ -155,6 +158,7 @@ export default function EmployerProfilePage() {
           <AmateurClubEmployerProfileForm
             onNext={handleProfileNext}
             initialData={formData.profileInfo as any}
+            isLoading={isLoading}
           />
         );
 
@@ -163,6 +167,7 @@ export default function EmployerProfilePage() {
           <CollegeOrUniversityEmployerProfileForm
             onNext={handleProfileNext}
             initialData={formData.profileInfo as any}
+            isLoading={isLoading}
           />
         );
 
@@ -171,6 +176,7 @@ export default function EmployerProfilePage() {
           <ConsultingCompanyEmployerProfileForm
             onNext={handleProfileNext}
             initialData={formData.profileInfo as any}
+            isLoading={isLoading}
           />
         );
 
@@ -179,6 +185,7 @@ export default function EmployerProfilePage() {
           <HighSchoolEmployerProfileForm
             onNext={handleProfileNext}
             initialData={formData.profileInfo as any}
+            isLoading={isLoading}
           />
         );
 

@@ -14,6 +14,7 @@ export function TechnicalDirectorVideoForm({
   onPrev,
   initialData,
   steps,
+  isLoading,
 }: IVideoFormProps) {
   const [hasSubmitted, setHasSubmitted] = useState(false);
 
@@ -111,6 +112,7 @@ export function TechnicalDirectorVideoForm({
       showPrev={true}
       nextLabel="Complete"
       isNextDisabled={!hasAllRequiredVideos}
+      isLoading={isLoading}
     >
       <form className="space-y-8">
         <div className="space-y-6">

@@ -24,12 +24,14 @@ interface IAgentEmployerProfileFormProps {
   onNext: (data: TAgentEmployerProfile) => void;
   onPrev?: () => void;
   initialData?: Partial<TAgentEmployerProfile>;
+  isLoading?: boolean;
 }
 
 export function AgentEmployerProfileForm({
   onNext,
   onPrev,
   initialData,
+  isLoading,
 }: IAgentEmployerProfileFormProps) {
   const [logoPreview, setLogoPreview] = useState<string | null>(null);
 
@@ -65,6 +67,7 @@ export function AgentEmployerProfileForm({
       onPrev={onPrev}
       showPrev={false}
       nextLabel="Complete"
+      isLoading={isLoading}
     >
       <form className="space-y-8">
         <FormSection title="Agent Information">
@@ -179,7 +182,7 @@ export function AgentEmployerProfileForm({
                   className="bg-gray-50 border-0"
                 />
               </FormField>
-              
+
               {/* FIFA License Number */}
               <FormField
                 label="FIFA license number"

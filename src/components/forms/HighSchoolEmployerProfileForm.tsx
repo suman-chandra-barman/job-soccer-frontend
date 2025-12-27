@@ -30,12 +30,14 @@ interface IHighSchoolEmployerProfileFormProps {
   onNext: (data: THighSchoolEmployerProfile) => void;
   onPrev?: () => void;
   initialData?: Partial<HighSchoolEmployerProfileFormData>;
+  isLoading?: boolean;
 }
 
 export function HighSchoolEmployerProfileForm({
   onNext,
   onPrev,
   initialData,
+  isLoading,
 }: IHighSchoolEmployerProfileFormProps) {
   const [logoPreview, setLogoPreview] = useState<string | null>(null);
 
@@ -71,6 +73,7 @@ export function HighSchoolEmployerProfileForm({
       onPrev={onPrev}
       showPrev={false}
       nextLabel="Complete"
+      isLoading={isLoading}
     >
       <form className="space-y-8">
         <FormSection title="High School Information">

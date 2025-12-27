@@ -54,7 +54,7 @@ export default function CandidateProfilePage() {
   const [fieldStaffPosition, setFieldStaffPosition] = useState<string>("");
 
   const user = useAppSelector((state) => state.auth.user);
-  const [createUserProfile] = useCreateUserProfileMutation();
+  const [createUserProfile, { isLoading }] = useCreateUserProfileMutation();
 
   const router = useRouter();
 
@@ -309,6 +309,7 @@ export default function CandidateProfilePage() {
       onPrev: handlePrevStep,
       initialData: formData.videos as TVideo | undefined,
       steps,
+      isLoading,
     };
 
     switch (userRole) {
