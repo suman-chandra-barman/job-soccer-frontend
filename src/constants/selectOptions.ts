@@ -252,8 +252,8 @@ export const playerPositionOptions = [
 ] as const;
 export type TPlayerPosition = (typeof playerPositionOptions)[number];
 
-// National Team Category options
-export const nationalTeamCategoryOptions = [
+// Professional Player National Team Category options
+export const professionalPlayerNationalTeamCategoryOptions = [
   "U14",
   "U15",
   "U16",
@@ -264,8 +264,23 @@ export const nationalTeamCategoryOptions = [
   "U21",
   "Current International"
 ] as const;
-export type TNationalTeamCategory =
-  (typeof nationalTeamCategoryOptions)[number];
+export type TProfessionalPlayerNationalTeamCategory =
+  (typeof professionalPlayerNationalTeamCategoryOptions)[number];
+
+  // National Team Category options
+export const amaturePlayerNationalTeamCategoryOptions = [
+  "U14",
+  "U15",
+  "U16",
+  "U17",
+  "U18",
+  "U19",
+  "U20",
+  "U21",
+  "Adult"
+] as const;
+export type TAmaturePlayerNationalTeamCategory =
+  (typeof amaturePlayerNationalTeamCategoryOptions)[number];
 
 // Foot options
 export const footOptions = ["Right", "Left", "Both"] as const;

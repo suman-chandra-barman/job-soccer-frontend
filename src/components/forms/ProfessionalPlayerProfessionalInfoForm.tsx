@@ -22,8 +22,8 @@ import {
   footOptions,
   genderOptions,
   heightUnitOptions,
-  nationalTeamCategoryOptions,
   playerPositionOptions,
+  professionalPlayerNationalTeamCategoryOptions,
   weightUnitOptions,
 } from "@/constants/selectOptions";
 import { TProfessionalPlayerProfessionalInfo } from "@/types/profile";
@@ -262,7 +262,7 @@ export function ProfessionalPlayerProfessionalInfoForm({
                   <SelectValue placeholder="Select your category" />
                 </SelectTrigger>
                 <SelectContent>
-                  {nationalTeamCategoryOptions.map((item) => (
+                  {professionalPlayerNationalTeamCategoryOptions.map((item) => (
                     <SelectItem key={item} value={item}>
                       {item}
                     </SelectItem>

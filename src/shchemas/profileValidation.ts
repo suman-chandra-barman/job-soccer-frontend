@@ -15,7 +15,7 @@ export const personalInfoSchema = z.object({
       },
       {
         message: "Date of birth must be a valid date in the past",
-      }
+      },
     )
     .transform((date) => new Date(date)),
   placeOfBirth: z.string().trim().min(1, "Place of birth is required"),
@@ -36,16 +36,7 @@ export const amateurPlayerProfessionalInfoSchema = z.object({
     unit: z.enum(["kg", "lb"]),
   }),
   currentClub: z.string().min(1, "Current club is required"),
-  nationalTeamCategory: z.enum([
-    "U14",
-    "U15",
-    "U16",
-    "U17",
-    "U18",
-    "U19",
-    "U20",
-    "U21",
-  ]),
+  nationalTeamCategory: z.string().min(1, "National Team Category is required"),
   foot: z.enum(["Right", "Left", "Both"]),
   position: z.enum([
     "GK",
@@ -154,7 +145,7 @@ export const fieldStaffProfessionalInfoSchema = z.object({
   position: z.string().min(1, "Position is required"),
   league: z.string().min(1, "League is required"),
   agent: z.string().optional(),
-  category: z.string().optional(),                      
+  category: z.string().optional(),
 });
 
 // Office staff Professional Information Schema
@@ -195,7 +186,7 @@ export const academyEmployerProfileSchema = z.object({
       },
       {
         message: "Founded date must be a valid date in the past",
-      }
+      },
     )
     .transform((date) => new Date(date)),
   nationality: z.string().trim().min(1, "Nationality is required"),
@@ -242,7 +233,7 @@ export const amateurClubEmployerProfileSchema = z.object({
       },
       {
         message: "Founded date must be a valid date in the past",
-      }
+      },
     )
     .transform((date) => new Date(date)),
   nationality: z.string().trim().min(1, "Nationality is required"),
@@ -274,7 +265,7 @@ export const collegeOrUniversityEmployerProfileSchema = z.object({
       },
       {
         message: "Founded date must be a valid date in the past",
-      }
+      },
     )
     .transform((date) => new Date(date)),
   phoneNumber: z.string().trim().min(1, "Phone number is required"),
@@ -302,7 +293,7 @@ export const consultingCompanyEmployerProfileSchema = z.object({
       },
       {
         message: "Founded date must be a valid date in the past",
-      }
+      },
     )
     .transform((date) => new Date(date)),
   nationality: z.string().trim().min(1, "Nationality is required"),
@@ -332,7 +323,7 @@ export const highSchoolEmployerProfileSchema = z.object({
       },
       {
         message: "Founded date must be a valid date in the past",
-      }
+      },
     )
     .transform((date) => new Date(date)),
   clubName: z.string().trim().min(1, "Club name is required"),
@@ -362,7 +353,7 @@ export const professionalClubEmployerProfileSchema = z.object({
       },
       {
         message: "Founded date must be a valid date in the past",
-      }
+      },
     )
     .transform((date) => new Date(date)),
   website: z.string().trim().min(1, "Website is required"),

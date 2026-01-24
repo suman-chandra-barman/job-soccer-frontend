@@ -30,11 +30,12 @@ import {
   footOptions,
   genderOptions,
   heightUnitOptions,
-  nationalTeamCategoryOptions,
   playerPositionOptions,
   weightUnitOptions,
   officeStaffPositionOptions,
   fieldStaffPositionOptions,
+  amaturePlayerNationalTeamCategoryOptions,
+  professionalPlayerNationalTeamCategoryOptions,
 } from "@/constants/selectOptions";
 
 const formSchema = z.object({
@@ -628,7 +629,7 @@ export default function EditProfileModal({
                           <SelectValue placeholder="Select category" />
                         </SelectTrigger>
                         <SelectContent>
-                          {nationalTeamCategoryOptions.map((item) => (
+                          {professionalPlayerNationalTeamCategoryOptions.map((item) => (
                             <SelectItem key={item} value={item}>
                               {item}
                             </SelectItem>
@@ -679,7 +680,7 @@ export default function EditProfileModal({
                         <SelectValue placeholder="Select category" />
                       </SelectTrigger>
                       <SelectContent>
-                        {nationalTeamCategoryOptions.map((item) => (
+                        {amaturePlayerNationalTeamCategoryOptions.map((item) => (
                           <SelectItem key={item} value={item}>
                             {item}
                           </SelectItem>

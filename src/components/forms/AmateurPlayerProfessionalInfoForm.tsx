@@ -17,16 +17,15 @@ import {
 import { amateurPlayerProfessionalInfoSchema } from "@/shchemas/profileValidation";
 import type { TAmateurPlayerProfessionalInfo } from "@/types/profile";
 import {
+  amaturePlayerNationalTeamCategoryOptions,
   availabilityOptions,
   countryList,
   footOptions,
   genderOptions,
   heightUnitOptions,
-  nationalTeamCategoryOptions,
   playerPositionOptions,
   weightUnitOptions,
 } from "@/constants/selectOptions";
-import { he } from "zod/v4/locales";
 
 interface IAmateurPlayerProfessionalInfoFormProps {
   onNext: (data: TAmateurPlayerProfessionalInfo) => void;
@@ -266,7 +265,7 @@ export function AmateurPlayerProfessionalInfoForm({
                   <SelectValue placeholder="Select your category" />
                 </SelectTrigger>
                 <SelectContent>
-                  {nationalTeamCategoryOptions.map((item) => (
+                  {amaturePlayerNationalTeamCategoryOptions.map((item) => (
                     <SelectItem key={item} value={item}>
                       {item}
                     </SelectItem>
