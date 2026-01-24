@@ -262,6 +262,7 @@ export const nationalTeamCategoryOptions = [
   "U19",
   "U20",
   "U21",
+  "Current International"
 ] as const;
 export type TNationalTeamCategory =
   (typeof nationalTeamCategoryOptions)[number];
