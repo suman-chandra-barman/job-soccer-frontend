@@ -109,7 +109,7 @@ export function CollegeOrUniversityPlayerProfessionalInfoForm({
 
             {/* Availability */}
             <FormField
-              label="Availability"
+              label="Applicable (optional)"
               error={errors.availability?.message}
             >
               <Select
@@ -122,7 +122,7 @@ export function CollegeOrUniversityPlayerProfessionalInfoForm({
                 }
               >
                 <SelectTrigger className="bg-gray-50 border-0 w-full">
-                  <SelectValue placeholder="Select availability" />
+                  <SelectValue placeholder="Select applicable" />
                 </SelectTrigger>
                 <SelectContent>
                   {availabilityOptions.map((item) => (

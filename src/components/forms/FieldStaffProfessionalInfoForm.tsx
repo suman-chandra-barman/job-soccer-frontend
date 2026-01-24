@@ -69,7 +69,10 @@ export function FieldStaffProfessionalInfoForm({
         <FormSection title="Professional Information">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             {/* Current Employer */}
-            <FormField label="Current Employer" error={errors.currentClub?.message}>
+            <FormField
+              label="Current Employer"
+              error={errors.currentClub?.message}
+            >
               <Input
                 {...register("currentClub")}
                 placeholder="Ex. Real Madrid"
@@ -79,14 +82,14 @@ export function FieldStaffProfessionalInfoForm({
 
             {/* Availability */}
             <FormField
-              label="Availability"
+              label="Applicable (optional)"
               error={errors.availability?.message}
             >
               <Select
                 onValueChange={(value) => setValue("availability", value)}
               >
                 <SelectTrigger className="bg-gray-50 border-0 w-full">
-                  <SelectValue placeholder="Availability" />
+                  <SelectValue placeholder="Select applicable" />
                 </SelectTrigger>
                 <SelectContent>
                   {availabilityOptions.map((item) => (
@@ -155,10 +158,7 @@ export function FieldStaffProfessionalInfoForm({
             </FormField>
 
             {/* Category */}
-            <FormField
-              label="League"
-              error={errors.league?.message}
-            >
+            <FormField label="League" error={errors.league?.message}>
               <Input
                 {...register("league")}
                 placeholder="Write your league"
@@ -181,6 +181,23 @@ export function FieldStaffProfessionalInfoForm({
                       {pos}
                     </SelectItem>
                   ))}
+                </SelectContent>
+              </Select>
+            </FormField>
+
+            {/* Boy or Girl */}
+            <FormField label="Boy or Girl" error={errors.boyOrGirl?.message}>
+              <Select onValueChange={(value) => setValue("boyOrGirl", value)}>
+                <SelectTrigger className="bg-gray-50 border-0 w-full">
+                  <SelectValue placeholder="Boy or Girl" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem key="Boy" value="Boy">
+                    Boy
+                  </SelectItem>
+                  <SelectItem key="Girl" value="Girl">
+                    Girl
+                  </SelectItem>
                 </SelectContent>
               </Select>
             </FormField>

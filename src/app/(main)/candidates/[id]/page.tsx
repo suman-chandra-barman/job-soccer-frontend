@@ -317,7 +317,7 @@ export default function UserProfilePage() {
                 {user?.profile?.availability && (
                   <div>
                     <label className="text-xs sm:text-sm text-gray-500 mb-1 block">
-                      Availability
+                      Applicable
                     </label>
                     <p className="text-gray-900 font-medium text-sm sm:text-base">
                       {user.profile.availability}

@@ -474,7 +474,7 @@ export default function EditProfileModal({
 
                 {/* Availability */}
                 <FormField
-                  label="Availability"
+                  label="Applicable (optional)"
                   error={errors.availability?.message}
                 >
                   <Select
@@ -484,7 +484,7 @@ export default function EditProfileModal({
                     }
                   >
                     <SelectTrigger className="bg-gray-50 border-0 w-full">
-                      <SelectValue placeholder="Select availability" />
+                      <SelectValue placeholder="Select applicable" />
                     </SelectTrigger>
                     <SelectContent>
                       {availabilityOptions.map((item) => (

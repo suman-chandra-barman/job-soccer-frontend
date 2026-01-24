@@ -98,14 +98,14 @@ export function OfficeStaffProfessionalInfoForm({
 
             {/* Availability */}
             <FormField
-              label="Availability"
+              label="Applicable (optional)"
               error={errors.availability?.message}
             >
               <Select
                 onValueChange={(value) => setValue("availability", value)}
               >
                 <SelectTrigger className="bg-gray-50 border-0 w-full">
-                  <SelectValue placeholder="Availability" />
+                  <SelectValue placeholder="Select applicable" />
                 </SelectTrigger>
                 <SelectContent>
                   {availabilityOptions.map((item) => (

@@ -26,7 +26,7 @@ export const personalInfoSchema = z.object({
 // Amateur player Professional Information Schema
 export const amateurPlayerProfessionalInfoSchema = z.object({
   gender: z.enum(["Male", "Female", "Other"]),
-  availability: z.enum(["Now", "Soon", "Later"]),
+  availability: z.enum(["Now", "Soon", "Later"]).optional(),
   height: z.object({
     size: z.number().min(1, "Height is required"),
     unit: z.enum(["cm", "m", "in", "ft"]),
@@ -68,7 +68,7 @@ export const amateurPlayerProfessionalInfoSchema = z.object({
 // College or University player Professional Information Schema
 export const collegeOrUniversityPlayerProfessionalInfoSchema = z.object({
   gender: z.string().min(1, "Gender is required"),
-  availability: z.string().min(1, "Availability is required"),
+  availability: z.string().optional(),
   height: z.object({
     size: z.number().min(1, "Height is required"),
     unit: z.enum(["cm", "m", "in", "ft"]),
@@ -103,7 +103,7 @@ export const highSchoolPlayerProfessionalInfoSchema = z.object({
     size: z.number().min(1, "Weight is required"),
     unit: z.enum(["kg", "lb"]),
   }),
-  availability: z.string().min(1, "Availability is required"),
+  availability: z.string().optional(),
   currentClub: z.string().min(1, "Current club is required"),
   socialMedia: z.string().min(1, "Social Media is required"),
   category: z.string().optional(),
@@ -135,7 +135,7 @@ export const professionalPlayerProfessionalInfoSchema = z.object({
   position: z.string().min(1, "Position is required"),
   agent: z.string().optional(),
   country: z.string().min(1, "Country is required"),
-  availability: z.string().min(1, "Availability is required"),
+  availability: z.string().optional(),
   socialMedia: z.string().min(1, "Social Media is required"),
   foot: z.string().min(1, "Foot is required"),
   nationalTeamGames: z.string().min(1, "National Team Games is required"),
@@ -146,14 +146,15 @@ export const professionalPlayerProfessionalInfoSchema = z.object({
 // Field staff Professional Information Schema
 export const fieldStaffProfessionalInfoSchema = z.object({
   currentClub: z.string().min(1, "Current employer is required"),
-  availability: z.string().min(1, "Availability is required"),
+  availability: z.string().optional(),
   country: z.string().min(1, "Country is required"),
   gender: z.string().min(1, "Gender is required"),
+  boyOrGirl: z.string().min(1, "Boy or Girl is required"),
   socialMedia: z.string().min(1, "Social Media is required"),
   position: z.string().min(1, "Position is required"),
   league: z.string().min(1, "League is required"),
   agent: z.string().optional(),
-  category: z.string().optional(),
+  category: z.string().optional(),                      
 });
 
 // Office staff Professional Information Schema
@@ -161,7 +162,7 @@ export const officeStaffProfessionalInfoSchema = z.object({
   country: z.enum(countryList).describe("Please select a valid country"),
   position: z.string().min(1, "Position is required"),
   languages: z.string().min(1, "Languages is required"),
-  availability: z.string().min(1, "Availability is required"),
+  availability: z.string().optional(),
   socialMedia: z.string().min(1, "Social Media is required"),
   agent: z.string().optional(),
   gender: z.string().min(1, "Gender is required"),
