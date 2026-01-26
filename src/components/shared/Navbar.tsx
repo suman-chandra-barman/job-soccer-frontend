@@ -39,6 +39,7 @@ import { logout } from "@/redux/features/auth/authSlice";
 import { baseApi } from "@/redux/api/baseApi";
 import { useGetUnreadCountQuery } from "@/redux/features/notification/notificationApi";
 import { useNotificationContext } from "@/components/providers/NotificationProvider";
+import GoogleTranslate from "../googleTranslate/GoogleTranslate";
 
 // ==================== Types ====================
 interface NavLink {
@@ -197,7 +198,7 @@ const NavLinkItem: React.FC<NavLinkItemProps> = ({
 // ==================== Helpers ====================
 const getNavLinks = (
   isLoggedIn: boolean,
-  onNotificationClick: () => void
+  onNotificationClick: () => void,
 ): NavLink[] => {
   const commonLinks: NavLink[] = [
     { name: "Home", href: "/", icon: Home },
@@ -265,11 +266,11 @@ export function Navbar() {
   const isLoggedIn = !!user?.data?.profileId;
   const navLinks = useMemo(
     () => getNavLinks(isLoggedIn, () => setIsNotificationOpen(true)),
-    [isLoggedIn]
+    [isLoggedIn],
   );
   const profileImageUrl = useMemo(
     () => getProfileImageUrl(user?.data?.profileImage),
-    [user?.data?.profileImage]
+    [user?.data?.profileImage],
   );
 
   const isActiveLink = useCallback(
@@ -277,7 +278,7 @@ export function Navbar() {
       if (href === "/") return pathname === href;
       return pathname.startsWith(href);
     },
-    [pathname]
+    [pathname],
   );
 
   const handleLogoutClick = useCallback(() => {
@@ -344,7 +345,8 @@ export function Navbar() {
           </nav>
 
           {/* Desktop User Menu */}
-          <div className="hidden lg:flex justify-end min-w-[100px]">
+          <div className="hidden lg:flex gap-5 justify-end">
+            <GoogleTranslate />
             {hasToken && isLoadingUser ? (
               <div className="w-11 h-11 rounded-full bg-gray-200 animate-pulse" />
             ) : isLoggedIn ? (
