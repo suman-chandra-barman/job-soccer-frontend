@@ -331,7 +331,7 @@ export default function CandidateProfilePage() {
       case FieldStaffPosition.GK_COACH:
       case FieldStaffPosition.MENTAL_COACH:
       case FieldStaffPosition.VIDEO_ANALYST_COACH:
-        return <GKCoachVideoForm {...videoProps} />;
+        return <GKCoachVideoForm {...videoProps} fieldStaffPosition={fieldStaffPosition}/>;
 
       case FieldStaffPosition.SPECIFIC_OFFENSIVE_COACH:
       case FieldStaffPosition.SPECIFIC_DEFENSIVE_COACH:
