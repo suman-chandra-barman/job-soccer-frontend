@@ -31,7 +31,7 @@ export function formatTimeAgo(dateString: string): string {
  * @returns Promise with image dimensions and validation result
  */
 export function validateImageDimensions(
-  file: File
+  file: File,
 ): Promise<{ width: number; height: number; aspectRatio: number }> {
   return new Promise((resolve, reject) => {
     const img = new Image();
@@ -65,7 +65,7 @@ export function validateImageDimensions(
 export async function processImageForBanner(
   file: File,
   targetAspectRatio: number = 16 / 9,
-  maxWidth: number = 1920
+  maxWidth: number = 1920,
 ): Promise<File> {
   return new Promise((resolve, reject) => {
     const img = new Image();
@@ -127,7 +127,7 @@ export async function processImageForBanner(
         0,
         0,
         finalWidth,
-        finalHeight
+        finalHeight,
       );
 
       // Convert canvas to blob
@@ -147,7 +147,7 @@ export async function processImageForBanner(
           resolve(processedFile);
         },
         file.type,
-        0.95
+        0.95,
       );
     };
 
@@ -158,4 +158,40 @@ export async function processImageForBanner(
 
     img.src = objectUrl;
   });
+}
+
+/**
+ * Recursively removes empty optional fields from an object
+ * @param input - The input value to clean (object, array, primitive)
+ * @returns Cleaned value with empty fields removed
+ */
+export function removeEmptyFields(input: unknown): unknown {
+  if (input === null || input === undefined) return undefined;
+
+  if (input instanceof Date) return input;
+
+  if (typeof input === "string") return input.trim() === "" ? undefined : input;
+  if (typeof input === "number" || typeof input === "boolean") return input;
+
+  if (Array.isArray(input)) {
+    const cleaned = input
+      .map((v) => (typeof v === "object" ? removeEmptyFields(v) : v))
+      .filter((v) => v !== undefined && !(typeof v === "string" && v === ""));
+    return cleaned.length ? cleaned : undefined;
+  }
+
+  if (typeof input === "object") {
+    const tag = Object.prototype.toString.call(input);
+    if (tag !== "[object Object]") return input;
+
+    const obj = input as Record<string, unknown>;
+    const out: Record<string, unknown> = {};
+    Object.entries(obj).forEach(([k, v]) => {
+      const cleaned = removeEmptyFields(v);
+      if (cleaned !== undefined) out[k] = cleaned;
+    });
+    return Object.keys(out).length ? out : undefined;
+  }
+
+  return undefined;
 }
