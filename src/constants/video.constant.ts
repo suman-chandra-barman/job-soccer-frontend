@@ -15,18 +15,18 @@ export enum VideoType {
 }
 
 export enum FieldStaffPosition {
-  HEAD_COACH = "Head Coach",
   ASSISTANT_COACH = "Assistant Coach",
-  GK_COACH = "GK Coach",
-  MENTAL_COACH = "Mental Coach",
-  VIDEO_ANALYST_COACH = "Video Analyst Coach",
-  SPECIFIC_OFFENSIVE_COACH = "Specific Offensive Coach",
   SPECIFIC_DEFENSIVE_COACH = "Specific Defensive Coach",
-  SPECIFIC_TECHNICAL_COACH = "Specific Technical Coach",
-  SCOUT = "Scout",
-  TECHNICAL_DIRECTOR = "Technical Director",
-  ACADEMY_DIRECTOR = "Academy Director",
   DIRECTOR_OF_COACHING = "Director of Coaching",
+  SPECIFIC_OFFENSIVE_COACH = "Specific Offensive Coach",
+  GK_COACH = "GK Coach",
+  HEAD_COACH = "Head Coach",
+  MENTAL_COACH = "Mental Coach",
+  SCOUT = "Scout",
+  SPECIFIC_TECHNICAL_COACH = "Specific Technical Coach",
+  TECHNICAL_DIRECTOR = "Technical Director",
+  VIDEO_ANALYST_COACH = "Video Analyst Coach",
+  ACADEMY_DIRECTOR = "Academy Director",
 }
 
 

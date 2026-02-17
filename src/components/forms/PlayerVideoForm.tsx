@@ -34,26 +34,26 @@ export function PlayerVideoForm({
 
   // State for videos and their titles
   const [video1, setVideo1] = useState<File | null>(
-    initialData?.videos?.[0] || null
+    initialData?.videos?.[0] || null,
   );
   const [video2, setVideo2] = useState<File | null>(
-    initialData?.videos?.[1] || null
+    initialData?.videos?.[1] || null,
   );
   const initialDataWithTitles = initialData as Partial<{
     videos: File[];
     videoTitles: string[];
   }>;
   const [videoTitle1, setVideoTitle1] = useState<string>(
-    initialDataWithTitles?.videoTitles?.[0] || ""
+    initialDataWithTitles?.videoTitles?.[0] || "",
   );
   const [videoTitle2, setVideoTitle2] = useState<string>(
-    initialDataWithTitles?.videoTitles?.[1] || ""
+    initialDataWithTitles?.videoTitles?.[1] || "",
   );
 
   // Update form videos array whenever videos change
   useEffect(() => {
     const videoArray = [video1, video2].filter(
-      (video): video is File => video !== null
+      (video): video is File => video !== null,
     );
     setValue("videos", videoArray, { shouldValidate: true });
   }, [video1, video2, setValue]);

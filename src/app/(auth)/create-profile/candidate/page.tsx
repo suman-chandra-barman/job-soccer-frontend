@@ -326,7 +326,7 @@ export default function CandidateProfilePage() {
     switch (fieldStaffPosition) {
       case FieldStaffPosition.HEAD_COACH:
       case FieldStaffPosition.ASSISTANT_COACH:
-        return <HeadCoachVideoForm {...videoProps} />;
+        return <HeadCoachVideoForm {...videoProps} fieldStaffPosition={fieldStaffPosition} />;
 
       case FieldStaffPosition.GK_COACH:
       case FieldStaffPosition.MENTAL_COACH:
