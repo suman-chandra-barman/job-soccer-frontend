@@ -336,7 +336,7 @@ export default function CandidateProfilePage() {
       case FieldStaffPosition.SPECIFIC_OFFENSIVE_COACH:
       case FieldStaffPosition.SPECIFIC_DEFENSIVE_COACH:
       case FieldStaffPosition.SPECIFIC_TECHNICAL_COACH:
-        return <SpecificCoachVideoForm {...videoProps} />;
+        return <SpecificCoachVideoForm {...videoProps} fieldStaffPosition={fieldStaffPosition}/>;
 
       case FieldStaffPosition.SCOUT:
         return <ScoutVideoForm {...videoProps} />;

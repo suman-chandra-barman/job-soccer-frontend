@@ -252,3 +252,156 @@ export const videoAnalystQuestions = [
     ],
   },
 ];
+
+export const defensiveCoachQuestions = [
+  {
+    section: "A. Background & Role Definition",
+    questions: [
+      "Can you describe your background and pathway to becoming a defensive specific coach?",
+      "How do you define the role and responsibilities of a defensive coach within a technical staff?",
+      "How do you align your defensive work with the head coach's overall tactical vision?",
+    ],
+  },
+  {
+    section: "B. Technical & Tactical Expertise",
+    questions: [
+      "How do you analyze opponent attacking patterns and threats?",
+      "How do you teach defensive decision-making and positioning?",
+      "How do you train players to recognize defensive triggers and cues?",
+    ],
+  },
+  {
+    section: "C. Defensive Methodology & Training Design",
+    questions: [
+      "How do you structure defensive training sessions to develop individual and collective defensive behaviors?",
+      "What defensive principles guide your work (positioning, duels, compactness, pressing)?",
+      "How do you adapt your defensive methodology to different age groups and competitive levels?",
+    ],
+  },
+  {
+    section: "D. Defensive Game Model & Communication",
+    questions: [
+      "How do you integrate defensive principles into the team's overall playing model?",
+      "How do you work on defensive organization in different phases (block, transition, set pieces)?",
+      "How do you communicate defensive concepts clearly to players to ensure understanding and execution?",
+    ],
+  },
+  {
+    section: "E. Leadership, Collaboration & Adaptability",
+    questions: [
+      "How do you collaborate with other specific coaches to ensure tactical balance?",
+      "Describe a situation where a defensive plan did not work as expected. What adjustments did you make?",
+      "How do you adapt your defensive work when players have different profiles, strengths, or limitations?",
+    ],
+  },
+  {
+    section: "F. Professionalism, Evaluation & Development",
+    questions: [
+      "What indicators do you use to evaluate defensive performance beyond goals conceded?",
+      "What has been the toughest professional challenge you have faced as a defensive coach, and how did you overcome it?",
+      "How do you measure your effectiveness as a defensive coach, and how has your methodology evolved over time?",
+    ],
+  },
+];
+
+export const offensiveCoachQuestions = [
+  {
+    section: "A. Background & Role Definition",
+    questions: [
+      "Can you describe your background and pathway to becoming an attacking specific coach?",
+      "How do you define the role and responsibilities of an attacking coach within a technical staff?",
+      "How do you align your attacking work with the head coach's overall tactical vision?",
+    ],
+  },
+  {
+    section: "B. Technical & Tactical Expertise",
+    questions: [
+      "How do you analyze attacking patterns and opponent defensive structures?",
+      "How do you teach decision-making in attacking situations?",
+      "How do you train players to recognize and exploit space in different attacking phases?",
+    ],
+  },
+  {
+    section: "C. Attacking Methodology & Training Design",
+    questions: [
+      "How do you structure attacking training sessions to develop individual and collective attacking behaviors?",
+      "What attacking principles guide your work (positioning, movement, spacing, finishing, creativity)?",
+      "How do you adapt your attacking methodology to different age groups and competitive levels?",
+    ],
+  },
+  {
+    section: "D. Game Model Integration & Communication",
+    questions: [
+      "How do you integrate attacking principles into the team's overall playing model?",
+      "How do you communicate attacking concepts clearly to players to ensure understanding and execution?",
+      "How do you coordinate attacking organization across phases (build-up, final third, transitions, set pieces)?",
+    ],
+  },
+  {
+    section: "E. Leadership, Collaboration & Adaptability",
+    questions: [
+      "How do you collaborate with other specific coaches to ensure tactical balance?",
+      "Describe a situation where an attacking plan failed. What adjustments did you make?",
+      "How do you adapt your attacking work to different player profiles?",
+    ],
+  },
+  {
+    section: "F. Professionalism, Evaluation & Development",
+    questions: [
+      "What indicators do you use to evaluate attacking performance beyond goals scored?",
+      "What has been the toughest professional challenge you have faced as an attacking coach, and how did you overcome it?",
+      "How do you measure your effectiveness as an attacking coach, and how has your methodology evolved over time?",
+    ],
+  },
+];
+
+export const technicalCoachQuestions = [
+  {
+    section: "A. Background & Role Definition",
+    questions: [
+      "Can you describe your coaching background and pathway to becoming a technical coach?",
+      "How do you define the role and responsibilities of a technical coach within a technical staff?",
+      "How do you align your technical work with the head coach's playing philosophy and objectives?",
+    ],
+  },
+  {
+    section: "B. Technical & Tactical Expertise",
+    questions: [
+      "How do you analyze player technical execution during match play?",
+      "How do you prioritize which technical skills to develop for different positions?",
+      "How do you evaluate decision-making quality linked to technical execution?",
+    ],
+  },
+  {
+    section: "C. Technical Methodology & Skill Development",
+    questions: [
+      "How do you structure technical training sessions to develop core skills (first touch, passing, receiving, ball mastery)?",
+      "What principles guide your technical coaching methodology?",
+      "How do you adapt technical work to different age groups, positions, and levels of play?",
+    ],
+  },
+  {
+    section: "D. Game Application & Communication",
+    questions: [
+      "How do you connect technical training exercises to game situations and decision-making?",
+      "How do you integrate individual technical development into collective team training?",
+      "How do you communicate technical feedback to players to ensure understanding and progression?",
+    ],
+  },
+  {
+    section: "E. Collaboration, Adaptability & Problem Solving",
+    questions: [
+      "How do you collaborate with tactical, physical, and mental staff to ensure coherent player development?",
+      "Describe a situation where a technical training approach did not produce the expected results. What adjustments did you make?",
+      "How do you adapt your technical coaching when players have different learning speeds or limitations?",
+    ],
+  },
+  {
+    section: "F. Professionalism, Evaluation & Development",
+    questions: [
+      "What indicators do you use to evaluate technical improvement in players beyond match performance?",
+      "What has been the toughest professional challenge you have faced as a technical coach, and how did you overcome it?",
+      "How do you measure your effectiveness as a technical coach, and how has your methodology evolved over time?",
+    ],
+  },
+];

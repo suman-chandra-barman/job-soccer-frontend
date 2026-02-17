@@ -2,9 +2,12 @@ import React from "react";
 import { FieldStaffPosition } from "@/constants/video.constant";
 import {
   assistantCoachQuestions,
+  defensiveCoachQuestions,
   gkCoachQuestions,
   headCoachQuestions,
   mentalCoachQuestions,
+  offensiveCoachQuestions,
+  technicalCoachQuestions,
   videoAnalystQuestions,
 } from "@/constants/questions";
 
@@ -14,7 +17,10 @@ interface CoachingQuestionsProps {
     | FieldStaffPosition.ASSISTANT_COACH
     | FieldStaffPosition.GK_COACH
     | FieldStaffPosition.MENTAL_COACH
-    | FieldStaffPosition.VIDEO_ANALYST_COACH;
+    | FieldStaffPosition.VIDEO_ANALYST_COACH
+    | FieldStaffPosition.SPECIFIC_DEFENSIVE_COACH
+    | FieldStaffPosition.SPECIFIC_OFFENSIVE_COACH
+    | FieldStaffPosition.SPECIFIC_TECHNICAL_COACH;
 }
 
 export function CoachingQuestions({
@@ -43,6 +49,20 @@ export function CoachingQuestions({
     case FieldStaffPosition.VIDEO_ANALYST_COACH:
       questions = videoAnalystQuestions;
       title = "Video Analyst – Interview Questionnaire (18 Questions)";
+      break;
+    case FieldStaffPosition.SPECIFIC_DEFENSIVE_COACH:
+      questions = defensiveCoachQuestions;
+      title =
+        "Defensive Specific Coach – Interview Questionnaire (18 Questions)";
+      break;
+    case FieldStaffPosition.SPECIFIC_OFFENSIVE_COACH:
+      questions = offensiveCoachQuestions;
+      title =
+        "Attacking Specific Coach – Interview Questionnaire (18 Questions)";
+      break;
+    case FieldStaffPosition.SPECIFIC_TECHNICAL_COACH:
+      questions = technicalCoachQuestions;
+      title = "Technical Coach – Interview Questionnaire (18 Questions)";
       break;
     default:
       questions = headCoachQuestions;
