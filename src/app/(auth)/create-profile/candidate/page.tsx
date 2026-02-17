@@ -339,16 +339,16 @@ export default function CandidateProfilePage() {
         return <SpecificCoachVideoForm {...videoProps} fieldStaffPosition={fieldStaffPosition}/>;
 
       case FieldStaffPosition.SCOUT:
-        return <ScoutVideoForm {...videoProps} />;
+        return <ScoutVideoForm {...videoProps} fieldStaffPosition={fieldStaffPosition}/>;
 
       case FieldStaffPosition.TECHNICAL_DIRECTOR:
-        return <TechnicalDirectorVideoForm {...videoProps} />;
+        return <TechnicalDirectorVideoForm {...videoProps} fieldStaffPosition={fieldStaffPosition} />;
 
       case FieldStaffPosition.ACADEMY_DIRECTOR:
-        return <AcademyDirectorVideoForm {...videoProps} />;
+        return <AcademyDirectorVideoForm {...videoProps} fieldStaffPosition={fieldStaffPosition} />;
 
       case FieldStaffPosition.DIRECTOR_OF_COACHING:
-        return <DirectorOfCoachingVideoForm {...videoProps} />;
+        return <DirectorOfCoachingVideoForm {...videoProps} fieldStaffPosition={fieldStaffPosition} />;
 
       default:
         return null;

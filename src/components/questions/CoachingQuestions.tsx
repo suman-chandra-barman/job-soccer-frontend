@@ -1,13 +1,17 @@
 import React from "react";
 import { FieldStaffPosition } from "@/constants/video.constant";
 import {
+  academyDirectorQuestions,
   assistantCoachQuestions,
   defensiveCoachQuestions,
+  directorOfCoachingQuestions,
   gkCoachQuestions,
   headCoachQuestions,
   mentalCoachQuestions,
   offensiveCoachQuestions,
+  scoutQuestions,
   technicalCoachQuestions,
+  technicalDirectorQuestions,
   videoAnalystQuestions,
 } from "@/constants/questions";
 
@@ -20,7 +24,11 @@ interface CoachingQuestionsProps {
     | FieldStaffPosition.VIDEO_ANALYST_COACH
     | FieldStaffPosition.SPECIFIC_DEFENSIVE_COACH
     | FieldStaffPosition.SPECIFIC_OFFENSIVE_COACH
-    | FieldStaffPosition.SPECIFIC_TECHNICAL_COACH;
+    | FieldStaffPosition.SPECIFIC_TECHNICAL_COACH
+    | FieldStaffPosition.SCOUT
+    | FieldStaffPosition.TECHNICAL_DIRECTOR
+    | FieldStaffPosition.DIRECTOR_OF_COACHING
+    | FieldStaffPosition.ACADEMY_DIRECTOR;
 }
 
 export function CoachingQuestions({
@@ -63,6 +71,22 @@ export function CoachingQuestions({
     case FieldStaffPosition.SPECIFIC_TECHNICAL_COACH:
       questions = technicalCoachQuestions;
       title = "Technical Coach – Interview Questionnaire (18 Questions)";
+      break;
+    case FieldStaffPosition.SCOUT:
+      questions = scoutQuestions;
+      title = "Scout – Interview Questionnaire (18 Questions)";
+      break;
+    case FieldStaffPosition.TECHNICAL_DIRECTOR:
+      questions = technicalDirectorQuestions;
+      title = "Technical Director – Interview Questionnaire (18 Questions)";
+      break;
+    case FieldStaffPosition.DIRECTOR_OF_COACHING:
+      questions = directorOfCoachingQuestions;
+      title = "Director of Coaching – Interview Questionnaire (18 Questions)";
+      break;
+    case FieldStaffPosition.ACADEMY_DIRECTOR:
+      questions = academyDirectorQuestions;
+      title = "Academy Director – Interview Questionnaire (18 Questions)";
       break;
     default:
       questions = headCoachQuestions;

@@ -405,3 +405,207 @@ export const technicalCoachQuestions = [
     ],
   },
 ];
+
+export const scoutQuestions = [
+  {
+    section: "A. Background & Role Definition",
+    questions: [
+      "Can you describe your scouting background and pathway to becoming a scout?",
+      "What is your primary role and responsibility within a recruitment or technical department?",
+      "How do you align your scouting priorities with club strategy and recruitment needs?",
+    ],
+  },
+  {
+    section: "B. Technical & Tactical Expertise",
+    questions: [
+      "How do you evaluate a player's tactical intelligence during matches?",
+      "How do you assess decision-making quality in game situations?",
+      "How do you identify tactical fit between a player and a team's playing model?",
+    ],
+  },
+  {
+    section: "C. Scouting Methodology",
+    questions: [
+      "What key attributes do you look for when evaluating a player's potential?",
+      "Can you walk us through your scouting process from identifying a player to making a recommendation?",
+      "Do you have experience using data analytics or video analysis to support your scouting decisions?",
+    ],
+  },
+  {
+    section: "D. Player Profile & Game Understanding",
+    questions: [
+      "How do you evaluate a player's potential for development and readiness to move to the next level?",
+      "How do you analyze a player's profile (technical, tactical, physical, mental) in relation to a team's playing model?",
+      "How do you contextualize individual performance based on competition level, age, and role?",
+    ],
+  },
+  {
+    section: "E. Communication, Collaboration & Adaptability",
+    questions: [
+      "How do you present your scouting reports to coaches or technical staff to ensure clarity and usefulness?",
+      "Describe a situation where you had to communicate a complex or sensitive scouting opinion. How did you handle it?",
+      "How do you collaborate with coaches and performance staff to align scouting with team needs?",
+    ],
+  },
+  {
+    section: "F. Professionalism, Impact & Development",
+    questions: [
+      "What do you consider to be your main strengths as a scout, and which areas are you actively working to improve?",
+      "What has been the toughest professional challenge you have faced as a scout, and how did you overcome it?",
+      "How do you measure the quality and effectiveness of your scouting work beyond player signings, and how has your methodology evolved over time?",
+    ],
+  },
+];
+
+export const technicalDirectorQuestions = [
+  {
+    section: "A. Background & Role Definition",
+    questions: [
+      "Can you describe your professional background and pathway to becoming a Technical Director?",
+      "How do you define the role and responsibilities of a Technical Director within a football club?",
+      "How do you balance strategic vision with day-to-day operational demands?",
+    ],
+  },
+  {
+    section: "B. Technical & Tactical Expertise",
+    questions: [
+      "How do you evaluate tactical consistency across all teams within the club?",
+      "How do you assess whether coaches are implementing the playing philosophy correctly?",
+      "How do you analyze team and player performance data to guide technical decisions?",
+    ],
+  },
+  {
+    section: "C. Technical Project & Methodology",
+    questions: [
+      "How do you structure and oversee the club's technical project throughout a season?",
+      "What methodology do you use to align player development with team performance objectives?",
+      "How do you evaluate whether the technical project is being correctly implemented?",
+    ],
+  },
+  {
+    section: "D. Playing Model & Communication",
+    questions: [
+      "How do you define the club's playing model and game principles across all teams and age groups?",
+      "How do you communicate the technical vision and expectations to coaches and staff?",
+      "Describe a situation where you had to communicate a complex or sensitive technical decision.",
+    ],
+  },
+  {
+    section: "E. Leadership, Collaboration & Adaptability",
+    questions: [
+      "How do you collaborate with the head coach, academy staff, and management to align objectives?",
+      "Describe a moment when your technical leadership influenced an important sporting decision.",
+      "Describe a situation where the technical project needed adjustment due to results or context.",
+    ],
+  },
+  {
+    section: "F. Professionalism, Evaluation & Vision",
+    questions: [
+      "How do you measure the effectiveness and impact of the technical project beyond match results?",
+      "What has been the toughest professional challenge you have faced as a Technical Director?",
+      "How has your technical leadership and methodology evolved over the past three to five years?",
+    ],
+  },
+];
+
+export const directorOfCoachingQuestions = [
+  {
+    section: "A. Background & Role Definition",
+    questions: [
+      "Can you describe your professional background and pathway to becoming a Director of Coaching?",
+      "What is your coaching philosophy, and how has it evolved over time?",
+      "How do you define the role and responsibilities of a Director of Coaching within a club or organization?",
+    ],
+  },
+  {
+    section: "B. Technical & Tactical Expertise",
+    questions: [
+      "How do you evaluate tactical consistency across teams within the club?",
+      "How do you ensure technical and tactical standards are implemented by coaches?",
+      "How do you analyze player and team performance data to guide coaching decisions?",
+    ],
+  },
+  {
+    section: "C. Club Philosophy & Methodology",
+    questions: [
+      "How do you design and implement a unified playing philosophy across all age groups?",
+      "What principles guide your coaching methodology in training and competition?",
+      "How do you ensure consistency while allowing coaches autonomy at different levels?",
+    ],
+  },
+  {
+    section: "D. Coach Development & Management",
+    questions: [
+      "How do you recruit, develop, and evaluate coaches within the organization?",
+      "What tools or indicators do you use to assess coaching performance?",
+      "How do you support coaches in their professional development and licensing pathway?",
+    ],
+  },
+  {
+    section: "E. Player Development Framework",
+    questions: [
+      "How do you align player development objectives with long-term performance outcomes?",
+      "How do you integrate physical, technical, tactical, and mental development into a single framework?",
+      "How do you manage transitions between age groups and competitive levels?",
+    ],
+  },
+  {
+    section: "F. Leadership, Structure & Evaluation",
+    questions: [
+      "How do you collaborate with technical directors, performance staff, and management?",
+      "How do you measure the success of the coaching program at both individual and collective levels?",
+      "If you were appointed today, what would be your priorities in the first 90 days?",
+    ],
+  },
+];
+
+export const academyDirectorQuestions = [
+  {
+    section: "A. Background & Role Definition",
+    questions: [
+      "Can you describe your background and pathway to becoming a strength & conditioning coach in soccer?",
+      "How do you define your role within a football performance department?",
+      "How do you collaborate with the head coach and medical staff to align performance objectives?",
+    ],
+  },
+  {
+    section: "B. Technical & Tactical Expertise",
+    questions: [
+      "How do you integrate tactical demands of soccer into physical preparation programs?",
+      "How do you adapt conditioning work according to position-specific requirements?",
+      "How do you analyze match demands to inform training design?",
+    ],
+  },
+  {
+    section: "C. Training Methodology & Planning",
+    questions: [
+      "How do you structure a weekly strength & conditioning program to support soccer performance?",
+      "How do you plan physical development across a full season?",
+      "How do you adapt your methodology for youth players compared to senior players?",
+    ],
+  },
+  {
+    section: "D. Performance Principles & Load Management",
+    questions: [
+      "What are your key physical performance principles for soccer players, and how do they align with the team's playing model?",
+      "How do you manage training loads, recovery, and player availability during congested schedules?",
+      "What tools or indicators do you use to monitor physical performance and fatigue?",
+    ],
+  },
+  {
+    section: "E. Adaptability & Decision-Making",
+    questions: [
+      "Describe a situation where your physical preparation plan had to be adjusted due to injuries, congestion, or constraints.",
+      "Tell us about a time when you had to make a difficult decision prioritizing player health over short-term performance.",
+      "How do you adapt your work when resources, time, or infrastructure are limited?",
+    ],
+  },
+  {
+    section: "F. Professionalism, Evaluation & Development",
+    questions: [
+      "What do you consider to be your main strengths as a strength & conditioning coach, and which areas are you improving?",
+      "What has been the toughest professional challenge you have faced in this role, and how did you overcome it?",
+      "How do you measure success beyond injury rates and fitness tests, and how has your methodology evolved over time?",
+    ],
+  },
+];

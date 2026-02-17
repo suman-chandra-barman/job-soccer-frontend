@@ -5,7 +5,8 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { FormLayout } from "@/components/form/FormLayout";
 import { IndividualVideoUpload } from "../form/fields/IndividualVideoUpload";
-import { VideoType } from "@/constants/video.constant";
+import { CoachingQuestions } from "../questions/CoachingQuestions";
+import { FieldStaffPosition, VideoType } from "@/constants/video.constant";
 import { videoSchema } from "@/shchemas/profileValidation";
 import { IVideoFormProps, IVideoMap, TVideo } from "@/types/profile";
 
@@ -15,7 +16,8 @@ export function ScoutVideoForm({
   initialData,
   steps,
   isLoading,
-}: IVideoFormProps) {
+  fieldStaffPosition,
+}: IVideoFormProps & { fieldStaffPosition: FieldStaffPosition.SCOUT }) {
   const [hasSubmitted, setHasSubmitted] = useState(false);
 
   const {
@@ -47,7 +49,7 @@ export function ScoutVideoForm({
   // Update form videos array whenever videoMap changes
   useEffect(() => {
     const videoArray = Object.values(videoMap).filter(
-      (video): video is File => video !== null
+      (video): video is File => video !== null,
     );
     setValue("videos", videoArray, { shouldValidate: true });
   }, [videoMap, setValue]);
@@ -83,7 +85,14 @@ export function ScoutVideoForm({
       ...data,
       videoMeta,
       videos,
-    } as TVideo & { videoMeta?: Array<{ type: VideoType; title: string; description: string }>; videos?: File[] });
+    } as TVideo & {
+      videoMeta?: Array<{
+        type: VideoType;
+        title: string;
+        description: string;
+      }>;
+      videos?: File[];
+    });
   };
 
   // Handle individual video changes by video type
@@ -109,6 +118,7 @@ export function ScoutVideoForm({
       isNextDisabled={!hasAllRequiredVideos}
       isLoading={isLoading}
     >
+      <CoachingQuestions fieldStaffPosition={fieldStaffPosition} />
       <form className="space-y-8">
         <div className="space-y-6">
           {/* Video 1 - Required */}
