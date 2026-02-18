@@ -563,49 +563,49 @@ export const academyDirectorQuestions = [
   {
     section: "A. Background & Role Definition",
     questions: [
-      "Can you describe your background and pathway to becoming a strength & conditioning coach in soccer?",
-      "How do you define your role within a football performance department?",
-      "How do you collaborate with the head coach and medical staff to align performance objectives?",
+      "Can you describe your professional pathway and the experiences that prepared you to lead an academy?",
+      "How would you define the mission of an academy director within a modern football organization?",
+      "What leadership principles guide your decisions when managing a long-term development structure?",
     ],
   },
   {
-    section: "B. Technical & Tactical Expertise",
+    section: "B. Technical & Development Expertise",
     questions: [
-      "How do you integrate tactical demands of soccer into physical preparation programs?",
-      "How do you adapt conditioning work according to position-specific requirements?",
-      "How do you analyze match demands to inform training design?",
+      "How do you ensure technical and tactical standards are consistent across all age groups?",
+      "How do you evaluate whether training sessions meet development objectives?",
+      "What indicators do you use to measure real player progression?",
     ],
   },
   {
-    section: "C. Training Methodology & Planning",
+    section: "C. Academy Philosophy & Methodology",
     questions: [
-      "How do you structure a weekly strength & conditioning program to support soccer performance?",
-      "How do you plan physical development across a full season?",
-      "How do you adapt your methodology for youth players compared to senior players?",
+      "How do you design and implement a unified development philosophy across the academy?",
+      "How do you maintain consistency while allowing coaches freedom to express their coaching identity?",
+      "What principles guide your long-term player development model?",
     ],
   },
   {
-    section: "D. Performance Principles & Load Management",
+    section: "D. Staff Leadership & Coach Development",
     questions: [
-      "What are your key physical performance principles for soccer players, and how do they align with the team's playing model?",
-      "How do you manage training loads, recovery, and player availability during congested schedules?",
-      "What tools or indicators do you use to monitor physical performance and fatigue?",
+      "How do you recruit, mentor, and evaluate academy coaches?",
+      "What tools or methods do you use to monitor coaching quality?",
+      "How do you support coaches in their professional growth and licensing pathway?",
     ],
   },
   {
-    section: "E. Adaptability & Decision-Making",
+    section: "E. Player Pathway & Performance Model",
     questions: [
-      "Describe a situation where your physical preparation plan had to be adjusted due to injuries, congestion, or constraints.",
-      "Tell us about a time when you had to make a difficult decision prioritizing player health over short-term performance.",
-      "How do you adapt your work when resources, time, or infrastructure are limited?",
+      "How do you structure player progression from grassroots to elite level?",
+      "How do you integrate technical, tactical, physical, and mental development into one system?",
+      "How do you manage transitions between age groups and competitive levels?",
     ],
   },
   {
-    section: "F. Professionalism, Evaluation & Development",
+    section: "F. Organizational Leadership & Impact",
     questions: [
-      "What do you consider to be your main strengths as a strength & conditioning coach, and which areas are you improving?",
-      "What has been the toughest professional challenge you have faced in this role, and how did you overcome it?",
-      "How do you measure success beyond injury rates and fitness tests, and how has your methodology evolved over time?",
+      "How do you collaborate with technical staff, performance departments, and club leadership?",
+      "What metrics do you use to evaluate academy success beyond match results?",
+      "If appointed today, what would be your priorities during your first 90 days?",
     ],
   },
 ];
