@@ -26,7 +26,7 @@ export function HeroSection() {
                     alt="Hand-drawn underline"
                     className="absolute -bottom-2 left-0 w-full h-auto"
                   />
-                </span>{" "}
+                </span>
                 job
               </h1>
               <h1 className="text-4xl md:text-5xl lg:text-6xl xl:text-7xl font-bold text-gray-900 leading-tight">
@@ -40,7 +40,7 @@ export function HeroSection() {
                   asChild
                   className=" md:w-[200px] bg-yellow-300 hover:scale-105 transition-transform duration-200"
                 >
-                  <Link href="/signin">Sign In</Link>
+                  <Link href="/signup">Sign Up</Link>
                 </Button>
               </div>
             )}
