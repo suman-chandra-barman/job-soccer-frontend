@@ -4,11 +4,11 @@ import { NewJobs } from "./NewJobs";
 
 const FindYourNextJob = () => {
   const opportunities: string[] = [
-    "Club Professional and Amateur - Discover players, staff and insights",
-    "Agent - Manage talent and explore club networks",
-    "Professional Player and Amateur find Clubs, Agents and opportunities",
-    "Staff - Browse and connect with Clubs and Agents",
-    "College/University - Connect with Coaches and discover soccer talents",
+    "Club Professional and Amateur — Discover verified players, coaching staff and performance insights to build your squad",
+    "Agent — Manage your talent roster, track opportunities and expand your club network all in one place",
+    "Professional Player and Amateur — Create your dynamic profile, get discovered by clubs and agents worldwide",
+    "Staff — Showcase your expertise, browse openings and connect directly with clubs and agents looking for your skills",
+    "College/University — Connect with elite coaches, scout emerging soccer talent and build your academic program",
   ];
   return (
     <div className="bg-white">
@@ -20,7 +20,7 @@ const FindYourNextJob = () => {
               Find the Right Opportunity for You
             </h2>
 
-            <div className="space-y-8 text-[#504A20]">
+            <div className="space-y-8 lg:space-y-14 text-[#504A20]">
               {opportunities.map((opportunity, index) => (
                 <div key={index} className="flex items-start gap-3">
                   <div className="shrink-0 mt-1 bg-amber-50">

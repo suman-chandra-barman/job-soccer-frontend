@@ -84,12 +84,6 @@ export function GlobalProfile() {
                 >
                   <Link href="/signin">Sign In</Link>
                 </Button>
-                <Button
-                  asChild
-                  className=" lg:w-[200px] bg-yellow-300 hover:scale-105 transition-transform duration-200"
-                >
-                  <Link href="/signup">Sign Up</Link>
-                </Button>
               </div>
             )}
           </div>

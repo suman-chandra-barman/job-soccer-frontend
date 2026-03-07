@@ -3,60 +3,67 @@ import brainIcon from "@/assets/home/ai_brain.svg";
 import videoIcon from "@/assets/home/video.svg";
 import global from "@/assets/home/global.svg";
 import security from "@/assets/home/security.svg";
-import chart from "@/assets/home/chart.svg"
-import profile from "@/assets/home/profile.svg"
-import footbal from "@/assets/home/footbal.svg"
-import job from "@/assets/home/job.svg"
+import chart from "@/assets/home/chart.svg";
+import profile from "@/assets/home/profile.svg";
+import footbal from "@/assets/home/footbal.svg";
+import job from "@/assets/home/job.svg";
 
 export function Features() {
   const features = [
     {
       icon: footbal,
       title: "Specialized in Soccer Staffing",
-      lists: ["JOBSOCCER is 100% focused on the soccer ecosystem."],
+      lists: [
+        "Unlike generic job boards, JOBSOCCER is built 100% for the soccer ecosystem. Every feature, every tool, every connection is designed with the beautiful game in mind.",
+      ],
     },
     {
       icon: brainIcon,
       title: "AI-Powered Talent Matching",
       lists: [
-        "Seamlessly connects employers with candidates and candidates with employers.",
+        "Our smart algorithm analyzes profiles, skills and requirements to connect the right candidates with the right employers faster and more accurately than any manual search.",
       ],
     },
     {
       icon: videoIcon,
-      title: "AI video Evaluation",
-      lists: ["Video interview analysis."],
+      title: "AI Video Interview Evaluation",
+      lists: [
+        "Go beyond the CV. Candidates upload their pre-video interviews that showcase their personality, communication and real-world skills, giving employers a true picture before the first meeting.",
+      ],
     },
     {
       icon: security,
       title: "AI Profile Quality Score",
-      lists: ["AI evaluates completeness and strength of each profile."],
+      lists: [
+        "Our AI evaluates every profile for completeness and strength, helping candidates present their best selves and giving employers confidence in what they see.",
+      ],
     },
     {
       icon: job,
-      title: "AI Powered job suggestions",
-      lists: ["Personalized job recommendations for players and staff."],
+      title: "AI Powered Job Suggestions",
+      lists: [
+        "No more endless scrolling. JOBSOCCER delivers personalized job recommendations directly to players and staff based on their profile, experience and preferences.",
+      ],
     },
     {
       icon: chart,
       title: "AI Data-Driven Market Insights",
       lists: [
-        "AI identifies rising talent trends, role demands, or regional needs.",
+        "Stay ahead of the game. Our AI tracks rising talent trends, in-demand roles and regional opportunities so clubs and candidates always know where the market is heading.",
       ],
     },
     {
       icon: global,
       title: "Global Access & Visibility",
       lists: [
-        "Gives equal visibility to candidates worldwide not just those with the right contacts.",
+        "Your next opportunity shouldn't depend on who you know. JOBSOCCER gives equal visibility to candidates from every country, every league and every level of the game.",
       ],
     },
     {
       icon: profile,
-      title: "Fair, Transparent, and Structured Process",
+      title: "Fair, Transparent and Structured Process",
       lists: [
-        "Clear application system",
-        "Reduces bias, improves diversity, and promotes merit- based recruitment",
+        "A clear, structured application system that reduces bias, promo",
       ],
     },
   ];
@@ -75,7 +82,12 @@ export function Features() {
               <div key={index} className="flex items-start space-x-4">
                 <div className="flex-1">
                   <div className="flex items-start gap-4">
-                    <Image src={feature.icon} alt={feature.title + " icon"} width={40} height={40} />
+                    <Image
+                      src={feature.icon}
+                      alt={feature.title + " icon"}
+                      width={40}
+                      height={40}
+                    />
                     <div>
                       <h3 className="text-xl font-bold mb-2">
                         {feature.title}
@@ -83,7 +95,7 @@ export function Features() {
                       <p className="text-gray-600 text-sm leading-relaxed">
                         {feature.lists.map((item, idx) => (
                           <span key={idx} className="block mb-1">
-                            • {item}
+                            {item}
                           </span>
                         ))}
                       </p>

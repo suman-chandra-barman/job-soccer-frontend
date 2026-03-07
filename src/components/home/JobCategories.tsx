@@ -23,7 +23,7 @@ export function JobCategories() {
         {/* Header */}
         <div className="flex flex-col md:flex-row justify-between items-start mb-12 gap-8">
           <h2 className="text-2xl md:text-4xl font-bold text-[#362F05] leading-tight max-w-2xl">
-            Your complete hub for soccer talents jobs and connections
+           Find Your Next Soccer Talent
           </h2>
           <Button
             asChild

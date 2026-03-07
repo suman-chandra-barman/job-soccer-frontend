@@ -1,7 +1,5 @@
 "use client";
 
-import Image from "next/image";
-import left from "@/assets/home/discover-left.png";
 import { CareerPathsDiagram } from "./CareerPathsDiagram";
 import { diagramAnimations } from "../../lib/animations";
 
@@ -21,27 +19,19 @@ export function Discover() {
         {/* Content Grid */}
         <div className="grid lg:grid-cols-2 gap-12 items-center">
           {/* Left Image with Gradient Background */}
-          <div
-            className="relative rounded-2xl overflow-hidden pt-10"
-            style={{
-              background:
-                "radial-gradient(circle, rgba(230, 161, 101, 1) 21%, rgba(255, 255, 255, 1) 55%)",
-            }}
-            aria-label="Visual representation of coaching"
-          >
-            <div className="flex justify-center">
-              <Image
-                src={left}
-                alt="Coach with young players"
-                className="object-contain"
-                loading="lazy"
-                sizes="(max-width: 768px) 100vw, 50vw"
-              />
-            </div>
+          <div>
+            <p className="text-lg leading-relaxed text-justify max-w-md mx-auto text-gray-700">
+              JOBSOCCER is the first platform built exclusively for the soccer
+              world. Whether you&lsquo;re a player looking for your next club, a coach
+              seeking new opportunities, or an organization searching for the
+              right talent everything you need is in one place. No more relying
+              on personal contacts or word of mouth. Just a smarter, fairer way
+              to connect soccer professionals worldwide
+            </p>
           </div>
 
           {/* Right Animated Diagram */}
-          <div className="flex justify-center py-10">
+          <div className="flex justify-center pt-10">
             <CareerPathsDiagram />
           </div>
         </div>

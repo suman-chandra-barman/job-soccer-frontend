@@ -20,20 +20,19 @@ export function Candidates() {
 
   return (
     <section className="py-16 bg-white">
+      {/* Header */}
+      <div className="py-8 text-center bg-primary">
+        <h2 className="text-2xl md:text-4xl font-bold text-center text-gray-900 mb-2">
+          Find Your Dream Team
+        </h2>
+        <p className="text-center text-gray-900">
+          Stop searching - Start Finding ! Jobsoccer connects you with verified
+          soccer talent worldwide.
+        </p>
+      </div>
       <div className="container mx-auto px-4">
-        {/* Header */}
-        <div className="text-center mb-12">
-          <h2 className="text-2xl md:text-4xl font-bold text-[#362F05] mb-3">
-            Find Your Dream Team
-          </h2>
-          <p className=" text-[#504A20] max-w-3xl mx-auto">
-            Build your Dream Team and we will connect you with the talent that
-            matches your vision
-          </p>
-        </div>
-
         {/* Candidates Container */}
-        <div className="bg-[#F7F6F2] rounded-2xl p-4 md:p-8">
+        <div className="bg-[#F7F6F2] rounded-b-2xl p-4 md:p-8">
           <div className="flex justify-between items-center mb-8">
             <h3 className="text-2xl font-bold text-gray-900">Candidates</h3>
             <Button
