@@ -115,6 +115,11 @@ export function Footer() {
             </div>
           </div>
         </div>
+        <div className="mt-10 border-t border-gray-200 pt-6 text-center">
+          <p className="text-gray-500 text-sm">
+            &copy; {new Date().getFullYear()} JobSoccer. All rights reserved.
+          </p>
+        </div>
       </div>
     </footer>
   );
