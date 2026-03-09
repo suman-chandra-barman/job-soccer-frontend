@@ -22,17 +22,6 @@ export function Footer() {
                 className="object-cover"
               />
             </Link>
-            {/* Contact Info */}
-            <div className="text-center md:text-left pl-2">
-              <p className="text-gray-600 text-sm">
-                <a
-                  href="mailto:info@jobsoccer.com"
-                  className="hover:text-gray-900"
-                >
-                  info@jobsoccer.com
-                </a>
-              </p>
-            </div>
           </div>
           {/* Quick Action */}
           <div className="w-full md:w-auto text-center md:text-left">
@@ -92,13 +81,21 @@ export function Footer() {
                   Privacy policy
                 </Link>
               </li>
+              <li>
+               <a
+                  href="mailto:info@jobsoccer.com"
+                  className="text-gray-600 hover:text-gray-900 text-sm"
+                >
+                  info@jobsoccer.com
+                </a>
+              </li>
             </ul>
           </div>
 
           {/* Subscribe */}
           <div className="w-full md:w-auto">
-            <p className="text-gray-600 text-sm mb-4 text-center md:text-left">
-              Subscribe to our email alerts
+            <p className="text-sm mb-4 text-center md:text-left">
+              Subscribe To Our Newsletter
             </p>
             <div className="flex flex-col sm:flex-row sm:items-center gap-2 mb-6">
               <Input

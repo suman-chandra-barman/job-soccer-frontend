@@ -25,7 +25,11 @@ export function NewJobs() {
   return (
     <div className="bg-[#F7F6F2] rounded-3xl p-4 md:p-6">
       <div className="flex items-center justify-between mb-4">
-        <h2 className="text-2xl md:4xl font-bold text-gray-900">New Jobs</h2>
+        <h2 className="text-2xl md:4xl font-bold text-gray-900">
+          <button className="bg-yellow-300 font-semibold px-6 py-3 rounded-md">
+            New Jobs
+          </button>
+        </h2>
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">

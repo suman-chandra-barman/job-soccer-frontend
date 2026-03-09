@@ -63,7 +63,7 @@ export function Features() {
       icon: profile,
       title: "Fair, Transparent and Structured Process",
       lists: [
-        "A clear, structured application system that reduces bias, promo",
+        "A clear, structured application system that reduces bias, promo.",
       ],
     },
   ];

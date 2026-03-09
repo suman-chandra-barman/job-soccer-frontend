@@ -63,7 +63,7 @@ export function HowItWorks() {
             </h3>
             <p className="text-gray-600 max-w-xl mx-auto">
               Whether you&apos;re looking for your next opportunity or your next
-              signing — you&apos;re three steps away.
+              signing you&apos;re three steps away.
             </p>
           </div>
 
@@ -142,8 +142,7 @@ export function HowItWorks() {
               <Button
                 asChild
                 size="lg"
-                variant="outline"
-                className="border-2 border-primary hover:bg-primary hover:scale-105 transition-all duration-200 text-gray-900 font-semibold px-8"
+                className="bg-primary hover:scale-105 transition-transform duration-200 text-gray-900 font-semibold px-8"
               >
                 <Link href="/signup">Sign Up as an Employer</Link>
               </Button>

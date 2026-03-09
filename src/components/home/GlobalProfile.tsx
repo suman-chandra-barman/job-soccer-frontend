@@ -68,7 +68,7 @@ export function GlobalProfile() {
                       <h3 className="text-lg font-semibold text-[#362F05] mb-1">
                         {feature.title}
                       </h3>
-                      <p className="text-[#A19C80] text-sm leading-relaxed">
+                      <p className="text-gray-600 text-sm leading-relaxed">
                         {feature.description}
                       </p>
                     </div>

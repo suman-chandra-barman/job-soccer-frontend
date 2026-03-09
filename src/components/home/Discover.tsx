@@ -26,7 +26,7 @@ export function Discover() {
               seeking new opportunities, or an organization searching for the
               right talent everything you need is in one place. No more relying
               on personal contacts or word of mouth. Just a smarter, fairer way
-              to connect soccer professionals worldwide
+              to connect soccer professionals worldwide.
             </p>
           </div>
 
