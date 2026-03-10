@@ -22,9 +22,12 @@ import {
 import { toast } from "sonner";
 import VideoPlayerModal from "../modals/VideoPlayerModal";
 import { useSendFriendRequestMutation } from "@/redux/features/user/userApi";
+import userPlaceholder from "@/assets/user-placeholder.png";
 
 function CandidateCard({ candidate }: { candidate: ICandidate }) {
   const [isVideoModalOpen, setIsVideoModalOpen] = useState(false);
+  const [imgError, setImgError] = useState(false);
+
   const dispatch = useAppDispatch();
   const shortlistedIds = useAppSelector(
     (state) => state.candidateShortlist.shortlistedIds
@@ -164,13 +167,17 @@ function CandidateCard({ candidate }: { candidate: ICandidate }) {
             {candidate?.profileImage ? (
               <div className="w-12 h-12 rounded-full overflow-hidden border-2 border-transparent hover:border-green-500 transition-colors">
                 <Image
-                  src={`${process.env.NEXT_PUBLIC_BASE_URL}${candidate.profileImage}`}
-                  alt={`${candidate?.firstName || ""} ${
-                    candidate?.lastName || ""
+                  src={
+                     imgError
+                      ? userPlaceholder
+                      : `${process.env.NEXT_PUBLIC_BASE_URL}${candidate.profileImage}`
+                  }
+                  alt={`${candidate?.firstName || ""}
                   }`}
                   width={48}
                   height={48}
                   className="w-full h-full object-cover"
+                  onError={() => setImgError(true)}
                 />
               </div>
             ) : (

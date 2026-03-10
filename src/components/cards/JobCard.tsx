@@ -2,13 +2,14 @@
 import { Bookmark, Clock, MapPin } from "lucide-react";
 import { TJob } from "@/types/job";
 import Image from "next/image";
-import employerLogo from "@/assets/employers/compony logo.png";
 import { Button } from "../ui/button";
+import { Avatar, AvatarFallback } from "../ui/avatar";
 import Link from "next/link";
 import user1 from "@/assets/candidates/user1.png";
 import user2 from "@/assets/candidates/user2.png";
 import user3 from "@/assets/candidates/user3.png";
 import user4 from "@/assets/candidates/user4.png";
+import userPlaceholder from "@/assets/user-placeholder.png";
 import { formatTimeAgo } from "@/lib/utils";
 import { useAuthCheck } from "@/hooks/useAuthCheck";
 import { LoginRequiredModal } from "../modals/LoginRequiredModal";
@@ -32,6 +33,7 @@ export function JobCard({ job }: JobCardProps) {
   const [showResumeModal, setShowResumeModal] = useState(false);
   const [localIsSaved, setLocalIsSaved] = useState<boolean | null>(null);
   const [localIsApplied, setLocalIsApplied] = useState<boolean | null>(null);
+  const [imgError, setImgError] = useState(false);
   const { checkAuth, showLoginModal, handleLogin, handleCloseModal } =
     useAuthCheck();
 
@@ -84,14 +86,14 @@ export function JobCard({ job }: JobCardProps) {
         : await saveJob(jobData.id).unwrap();
       if (result.success) {
         toast.success(
-          willBeSaved ? "Job saved successfully!" : "Job unsaved successfully!"
+          willBeSaved ? "Job saved successfully!" : "Job unsaved successfully!",
         );
       }
     } catch (error: any) {
       // Revert on error
       setLocalIsSaved(previousState);
       toast.error(
-        error.data?.message || "Failed to save job. Please try again."
+        error.data?.message || "Failed to save job. Please try again.",
       );
       console.error("Failed to save job:", error);
     }
@@ -125,14 +127,14 @@ export function JobCard({ job }: JobCardProps) {
         toast.success(
           willBeSaved
             ? "Job shortlisted successfully!"
-            : "Job removed from shortlist!"
+            : "Job removed from shortlist!",
         );
       }
     } catch (error: any) {
       // Revert on error
       setLocalIsSaved(previousState);
       toast.error(
-        error.data?.message || "Failed to update job. Please try again."
+        error.data?.message || "Failed to update job. Please try again.",
       );
       console.error("Failed to update job:", error);
     }
@@ -172,13 +174,29 @@ export function JobCard({ job }: JobCardProps) {
           href={`/jobs/${jobData.id}`}
           className="w-12 h-12 rounded-xl flex items-center justify-center border border-gray-200 bg-white"
         >
-          <Image
-            src={jobData.image || employerLogo}
-            alt="Logo"
-            className="object-contain rounded-xl"
-            width={48}
-            height={48}
-          />
+          {jobData.image ? (
+            <div className="w-12 h-12 rounded-xl overflow-hidden">
+              <Image
+                src={
+                  imgError
+                    ? userPlaceholder
+                    : `${process.env.NEXT_PUBLIC_BASE_URL}${jobData.image}`
+                }
+                alt={jobData.company}
+                width={48}
+                height={48}
+                className="w-full h-full object-cover"
+                onError={() => setImgError(true)}
+              />
+            </div>
+          ) : (
+            <Avatar className="w-12 h-12 rounded-xl">
+              <AvatarFallback className="rounded-xl text-sm font-medium">
+                {job.creator.creatorId.firstName?.charAt(0)}
+                {job.creator.creatorId.lastName?.charAt(0)}
+              </AvatarFallback>
+            </Avatar>
+          )}
         </Link>
         <div className="flex-1 min-w-0">
           <h3 className="font-semibold text-gray-900 xl:text-lg">
