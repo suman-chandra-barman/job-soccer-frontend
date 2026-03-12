@@ -3,6 +3,7 @@ import { Input } from "@/components/ui/input";
 import Link from "next/link";
 import Image from "next/image";
 import logo from "@/assets/logo_with_domain.svg";
+import { Mail } from "lucide-react";
 
 export function Footer() {
   return (
@@ -86,7 +87,7 @@ export function Footer() {
                   href="mailto:info@jobsoccer.com"
                   className="text-gray-600 hover:text-gray-900 text-sm"
                 >
-                  info@jobsoccer.com
+                 <Mail className="inline mr-1" size={16}/>info@jobsoccer.com
                 </a>
               </li>
             </ul>
@@ -94,9 +95,9 @@ export function Footer() {
 
           {/* Subscribe */}
           <div className="w-full md:w-auto">
-            <p className="text-sm mb-4 text-center md:text-left">
+            <h3 className="text-lg font-semibold mb-4 text-center md:text-left">
               Subscribe To Our Newsletter
-            </p>
+            </h3>
             <div className="flex flex-col sm:flex-row sm:items-center gap-2 mb-6">
               <Input
                 type="email"

@@ -17,7 +17,7 @@ export function StatsBanner() {
   return (
     <section className="py-12">
       {/* Yellow Banner Header */}
-      <div className="py-8 text-center bg-primary">
+      <div className="py-8 text-center bg-primary mb-16">
         <h2 className="text-2xl md:text-4xl font-bold text-gray-900">
           The Soccer World is Massive. We Connect It.
         </h2>
