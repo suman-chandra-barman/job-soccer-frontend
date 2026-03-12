@@ -138,7 +138,7 @@ export function HeadCoachVideoForm({
             label={VideoType.PRE_RECORDED_INTERVIEW}
             description="Upload your pre-recorded interview video"
             required={true}
-            maxDuration={180}
+            maxDuration={420}
             value={videoMap[VideoType.PRE_RECORDED_INTERVIEW]}
             onChange={(file) =>
               handleVideoChangeByType(VideoType.PRE_RECORDED_INTERVIEW, file)
@@ -157,7 +157,7 @@ export function HeadCoachVideoForm({
             label={VideoType.TECHNICAL}
             description="Upload your technical video"
             required={true}
-            maxDuration={180}
+            maxDuration={420}
             value={videoMap[VideoType.TECHNICAL]}
             onChange={(file) =>
               handleVideoChangeByType(VideoType.TECHNICAL, file)
@@ -173,7 +173,7 @@ export function HeadCoachVideoForm({
             label={VideoType.TACTICAL}
             description="Upload your tactical video"
             required={true}
-            maxDuration={180}
+            maxDuration={420}
             value={videoMap[VideoType.TACTICAL]}
             onChange={(file) =>
               handleVideoChangeByType(VideoType.TACTICAL, file)
@@ -190,7 +190,7 @@ export function HeadCoachVideoForm({
             label={VideoType.GAME_PRINCIPALS}
             description="Upload your game principles video"
             required={true}
-            maxDuration={180}
+            maxDuration={420}
             value={videoMap[VideoType.GAME_PRINCIPALS]}
             onChange={(file) =>
               handleVideoChangeByType(VideoType.GAME_PRINCIPALS, file)

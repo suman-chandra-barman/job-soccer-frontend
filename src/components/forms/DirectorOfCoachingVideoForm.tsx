@@ -129,7 +129,7 @@ export function DirectorOfCoachingVideoForm({
             label={VideoType.PRE_RECORDED_INTERVIEW}
             description="Upload your pre-recorded interview video"
             required={true}
-            maxDuration={180}
+            maxDuration={420}
             value={videoMap[VideoType.PRE_RECORDED_INTERVIEW]}
             onChange={(file) =>
               handleVideoChangeByType(VideoType.PRE_RECORDED_INTERVIEW, file)
@@ -148,7 +148,7 @@ export function DirectorOfCoachingVideoForm({
             label={VideoType.COACHING_RECRUITMENT_METHODOLOGY}
             description="Upload your coaching recruitment methodology video"
             required={true}
-            maxDuration={180}
+            maxDuration={420}
             value={videoMap[VideoType.COACHING_RECRUITMENT_METHODOLOGY]}
             onChange={(file) =>
               handleVideoChangeByType(

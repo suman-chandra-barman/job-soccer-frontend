@@ -133,7 +133,7 @@ export function TechnicalDirectorVideoForm({
             label={VideoType.PRE_RECORDED_INTERVIEW}
             description="Upload your pre-recorded interview video"
             required={true}
-            maxDuration={180}
+            maxDuration={420}
             value={videoMap[VideoType.PRE_RECORDED_INTERVIEW]}
             onChange={(file) =>
               handleVideoChangeByType(VideoType.PRE_RECORDED_INTERVIEW, file)
@@ -152,7 +152,7 @@ export function TechnicalDirectorVideoForm({
             label={VideoType.CLUB_PHILOSOPHY_METHODOLOGY}
             description="Upload your club philosophy and methodology video"
             required={true}
-            maxDuration={180}
+            maxDuration={420}
             value={videoMap[VideoType.CLUB_PHILOSOPHY_METHODOLOGY]}
             onChange={(file) =>
               handleVideoChangeByType(
@@ -174,7 +174,7 @@ export function TechnicalDirectorVideoForm({
             label={VideoType.PLAYER_RECRUITMENT_METHODOLOGY}
             description="Upload your player recruitment methodology video"
             required={true}
-            maxDuration={180}
+            maxDuration={420}
             value={videoMap[VideoType.PLAYER_RECRUITMENT_METHODOLOGY]}
             onChange={(file) =>
               handleVideoChangeByType(

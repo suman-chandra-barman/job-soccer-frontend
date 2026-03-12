@@ -115,7 +115,7 @@ export function OfficeStaffVideoForm({
             label={VideoType.PRE_RECORDED_INTERVIEW}
             description="Upload your pre-recorded interview video"
             required={true}
-            maxDuration={180}
+            maxDuration={420}
             value={videoMap[VideoType.PRE_RECORDED_INTERVIEW]}
             onChange={(file) =>
               handleVideoChangeByType(VideoType.PRE_RECORDED_INTERVIEW, file)
@@ -134,7 +134,7 @@ export function OfficeStaffVideoForm({
             label={VideoType.METHODOLOGY}
             description="Upload your methodology video (optional)"
             required={false}
-            maxDuration={180}
+            maxDuration={420}
             value={videoMap[VideoType.METHODOLOGY]}
             onChange={(file) =>
               handleVideoChangeByType(VideoType.METHODOLOGY, file)
