@@ -127,17 +127,23 @@ export default function GoogleTranslate() {
       <div id="google_translate_element" style={{ display: "none" }} />
 
       {/* Language Selector */}
-      <div className="language-switch-container">
+      <div className="language-switch-container notranslate">
         <select
-          className="language-select"
+          className="language-select notranslate"
           value={currentLang}
           onChange={handleLanguageChange}
           disabled={!isLoaded}
           aria-label="Select Language"
         >
-          <option value="en">English</option>
-          <option value="es">Spanish</option>
-          <option value="fr">French</option>
+          <option value="en" className="notranslate">
+            English
+          </option>
+          <option value="es" className="notranslate">
+            Spanish
+          </option>
+          <option value="fr" className="notranslate">
+            French
+          </option>
         </select>
       </div>
 
