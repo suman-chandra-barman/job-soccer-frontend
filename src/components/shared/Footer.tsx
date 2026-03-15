@@ -4,6 +4,7 @@ import Link from "next/link";
 import Image from "next/image";
 import logo from "@/assets/logo_with_domain.svg";
 import { Mail } from "lucide-react";
+import { FaFacebook, FaInstagram, FaLinkedin } from "react-icons/fa";
 
 export function Footer() {
   return (
@@ -83,11 +84,12 @@ export function Footer() {
                 </Link>
               </li>
               <li>
-               <a
+                <a
                   href="mailto:info@jobsoccer.com"
                   className="text-gray-600 hover:text-gray-900 text-sm"
                 >
-                 <Mail className="inline mr-1" size={16}/>info@jobsoccer.com
+                  <Mail className="inline mr-1" size={16} />
+                  info@jobsoccer.com
                 </a>
               </li>
             </ul>
@@ -95,7 +97,7 @@ export function Footer() {
 
           {/* Subscribe */}
           <div className="w-full md:w-auto">
-            <h3 className="text-lg font-semibold mb-4 text-center md:text-left">
+            <h3 className="lg:text-md font-semibold mb-4 text-center md:text-left">
               Subscribe To Our Newsletter
             </h3>
             <div className="flex flex-col sm:flex-row sm:items-center gap-2 mb-6">
@@ -113,10 +115,24 @@ export function Footer() {
             </div>
           </div>
         </div>
-        <div className="mt-10 border-t border-gray-200 pt-6 text-center">
-          <p className="text-gray-500 text-sm">
-            &copy; {new Date().getFullYear()} JobSoccer. All rights reserved.
-          </p>
+        <div className="pt-16">
+          {/* Social Media Icons */}
+          <div className="flex space-x-4 items-center justify-center gap-4">
+            <Link href="https://www.facebook.com/share/1DkGxofpte/?mibextid=wwXIfr" target="_blank" className="text-blue-600 hover:text-blue-700">
+              <FaFacebook className="h-6 w-6" />
+            </Link>
+            <Link
+              target="_blank"
+              href="https://www.instagram.com/jobsoccer_fc?igsh=MTRvc2Jla24yaWEz&utm_source=qr"
+              className="flex items-center justify-center h-6 w-6 rounded-full bg-linear-to-tr from-yellow-400 via-pink-500 to-purple-600"
+            >
+              <FaInstagram className="h-4 w-4 text-white" />
+            </Link>
+
+            <Link target="_blank" href="https://www.linkedin.com/company/108544034/admin/dashboard" className="text-blue-500 hover:text-blue-600">
+              <FaLinkedin className="h-6 w-6" />
+            </Link>
+          </div>
         </div>
       </div>
     </footer>
