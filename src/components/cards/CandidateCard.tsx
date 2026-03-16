@@ -165,7 +165,7 @@ function CandidateCard({ candidate }: { candidate: ICandidate }) {
           {/* Profile Header */}
           <div className="flex items-center gap-3 mb-4">
             {candidate?.profileImage ? (
-              <div className="w-12 h-12 rounded-full overflow-hidden border-2 border-transparent hover:border-green-500 transition-colors">
+              <div className="w-12 h-12 rounded-full overflow-hidden border-2 border-transparent">
                 <Image
                   src={
                      imgError
@@ -192,8 +192,8 @@ function CandidateCard({ candidate }: { candidate: ICandidate }) {
               <h4 className=" text-sm xl:text-base font-semibold text-gray-900">
                 {candidate.firstName + " " + candidate.lastName}
               </h4>
-              <p className="text-xs xl:text-sm text-gray-500">
-                {candidate.role}
+              <p className="text-xs text-gray-500 capitalize">
+                {candidate.profile.position}
               </p>
             </div>
           </div>

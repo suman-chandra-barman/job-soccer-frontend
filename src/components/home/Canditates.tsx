@@ -7,6 +7,13 @@ import { useGetCandidateFeaturedQuery } from "@/redux/features/candidate/candida
 import { ICandidate } from "@/types/user";
 import { Skeleton } from "../ui/skeleton";
 
+interface FeaturedCandidatesData {
+  Onfieldstaff?: ICandidate[];
+  OfficeStaff?: ICandidate[];
+  "College/UniversityPlayer"?: ICandidate[];
+  AmateurPlayer?: ICandidate[];
+}
+
 export function Candidates() {
   const {
     data: candidatesData,
@@ -14,9 +21,18 @@ export function Candidates() {
     isError,
   } = useGetCandidateFeaturedQuery(undefined);
 
-  // Extract Professional Players from the grouped data
-  const professionalPlayers: ICandidate[] =
-    candidatesData?.data?.ProfessionalPlayer || [];
+  const featuredData = candidatesData?.data as
+    | FeaturedCandidatesData
+    | undefined;
+
+  // Show one candidate from each requested category on the homepage preview.
+  const homepageCandidates: ICandidate[] = [
+    featuredData?.Onfieldstaff?.[0],
+    featuredData?.OfficeStaff?.[0],
+    featuredData?.["College/UniversityPlayer"]?.[0],
+    featuredData?.AmateurPlayer?.[0],
+    
+  ].filter((candidate): candidate is ICandidate => Boolean(candidate));
 
   return (
     <section className="py-16 bg-white">
@@ -56,12 +72,12 @@ export function Candidates() {
               <div className="col-span-full text-center py-8 text-gray-500">
                 Failed to load candidates. Please try again later.
               </div>
-            ) : professionalPlayers.length === 0 ? (
+            ) : homepageCandidates.length === 0 ? (
               <div className="col-span-full text-center py-8 text-gray-500">
-                No professional players available at the moment.
+                No candidates available at the moment.
               </div>
             ) : (
-              professionalPlayers.map((candidate: ICandidate) => (
+              homepageCandidates.map((candidate: ICandidate) => (
                 <CandidateCard key={candidate._id} candidate={candidate} />
               ))
             )}
