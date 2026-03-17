@@ -32,7 +32,7 @@ export default function ProfileAvatar({
   const profileInputRef = useRef<HTMLInputElement>(null);
 
   const handleProfileImageChange = async (
-    event: React.ChangeEvent<HTMLInputElement>
+    event: React.ChangeEvent<HTMLInputElement>,
   ) => {
     const file = event.target?.files?.[0];
     if (!file) return;
@@ -67,7 +67,7 @@ export default function ProfileAvatar({
     <div className="absolute -bottom-16 left-4 lg:left-8">
       <div className="relative">
         {/* Profile Image Container */}
-        <div className="relative w-24 h-24 lg:w-32 lg:h-32 rounded-full border-4 border-white overflow-hidden bg-white shadow-lg">
+        <div className="relative w-20 h-20 lg:w-24 lg:h-24 rounded-full border-4 border-white overflow-hidden bg-white shadow-lg">
           {avatarUrl ? (
             <Image
               src={avatarUrl}

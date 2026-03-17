@@ -9,10 +9,10 @@ const nextConfig: NextConfig = {
         pathname: "/**",
       },
       {
-        protocol: "http",
-        hostname: "images.pexels.com",
+        protocol: "https",
+        hostname: process.env.NEXT_PUBLIC_HOSTNAME || "74.208.193.37",
         pathname: "/**",
-      },
+      }
     ],
   },
 };
