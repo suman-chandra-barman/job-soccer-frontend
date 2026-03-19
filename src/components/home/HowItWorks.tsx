@@ -55,7 +55,7 @@ export function HowItWorks() {
 
       {/* Content */}
       <div className="bg-[#F7F6F2]">
-        <div className="container mx-auto px-4 py-16">
+        <div className="container mx-auto px-4 py-8 lg:py-16">
           {/* Section Intro */}
           <div className="text-center mb-14">
             <h3 className="text-2xl md:text-3xl font-bold text-gray-900 mb-3">

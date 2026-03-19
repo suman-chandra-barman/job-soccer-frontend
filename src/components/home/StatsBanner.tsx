@@ -15,14 +15,14 @@ export function StatsBanner() {
   ];
 
   return (
-    <section className="py-12">
+    <section>
       {/* Yellow Banner Header */}
       <div className="py-8 text-center bg-primary mb-16">
         <h2 className="text-2xl md:text-4xl font-bold text-gray-900">
           The Soccer World is Massive. We Connect It.
         </h2>
       </div>
-      <div className="bg-[#252525] py-12">
+      <div className="bg-[#252525] py-8 lg:py-16">
         <div className="container mx-auto px-4">
           <div className="flex flex-col md:flex-row items-center justify-center divide-y md:divide-y-0 md:divide-x divide-white/10">
             {stats.map((stat, index) => (

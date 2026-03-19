@@ -29,7 +29,7 @@ export function GlobalProfile() {
   const { user, token } = useAppSelector((state) => state.auth);
   const isAuthenticated = !!user && !!token;
   return (
-    <section className="container mx-auto px-4 pb-16">
+    <section className="container mx-auto px-4 pb-8 lg:pb-16">
       <div className=" bg-[#F7F6F2] rounded-2xl py-8 px-4">
         {/* Header */}
         <div className="text-center mb-12 md:mb-16">

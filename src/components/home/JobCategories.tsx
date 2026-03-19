@@ -18,8 +18,8 @@ export function JobCategories() {
   const jobCategories: TJobCountByRole[] = jobCountsData?.data || [];
 
   return (
-    <section className="py-16 bg-[#F7F6F2]">
-      <div className="container mx-auto px-4">
+    <section className="bg-[#F7F6F2]">
+      <div className="container mx-auto px-4 py-8 lg:py-16">
         {/* Header */}
         <div className="flex flex-col md:flex-row justify-between items-start mb-12 gap-8">
           <h2 className="text-2xl md:text-4xl font-bold text-[#362F05] leading-tight max-w-2xl">

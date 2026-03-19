@@ -35,7 +35,7 @@ export function Candidates() {
   ].filter((candidate): candidate is ICandidate => Boolean(candidate));
 
   return (
-    <section className="py-16 bg-white">
+    <section className="py-8 lg:py-16 bg-white">
       {/* Header */}
       <div className="py-8 text-center bg-primary">
         <h2 className="text-2xl md:text-4xl font-bold text-center text-gray-900 mb-2">

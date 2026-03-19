@@ -11,7 +11,7 @@ import { JobSearch } from "@/components/search/JobSearch";
 
 export default function HomePage() {
   return (
-    <div>
+    <main>
       <HeroSection />
       <JobSearch />
       <FindYourNextJob />
@@ -22,6 +22,6 @@ export default function HomePage() {
       <StatsBanner />
       <HowItWorks />
       <GlobalProfile />
-    </div>
+    </main>
   );
 }
