@@ -227,7 +227,7 @@ function CandidateCard({ candidate }: { candidate: ICandidate }) {
             className="flex mb-6 items-center gap-1 text-sm transition-colors cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
           >
             <FaPlayCircle className="w-4 h-4 text-red-500 hover:text-red-600" />
-            Watch Interview{" "}
+            Watch Highlights{" "}
             {candidate?.profile?.videos?.length
               ? `(${candidate.profile.videos.length})`
               : ""}
