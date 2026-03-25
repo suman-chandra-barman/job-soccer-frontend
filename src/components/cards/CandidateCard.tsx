@@ -162,8 +162,8 @@ function CandidateCard({ candidate }: { candidate: ICandidate }) {
   const isStaffRole =
     candidate.role === "On field staff" || candidate.role === "Office Staff";
   const watchLabel = isStaffRole
-    ? `Watch Interview${videoCount === 1 ? "" : "s"}`
-    : `Watch Highlight${videoCount === 1 ? "" : "s"}`;
+    ? `Watch Interview`
+    : `Watch Highlights`;
 
   return (
     <div className="h-full">
