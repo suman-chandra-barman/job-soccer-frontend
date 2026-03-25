@@ -17,10 +17,10 @@ export function Discover() {
       </header>
       <div className="container mx-auto px-4">
         {/* Content Grid */}
-        <div className="grid lg:grid-cols-2 gap-12 items-center">
+        <div className="grid lg:grid-cols-2 gap-8 md:gap-12 lg:gap-24 items-center justify-center">
           {/* Left Image with Gradient Background */}
           <div>
-            <p className="text-lg leading-relaxed text-justify max-w-md mx-auto text-gray-700">
+            <p className="lg:text-lg max-w-md ml-auto text-gray-700">
               JOBSOCCER is the first platform built exclusively for the soccer
               world. Whether you&lsquo;re a player looking for your next club, a coach
               seeking new opportunities, or an organization searching for the
@@ -31,7 +31,7 @@ export function Discover() {
           </div>
 
           {/* Right Animated Diagram */}
-          <div className="flex justify-center pt-10">
+          <div className="pt-10">
             <CareerPathsDiagram />
           </div>
         </div>

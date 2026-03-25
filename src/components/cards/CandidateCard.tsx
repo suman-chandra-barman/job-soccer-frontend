@@ -30,14 +30,14 @@ function CandidateCard({ candidate }: { candidate: ICandidate }) {
 
   const dispatch = useAppDispatch();
   const shortlistedIds = useAppSelector(
-    (state) => state.candidateShortlist.shortlistedIds
+    (state) => state.candidateShortlist.shortlistedIds,
   );
   const { checkAuth, showLoginModal, handleLogin, handleCloseModal } =
     useAuthCheck();
 
   // Local state for optimistic updates
   const [localIsShortlisted, setLocalIsShortlisted] = useState<boolean | null>(
-    null
+    null,
   );
   const [localFriendRequestStatus, setLocalFriendRequestStatus] = useState<
     typeof candidate.friendRequestStatus | null
@@ -158,6 +158,13 @@ function CandidateCard({ candidate }: { candidate: ICandidate }) {
     }
   };
 
+  const videoCount = candidate?.profile?.videos?.length ?? 0;
+  const isStaffRole =
+    candidate.role === "On field staff" || candidate.role === "Office Staff";
+  const watchLabel = isStaffRole
+    ? `Watch Interview${videoCount === 1 ? "" : "s"}`
+    : `Watch Highlight${videoCount === 1 ? "" : "s"}`;
+
   return (
     <div className="h-full">
       <Card className="bg-linear-to-br from-white to-[#FDF9E3] border-0 shadow-sm hover:shadow-md transition-shadow h-full flex flex-col">
@@ -168,7 +175,7 @@ function CandidateCard({ candidate }: { candidate: ICandidate }) {
               <div className="w-12 h-12 rounded-full overflow-hidden border-2 border-transparent">
                 <Image
                   src={
-                     imgError
+                    imgError
                       ? userPlaceholder
                       : `${process.env.NEXT_PUBLIC_BASE_URL}${candidate.profileImage}`
                   }
@@ -223,14 +230,11 @@ function CandidateCard({ candidate }: { candidate: ICandidate }) {
           </Link>
           <button
             onClick={() => setIsVideoModalOpen(true)}
-            disabled={!candidate?.profile?.videos?.length}
+            disabled={!videoCount}
             className="flex mb-6 items-center gap-1 text-sm transition-colors cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
           >
             <FaPlayCircle className="w-4 h-4 text-red-500 hover:text-red-600" />
-            Watch Highlights{" "}
-            {candidate?.profile?.videos?.length
-              ? `(${candidate.profile.videos.length})`
-              : ""}
+            {watchLabel} {videoCount ? `(${videoCount})` : ""}
           </button>
 
           {/* Spacer to push footer to bottom */}
