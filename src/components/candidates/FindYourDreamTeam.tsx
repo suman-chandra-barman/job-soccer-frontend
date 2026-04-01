@@ -25,11 +25,11 @@ const FindYourDreamTeam = () => {
         <div className="grid grid-cols-1 lg:grid-cols-5 gap-8 items-start">
           {/* Left Column - Opportunities */}
           <div className={`space-y-6 py-8 lg:col-span-2`}>
-            <h3 className="text-xl md:text-4xl font-bold text-[#362F05] leading-tight">
+            <h3 className="text-xl md:text-xl lg:text-2xl font-bold text-[#362F05] leading-tight">
               For players, coaches, analysts and staff your next opportunity in
               soccer starts here
             </h3>
-            <div className="space-y-8 lg:space-y-14 text-[#504A20]">
+            <div className="space-y-8 text-[#504A20]">
               {opportunities.map((opportunity, index) => (
                 <div key={index} className="flex items-start gap-3">
                   <div className="shrink-0 mt-1 bg-amber-50">

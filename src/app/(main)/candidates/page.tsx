@@ -1,10 +1,9 @@
 "use client";
 
 import FindYourDreamTeam from "@/components/candidates/FindYourDreamTeam";
-import { Button } from "@/components/ui/button";
+import PreRecordedVideoInterviewSection from "@/components/candidates/PreRecordedVideoInterviewSection";
+import CandidateSection from "@/components/candidates/CandidateSection";
 import React, { useMemo } from "react";
-import CandidateCard from "@/components/cards/CandidateCard";
-import Link from "next/link";
 import { CandidateSearch } from "@/components/search/CandidateSearch";
 import { useGetCandidateFeaturedQuery } from "@/redux/features/candidate/candidateApi";
 import { ICandidate } from "@/types/user";
@@ -13,7 +12,7 @@ import { CardSkeletonGrid } from "@/components/skeleton/CardSkeleton";
 import { CandidateRole } from "@/types/profile";
 
 // Types for better type safety
-interface CandidateSection {
+interface CandidateSectionConfig {
   title: string;
   dataKey: keyof FeaturedCandidatesData;
   searchRole: string;
@@ -39,50 +38,12 @@ const LoadingSection = () => (
   </div>
 );
 
-// Candidate section component for reusability
-interface CandidateSectionProps {
-  title: string;
-  candidates?: ICandidate[];
-  searchRole: string;
-}
-
-const CandidateSection: React.FC<CandidateSectionProps> = ({
-  title,
-  candidates,
-  searchRole,
-}) => {
-  if (!candidates || candidates.length === 0) return null;
-
-  return (
-    <section className="my-8">
-      <div className="flex items-center justify-between py-4">
-        <h2 className="text-xl md:text-2xl font-bold text-gray-900">{title}</h2>
-        <Button
-          asChild
-          className="bg-yellow-300  hover:scale-105 transition-transform duration-200 font-semibold px-6 py-3"
-        >
-          <Link
-            href={`/candidates/search?role=${encodeURIComponent(searchRole)}`}
-          >
-            See All
-          </Link>
-        </Button>
-      </div>
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-3 md:gap-4">
-        {candidates.map((candidate) => (
-          <CandidateCard key={candidate._id} candidate={candidate} />
-        ))}
-      </div>
-    </section>
-  );
-};
-
 function CandidatesPage() {
   const { data: featuredCandidatesData, isLoading } =
     useGetCandidateFeaturedQuery(null);
 
   // Define sections configuration for better maintainability
-  const candidateSections: CandidateSection[] = useMemo(
+  const candidateSections: CandidateSectionConfig[] = useMemo(
     () => [
       {
         title: "High School Players",
@@ -131,6 +92,7 @@ function CandidatesPage() {
         </div>
         <div className="container mx-auto px-4 md:px-0">
           <FindYourDreamTeam />
+          <PreRecordedVideoInterviewSection />
           {Array.from({ length: 6 }).map((_, index) => (
             <LoadingSection key={index} />
           ))}
@@ -149,8 +111,12 @@ function CandidatesPage() {
       {/* Main Content */}
       <div className="container mx-auto px-4">
         <FindYourDreamTeam />
+      </div>
 
-        {/* Candidate Sections */}
+      <PreRecordedVideoInterviewSection />
+
+      {/* Candidate Sections */}
+      <div className="container mx-auto px-4">
         {candidateSections.map((section) => (
           <CandidateSection
             key={section.dataKey}
