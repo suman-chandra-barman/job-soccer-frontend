@@ -43,15 +43,20 @@ export function JobCard({ job }: JobCardProps) {
 
   const dispatch = useAppDispatch();
 
+  
+
+  console.log("job----->", job)
+
+
   // Use local state if available, otherwise use API data
   const isApplied = localIsApplied ?? job.isApplied ?? false;
   const isSaved = localIsSaved ?? job.isSaved ?? false;
 
   const jobData = {
     id: job._id,
-    company: `${job.creator.creatorId.firstName} ${job.creator.creatorId.lastName}`,
+    company: `${job.creator.creatorId?.firstName || ""} ${job.creator.creatorId?.lastName || ""}`.trim() || "Not available" ,
     location: job.location,
-    image: job.creator.creatorId.profileImage,
+    image: job.creator.creatorId?.profileImage,
     applicantCount: job.applicationCount,
     salary: `$${(job.salary.min / 1000).toFixed(0)}K-${(
       job.salary.max / 1000
@@ -166,7 +171,6 @@ export function JobCard({ job }: JobCardProps) {
       console.error("Failed to apply:", error);
     }
   };
-
   return (
     <div className="bg-linear-to-br from-white to-[#FDF9E3] rounded-xl p-4 shadow-sm border border-gray-100">
       <div className="flex items-center gap-3 mb-4 border-b border-gray-200 pb-4">
@@ -192,8 +196,8 @@ export function JobCard({ job }: JobCardProps) {
           ) : (
             <Avatar className="w-12 h-12 rounded-xl">
               <AvatarFallback className="rounded-xl text-sm font-medium">
-                {job.creator.creatorId.firstName?.charAt(0)}
-                {job.creator.creatorId.lastName?.charAt(0)}
+                {job.creator.creatorId?.firstName?.charAt(0)}
+                {job.creator.creatorId?.lastName?.charAt(0)}
               </AvatarFallback>
             </Avatar>
           )}
