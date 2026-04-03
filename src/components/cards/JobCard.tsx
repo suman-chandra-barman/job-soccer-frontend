@@ -43,11 +43,6 @@ export function JobCard({ job }: JobCardProps) {
 
   const dispatch = useAppDispatch();
 
-  
-
-  console.log("job----->", job)
-
-
   // Use local state if available, otherwise use API data
   const isApplied = localIsApplied ?? job.isApplied ?? false;
   const isSaved = localIsSaved ?? job.isSaved ?? false;

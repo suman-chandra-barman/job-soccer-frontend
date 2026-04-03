@@ -130,13 +130,13 @@ export function EmployerCard({ employer }: { employer: IEmployer }) {
           <div className="flex-1 min-w-0">
             <Link href={`/employers/${employer._id}`}>
               <h3 className="font-semibold text-gray-900 text-lg truncate cursor-pointer hover:text-green-600 transition-colors">
-                {employerName || "Unknown Employer"}
+                {employer?.profile?.clubName || "Unknown Club"}
               </h3>
             </Link>
             <div className="flex items-center gap-1 text-gray-500 text-sm mt-1">
               <MapPin className="w-4 h-4 shrink-0" />
               <span className="truncate">
-                {employer?.profile?.location || "Location not specified"}
+                {employer?.profile?.location || "N/A"}
               </span>
             </div>
           </div>
@@ -148,7 +148,7 @@ export function EmployerCard({ employer }: { employer: IEmployer }) {
             Verified
           </span>
           <span className="rounded-full border border-black  px-2 py-1 text-xs">
-            {employer?.profile?.clubName}
+            {employerName}
           </span>
         </div>
       </div>

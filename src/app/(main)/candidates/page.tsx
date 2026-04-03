@@ -46,6 +46,16 @@ function CandidatesPage() {
   const candidateSections: CandidateSectionConfig[] = useMemo(
     () => [
       {
+        title: "On field Staff",
+        dataKey: "Onfieldstaff",
+        searchRole: CandidateRole.ON_FIELD_STAFF,
+      },
+      {
+        title: "Office Staff",
+        dataKey: "OfficeStaff",
+        searchRole: CandidateRole.OFFICE_STAFF,
+      },
+      {
         title: "High School Players",
         dataKey: "HighSchoolPlayer",
         searchRole: CandidateRole.HIGH_SCHOOL,
@@ -64,16 +74,6 @@ function CandidatesPage() {
         title: "Amateur Players",
         dataKey: "AmateurPlayer",
         searchRole: CandidateRole.AMATEUR_PLAYER,
-      },
-      {
-        title: "On field Staff",
-        dataKey: "Onfieldstaff",
-        searchRole: CandidateRole.ON_FIELD_STAFF,
-      },
-      {
-        title: "Office Staff",
-        dataKey: "OfficeStaff",
-        searchRole: CandidateRole.OFFICE_STAFF,
       },
     ],
     [],
