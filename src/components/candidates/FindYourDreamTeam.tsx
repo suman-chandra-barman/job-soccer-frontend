@@ -45,7 +45,7 @@ const FindYourDreamTeam = () => {
           <div className="bg-[#F7F6F2] rounded-3xl p-4 md:p-6 w-full lg:col-span-3">
             <div className="flex items-center justify-between mb-4">
               <h2 className="text-2xl md:text-3xl font-bold text-gray-900">
-                Clubs Hiring
+                Job Postings
               </h2>
             </div>
 

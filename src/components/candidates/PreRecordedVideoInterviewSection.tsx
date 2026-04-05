@@ -2,7 +2,7 @@ const PreRecordedVideoInterviewSection = () => (
   <section className="my-8">
     <div className="py-8 text-center bg-primary">
       <h2 className="text-2xl md:text-4xl font-bold text-center text-gray-900">
-        What is a pre-recorded video interview?
+        What is a Pre-Recorded Video Interview?
       </h2>
     </div>
 
