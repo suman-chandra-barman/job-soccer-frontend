@@ -46,10 +46,13 @@ export function JobCard({ job }: JobCardProps) {
   // Use local state if available, otherwise use API data
   const isApplied = localIsApplied ?? job.isApplied ?? false;
   const isSaved = localIsSaved ?? job.isSaved ?? false;
+  console.log("jobData:", job);
 
   const jobData = {
     id: job._id,
-    company: `${job.creator.creatorId?.firstName || ""} ${job.creator.creatorId?.lastName || ""}`.trim() || "Not available" ,
+    company:
+      `${job.creator.creatorId?.firstName || ""} ${job.creator.creatorId?.lastName || ""}`.trim() ||
+      "Not available",
     location: job.location,
     image: job.creator.creatorId?.profileImage,
     applicantCount: job.applicationCount,
@@ -58,6 +61,8 @@ export function JobCard({ job }: JobCardProps) {
     ).toFixed(0)}K`,
     postedTime: formatTimeAgo(job.createdAt),
     applicantImages: [user1, user2, user3, user4],
+    position: job.position,
+    contractType: job.contractType,
   };
 
   const handleBookmarkClick = async (e: React.MouseEvent) => {
@@ -226,6 +231,14 @@ export function JobCard({ job }: JobCardProps) {
         className="cursor-pointer"
         title="View Job Details"
       >
+        <div className="flex flex-wrap items-center gap-2 mb-4">
+          <span className="inline-flex items-center rounded-full bg-yellow-100 px-3 py-1 text-xs font-medium text-yellow-800">
+            {jobData.position}
+          </span>
+          <span className="inline-flex items-center rounded-full bg-gray-100 px-3 py-1 text-xs font-medium text-gray-700">
+            {jobData.contractType ==="FullTime" ? "Full Time" : jobData.contractType === "PartTime" ? "Part Time" : jobData.contractType ==="Contract" ? "Contract" : "Not specified"}
+          </span>
+        </div>
         <div className="flex items-center gap-2 mb-4">
           <div className="flex -space-x-4">
             {jobData.applicantImages.map((image, index: number) => (

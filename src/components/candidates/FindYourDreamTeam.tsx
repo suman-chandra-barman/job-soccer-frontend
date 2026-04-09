@@ -1,11 +1,16 @@
 import { Check } from "lucide-react";
-import React, { Suspense } from "react";
+import React from "react";
 import { Button } from "../ui/button";
 import Link from "next/link";
-import EmployersPreview from "./EmployersPreview";
-import { CardSkeletonGrid } from "../skeleton/CardSkeleton";
+import { CardSkeleton } from "../skeleton/CardSkeleton";
+import { useGetNewFourJobsQuery } from "@/redux/features/job/jobApi";
+import { TJob } from "@/types/job";
+import { JobCard } from "../cards/JobCard";
 
 const FindYourDreamTeam = () => {
+  const { data: jobsData, isLoading } = useGetNewFourJobsQuery(undefined);
+  const jobs: TJob[] = jobsData?.data || [];
+
   const opportunities: string[] = [
     "Create your professional profile and get discovered by clubs, agents and scouts worldwide",
     "Upload your highlight videos and let your game speak for itself",
@@ -29,7 +34,7 @@ const FindYourDreamTeam = () => {
               For players, coaches, analysts and staff your next opportunity in
               soccer starts here
             </h3>
-            <div className="space-y-8 text-[#504A20]">
+            <div className="space-y-8 lg:space-y-14 text-[#504A20]">
               {opportunities.map((opportunity, index) => (
                 <div key={index} className="flex items-start gap-3">
                   <div className="shrink-0 mt-1 bg-amber-50">
@@ -49,14 +54,19 @@ const FindYourDreamTeam = () => {
               </h2>
             </div>
 
-            <Suspense
-              fallback={
-                <CardSkeletonGrid className="grid grid-cols-1 md:grid-cols-2 gap-3 md:gap-4 " />
-              }
-            >
-              <EmployersPreview />
-            </Suspense>
-
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+              {isLoading ? (
+                Array.from({ length: 4 }).map((_, index) => (
+                  <CardSkeleton key={index} />
+                ))
+              ) : jobs.length > 0 ? (
+                jobs.map((job) => <JobCard key={job._id} job={job} />)
+              ) : (
+                <p className="col-span-full text-center text-gray-500">
+                  No new jobs available
+                </p>
+              )}
+            </div>
             <div className="flex justify-end mt-4">
               <Button className="bg-yellow-300  hover:scale-105 transition-transform duration-200 font-semibold px-6 py-3">
                 <Link href="/employers">See All</Link>
