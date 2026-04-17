@@ -91,7 +91,7 @@ export function EmployerSearch() {
           {/* Search Button */}
           <Button
             onClick={handleSearch}
-            className="h-12 w-full md:w-52 bg-black hover:bg-gray-800 text-white rounded-xl font-medium"
+            className="h-12 w-full md:w-52 bg-yellow-300 hover:scale-105 transition-transform duration-200 rounded-xl font-medium"
           >
             <Search className="w-4 h-4 mr-1" />
             Search
