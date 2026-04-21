@@ -5,7 +5,7 @@ import Image from "next/image";
 import candidatesImg from "@/assets/candidates/candidates.png";
 import { IEmployer } from "@/types/user";
 import { useGetEmployersQuery } from "@/redux/features/employer/employerApi";
-import { CardSkeletonGrid } from "../skeleton";
+import { EmployerCardSkeleton } from "../skeleton";
 import { EmployerCard } from "../cards/EmployerCard";
 
 const FindYourDreamTeam = () => {
@@ -40,7 +40,7 @@ const FindYourDreamTeam = () => {
             <div className="grid grid-cols-1 md:grid-cols-2 gap-3 md:gap-4 mb-4">
               {isLoading
                 ? Array.from({ length: 4 }).map((_, index) => (
-                    <CardSkeletonGrid key={index} />
+                    <EmployerCardSkeleton key={index} />
                   ))
                 : employersData?.data
                     ?.slice(0, 4)
