@@ -1,22 +1,22 @@
 import React from "react";
 import { Button } from "../ui/button";
-import CandidateCard from "../cards/CandidateCard";
 import Link from "next/link";
 import Image from "next/image";
 import candidatesImg from "@/assets/candidates/candidates.png";
-import { useGetCandidatesQuery } from "@/redux/features/candidate/candidateApi";
-import { ICandidate } from "@/types/user";
-import { CandidateCardSkeleton } from "../skeleton/CandidateCardSkeleton";
+import { IEmployer } from "@/types/user";
+import { useGetEmployersQuery } from "@/redux/features/employer/employerApi";
+import { CardSkeletonGrid } from "../skeleton";
+import { EmployerCard } from "../cards/EmployerCard";
 
 const FindYourDreamTeam = () => {
-  const { data: candidatesData, isLoading } = useGetCandidatesQuery(null);
+  const { data: employersData, isLoading } = useGetEmployersQuery(null);
 
   return (
     <div className=" bg-white">
       <div className="py-8 lg:py-16">
         <div className="text-center mb-12">
           <h2 className="text-xl md:text-4xl font-bold text-[#362F05]">
-            Find Your Dream Team
+            Find Your Next Talent
           </h2>
         </div>
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-2 lg:gap-6">
@@ -25,30 +25,27 @@ const FindYourDreamTeam = () => {
             <Image
               src={candidatesImg}
               alt="Candidates"
-              className="w-full h-full xl:max-h-[1000px] object-cover rounded-2xl"
+              className="w-full object-cover rounded-2xl"
             />
           </div>
 
-          {/* Right Column - Candidates */}
+          {/* Right Column - Employers */}
           <div className="bg-[#F7F6F2] rounded-3xl p-4 md:p-6 w-full">
             <div className="flex items-center justify-between mb-4">
               <h2 className="text-2xl md:text-3xl font-bold text-gray-900">
-                Candidates
+                Employers
               </h2>
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-3 md:gap-4 mb-4">
               {isLoading
                 ? Array.from({ length: 4 }).map((_, index) => (
-                    <CandidateCardSkeleton key={index} />
+                    <CardSkeletonGrid key={index} />
                   ))
-                : candidatesData?.data
+                : employersData?.data
                     ?.slice(0, 4)
-                    .map((candidate: ICandidate) => (
-                      <CandidateCard
-                        key={candidate._id}
-                        candidate={candidate}
-                      />
+                    ?.map((employer: IEmployer) => (
+                      <EmployerCard key={employer._id} employer={employer} />
                     ))}
             </div>
 
