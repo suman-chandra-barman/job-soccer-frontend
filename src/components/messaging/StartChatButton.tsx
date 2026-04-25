@@ -63,12 +63,12 @@ export function StartChatButton({
       <Button onClick={handleStartChat} disabled={loading} className={className}>
         {loading ? (
           <>
-            <Loader2 className="h-4 w-4 mr-2 animate-spin" />
+            <Loader2 className="animate-spin" />
             Loading...
           </>
         ) : (
           <>
-            <MessageCircle className="h-4 w-4 mr-2" />
+            <MessageCircle />
             Message 
           </>
         )}

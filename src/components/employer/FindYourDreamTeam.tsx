@@ -2,7 +2,7 @@ import React from "react";
 import { Button } from "../ui/button";
 import Link from "next/link";
 import Image from "next/image";
-import candidatesImg from "@/assets/candidates/candidates.png";
+import employersImg from "@/assets/employers.png";
 import { IEmployer } from "@/types/user";
 import { useGetEmployersQuery } from "@/redux/features/employer/employerApi";
 import { EmployerCardSkeleton } from "../skeleton";
@@ -16,21 +16,21 @@ const FindYourDreamTeam = () => {
       <div className="py-8 lg:py-16">
         <div className="text-center mb-12">
           <h2 className="text-xl md:text-4xl font-bold text-[#362F05]">
-            Find Your Next Talent
+            Find Your Next Opportunity
           </h2>
         </div>
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-2 lg:gap-6">
+        <div className="grid grid-cols-1 md:grid-cols-7 gap-6 items-start">
           {/* Left Column - Image */}
-          <div className={``}>
+          <div className="md:col-span-3 h-full">
             <Image
-              src={candidatesImg}
-              alt="Candidates"
-              className="w-full object-cover rounded-2xl"
+              src={employersImg}
+              alt="Employers"
+              className="w-full h-full object-cover rounded-2xl"
             />
           </div>
 
           {/* Right Column - Employers */}
-          <div className="bg-[#F7F6F2] rounded-3xl p-4 md:p-6 w-full">
+          <div className="bg-[#F7F6F2] rounded-3xl p-4 md:p-6 w-full md:col-span-4">
             <div className="flex items-center justify-between mb-4">
               <h2 className="text-2xl md:text-3xl font-bold text-gray-900">
                 Employers

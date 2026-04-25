@@ -27,9 +27,9 @@ const FindYourDreamTeam = () => {
             Your Soccer Career Starts Here!
           </h2>
         </div>
-        <div className="grid grid-cols-1 lg:grid-cols-5 gap-8 items-start">
+        <div className="grid grid-cols-1 md:grid-cols-7 gap-8 items-start">
           {/* Left Column - Opportunities */}
-          <div className={`space-y-6 py-8 lg:col-span-2`}>
+          <div className={`space-y-6 py-8 md:col-span-3`}>
             <h3 className="text-xl md:text-xl lg:text-2xl font-bold text-[#362F05] leading-tight">
               For players, coaches, analysts and staff your next opportunity in
               soccer starts here
@@ -47,7 +47,7 @@ const FindYourDreamTeam = () => {
           </div>
 
           {/* Right Column - Jobs */}
-          <div className="bg-[#F7F6F2] rounded-3xl p-4 md:p-6 w-full lg:col-span-3">
+          <div className="bg-[#F7F6F2] rounded-3xl p-4 md:p-6 w-full md:col-span-4">
             <div className="flex items-center justify-between mb-4">
               <h2 className="text-2xl md:text-3xl font-bold text-gray-900">
                 Job Postings

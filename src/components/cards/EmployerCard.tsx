@@ -66,7 +66,7 @@ export function EmployerCard({ employer }: { employer: IEmployer }) {
         dispatch(removeFromFollowing(employer._id));
         toast.success("Unfollowed successfully");
         setLocalFollowerCount(
-          isFollowing ? followerCount - 1 : followerCount + 1
+          isFollowing ? followerCount - 1 : followerCount + 1,
         );
       } else {
         // Follow
@@ -74,7 +74,7 @@ export function EmployerCard({ employer }: { employer: IEmployer }) {
         dispatch(addToFollowing(employer._id));
         toast.success("Followed successfully");
         setLocalFollowerCount(
-          isFollowing ? followerCount - 1 : followerCount + 1
+          isFollowing ? followerCount - 1 : followerCount + 1,
         );
       }
     } catch (error) {
@@ -84,7 +84,7 @@ export function EmployerCard({ employer }: { employer: IEmployer }) {
       const err = error as { data?: { message?: string } };
       toast.error(
         err?.data?.message ||
-          `Failed to ${isFollowing ? "unfollow" : "follow"} employer`
+          `Failed to ${isFollowing ? "unfollow" : "follow"} employer`,
       );
     }
   };
@@ -182,7 +182,7 @@ export function EmployerCard({ employer }: { employer: IEmployer }) {
             <>{isFollowing ? "Unfollowing..." : "Following..."}</>
           ) : (
             <>
-              <UserRoundPlus className="w-6 h-6" />
+              <UserRoundPlus />
               {isFollowing ? "Unfollow" : "Follow"}
             </>
           )}
