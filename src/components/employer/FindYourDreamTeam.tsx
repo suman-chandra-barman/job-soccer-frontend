@@ -2,7 +2,7 @@ import React from "react";
 import { Button } from "../ui/button";
 import Link from "next/link";
 import Image from "next/image";
-import employersImg from "@/assets/employers.png";
+import employersImg from "@/assets/employers.jpg";
 import { IEmployer } from "@/types/user";
 import { useGetEmployersQuery } from "@/redux/features/employer/employerApi";
 import { EmployerCardSkeleton } from "../skeleton";
