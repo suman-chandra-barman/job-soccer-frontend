@@ -82,40 +82,6 @@ It includes:
 
 - **ESLint 9** + `eslint-config-next`
 
-### Libraries (from `package.json`)
-
-**Dependencies**
-
-- `next`, `react`, `react-dom`
-- `tailwind-merge`, `clsx`, `class-variance-authority`
-- `@reduxjs/toolkit`, `react-redux`, `redux-persist`
-- `react-hook-form`, `@hookform/resolvers`, `zod`
-- `socket.io-client`
-- `sonner`
-- `date-fns`
-- `lucide-react`, `react-icons`
-- Radix UI:
-  - `@radix-ui/react-alert-dialog`
-  - `@radix-ui/react-avatar`
-  - `@radix-ui/react-checkbox`
-  - `@radix-ui/react-dialog`
-  - `@radix-ui/react-dropdown-menu`
-  - `@radix-ui/react-label`
-  - `@radix-ui/react-popover`
-  - `@radix-ui/react-radio-group`
-  - `@radix-ui/react-scroll-area`
-  - `@radix-ui/react-select`
-  - `@radix-ui/react-separator`
-  - `@radix-ui/react-slot`
-  - `@radix-ui/react-tabs`
-
-**Dev Dependencies**
-
-- `typescript`
-- `tailwindcss`, `@tailwindcss/postcss`, `tw-animate-css`
-- `eslint`, `eslint-config-next`, `@eslint/eslintrc`
-- `@types/node`, `@types/react`, `@types/react-dom`
-
 ---
 
 ## ✨ Key Features
@@ -220,21 +186,6 @@ NEXT_PUBLIC_IMAGE_URL=http://localhost:5000
 # Used by next.config.ts for next/image remotePatterns
 NEXT_PUBLIC_HOSTNAME=localhost
 ```
-
-### LinkedIn OAuth (optional)
-
-If you want LinkedIn login/signup enabled, add:
-
-```env
-NEXT_PUBLIC_CLIENT_ID=your_linkedin_client_id
-NEXT_PUBLIC_PRIMARY_CLIENT_SECRET=your_linkedin_client_secret
-
-# Local:  http://localhost:3000/api/linkedin/callback
-# Prod:   https://yourdomain.com/api/linkedin/callback
-NEXT_PUBLIC_LINKEDIN_REDIRECT_URI=http://localhost:3000/api/linkedin/callback
-```
-
-Setup guide: see [LINKEDIN_OAUTH_SETUP.md](LINKEDIN_OAUTH_SETUP.md).
 
 ---
 
