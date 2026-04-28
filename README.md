@@ -18,17 +18,31 @@
 
 ## 📚 Table of Contents
 
-- 📖 Project Overview
-- 🧰 Tech Stack
-- ✨ Key Features
-- 🗂️ Project Structure
-- 🛠️ Installation
-- 🔐 Environment Variables
-- 📦 Scripts
-- 🚀 Build & Deployment
-- 🔐 Security Notes
+- [🌐 Live Demo](#live-demo)
+- [📖 Project Overview](#project-overview)
+- [🧰 Tech Stack](#tech-stack)
+- [✨ Key Features](#key-features)
+- [📸 Screenshots](#screenshots)
+- [🗂️ Project Structure](#project-structure)
+- [🛠️ Installation](#installation)
+- [🔐 Environment Variables](#environment-variables)
+- [📦 Scripts](#scripts)
+- [🚀 Build & Deployment](#build-deployment)
+- [🔐 Security Notes](#security-notes)
 
 ---
+
+<a id="live-demo"></a>
+
+## 🌐 Live Demo
+
+🔗 http://74.208.193.37:3000
+
+> ⚠️ Some features (authentication, chat, notifications) may require a working backend and valid credentials.
+
+---
+
+<a id="project-overview"></a>
 
 ## 📖 Project Overview
 
@@ -44,6 +58,8 @@ It includes:
 - LinkedIn OAuth login/signup
 
 ---
+
+<a id="tech-stack"></a>
 
 ## 🧰 Tech Stack
 
@@ -84,6 +100,8 @@ It includes:
 
 ---
 
+<a id="key-features"></a>
+
 ## ✨ Key Features
 
 - 🔐 **Authentication**: signup/signin, email verification, password reset flows
@@ -95,9 +113,28 @@ It includes:
 - ⭐ **Agent Rating System**: candidates can rate employer “agents” (1–5 stars)
 - 🔗 **LinkedIn OAuth**: login/signup with LinkedIn (with callback handler)
 
-> 📌 Feature docs: [AGENT_RATING_FEATURE.md](AGENT_RATING_FEATURE.md), [LINKEDIN_OAUTH_SETUP.md](LINKEDIN_OAUTH_SETUP.md)
-
 ---
+
+<a id="screenshots"></a>
+
+## 📸 Screenshots
+
+<div align="center">
+	<p>Explore the Job Soccer user interface across core modules.</p>
+
+|                         🏠 Home                          |                         💼 Job Board                          |
+| :------------------------------------------------------: | :-----------------------------------------------------------: |
+| <img src="./public/screenshots/home.png" width="100%" /> | <img src="./public/screenshots/job_board.png" width="100%" /> |
+
+<br />
+
+|                         🧑‍💻 Candidates                          |                         🏢 Employers                          |
+| :------------------------------------------------------------: | :-----------------------------------------------------------: |
+| <img src="./public/screenshots/candidates.png" width="100%" /> | <img src="./public/screenshots/employers.png" width="100%" /> |
+
+</div>
+
+<a id="project-structure"></a>
 
 ## 🗂️ Project Structure
 
@@ -128,6 +165,8 @@ src/
 
 ---
 
+<a id="installation"></a>
+
 ## 🛠️ Installation
 
 ### 1) Prerequisites
@@ -154,6 +193,8 @@ npm run dev
 Open: http://localhost:3000
 
 ---
+
+<a id="environment-variables"></a>
 
 ## 🔐 Environment Variables
 
@@ -189,6 +230,8 @@ NEXT_PUBLIC_HOSTNAME=localhost
 
 ---
 
+<a id="scripts"></a>
+
 ## 📦 Scripts
 
 ```bash
@@ -200,6 +243,8 @@ npm run lint    # Lint the codebase
 
 ---
 
+<a id="build-deployment"></a>
+
 ## 🚀 Build & Deployment
 
 ```bash
@@ -210,6 +255,8 @@ npm run start
 Make sure your deployment platform has the same environment variables configured (especially `NEXT_PUBLIC_BASE_URL` and `NEXT_PUBLIC_SOCKET_URL`).
 
 ---
+
+<a id="security-notes"></a>
 
 ## 🔐 Security Notes
 
