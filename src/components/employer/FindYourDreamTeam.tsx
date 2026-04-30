@@ -2,7 +2,7 @@ import React from "react";
 import { Button } from "../ui/button";
 import Link from "next/link";
 import Image from "next/image";
-import employersImg from "@/assets/employers.jpg";
+import employersImg from "@/assets/employers.svg";
 import { IEmployer } from "@/types/user";
 import { useGetEmployersQuery } from "@/redux/features/employer/employerApi";
 import { EmployerCardSkeleton } from "../skeleton";
@@ -19,7 +19,7 @@ const FindYourDreamTeam = () => {
             Find Your Next Opportunity
           </h2>
         </div>
-        <div className="grid grid-cols-1 md:grid-cols-7 gap-6 items-start">
+        <div className="grid grid-cols-1 md:grid-cols-7 gap-4 xl:gap-6 items-start">
           {/* Left Column - Image */}
           <div className="md:col-span-3 h-full">
             <Image

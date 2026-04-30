@@ -27,7 +27,7 @@ const FindYourDreamTeam = () => {
             Your Soccer Career Starts Here!
           </h2>
         </div>
-        <div className="grid grid-cols-1 md:grid-cols-7 gap-8 items-start">
+        <div className="grid grid-cols-1 md:grid-cols-7 gap-4 xl:gap-6 items-start">
           {/* Left Column - Opportunities */}
           <div className={`space-y-6 py-8 md:col-span-3`}>
             <h3 className="text-xl md:text-xl lg:text-2xl font-bold text-[#362F05] leading-tight">
