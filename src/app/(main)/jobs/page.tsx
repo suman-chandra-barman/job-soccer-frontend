@@ -89,8 +89,10 @@ function JobPageContent() {
       <div className="container mx-auto px-4">
         {/* New Jobs */}
         <div>
-          <h2 className="text-2xl md:text-4xl text-green-400 font-semibold my-10">
-            New Jobs
+          <h2 className="text-2xl md:4xl font-bold text-gray-900  my-10">
+            <span className="bg-yellow-300 font-semibold px-6 py-3 rounded-md">
+              New Jobs
+            </span>
           </h2>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-3 md:gap-4 mb-8">
             {newJobsLoading ? (
