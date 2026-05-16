@@ -92,7 +92,7 @@ function JobPageContent() {
           <h2 className="text-2xl md:text-4xl text-green-400 font-semibold my-10">
             New Jobs
           </h2>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-3 md:gap-4 mb-8">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3 md:gap-4 mb-8">
             {newJobsLoading ? (
               <>
                 {Array.from({ length: 4 }).map((_, index) => (
@@ -114,7 +114,7 @@ function JobPageContent() {
         {/* All Jobs */}
         <div>
           <h2 className="text-2xl md:text-4xl font-semibold my-10">All Jobs</h2>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-3 md:gap-4 mb-8">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3 md:gap-4 mb-8">
             {allJobsLoading ? (
               <>
                 {Array.from({ length: 8 }).map((_, index) => (
