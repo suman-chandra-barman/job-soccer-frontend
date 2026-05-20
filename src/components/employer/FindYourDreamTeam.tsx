@@ -19,9 +19,9 @@ const FindYourDreamTeam = () => {
             Find Your Next Opportunity
           </h2>
         </div>
-        <div className="grid grid-cols-1 md:grid-cols-7 gap-4 xl:gap-6 items-start">
+        <div className="grid grid-cols-1 lg:grid-cols-7 gap-4 xl:gap-6 items-start">
           {/* Left Column - Image */}
-          <div className="md:col-span-3 h-full">
+          <div className="lg:col-span-3 h-full">
             <Image
               src={employersImg}
               alt="Employers"
@@ -30,7 +30,7 @@ const FindYourDreamTeam = () => {
           </div>
 
           {/* Right Column - Employers */}
-          <div className="bg-[#F7F6F2] rounded-3xl p-4 md:p-6 w-full md:col-span-4">
+          <div className="bg-[#F7F6F2] rounded-3xl p-4 md:p-6 w-full lg:col-span-4">
             <div className="flex items-center justify-between mb-4">
               <h2 className="text-2xl md:text-3xl font-bold text-gray-900">
                 Employers
