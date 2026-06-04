@@ -1,6 +1,7 @@
 "use client";
 
 import React from "react";
+import { Check, X } from "lucide-react";
 import { PlanCard, PlanCardProps } from "@/components/cards/PlanCard";
 
 type PlanGroup = {
@@ -139,16 +140,67 @@ const pricingGroups: PlanGroup[] = [
   },
 ];
 
+// ─── Employer pricing data ────────────────────────────────────────────────────
+
+type EmployerType = {
+  label: string;
+  basicPrice: string;
+  goldPrice: string;
+};
+
+const employerTypes: EmployerType[] = [
+  { label: "Professional Clubs", basicPrice: "$19.99", goldPrice: "$59.99" },
+  { label: "Amateur Clubs",      basicPrice: "$9.99",  goldPrice: "$29.99" },
+  { label: "Academy",           basicPrice: "$9.99",  goldPrice: "$29.99" },
+  { label: "College / University", basicPrice: "$19.99", goldPrice: "$59.99" },
+  { label: "Consulting Company", basicPrice: "$19.99", goldPrice: "$59.99" },
+  { label: "Agents / Agency",   basicPrice: "$19.99", goldPrice: "$59.99" },
+];
+
+const employerBasicFeatures = [
+  { label: "Post up to 3 active job listings",     included: true  },
+  { label: "Access candidate profiles & CVs",      included: true  },
+  { label: "View pre-recorded video interviews",   included: true  },
+  { label: "Organization profile page",            included: true  },
+  { label: "AI candidate matching",                included: false },
+  { label: "Hiring analytics dashboard",           included: false },
+  { label: "Talent pool builder",                  included: false },
+];
+
+const employerGoldFeatures = [
+  { label: "Everything in Basic",                      included: true },
+  { label: "AI candidate matching & shortlists",       included: true },
+  { label: "Hiring analytics dashboard",               included: true },
+  { label: "Talent pool builder",                      included: true },
+  { label: "Advanced search & psychometric filters",   included: true },
+  { label: "Team collaboration tools",                 included: true },
+  { label: "Unlimited job postings",                   included: true },
+];
+
+// ─── Small helper ─────────────────────────────────────────────────────────────
+
+const FeatureItem = ({ label, included }: { label: string; included: boolean }) => (
+  <li className="flex items-start gap-2 text-sm">
+    <span className={`mt-0.5 flex-shrink-0 ${included ? "text-yellow-300" : "text-red-400"}`}>
+      {included ? <Check className="h-4 w-4" /> : <X className="h-4 w-4" />}
+    </span>
+    <span className={included ? "text-gray-800" : "text-gray-400"}>{label}</span>
+  </li>
+);
+
+// ─── Page ─────────────────────────────────────────────────────────────────────
+
 export default function UpgradePage() {
   return (
     <div className="min-h-screen bg-slate-50 px-4 py-10">
       <div className="mx-auto max-w-5xl">
-        <div className="rounded-xl bg-blue-700 py-3 text-center text-lg font-semibold text-white shadow">
+        <div className="rounded-xl bg-yellow-300 py-3 text-center text-lg font-semibold shadow">
           Jobsoccer - Pricing Plans
         </div>
 
+        {/* ── Candidates ── */}
         <div className="mt-8">
-          <h2 className="text-sm font-semibold uppercase tracking-wide text-blue-700">
+          <h2 className="text-sm font-semibold uppercase tracking-wide">
             Candidates
           </h2>
 
@@ -170,10 +222,73 @@ export default function UpgradePage() {
           ))}
         </div>
 
-        <div className="mt-10 border-t border-gray-200 pt-6">
-          <h2 className="text-sm font-semibold uppercase tracking-wide text-blue-700">
+        {/* ── Employers ── */}
+        <div className="mt-12 border-t border-gray-200 pt-8">
+          <h2 className="mb-5 text-sm font-semibold uppercase tracking-wide">
             Employers
           </h2>
+
+          {/* Employer-type pricing grid */}
+          <div className="grid gap-3 sm:grid-cols-2">
+            {employerTypes.map((et) => (
+              <div
+                key={et.label}
+                className="flex items-center justify-between rounded-xl border border-gray-200 bg-white px-5 py-4 shadow-sm"
+              >
+                <div>
+                  <p className="text-sm font-semibold text-gray-800">{et.label}</p>
+                  <p className="mt-1 text-xs text-gray-500">
+                    Basic —{" "}
+                    <span className="font-medium text-gray-700">{et.basicPrice}/mo</span>
+                  </p>
+                </div>
+                <div className="rounded-lg bg-amber-100 px-4 py-2 text-right">
+                  <p className="text-xs font-semibold text-amber-700">Gold</p>
+                  <p className="text-sm font-bold text-amber-800">{et.goldPrice}/mo</p>
+                </div>
+              </div>
+            ))}
+          </div>
+
+          {/* Basic vs Gold feature comparison */}
+          <div className="mt-8">
+            <p className="mb-4 text-xs font-bold uppercase tracking-widest text-gray-400">
+              What&apos;s Included — Basic vs Gold
+            </p>
+
+            <div className="grid gap-4 md:grid-cols-2">
+              {/* Basic column */}
+              <div className="rounded-xl border border-gray-200 bg-white p-5 shadow-sm">
+                <p className="mb-4 text-sm font-semibold text-gray-700">Basic plan</p>
+                <ul className="space-y-2.5">
+                  {employerBasicFeatures.map((f) => (
+                    <FeatureItem key={f.label} label={f.label} included={f.included} />
+                  ))}
+                </ul>
+              </div>
+
+              {/* Gold column */}
+              <div className="relative rounded-xl border-2 border-yellow-300 bg-white p-5 shadow-md">
+                {/* Recommended banner */}
+                <div className="-mt-[1.35rem] mb-4 flex justify-center">
+                  <span className="rounded-md bg-yellow-300 px-6 py-1 text-xs font-semibold uppercase tracking-wide shadow">
+                    Recommended
+                  </span>
+                </div>
+                <p className="mb-4 text-sm font-semibold text-gray-700">Gold plan</p>
+                <ul className="space-y-2.5">
+                  {employerGoldFeatures.map((f) => (
+                    <FeatureItem key={f.label} label={f.label} included={f.included} />
+                  ))}
+                </ul>
+              </div>
+            </div>
+          </div>
+
+          {/* Footnote */}
+          <p className="mt-6 text-center text-xs text-gray-400">
+            All prices are per month &middot; Annual billing options available &middot; Prices in USD
+          </p>
         </div>
       </div>
     </div>

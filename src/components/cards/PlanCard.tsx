@@ -20,7 +20,7 @@ const FeatureRow = ({ label, included }: PlanFeature) => (
   <li className="flex items-start gap-2 text-sm">
     <span
       className={`mt-0.5 inline-flex h-4 w-4 items-center justify-center rounded-full ${
-        included ? "text-blue-700" : "text-gray-400"
+        included ? "text-yellow-300" : "text-gray-400"
       }`}
     >
       {included ? <Check className="h-4 w-4" /> : <X className="h-4 w-4" />}
@@ -41,15 +41,15 @@ const PlanCard = ({
 }: PlanCardProps) => (
   <div
     className={`relative rounded-xl border bg-white p-5 shadow-sm ${
-      highlight ? "border-blue-600 shadow-md" : "border-gray-200"
+      highlight ? "border-yellow-300 shadow-md" : "border-gray-200"
     }`}
   >
     {badge && (
       <div
         className={`-mt-2 mb-3 inline-flex w-full justify-center rounded-md px-3 py-1 text-xs font-semibold uppercase tracking-wide ${
           badge === "Free"
-            ? "bg-green-100 text-green-700"
-            : "bg-blue-700 text-white"
+            ? "bg-yellow-100"
+            : "bg-yellow-300 text-gray-900"
         }`}
       >
         {badge}
