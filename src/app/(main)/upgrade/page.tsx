@@ -270,10 +270,10 @@ export default function UpgradePage() {
               {/* Gold column */}
               <div className="relative rounded-xl border-2 border-yellow-300 bg-white p-5 shadow-md">
                 {/* Recommended banner */}
-                <div className="-mt-[1.35rem] mb-4 flex justify-center">
-                  <span className="rounded-md bg-yellow-300 px-6 py-1 text-xs font-semibold uppercase tracking-wide shadow">
+                <div className="mb-4 flex justify-center">
+                  <h3 className="rounded-md w-full text-center bg-yellow-300 px-6 py-1 text-xs font-semibold uppercase tracking-wide shadow">
                     Recommended
-                  </span>
+                  </h3>
                 </div>
                 <p className="mb-4 text-sm font-semibold text-gray-700">Gold plan</p>
                 <ul className="space-y-2.5">
