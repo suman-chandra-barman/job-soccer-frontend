@@ -128,8 +128,8 @@ export function EmployerCard({ employer }: { employer: IEmployer }) {
             )}
           </Link>
           <div className="flex-1 min-w-0">
-            <Link href={`/employers/${employer._id}`}>
-              <h3 className="font-semibold text-gray-900 text-lg truncate cursor-pointer hover:text-green-600 transition-colors">
+            <Link href={`/employers/${employer._id}`} className="hover:underline">
+              <h3 className="font-semibold text-gray-900 text-lg truncate cursor-pointer">
                 {employer?.profile?.clubName || "Unknown Club"}
               </h3>
             </Link>

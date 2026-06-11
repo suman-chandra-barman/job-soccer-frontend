@@ -46,10 +46,10 @@ export function JobCard({ job }: JobCardProps) {
   // Use local state if available, otherwise use API data
   const isApplied = localIsApplied ?? job.isApplied ?? false;
   const isSaved = localIsSaved ?? job.isSaved ?? false;
-  console.log("jobData:", job);
 
   const jobData = {
     id: job._id,
+    creatorId: job.creator.creatorId?._id,
     company:
       `${job.creator.creatorId?.firstName || ""} ${job.creator.creatorId?.lastName || ""}`.trim() ||
       "Not available",
@@ -175,7 +175,7 @@ export function JobCard({ job }: JobCardProps) {
     <div className="bg-linear-to-br from-white to-[#FDF9E3] rounded-xl p-4 shadow-sm border border-gray-100">
       <div className="flex items-center gap-3 mb-4 border-b border-gray-200 pb-4">
         <Link
-          href={`/jobs/${jobData.id}`}
+          href={`/employers/${jobData.creatorId}`}
           className="w-12 h-12 rounded-xl flex items-center justify-center border border-gray-200 bg-white"
         >
           {jobData.image ? (
@@ -203,9 +203,14 @@ export function JobCard({ job }: JobCardProps) {
           )}
         </Link>
         <div className="flex-1 min-w-0">
-          <h3 className="font-semibold text-gray-900 xl:text-lg">
-            {jobData.company}
-          </h3>
+          <Link
+            href={`/employers/${jobData.creatorId}`}
+            className="hover:underline"
+          >
+            <h3 className="font-semibold text-gray-900 xl:text-lg cursor-pointer">
+              {jobData.company}
+            </h3>
+          </Link>
           <div className="flex items-center gap-1 text-gray-500 text-sm mt-1">
             <MapPin className="w-4 h-4" />
             <span>{jobData.location}</span>

@@ -161,9 +161,7 @@ function CandidateCard({ candidate }: { candidate: ICandidate }) {
   const videoCount = candidate?.profile?.videos?.length ?? 0;
   const isStaffRole =
     candidate.role === "On field staff" || candidate.role === "Office Staff";
-  const watchLabel = isStaffRole
-    ? `Watch Interview`
-    : `Watch Highlights`;
+  const watchLabel = isStaffRole ? `Watch Interview` : `Watch Highlights`;
 
   return (
     <div className="h-full">
@@ -172,33 +170,42 @@ function CandidateCard({ candidate }: { candidate: ICandidate }) {
           {/* Profile Header */}
           <div className="flex items-center gap-3 mb-4">
             {candidate?.profileImage ? (
-              <div className="w-12 h-12 rounded-full overflow-hidden border-2 border-transparent">
-                <Image
-                  src={
-                    imgError
-                      ? userPlaceholder
-                      : `${process.env.NEXT_PUBLIC_BASE_URL}${candidate.profileImage}`
-                  }
-                  alt={`${candidate?.firstName || ""}
+              <Link href={`/candidates/${candidate._id}`}>
+                <div className="w-12 h-12 rounded-full overflow-hidden border-2 border-transparent">
+                  <Image
+                    src={
+                      imgError
+                        ? userPlaceholder
+                        : `${process.env.NEXT_PUBLIC_BASE_URL}${candidate.profileImage}`
+                    }
+                    alt={`${candidate?.firstName || ""}
                   }`}
-                  width={48}
-                  height={48}
-                  className="w-full h-full object-cover"
-                  onError={() => setImgError(true)}
-                />
-              </div>
+                    width={48}
+                    height={48}
+                    className="w-full h-full object-cover"
+                    onError={() => setImgError(true)}
+                  />
+                </div>
+              </Link>
             ) : (
-              <Avatar className="w-12 h-12">
-                <AvatarFallback className="text-base font-medium">
-                  {candidate?.firstName?.charAt(0)}
-                  {candidate?.lastName?.charAt(0)}
-                </AvatarFallback>
-              </Avatar>
+              <Link href={`/candidates/${candidate._id}`}>
+                <Avatar className="w-12 h-12">
+                  <AvatarFallback className="text-base font-medium">
+                    {candidate?.firstName?.charAt(0)}
+                    {candidate?.lastName?.charAt(0)}
+                  </AvatarFallback>
+                </Avatar>
+              </Link>
             )}
             <div>
-              <h4 className=" text-sm xl:text-base font-semibold text-gray-900">
-                {candidate.firstName + " " + candidate.lastName}
-              </h4>
+              <Link
+                href={`/candidates/${candidate._id}`}
+                className="hover:underline"
+              >
+                <h4 className=" text-sm xl:text-base font-semibold text-gray-900">
+                  {candidate.firstName + " " + candidate.lastName}
+                </h4>
+              </Link>
               <p className="text-xs text-gray-500 capitalize">
                 {candidate.profile.position}
               </p>
