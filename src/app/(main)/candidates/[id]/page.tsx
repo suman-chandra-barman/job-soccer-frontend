@@ -54,6 +54,8 @@ export default function UserProfilePage() {
 
   const user = userData?.data;
   const areFriends = friendshipData?.data?.areFriends || false;
+  const isAdmin = (currentUser?.userType as string) === "admin" || currentUser?.role === "admin";
+  const hasAccess = areFriends || isAdmin || isOwnProfile;
 
   // Handle friend request
   const handleRequestAccess = async () => {
@@ -161,7 +163,7 @@ export default function UserProfilePage() {
           </h2>
 
           {/* Show email only to friends */}
-          {areFriends && user?.email && (
+          {hasAccess && user?.email && (
             <div className="flex flex-wrap gap-3 sm:gap-4 mt-2 mb-3 sm:mb-4 text-gray-600 text-sm">
               <div className="flex items-center gap-2">
                 <Mail className="h-4 w-4 shrink-0" />
@@ -176,7 +178,7 @@ export default function UserProfilePage() {
                 {displayRole}
               </Badge>
             )}
-            {!areFriends && verificationStatus?.status === "approved" && (
+            {!hasAccess && verificationStatus?.status === "approved" && (
               <Badge className="bg-blue-50 text-blue-700 border-blue-200 px-2 sm:px-3 py-1 rounded-full flex items-center gap-1 text-xs sm:text-sm">
                 <BadgeCheck className="h-3 w-3 sm:h-4 sm:w-4 shrink-0" />
                 Verified
@@ -194,8 +196,8 @@ export default function UserProfilePage() {
       </div>
 
       {/* Profile Information Section - Conditional Rendering */}
-      <div className={!areFriends ? "filter blur-sm pointer-events-none" : ""}>
-        {areFriends ? (
+      <div className={!hasAccess ? "filter blur-sm pointer-events-none" : ""}>
+        {hasAccess ? (
           // Full profile view for friends
           <div className="p-4 sm:p-6 border rounded-lg sm:rounded-2xl shadow">
             {/* Profile Information Section */}
@@ -469,7 +471,7 @@ export default function UserProfilePage() {
       </div>
 
       {/* Access Request Modal - Show automatically for non-friends */}
-      {!areFriends && (
+      {!hasAccess && (
         <AccessRequestModal
           isOpen={isAccessModalOpen}
           onClose={() => setIsAccessModalOpen(false)}

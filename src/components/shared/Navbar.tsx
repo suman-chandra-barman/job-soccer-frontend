@@ -52,7 +52,7 @@ interface NavLink {
 interface UserProfileMenuProps {
   profileImageUrl?: string;
   userName?: string;
-  userType?: "candidate" | "employer";
+  userType?: "candidate" | "employer" | "admin";
   onLogout: () => void;
   size?: "sm" | "md";
 }
