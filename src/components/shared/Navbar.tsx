@@ -74,6 +74,9 @@ const UserProfileMenu: React.FC<UserProfileMenuProps> = ({
     } else if (userType === "employer") {
       router.push("/profile/employer");
     }
+    else if (userType === "admin") {
+      window.open("http://74.208.193.37:4000/login", "_blank");
+    }
   };
 
   return (
@@ -104,13 +107,27 @@ const UserProfileMenu: React.FC<UserProfileMenuProps> = ({
         </button>
       </DropdownMenuTrigger>
       <DropdownMenuContent className="w-56" align="end">
-        <DropdownMenuItem
-          onClick={handleProfileClick}
-          className="cursor-pointer"
-        >
-          <User className="h-4 w-4" />
-          My Profile
-        </DropdownMenuItem>
+        {userType === "admin" ? (
+          <DropdownMenuItem asChild className="cursor-pointer">
+            <a
+              href="http://74.208.193.37:4000/login"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="flex items-center gap-2 w-full"
+            >
+              <User className="h-4 w-4" />
+              Admin Dashboard
+            </a>
+          </DropdownMenuItem>
+        ) : (
+          <DropdownMenuItem
+            onClick={handleProfileClick}
+            className="cursor-pointer"
+          >
+            <User className="h-4 w-4" />
+            My Profile
+          </DropdownMenuItem>
+        )}
         <DropdownMenuSeparator />
         <DropdownMenuItem
           onClick={onLogout}
@@ -263,7 +280,7 @@ export function Navbar() {
   // Use real-time count if available, otherwise fall back to API count
   const unreadCount = realtimeUnreadCount || unreadCountData?.data || 0;
 
-  const isLoggedIn = !!user?.data?.profileId;
+  const isLoggedIn = !!user?.data?.profileId || user?.data?.userType === "admin" || user?.data?.role === "admin";
   const navLinks = useMemo(
     () => getNavLinks(isLoggedIn, () => setIsNotificationOpen(true)),
     [isLoggedIn],
@@ -353,7 +370,7 @@ export function Navbar() {
               <UserProfileMenu
                 profileImageUrl={profileImageUrl}
                 userName={user?.data?.firstName}
-                userType={user?.data?.userType}
+                userType={user?.data?.userType === "admin" || user?.data?.role === "admin" ? "admin" : user?.data?.userType}
                 onLogout={handleLogoutClick}
                 size="sm"
               />
@@ -379,7 +396,7 @@ export function Navbar() {
                 <UserProfileMenu
                   profileImageUrl={profileImageUrl}
                   userName={user?.data?.firstName}
-                  userType={user?.data?.userType}
+                  userType={user?.data?.userType === "admin" || user?.data?.role === "admin" ? "admin" : user?.data?.userType}
                   onLogout={handleLogoutClick}
                   size="md"
                 />
