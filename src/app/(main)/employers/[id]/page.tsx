@@ -228,7 +228,7 @@ export default function EmployerDetailsPage() {
 
             <div className="flex flex-wrap gap-2">
               {displayRole && (
-                <Badge className="bg-yellow-100 text-yellow-800 border-yellow-200 px-3 sm:px-4 py-1 rounded-full text-xs sm:text-sm">
+                <Badge className="bg-yellow-300  border-yellow-200 px-3 sm:px-4 py-1 rounded-full text-xs sm:text-sm">
                   {displayRole}
                 </Badge>
               )}
@@ -458,18 +458,6 @@ export default function EmployerDetailsPage() {
                 {followerCount}
               </p>
             </div>
-
-            {/* Profile AI Score */}
-            {employer?.aiProfileScore && (
-              <div>
-                <label className="text-xs sm:text-sm text-gray-500 mb-1 block">
-                  Profile AI Score
-                </label>
-                <p className="text-gray-900 font-medium text-sm sm:text-base">
-                  {employer.aiProfileScore}
-                </p>
-              </div>
-            )}
           </div>
         </div>
       </div>

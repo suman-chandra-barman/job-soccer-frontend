@@ -415,7 +415,8 @@ export default function UserProfilePage() {
                   </div>
                 )}
 
-                {user?.aiProfileScore && (
+
+                {user?.aiProfileScore >= 0 && (
                   <div>
                     <label className="text-xs sm:text-sm text-gray-500 mb-1 block">
                       Profile AI Score

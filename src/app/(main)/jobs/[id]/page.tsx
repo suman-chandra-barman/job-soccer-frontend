@@ -205,11 +205,12 @@ const JobDetailsPage = ({ params }: PageProps) => {
                     </div>
                   </div>
 
-                  <div className="flex items-center gap-2 text-sm">
-                    <span className="text-gray-600">Application Deadline:</span>
-                    <span className="text-gray-900 font-medium">
-                      {formatDate(jobData.deadline)}
-                    </span>
+                  <div className="text-sm">
+                    <p>
+                      <span className="text-gray-600">Deadline:</span>
+                      <span className="text-gray-900 font-medium">
+                        {formatDate(jobData.deadline)}
+                      </span></p>
                   </div>
                 </div>
 
@@ -338,34 +339,32 @@ const JobDetailsPage = ({ params }: PageProps) => {
                       <button
                         onClick={handleSaveJob}
                         disabled={isSaving || isUnsaving}
-                        className={`flex-1 px-6 py-2 border rounded-md transition-colors disabled:opacity-50 disabled:cursor-not-allowed ${
-                          isSaved
-                            ? "bg-green-50 border-green-500 text-green-700"
-                            : "border-gray-300 text-gray-700 hover:bg-gray-50"
-                        }`}
+                        className={`flex-1 px-6 py-2 border rounded-md transition-colors disabled:opacity-50 disabled:cursor-not-allowed ${isSaved
+                          ? "bg-green-50 border-green-500 text-green-700"
+                          : "border-gray-300 text-gray-700 hover:bg-gray-50"
+                          }`}
                       >
                         {isSaving || isUnsaving
                           ? isSaved
                             ? "Unsaving..."
                             : "Saving..."
                           : isSaved
-                          ? "Unsave Job"
-                          : "Save Job"}
+                            ? "Unsave Job"
+                            : "Save Job"}
                       </button>
                       <button
                         onClick={handleApplyClick}
                         disabled={isApplied || isApplying}
-                        className={`flex-1 px-8 py-2 rounded-md transition-colors disabled:opacity-50 ${
-                          isApplied
-                            ? "bg-green-500 text-white cursor-not-allowed"
-                            : "bg-green-500 text-white hover:bg-green-600"
-                        }`}
+                        className={`flex-1 px-8 py-2 rounded-md transition-colors disabled:opacity-50 ${isApplied
+                          ? "bg-green-500 text-white cursor-not-allowed"
+                          : "bg-green-500 text-white hover:bg-green-600"
+                          }`}
                       >
                         {isApplying
                           ? "Applying..."
                           : isApplied
-                          ? "Applied"
-                          : "Apply Now"}
+                            ? "Applied"
+                            : "Apply Now"}
                       </button>
                     </div>
                   </div>
@@ -441,34 +440,32 @@ const JobDetailsPage = ({ params }: PageProps) => {
                         <button
                           onClick={handleSaveJob}
                           disabled={isSaving || isUnsaving}
-                          className={`w-full px-4 py-2 border rounded-md transition-colors text-sm disabled:opacity-50 disabled:cursor-not-allowed ${
-                            isSaved
-                              ? "bg-green-50 border-green-500 text-green-700"
-                              : "border-gray-300 text-gray-700 hover:bg-gray-50"
-                          }`}
+                          className={`w-full px-4 py-2 border rounded-md transition-colors text-sm disabled:opacity-50 disabled:cursor-not-allowed ${isSaved
+                            ? "bg-green-50 border-green-500 text-green-700"
+                            : "border-gray-300 text-gray-700 hover:bg-gray-50"
+                            }`}
                         >
                           {isSaving || isUnsaving
                             ? isSaved
                               ? "Unsaving..."
                               : "Saving..."
                             : isSaved
-                            ? "Unsave Job"
-                            : "Save Job"}
+                              ? "Unsave Job"
+                              : "Save Job"}
                         </button>
                         <button
                           onClick={handleApplyClick}
                           disabled={isApplied || isApplying}
-                          className={`w-full px-4 py-2 rounded-md transition-colors text-sm disabled:opacity-50 ${
-                            isApplied
-                              ? "bg-green-500 text-white cursor-not-allowed"
-                              : "bg-green-500 text-white hover:bg-green-600"
-                          }`}
+                          className={`w-full px-4 py-2 rounded-md transition-colors text-sm disabled:opacity-50 ${isApplied
+                            ? "bg-green-500 text-white cursor-not-allowed"
+                            : "bg-green-500 text-white hover:bg-green-600"
+                            }`}
                         >
                           {isApplying
                             ? "Applying..."
                             : isApplied
-                            ? "Applied"
-                            : "Apply Now"}
+                              ? "Applied"
+                              : "Apply Now"}
                         </button>
                       </div>
                     </div>
