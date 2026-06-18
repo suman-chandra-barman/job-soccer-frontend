@@ -11,7 +11,6 @@ import {
   XCircle,
   UserPlus,
   UserMinus,
-  Globe,
   MapPin,
   Phone,
   Calendar,
@@ -28,6 +27,8 @@ import {
 } from "@/redux/features/follow/followApi";
 import { AgentRatingComponent } from "@/components/shared/AgentRatingComponent";
 import { useGetEmployerByIdQuery } from "@/redux/features/employer/employerApi";
+import { detectSocialPlatform, formatUrl } from "@/utils/socialMedia";
+import Link from "next/link";
 
 export default function EmployerDetailsPage() {
   const params = useParams();
@@ -100,7 +101,7 @@ export default function EmployerDetailsPage() {
       const err = error as { data?: { message?: string } };
       toast.error(
         err?.data?.message ||
-          `Failed to ${isFollowing ? "unfollow" : "follow"} employer`
+        `Failed to ${isFollowing ? "unfollow" : "follow"} employer`
       );
     }
   };
@@ -252,11 +253,10 @@ export default function EmployerDetailsPage() {
                 variant="outline"
                 onClick={handleFollowToggle}
                 disabled={isLoading}
-                className={`flex items-center justify-center gap-2 flex-1 sm:flex-none text-sm ${
-                  isFollowing
+                className={`flex items-center justify-center gap-2 flex-1 sm:flex-none text-sm ${isFollowing
                     ? "bg-green-50 border-green-500 text-green-700"
                     : ""
-                }`}
+                  }`}
               >
                 {isLoading ? (
                   <>{isFollowing ? "Unfollowing..." : "Following..."}</>
@@ -356,24 +356,28 @@ export default function EmployerDetailsPage() {
             )}
 
             {/* Website */}
-            {employer?.profile?.website && (
-              <div>
-                <label className="text-xs sm:text-sm text-gray-500 mb-1 block">
-                  Website
-                </label>
-                <p className="text-blue-600 font-medium cursor-pointer hover:underline flex items-center gap-2 text-sm sm:text-base">
-                  <Globe className="h-4 w-4 shrink-0" />
-                  <a
-                    href={employer.profile.website}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="truncate"
-                  >
-                    {employer.profile.website}
-                  </a>
-                </p>
-              </div>
-            )}
+            {employer?.profile?.website && (() => {
+              const platform = detectSocialPlatform(employer.profile.website);
+              const PlatformIcon = platform.Icon;
+              return (
+                <div>
+                  <label className="text-xs sm:text-sm text-gray-500 mb-1 block">
+                    {platform.name}
+                  </label>
+                  <p className={`font-medium cursor-pointer hover:underline text-sm sm:text-base ${platform.colorClass}`}>
+                    <Link
+                      href={formatUrl(employer.profile.website)}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="truncate flex items-center gap-2"
+                    >
+                      <PlatformIcon className="h-4 w-4 shrink-0" />
+                      {employer.profile.website}
+                    </Link>
+                  </p>
+                </div>
+              );
+            })()}
 
             {/* Address */}
             {employer?.profile?.address && (

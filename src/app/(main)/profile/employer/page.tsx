@@ -25,6 +25,7 @@ import { ProfileSkeleton } from "@/components/skeleton";
 import ProfileBanner from "@/components/profile/ProfileBanner";
 import ProfileAvatar from "@/components/profile/ProfileAvatar";
 import EditEmployerPersonalInformationModal from "@/components/modals/EditEmployerPersonalInformationModal";
+import { detectSocialPlatform, formatUrl } from "@/utils/socialMedia";
 
 export default function EmployerProfilePage() {
   // Get user data from Redux store
@@ -341,22 +342,28 @@ export default function EmployerProfilePage() {
             </div>
 
             {/* Website */}
-            {currentUser?.profile?.website && (
-              <div>
-                <label className="text-sm text-gray-500 mb-1 block">
-                  Website
-                </label>
-                <p className="text-blue-600 font-medium cursor-pointer hover:underline">
-                  <a
-                    href={currentUser.profile.website}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                  >
-                    {currentUser.profile.website}
-                  </a>
-                </p>
-              </div>
-            )}
+            {currentUser?.profile?.website && (() => {
+              const platform = detectSocialPlatform(currentUser.profile.website);
+              const PlatformIcon = platform.Icon;
+              return (
+                <div>
+                  <label className="text-sm text-gray-500 mb-1 block">
+                    {platform.name}
+                  </label>
+                  <p className={`font-medium cursor-pointer hover:underline flex items-center gap-2 text-sm ${platform.colorClass}`}>
+                    <PlatformIcon className="h-4 w-4 shrink-0" />
+                    <a
+                      href={formatUrl(currentUser.profile.website)}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="truncate"
+                    >
+                      {currentUser.profile.website}
+                    </a>
+                  </p>
+                </div>
+              );
+            })()}
 
             {/* Address */}
             {currentUser?.profile?.address && (

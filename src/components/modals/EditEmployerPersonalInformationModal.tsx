@@ -25,6 +25,7 @@ import { useUpdateProfileMutation } from "@/redux/features/user/userApi";
 import { FormSection } from "@/components/form/FormSection";
 import { FormField } from "@/components/form/fields/FormField";
 import { countryList } from "@/constants/selectOptions";
+import { SocialMediaInput } from "@/components/shared/SocialMediaInput";
 
 const formSchema = z.object({
   clubName: z.string().optional(),
@@ -185,8 +186,9 @@ export default function EditEmployerPersonalInformationModal({
 
                 {/* Website */}
                 <FormField label="Website" error={errors.website?.message}>
-                  <Input
-                    {...register("website")}
+                  <SocialMediaInput
+                    register={register("website")}
+                    value={watch("website") || ""}
                     placeholder="Ex. https://example.com"
                     className="bg-gray-50 border-0"
                   />
