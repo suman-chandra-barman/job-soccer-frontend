@@ -175,7 +175,7 @@ export function JobCard({ job }: JobCardProps) {
     <div className="bg-linear-to-br from-white to-[#FDF9E3] rounded-xl p-4 shadow-sm border border-gray-100">
       <div className="flex items-center gap-3 mb-4 border-b border-gray-200 pb-4">
         <Link
-          href={`/employers/${jobData.creatorId}`}
+          href={`/jobs/${jobData.id}`}
           className="w-12 h-12 rounded-xl flex items-center justify-center border border-gray-200 bg-white"
         >
           {jobData.image ? (
@@ -204,8 +204,7 @@ export function JobCard({ job }: JobCardProps) {
         </Link>
         <div className="flex-1 min-w-0">
           <Link
-            href={`/employers/${jobData.creatorId}`}
-            className="hover:underline"
+            href={`/jobs/${jobData.id}`}
           >
             <h3 className="font-semibold text-gray-900 xl:text-lg cursor-pointer">
               {jobData.company}
@@ -221,11 +220,10 @@ export function JobCard({ job }: JobCardProps) {
           className="cursor-pointer hover:scale-110 transition-transform duration-200"
         >
           <Bookmark
-            className={`w-7 h-7 hover:stroke-yellow-400 transition-colors ${
-              isSaved
+            className={`w-7 h-7 hover:stroke-yellow-400 transition-colors ${isSaved
                 ? "fill-yellow-400 stroke-yellow-400"
                 : "hover:fill-yellow-400"
-            }`}
+              }`}
           />
         </div>
       </div>
@@ -241,7 +239,7 @@ export function JobCard({ job }: JobCardProps) {
             {jobData.position}
           </span>
           <span className="inline-flex items-center rounded-full bg-gray-100 px-3 py-1 text-xs font-medium text-gray-700">
-            {jobData.contractType ==="FullTime" ? "Full Time" : jobData.contractType === "PartTime" ? "Part Time" : jobData.contractType ==="Contract" ? "Contract" : "Not specified"}
+            {jobData.contractType === "FullTime" ? "Full Time" : jobData.contractType === "PartTime" ? "Part Time" : jobData.contractType === "Contract" ? "Contract" : "Not specified"}
           </span>
         </div>
         <div className="flex items-center gap-2 mb-4">
@@ -285,9 +283,8 @@ export function JobCard({ job }: JobCardProps) {
       <div className="border-t border-gray-200 pt-4 flex gap-4 items-center">
         <Button
           variant="outline"
-          className={`flex-1 hover:scale-105 transition-transform duration-200 ${
-            isSaved ? "bg-green-50 border-green-500 text-green-700" : ""
-          }`}
+          className={`flex-1 hover:scale-105 transition-transform duration-200 ${isSaved ? "bg-green-50 border-green-500 text-green-700" : ""
+            }`}
           onClick={handleShortlistClick}
           disabled={isSavingLoading || isUnsavingLoading}
         >
@@ -306,9 +303,8 @@ export function JobCard({ job }: JobCardProps) {
           )}
         </Button>
         <Button
-          className={`flex-1 hover:scale-105 transition-transform duration-200 ${
-            isApplied ? "bg-green-500 text-white" : ""
-          }`}
+          className={`flex-1 hover:scale-105 transition-transform duration-200 ${isApplied ? "bg-green-500 text-white" : ""
+            }`}
           disabled={isApplied || isApplyingLoading}
           onClick={handleApplyClick}
         >
