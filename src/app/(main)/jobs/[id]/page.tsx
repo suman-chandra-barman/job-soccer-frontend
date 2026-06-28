@@ -48,11 +48,18 @@ const JobDetailsPage = ({ params }: PageProps) => {
 
   const { data: relatedJobsResponse, isLoading: relatedJobsLoading } =
     useGetJobsWithFiltersQuery(
-      { jobCategory: jobData?.jobCategory || "" },
+      {
+        jobCategory: jobData?.jobCategory || "",
+        country: jobData?.country || "",
+        position: jobData?.position || "",
+      },
       { skip: !jobData?.jobCategory }
     );
 
-  const relatedJobs = relatedJobsResponse?.data?.slice(0, 4) || [];
+  const relatedJobs =
+    relatedJobsResponse?.data
+      ?.filter((job: TJob) => job._id !== id)
+      ?.slice(0, 4) || [];
 
   if (isLoading) {
     return (
@@ -175,7 +182,7 @@ const JobDetailsPage = ({ params }: PageProps) => {
                 <JobCard key={job._id} job={job} />
               ))
             ) : (
-              <p className="text-gray-500 text-center">
+              <p className="text-gray-500">
                 No recommended jobs found
               </p>
             )}
