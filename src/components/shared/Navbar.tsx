@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useCallback, useMemo } from "react";
+import React, { useState, useCallback, useMemo, useEffect } from "react";
 import {
   Home,
   MessageCircle,
@@ -171,7 +171,7 @@ const NavLinkItem: React.FC<NavLinkItemProps> = ({
     ? "text-green-500"
     : "text-gray-700 hover:text-green-500";
 
-  const showBadge = badge && badge > 0;
+  const showBadge = typeof badge === "number" && badge > 0;
 
   if (isMobile) {
     return (
@@ -253,6 +253,7 @@ const getProfileImageUrl = (profileImage?: string): string | undefined => {
 
 // ==================== Main Component ====================
 export function Navbar() {
+  const [mounted, setMounted] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isNotificationOpen, setIsNotificationOpen] = useState(false);
   const [isLogoutModalOpen, setIsLogoutModalOpen] = useState(false);
@@ -261,12 +262,30 @@ export function Navbar() {
   const router = useRouter();
   const dispatch = useAppDispatch();
 
-  // Check if user has token from Redux store
+  // Check if user has token and details from Redux store
   const token = useAppSelector((state) => state.auth.token);
+  const reduxUser = useAppSelector((state) => state.auth.user);
   const hasToken = !!token;
-  const { data: user, isLoading: isLoadingUser } = useGetMeQuery(null, {
+
+  // Mount logic to avoid Next.js hydration mismatch
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
+  const { data: user, isLoading: isLoadingUser, error: userError } = useGetMeQuery(null, {
     skip: !hasToken,
   });
+
+  // Automatically log out if token is invalid/expired
+  useEffect(() => {
+    if (userError && typeof userError === "object" && "status" in userError) {
+      const status = (userError as { status: number | string }).status;
+      if (status === 401 || status === 403) {
+        dispatch(logout());
+        dispatch(baseApi.util.resetApiState());
+      }
+    }
+  }, [userError, dispatch]);
 
   // Get real-time unread notification count from context
   const { unreadCount: realtimeUnreadCount } = useNotificationContext();
@@ -280,14 +299,20 @@ export function Navbar() {
   // Use real-time count if available, otherwise fall back to API count
   const unreadCount = realtimeUnreadCount || unreadCountData?.data || 0;
 
-  const isLoggedIn = !!user?.data?.profileId || user?.data?.userType === "admin" || user?.data?.role === "admin";
+  // Derived Auth state and roles
+  const currentUser = user?.data || reduxUser;
+  const isLoggedIn = hasToken && !!currentUser;
+  const isAdmin = currentUser?.userType === "admin" || currentUser?.role === "admin";
+  const userType = isAdmin ? "admin" : currentUser?.userType;
+
   const navLinks = useMemo(
     () => getNavLinks(isLoggedIn, () => setIsNotificationOpen(true)),
     [isLoggedIn],
   );
+
   const profileImageUrl = useMemo(
-    () => getProfileImageUrl(user?.data?.profileImage),
-    [user?.data?.profileImage],
+    () => getProfileImageUrl(currentUser?.profileImage || undefined),
+    [currentUser?.profileImage],
   );
 
   const isActiveLink = useCallback(
@@ -364,13 +389,21 @@ export function Navbar() {
           {/* Desktop User Menu */}
           <div className="hidden lg:flex gap-5 justify-end">
             <GoogleTranslate />
-            {hasToken && isLoadingUser ? (
+            {!mounted ? (
+              // Neutral loading placeholder before hydration matching server render
+              <Link href="/signin">
+                <Button className="bg-yellow-300 font-semibold cursor-pointer">
+                  Sign In
+                </Button>
+              </Link>
+            ) : hasToken && isLoadingUser && !currentUser ? (
+              // Pulse loader when loading state is active and we don't have redux cached data
               <div className="w-11 h-11 rounded-full bg-gray-200 animate-pulse" />
             ) : isLoggedIn ? (
               <UserProfileMenu
                 profileImageUrl={profileImageUrl}
-                userName={user?.data?.firstName}
-                userType={user?.data?.userType === "admin" || user?.data?.role === "admin" ? "admin" : user?.data?.userType}
+                userName={currentUser?.firstName}
+                userType={userType}
                 onLogout={handleLogoutClick}
                 size="sm"
               />
@@ -390,13 +423,15 @@ export function Navbar() {
         <SheetContent side="left" className="w-[300px] sm:w-[400px]">
           <SheetHeader className="border-b">
             <SheetTitle className="text-left">
-              {hasToken && isLoadingUser ? (
+              {!mounted ? (
+                <span className="text-xl font-bold text-gray-900">Menu</span>
+              ) : hasToken && isLoadingUser && !currentUser ? (
                 <div className="w-13 h-13 rounded-full bg-gray-200 animate-pulse" />
               ) : isLoggedIn ? (
                 <UserProfileMenu
                   profileImageUrl={profileImageUrl}
-                  userName={user?.data?.firstName}
-                  userType={user?.data?.userType === "admin" || user?.data?.role === "admin" ? "admin" : user?.data?.userType}
+                  userName={currentUser?.firstName}
+                  userType={userType}
                   onLogout={handleLogoutClick}
                   size="md"
                 />
@@ -421,7 +456,7 @@ export function Navbar() {
               />
             ))}
 
-            {!isLoggedIn && (
+            {(!mounted || !isLoggedIn) && (
               <Link
                 href="/signin"
                 onClick={closeMobileMenu}
