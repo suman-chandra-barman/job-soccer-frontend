@@ -22,6 +22,7 @@ import AnalyticsSection from "@/components/profile/AnalyticsSection";
 import { useAppSelector } from "@/redux/hooks";
 import { StartChatButton } from "@/components/messaging/StartChatButton";
 import { useGetCandidateByIdQuery } from "@/redux/features/candidate/candidateApi";
+import { Button } from "@/components/ui/button";
 
 export default function UserProfilePage() {
   const params = useParams();
@@ -153,7 +154,7 @@ export default function UserProfilePage() {
       </div>
 
       {/* Profile Info - Always Visible */}
-      <div className="mb-6 sm:mb-8 px-2 sm:px-4">
+      <div className="flex flex-col sm:flex-row sm:flex-wrap gap-3 sm:gap-4 justify-between mb-6 sm:mb-8 px-2 sm:px-4">
         <div className="mb-4 sm:mb-6">
           <h2 className="text-2xl sm:text-2xl md:text-3xl font-bold text-gray-900 flex flex-wrap items-center gap-2">
             {displayName}
@@ -173,26 +174,56 @@ export default function UserProfilePage() {
           )}
 
           <div className="flex gap-2 flex-wrap mt-3 sm:mt-4">
-            {displayRole && (
-              <Badge className="bg-yellow-100 text-yellow-800 border-yellow-200 px-3 sm:px-4 py-1 rounded-full text-xs sm:text-sm">
-                {displayRole}
-              </Badge>
-            )}
-            {!hasAccess && verificationStatus?.status === "approved" && (
-              <Badge className="bg-blue-50 text-blue-700 border-blue-200 px-2 sm:px-3 py-1 rounded-full flex items-center gap-1 text-xs sm:text-sm">
-                <BadgeCheck className="h-3 w-3 sm:h-4 sm:w-4 shrink-0" />
-                Verified
-              </Badge>
-            )}
-            {!isOwnProfile && (
-              <StartChatButton
-                userId={userId}
-                userName={displayName}
-                className="rounded-full"
-              />
-            )}
+                {displayRole && (
+                <Badge className="bg-yellow-100 text-yellow-800 border-yellow-200 px-3 sm:px-4 py-1 rounded-full text-xs sm:text-sm">
+                  {displayRole}
+                </Badge>
+              )}
+              {!hasAccess && verificationStatus?.status === "approved" && (
+                <Badge className="bg-blue-50 text-blue-700 border-blue-200 px-2 sm:px-3 py-1 rounded-full flex items-center gap-1 text-xs sm:text-sm">
+                  <BadgeCheck className="h-3 w-3 sm:h-4 sm:w-4 shrink-0" />
+                  Verified
+                </Badge>
+              )}
           </div>
         </div>
+        {/* Action Buttons - Hide on own profile */}
+        {!isOwnProfile && (
+          <div className="flex flex-col sm:flex-row gap-2 w-full sm:w-auto">
+            <StartChatButton
+              userId={userId}
+              userName={displayName}
+              className="flex items-center justify-center gap-2 flex-1 sm:flex-none text-sm"
+            />
+            <Button
+              variant="outline"
+              // onClick={handleFollowToggle}
+              // disabled={isLoading}
+              className={`flex items-center justify-center gap-2 flex-1 sm:flex-none text-sm 
+              `}
+            >
+              {/* {isLoading ? (
+                <>{isFollowing ? "Unfollowing..." : "Following..."}</>
+              ) : (
+                <>
+                  {isFollowing ? (
+                    <>
+                      <UserMinus className="h-4 w-4" />
+                      Unfollow
+                    </>
+                  ) : (
+                    <>
+                      <UserPlus className="h-4 w-4" />
+                      Follow
+                    </>
+                  )}
+                </>
+              )} */}
+
+              Follow
+            </Button>
+          </div>
+        )}
       </div>
 
       {/* Profile Information Section - Conditional Rendering */}
@@ -210,35 +241,6 @@ export default function UserProfilePage() {
 
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-4 sm:gap-x-8 gap-y-4 sm:gap-y-6">
                 {/* Personal Information Fields */}
-                {user?.profile?.dateOfBirth && (
-                  <div>
-                    <label className="text-xs sm:text-sm text-gray-500 mb-1 block">
-                      Date of birth
-                    </label>
-                    <p className="text-gray-900 font-medium text-sm sm:text-base">
-                      {new Date(user.profile.dateOfBirth).toLocaleDateString(
-                        "en-US",
-                        {
-                          year: "numeric",
-                          month: "long",
-                          day: "numeric",
-                        }
-                      )}
-                    </p>
-                  </div>
-                )}
-
-                {user?.profile?.placeOfBirth && (
-                  <div>
-                    <label className="text-xs sm:text-sm text-gray-500 mb-1 block">
-                      Place of birth
-                    </label>
-                    <p className="text-gray-900 font-medium text-sm sm:text-base">
-                      {user.profile.placeOfBirth}
-                    </p>
-                  </div>
-                )}
-
                 {user?.profile?.nationality && (
                   <div>
                     <label className="text-xs sm:text-sm text-gray-500 mb-1 block">
@@ -249,18 +251,6 @@ export default function UserProfilePage() {
                     </p>
                   </div>
                 )}
-
-                {user?.profile?.phoneNumber && (
-                  <div>
-                    <label className="text-xs sm:text-sm text-gray-500 mb-1 block">
-                      Phone number
-                    </label>
-                    <p className="text-gray-900 font-medium text-sm sm:text-base">
-                      {user.profile.phoneNumber}
-                    </p>
-                  </div>
-                )}
-
                 {user?.profile?.gender && (
                   <div>
                     <label className="text-xs sm:text-sm text-gray-500 mb-1 block">
