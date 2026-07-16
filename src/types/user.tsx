@@ -58,6 +58,8 @@ export interface ICandidate {
     status: "pending" | "accepted" | "rejected";
     type: "sent" | "received";
   } | null;
+  followerCount?: number;
+  isFollowing?: boolean;
 }
 
 export interface IEmployer {

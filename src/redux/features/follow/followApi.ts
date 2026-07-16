@@ -2,30 +2,36 @@ import { baseApi } from "@/redux/api/baseApi";
 
 const followApi = baseApi.injectEndpoints({
   endpoints: (builder) => ({
-    followEmployer: builder.mutation({
-      query: (employerId: string) => ({
+    followUser: builder.mutation({
+      query: (userId: string) => ({
         url: "/follow",
         method: "POST",
-        body: { employerId },
+        body: { employerId: userId },
       }),
-      invalidatesTags: [
+      invalidatesTags: (result, error, userId) => [
         { type: "Employer", id: "FOLLOWING" },
         { type: "Employer", id: "LIST" },
+        { type: "Employer", id: userId },
+        { type: "Candidate", id: userId },
+        { type: "Candidate", id: "LIST" },
       ],
     }),
 
-    unfollowEmployer: builder.mutation({
-      query: (employerId: string) => ({
-        url: `/follow/${employerId}`,
+    unfollowUser: builder.mutation({
+      query: (userId: string) => ({
+        url: `/follow/${userId}`,
         method: "DELETE",
       }),
-      invalidatesTags: [
+      invalidatesTags: (result, error, userId) => [
         { type: "Employer", id: "FOLLOWING" },
         { type: "Employer", id: "LIST" },
+        { type: "Employer", id: userId },
+        { type: "Candidate", id: userId },
+        { type: "Candidate", id: "LIST" },
       ],
     }),
 
-    getFollowedEmployers: builder.query({
+    getFollowedUsers: builder.query({
       query: () => ({
         url: "/follow",
         method: "GET",
@@ -37,29 +43,38 @@ const followApi = baseApi.injectEndpoints({
                 type: "Employer" as const,
                 id: _id,
               })),
+              ...result.data.map(({ _id }: { _id: string }) => ({
+                type: "Candidate" as const,
+                id: _id,
+              })),
               { type: "Employer", id: "FOLLOWING" },
+              { type: "Candidate", id: "FOLLOWING" },
             ]
-          : [{ type: "Employer", id: "FOLLOWING" }],
+          : [
+              { type: "Employer", id: "FOLLOWING" },
+              { type: "Candidate", id: "FOLLOWING" },
+            ],
       keepUnusedDataFor: 300,
     }),
 
     checkFollowStatus: builder.query({
-      query: (employerId: string) => ({
-        url: `/follow/status/${employerId}`,
+      query: (userId: string) => ({
+        url: `/follow/status/${userId}`,
         method: "GET",
       }),
-      providesTags: (_result, _error, employerId) => [
-        { type: "Employer", id: employerId },
+      providesTags: (_result, _error, userId) => [
+        { type: "Employer", id: userId },
+        { type: "Candidate", id: userId },
       ],
     }),
   }),
 });
 
 export const {
-  useFollowEmployerMutation,
-  useUnfollowEmployerMutation,
-  useGetFollowedEmployersQuery,
-  useLazyGetFollowedEmployersQuery,
+  useFollowUserMutation,
+  useUnfollowUserMutation,
+  useGetFollowedUsersQuery,
+  useLazyGetFollowedUsersQuery,
   useCheckFollowStatusQuery,
   useLazyCheckFollowStatusQuery,
 } = followApi;

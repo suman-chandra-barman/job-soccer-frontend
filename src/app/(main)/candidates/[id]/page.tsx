@@ -4,7 +4,7 @@ import React, { useState } from "react";
 import { useParams } from "next/navigation";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent } from "@/components/ui/card";
-import { BadgeCheck, Mail, XCircle, Lock } from "lucide-react";
+import { BadgeCheck, Mail, XCircle, Lock, UserPlus, UserMinus } from "lucide-react";
 import Image from "next/image";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { toast } from "sonner";
@@ -12,6 +12,10 @@ import {
   useCheckFriendshipStatusQuery,
   useSendFriendRequestMutation,
 } from "@/redux/features/user/userApi";
+import {
+  useFollowUserMutation,
+  useUnfollowUserMutation,
+} from "@/redux/features/follow/followApi";
 import { ProfileSkeleton } from "@/components/skeleton/ProfileSkeleton";
 import AccessRequestModal from "@/components/modals/AccessRequestModal";
 import ExperienceSection from "@/components/profile/ExperienceSection";
@@ -53,7 +57,64 @@ export default function UserProfilePage() {
   const [sendFriendRequest, { isLoading: isSendingRequest }] =
     useSendFriendRequestMutation();
 
+  // Follow/Unfollow mutations
+  const [followCandidate, { isLoading: isFollowLoading }] =
+    useFollowUserMutation();
+  const [unfollowCandidate, { isLoading: isUnfollowLoading }] =
+    useUnfollowUserMutation();
+
+  // Local state for optimistic updates
+  const [localIsFollowing, setLocalIsFollowing] = useState<
+    boolean | null
+  >(null);
+  const [localFollowerCount, setLocalFollowerCount] = useState<
+    number | null
+  >(null);
+
   const user = userData?.data;
+
+  // Use local state if available, otherwise use API data
+  const isFollowing = localIsFollowing ?? user?.isFollowing ?? false;
+  const followerCount = localFollowerCount ?? user?.followerCount ?? 0;
+  const isFollowMutating = isFollowLoading || isUnfollowLoading;
+
+  // Handle follow/unfollow
+  const handleFollowToggle = async () => {
+    if (!currentUser) {
+      toast.error("Please log in to follow candidates");
+      return;
+    }
+
+    const previousState = isFollowing;
+    const previousCount = followerCount;
+
+    try {
+      // Optimistic update
+      setLocalIsFollowing(!isFollowing);
+      setLocalFollowerCount(
+        isFollowing ? followerCount - 1 : followerCount + 1
+      );
+
+      if (isFollowing) {
+        // Unfollow
+        await unfollowCandidate(userId).unwrap();
+        toast.success("Unfollowed successfully");
+      } else {
+        // Follow
+        await followCandidate(userId).unwrap();
+        toast.success("Followed successfully");
+      }
+    } catch (error) {
+      // Revert on error
+      setLocalIsFollowing(previousState);
+      setLocalFollowerCount(previousCount);
+      const err = error as { data?: { message?: string } };
+      toast.error(
+        err?.data?.message ||
+        `Failed to ${isFollowing ? "unfollow" : "follow"} candidate`
+      );
+    }
+  };
   const areFriends = friendshipData?.data?.areFriends || false;
   const isAdmin = (currentUser?.userType as string) === "admin" || currentUser?.role === "admin";
   const hasAccess = areFriends || isAdmin || isOwnProfile;
@@ -197,12 +258,13 @@ export default function UserProfilePage() {
             />
             <Button
               variant="outline"
-              // onClick={handleFollowToggle}
-              // disabled={isLoading}
-              className={`flex items-center justify-center gap-2 flex-1 sm:flex-none text-sm 
-              `}
+              onClick={handleFollowToggle}
+              disabled={isFollowMutating}
+              className={`flex items-center justify-center gap-2 flex-1 sm:flex-none text-sm ${
+                isFollowing ? "bg-green-50 border-green-500 text-green-700" : ""
+              }`}
             >
-              {/* {isLoading ? (
+              {isFollowMutating ? (
                 <>{isFollowing ? "Unfollowing..." : "Following..."}</>
               ) : (
                 <>
@@ -218,9 +280,7 @@ export default function UserProfilePage() {
                     </>
                   )}
                 </>
-              )} */}
-
-              Follow
+              )}
             </Button>
           </div>
         )}
@@ -416,6 +476,16 @@ export default function UserProfilePage() {
                     </p>
                   </div>
                 )}
+
+                {/* Followers Count */}
+                <div>
+                  <label className="text-xs sm:text-sm text-gray-500 mb-1 block">
+                    Followers
+                  </label>
+                  <p className="text-gray-900 font-medium text-sm sm:text-base">
+                    {followerCount}
+                  </p>
+                </div>
               </div>
             </div>
 

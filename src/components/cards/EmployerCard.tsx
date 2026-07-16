@@ -9,8 +9,8 @@ import { Avatar, AvatarFallback } from "../ui/avatar";
 import { useAuthCheck } from "@/hooks/useAuthCheck";
 import { LoginRequiredModal } from "../modals/LoginRequiredModal";
 import {
-  useFollowEmployerMutation,
-  useUnfollowEmployerMutation,
+  useFollowUserMutation,
+  useUnfollowUserMutation,
 } from "@/redux/features/follow/followApi";
 import { useAppDispatch } from "@/redux/hooks";
 import {
@@ -25,9 +25,9 @@ export function EmployerCard({ employer }: { employer: IEmployer }) {
     useAuthCheck();
 
   const [followEmployer, { isLoading: isFollowLoading }] =
-    useFollowEmployerMutation();
+    useFollowUserMutation();
   const [unfollowEmployer, { isLoading: isUnfollowLoading }] =
-    useUnfollowEmployerMutation();
+    useUnfollowUserMutation();
 
   // Local state for optimistic updates
   const [localIsFollowing, setLocalIsFollowing] = React.useState<

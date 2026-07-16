@@ -22,8 +22,8 @@ import { ProfileSkeleton } from "@/components/skeleton/ProfileSkeleton";
 import { useAppSelector } from "@/redux/hooks";
 import { StartChatButton } from "@/components/messaging/StartChatButton";
 import {
-  useFollowEmployerMutation,
-  useUnfollowEmployerMutation,
+  useFollowUserMutation,
+  useUnfollowUserMutation,
 } from "@/redux/features/follow/followApi";
 import { AgentRatingComponent } from "@/components/shared/AgentRatingComponent";
 import { useGetEmployerByIdQuery } from "@/redux/features/employer/employerApi";
@@ -49,9 +49,9 @@ export default function EmployerDetailsPage() {
 
   // Follow/Unfollow mutations
   const [followEmployer, { isLoading: isFollowLoading }] =
-    useFollowEmployerMutation();
+    useFollowUserMutation();
   const [unfollowEmployer, { isLoading: isUnfollowLoading }] =
-    useUnfollowEmployerMutation();
+    useUnfollowUserMutation();
 
   // Local state for optimistic updates
   const [localIsFollowing, setLocalIsFollowing] = React.useState<
